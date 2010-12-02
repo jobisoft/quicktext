@@ -47,11 +47,13 @@
               <menu label="&quicktext.import.label;">
                 <menupopup>
                   <menuitem label="&quicktext.templates.label;" oncommand="quicktext.importTemplatesFromFile();" />
+                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.importScriptsFromFile();" />
                 </menupopup>
               </menu>
               <menu label="&quicktext.export.label;">
                 <menupopup>
                   <menuitem label="&quicktext.templates.label;" oncommand="quicktext.exportTemplatesToFile();" />
+                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.exportScriptsToFile();" />
                 </menupopup>
               </menu>
               <menuseparator />
@@ -74,6 +76,7 @@
         <tabs>
           <tab label="&quicktext.general.label;" />
           <tab label="&quicktext.templates.label;" />
+          <tab label="&quicktext.scripts.label;" />
         </tabs>
         <tabpanels flex="1" style="margin: 0px; padding: 0px">
           <tabpanel id="tab-general">
@@ -119,6 +122,11 @@
                   <caption label="&quicktext.sharingTemplates.label;" />
                   <button label="&quicktext.export.label;" oncommand="quicktext.exportTemplatesToFile();" />
                   <button label="&quicktext.import.label;" oncommand="quicktext.importTemplatesFromFile();" />
+                </groupbox>
+                <groupbox>
+                  <caption label="&quicktext.sharingScripts.label;" />
+                  <button label="&quicktext.export.label;" oncommand="quicktext.exportScriptsToFile();" />
+                  <button label="&quicktext.import.label;" oncommand="quicktext.importScriptsFromFile();" />
                 </groupbox>
               </vbox>
             </hbox>
@@ -227,6 +235,7 @@
                                 </menupopup>
                               </menu>
                               <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />
+                              <menu label="&quicktext.scripts.label;" id="variables-scripts" />
                               <menu label="&quicktext.ownVariables.label;" id="quicktext-own-vars" hidden="true">
                                 <menupopup>
                                 </menupopup>
@@ -279,6 +288,49 @@
                         <label align="center" value="&quicktext.keyword.label;:" control="text-keyword" style="margin-top: 6px" />
                         <textbox id="text-keyword" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(4);"/>
                       </row>
+                      <row showfor="text">
+                        <label align="center" value="&quicktext.attachments.label;:" control="text-attachments" style="margin-top: 6px" />
+                        <hbox>
+                          <textbox id="text-attachments" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(6);"/>
+                          <button id="button-attachments" label="&quicktext.browse.label;" oncommand="quicktext.browseAttachment();" disabled="true" candisable="true"/>
+                        </hbox>
+                      </row>
+                    </rows>
+                  </grid>
+                </vbox>
+              </groupbox>
+            </vbox>
+          </tabpanel>
+          <tabpanel id="tab-scripts">
+            <vbox style="width: 200px;">
+              <groupbox flex="1">
+                <caption label="&quicktext.title.label;" />
+                <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" /></hbox>
+                <listbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
+                <hbox><button id="script-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeScript();" /></hbox>
+              </groupbox>
+
+            </vbox>
+            <splitter resizebefore="closest" resizeafter="closest">
+              <grippy/>
+            </splitter>
+            <vbox flex="1">
+              <groupbox flex="1">
+                <caption label="&quicktext.script.label;" id="script-caption"/>
+                <vbox flex="1">
+                  <grid flex="1">
+                    <columns>
+                      <column width="80px"/>
+                      <column flex="1"/>
+                    </columns>
+                    <rows>
+                      <row>
+                        <label align="center" value="&quicktext.title.label;:" control="script-title" style="margin-top: 6px" />
+                        <textbox id="script-title" flex="1" oninput="quicktext.checkForScriptChanges(0);"/>
+                      </row>
+                      <vbox flex="1">
+                        <textbox id="script" flex="1" multiline="true" oninput="quicktext.checkForScriptChanges(1);"/>
+                      </vbox>
                     </rows>
                   </grid>
                 </vbox>

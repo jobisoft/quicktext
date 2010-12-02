@@ -7,14 +7,14 @@ function wzQuicktextScript() {
 }
 
 wzQuicktextScript.prototype = {
-  get name() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
-  set name(aName) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  get name() { return this.mName; },
+  set name(aName) { if (typeof aName != 'undefined') return this.mName = aName; }
 ,
-  get script() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
-  set script(aScript) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  get script() { return this.mScript; },
+  set script(aScript) { if (typeof aScript != 'undefined') return this.mScript = aScript; }
 ,
-  get type() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
-  set type(aType) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  get type() { return this.mType; },
+  set type(aType) { if (typeof aType != 'undefined') return this.mType = aType; }
 ,
   clone: function()
   {
@@ -38,7 +38,7 @@ wzQuicktextScript.prototype = {
 }
 
 var wzQuicktextScriptModule = {
-  mClassID:     Components.ID("{5971120e-84ce-4f2b-9418-ed924c88fe10}"),
+  mClassID:     Components.ID("{1d3a4cc6-c543-4800-b9ec-48ec5fa810fb}"),
   mClassName:   "Quicktext Script",
   mContractID:  "@hesslow.se/quicktext/script;1"
 ,

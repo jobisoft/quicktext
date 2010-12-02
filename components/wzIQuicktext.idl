@@ -1,8 +1,9 @@
 #include "nsISupports.idl"
-#include "nsIFile.idl"
 #include "nsIDOMWindow.idl"
-#include "nsIObserver.idl"
-#include "nsIEditor.idl"
+
+interface nsIFile;
+interface nsIObserver;
+interface nsIEditor;
 
 [scriptable, uuid(a3c2ad4e-2e2c-4c72-b1e0-0ac74b479ad2)]
 interface wzIQuicktextHeader : nsISupports
@@ -41,10 +42,11 @@ interface wzIQuicktextGroup : nsISupports
   wzIQuicktextGroup     clone();
 };
 
-[scriptable, uuid(67419c2b-5a07-4943-84fa-b9245d2cb680)]
+[scriptable, uuid(398b38b4-4d4f-461b-bf63-483205f9a21f)]
 interface wzIQuicktextVar : nsISupports
 {
   void                  init(in nsIDOMWindow aWindow);
+  void                  cleanTagData();
   AString               parse(in AString aStr);
   AString               removeBadHTML(in AString aStr);
 };

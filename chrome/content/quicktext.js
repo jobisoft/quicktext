@@ -332,6 +332,7 @@ var quicktext = {
    */
   insertVariable: function(aVar)
   {
+    gQuicktextVar.cleanTagData();
     this.insertBody("[["+ aVar +"]] ", 0, true);
   }
 ,
@@ -344,9 +345,162 @@ var quicktext = {
     {
       this.mLastFocusedElement = (document.commandDispatcher.focusedWindow != window) ? document.commandDispatcher.focusedWindow : document.commandDispatcher.focusedElement;
 
+      gQuicktextVar.cleanTagData();
+
       var text = gQuicktext.getText(aGroupIndex, aTextIndex, false);
+      this.insertHeaders(text);
       this.insertSubject(text.subject);
+      this.insertAttachments(text.attachments);
       this.insertBody(text.text, text.type, aHandleTransaction);
+
+      // If we insert any headers we maybe needs to return the placement of the focus
+      setTimeout("quicktext.moveFocus();", 1);
+    }
+  }
+,
+  insertAttachments: function(aStr)
+  {
+    if (aStr != "")
+    {
+	  aStr = gQuicktextVar.parse(aStr);
+      var files = aStr.split(";");
+      for (var i = 0; i < files.length; i++)
+      {
+        var currentFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+		currentFile.initWithPath(files[i]);
+		if (!currentFile.exists())
+		  continue;
+
+		// Thunderbird 3 support
+		if (typeof AddFileAttachment == 'function')
+		{
+		  AddFileAttachment(currentFile);
+		}
+		else
+		{
+		  var ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+		  var fileHandler = ioService.getProtocolHandler("file").QueryInterface(Components.interfaces.nsIFileProtocolHandler);
+		  var currentAttachment = fileHandler.getURLSpecFromFile(currentFile);
+  
+		  var attachment = Components.classes["@mozilla.org/messengercompose/attachment;1"].createInstance(Components.interfaces.nsIMsgAttachment);
+		  attachment.url = currentAttachment;
+  
+		  if (!DuplicateFileCheck(currentAttachment))
+		  {
+			AddAttachment(attachment);
+			ChangeAttachmentBucketVisibility(false);
+			gContentChanged = true;
+		  }
+		}
+      }
+    }
+  }
+,
+  insertHeaders: function(aText)
+  {
+    var headerLength = aText.getHeaderLength();
+    if (headerLength == 0)
+      return;
+
+    var convertHeaderToType           = [];
+    convertHeaderToType["to"]         = "to";
+    convertHeaderToType["cc"]         = "cc";
+    convertHeaderToType["bcc"]        = "bcc";
+    convertHeaderToType["reply-to"]   = "reply";
+
+    var convertHeaderToParse          = [];
+    convertHeaderToParse["to"]        = "to";
+    convertHeaderToParse["cc"]        = "cc";
+    convertHeaderToParse["bcc"]       = "bcc";
+    convertHeaderToParse["reply-to"]  = "replyTo";
+
+    var recipientHeaders              = [];
+    recipientHeaders["to"]            = [];
+    recipientHeaders["cc"]            = [];
+    recipientHeaders["bcc"]           = [];
+    recipientHeaders["reply-to"]      = [];
+
+    // Add all recipient headers to an array
+    var count = 0;
+    for (var i = 0; i < headerLength; i++)
+    {
+      var header = aText.getHeader(i);
+      var type = header.type.toLowerCase();
+      if (typeof recipientHeaders[type] != "undefined")
+      {
+        recipientHeaders[type].push(gQuicktextVar.parse(header.value));
+        count++;
+      }
+    }
+
+    if (count > 0)
+    {
+      Recipients2CompFields(gMsgCompose.compFields);
+      var parser = Components.classes["@mozilla.org/messenger/headerparser;1"].getService(Components.interfaces.nsIMsgHeaderParser);
+
+      // Go through all recipientHeaders to remove duplicates
+      var tmpRecipientHeaders = [];
+      count = 0;
+      for (var header in recipientHeaders)
+      {
+        if (recipientHeaders[header].length == 0)
+          continue;
+
+        tmpRecipientHeaders[header] = [];
+        
+        // Create an array of emailaddresses for this header that allready added
+        var tmpEmailAddresses = {};
+        var numOfAddresses = parser.parseHeadersWithArray(gMsgCompose.compFields[convertHeaderToParse[header]], tmpEmailAddresses, {}, {});
+        var emailAddresses = [];
+        for (var i = 0; i < numOfAddresses; i++)
+          emailAddresses.push(tmpEmailAddresses.value[i]);
+
+        // Go through all recipient of this header that I want to add
+        for (var i = 0; i < recipientHeaders[header].length; i++)
+        {
+          // Get the mailaddresses of all the addresses
+          var insertedEmailAddresses = {};
+          var insertedFullAddresses = {};
+          var insertedNumOfAddresses = parser.parseHeadersWithArray(recipientHeaders[header][i], insertedEmailAddresses, {}, insertedFullAddresses);
+
+          for (var j = 0; j < insertedNumOfAddresses; j++)
+          {
+            if (emailAddresses.indexOf(insertedEmailAddresses.value[j]) < 0)
+            {
+              tmpRecipientHeaders[header].push(insertedFullAddresses.value[j]);
+              emailAddresses.push(insertedEmailAddresses.value[j]);
+              count++;
+            }
+          }
+        }
+      }
+
+      if (count > 0)
+      {
+        var addressingWidgetFocus = false;
+        var focusedElement = this.mLastFocusedElement;
+        var addressingWidget = document.getElementById("addressingWidget");
+        if (focusedElement == addressingWidget || focusedElement.compareDocumentPosition && focusedElement.compareDocumentPosition(addressingWidget) & Node.DOCUMENT_POSITION_CONTAINS)
+          addressingWidgetFocus = true;
+
+        for (var header in tmpRecipientHeaders)
+          for (var i = 0; i < tmpRecipientHeaders[header].length; i++)
+            AddRecipient("addr_"+ convertHeaderToType[header], tmpRecipientHeaders[header][i]);
+
+        // AddRecipient takes focus so if I don't have focus in the addressingWidget
+        // I want to move it back.
+        if (addressingWidgetFocus)
+          this.mLastFocusedElement = null;
+      }
+    }
+  }
+,
+  moveFocus: function()
+  {
+    if (this.mLastFocusedElement)
+    {
+      this.mLastFocusedElement.focus();
+      this.mLastFocusedElement = null;
     }
   }
 ,

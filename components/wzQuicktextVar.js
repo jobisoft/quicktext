@@ -1,6 +1,6 @@
 const kDebug          = true;
-const persistentTags  = ['VERSION'];
-const allowedTags     = ['ATT', 'CLIPBOARD', 'DATE', 'FILE', 'FROM', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'VERSION'];
+const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
+const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION'];
 
 function streamListener()
 {
@@ -128,7 +128,7 @@ wzQuicktextVar.prototype = {
     this.mData = {};
   }
 ,
-  parse: function(aStr)
+  cleanTagData: function()
   {
     // Just save some of the tag-data.
     tmpData = {};
@@ -138,7 +138,10 @@ wzQuicktextVar.prototype = {
         tmpData[i] = this.mData[i];
     }
     this.mData = tmpData;
-
+  }
+,
+  parse: function(aStr)
+  {
     // Reparse the text until there is no difference in the text
     // or that we parse 100 times (so we don't make an infinitive loop)
     var oldStr;
@@ -170,6 +173,7 @@ wzQuicktextVar.prototype = {
       {
         case 'att':
         case 'clipboard':
+        case 'counter':
         case 'date':
         case 'subject':
         case 'time':
@@ -178,7 +182,12 @@ wzQuicktextVar.prototype = {
           break;
         case 'file':
         case 'from':
+        case 'input':
+        case 'orgatt':
+        case 'orgheader':
+        case 'script':
         case 'to':
+        case 'url':
           variable_limit = 1;
           break;
         case 'text':
@@ -316,6 +325,11 @@ wzQuicktextVar.prototype = {
     return this.process_text(aVariables);
   }
 ,
+  get_script: function(aVariables)
+  {
+    return this.process_script(aVariables);
+  }
+,
   get_att: function(aVariables)
   {
     var data = this.process_att(aVariables);
@@ -336,6 +350,16 @@ wzQuicktextVar.prototype = {
 
       return TrimString(value.join(aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t")));
     }
+
+    return "";
+  }
+,
+  get_input: function(aVariables)
+  {
+    var data = this.process_input(aVariables);
+
+    if (typeof data[aVariables[0]] != "undefined")
+      return data[aVariables[0]];
 
     return "";
   }
@@ -370,6 +394,11 @@ wzQuicktextVar.prototype = {
       return "";
   }
 ,
+  get_url: function(aVariables)
+  {
+    return this.process_url(aVariables);
+  }
+,
   get_version: function(aVariables)
   {
     var data = this.process_version(aVariables);
@@ -380,6 +409,11 @@ wzQuicktextVar.prototype = {
       return data[aVariables[0]];
 
     return "";
+  }
+,
+  get_counter: function(aVariables)
+  {
+    return this.process_counter(aVariables);
   }
 ,
   get_subject: function(aVariables)
@@ -406,6 +440,36 @@ wzQuicktextVar.prototype = {
       aVariables[0] = "noseconds";
     if (typeof data[aVariables[0]] != 'undefined')
       return data[aVariables[0]];
+
+    return "";
+  }
+,
+  get_orgheader: function(aVariables)
+  {
+    var data = this.process_orgheader(aVariables);
+
+    aVariables[0] = aVariables[0].toLowerCase();
+    if (typeof data[aVariables[0]] != 'undefined')
+    {
+      if (aVariables.length < 2)
+        aVariables[1] = ", ";
+
+      return data[aVariables[0]].join(aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t"));
+    }
+    else
+      return "";
+  }
+,
+  get_orgatt: function(aVariables)
+  {
+    var data = this.process_orgatt(aVariables);
+
+    if (typeof data != 'undefined')
+    {
+      if (aVariables.length == 0)
+        aVariables[0] = ", ";
+      return data['displayName'].join(aVariables[0].replace(/\\n/g, "\n").replace(/\\t/g, "\t"));
+    }
 
     return "";
   }
@@ -456,6 +520,47 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
+  process_script: function(aVariables)
+  {
+    if (aVariables.length == 0)
+      return "";
+    
+    var scriptName = aVariables.shift();
+
+    // Looks through all scripts and tries to find the 
+    // one we look for
+    var scriptLength = this.mQuicktext.getScriptLength(false);
+    for (var i = 0; i < scriptLength; i++)
+    {
+      var script = this.mQuicktext.getScript(i, false);
+      if (script.name == scriptName)
+      {
+        returnValue = "";
+        try {
+          var s = Components.utils.Sandbox(this.mWindow);
+          s.mQuicktext = this;
+          s.mVariables = aVariables;
+          s.mWindow = this.mWindow;
+          returnValue = Components.utils.evalInSandbox("scriptObject = {}; scriptObject.mQuicktext = mQuicktext; scriptObject.mVariables = mVariables; scriptObject.mWindow = mWindow; scriptObject.run = function() {\n" + script.script +"\nreturn ''; }; scriptObject.run();", s);
+        } catch (e) {
+          if (this.mWindow)
+          {
+            var lines = script.script.split("\n");
+            
+            // Takes the linenumber where the error where and remove
+            // the line that it was run on so we get the line in the script
+            var lineNumber = e.lineNumber-543;
+            this.mWindow.alert("You have an error in your script: "+ script.name +"\n"+ e.name +": "+ e.message +"\nLine ("+ lineNumber +"): "+ lines[lineNumber-1] );
+          }
+        }
+
+        return returnValue;
+      }
+    }
+
+    return "";
+  }
+,
   process_att: function(aVariables)
   {
     if (this.mData['ATT'] && this.mData['ATT'].checked)
@@ -493,6 +598,44 @@ wzQuicktextVar.prototype = {
     }
 
     return this.mData['ATT'].data;
+  }
+,
+  process_input: function(aVariables)
+  {
+    if (typeof this.mData['INPUT'] == 'undefined')
+      this.mData['INPUT'] = {};
+    if (typeof this.mData['INPUT'].data == 'undefined')
+      this.mData['INPUT'].data = {};
+
+    if (typeof this.mData['INPUT'].data[aVariables[0]] != 'undefined')
+      return this.mData['INPUT'].data;
+
+    // There are two types of input select and text.
+    var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+    if (aVariables[1] == 'select')
+    {
+      var checkValue = {};
+      var value = {};
+      if (typeof aVariables[2] != 'undefined')
+         value.value = aVariables[2].split(";");
+      if (promptService.select(this.mWindow, this.mWindow.quicktext.mStringBundle.getString("inputTitle"), this.mWindow.quicktext.mStringBundle.getFormattedString("inputText", [aVariables[0]]), value.value.length, value.value, checkValue))
+        this.mData['INPUT'].data[aVariables[0]] = value.value[checkValue.value];
+      else
+        this.mData['INPUT'].data[aVariables[0]] = "";
+    }
+    else
+    {
+      var checkValue = {};      
+      var value = {};
+      if (typeof aVariables[2] != 'undefined')
+        value.value = aVariables[2];
+      if (promptService.prompt(this.mWindow, this.mWindow.quicktext.mStringBundle.getString("inputTitle"), this.mWindow.quicktext.mStringBundle.getFormattedString("inputText", [aVariables[0]]), value, null, checkValue))
+        this.mData['INPUT'].data[aVariables[0]] = value.value;
+      else
+        this.mData['INPUT'].data[aVariables[0]] = "";
+    }
+
+    return this.mData['INPUT'].data;
   }
 ,
   process_clipboard: function(aVariables)
@@ -677,6 +820,69 @@ wzQuicktextVar.prototype = {
     return this.mData['TO'].data;
   }
 ,
+  process_url: function(aVariables)
+  {
+    if (aVariables.length == 0)
+      return "";
+
+    var url = aVariables.shift();
+
+    if (url != "")
+    {
+      var post = [];
+      if (aVariables.length > 0)
+      {
+        var variables = aVariables.shift().split(";");
+        for (var k = 0; k < variables.length; k++)
+        {
+          var tag = variables[k].toLowerCase();
+          var data = this["process_"+ tag]();
+
+          switch (tag)
+          {
+            case 'to':
+            case 'att':
+            case 'orgheader':
+            case 'orgatt':
+              if (typeof data != 'undefined')
+              {
+                for (var i in data)
+                  for (var j in data[i])
+                    post.push(tag +'['+ i +']['+ j +']='+ data[i][j]);
+              }
+              break;
+            case 'from':
+            case 'version':
+            case 'date':
+            case 'time':
+              if (typeof data != 'undefined')
+              {
+                for (var i in data)
+                  post.push(tag +'['+ i +']='+ data[i]);
+              }
+              break;
+            case 'subject':
+            case 'clipboard':
+            case 'counter':
+              if (typeof data != 'undefined')
+                post.push(tag +'='+ data);
+              break;
+          }
+        }
+      }
+
+      var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
+      req.open('POST', url, false);
+      req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      req.send(post.join("&"));
+
+      if (req.status == 200)
+        return req.responseText;
+    }
+
+    return "";
+  }
+,
   process_version: function(aVariables)
   {
     if (this.mData['VERSION'] && this.mData['VERSION'].checked)
@@ -707,6 +913,24 @@ wzQuicktextVar.prototype = {
     catch(e) {}
 
     return this.mData['VERSION'].data;
+  }
+,
+  process_counter: function(aVariables)
+  {
+    if (this.mData['COUNTER'] && this.mData['COUNTER'].checked)
+      return this.mData['COUNTER'].data;
+
+    this.mData['COUNTER'] = {};
+    this.mData['COUNTER'].checked = true;
+    this.mData['COUNTER'].data = 0;
+
+    if (this.mPrefBranch.prefHasUserValue("counter"))
+      this.mData['COUNTER'].data = this.mPrefBranch.getIntPref("counter");
+
+    this.mData['COUNTER'].data++;
+    this.mPrefBranch.setIntPref("counter", this.mData['COUNTER'].data);
+
+    return this.mData['COUNTER'].data;
   }
 ,
   process_subject: function(aVariables)
@@ -742,6 +966,24 @@ wzQuicktextVar.prototype = {
     return this.mData['TIME'].data;
   }
 ,
+  process_orgheader: function(aVariables)
+  {
+    if (this.mData['ORGHEADER'] && this.mData['ORGHEADER'].checked)
+      return this.mData['ORGHEADER'].data;
+
+    this.preprocess_org();
+    return this.mData['ORGHEADER'].data;
+  }
+,
+  process_orgatt: function(aVariables)
+  {
+    if (this.mData['ORGATT'] && this.mData['ORGATT'].checked)
+      return this.mData['ORGATT'].data;
+
+    this.preprocess_org();
+    return this.mData['ORGATT'].data;
+  }
+,
   preprocess_datetime: function()
   {
     this.mData['DATE'] = {};
@@ -759,6 +1001,52 @@ wzQuicktextVar.prototype = {
 
     this.mData['TIME'].data['seconds'] = TrimString(dateTimeService.FormatTime("", dateTimeService.timeFormatSeconds, timeStamp.getHours(), timeStamp.getMinutes(), timeStamp.getSeconds()));
     this.mData['TIME'].data['noseconds'] = TrimString(dateTimeService.FormatTime("", dateTimeService.timeFormatNoSeconds, timeStamp.getHours(), timeStamp.getMinutes(), timeStamp.getSeconds()));
+  }
+,
+  preprocess_org: function()
+  {
+    this.mData['ORGHEADER'] = {};
+    this.mData['ORGHEADER'].checked = true;
+    this.mData['ORGHEADER'].data = {};
+
+    this.mData['ORGATT'] = {};
+    this.mData['ORGATT'].checked = true;
+    this.mData['ORGATT'].data = {contentType:[], url:[], displayName:[], uri:[], isExternal:[]};
+
+    var msgURI = this.mWindow.gMsgCompose.originalMsgURI;
+    if (!msgURI || msgURI == "")
+      return;
+
+    var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance(Components.interfaces.nsIMessenger);
+    var mms = messenger.messageServiceFromURI(msgURI).QueryInterface(Components.interfaces.nsIMsgMessageService);
+    var listener = streamListener();
+    mms.streamMessage(msgURI, listener, null, null, true, "filter");
+
+    const eqs = Components.interfaces.nsIEventQueueService;
+    while (listener.mBusy)
+    {
+      // This works like a yield. Not sure why
+      Components.classes["@mozilla.org/event-queue-service;1"]
+        .getService(eqs).getSpecialEventQueue(eqs.UI_THREAD_EVENT_QUEUE)
+        .processPendingEvents();
+    }
+
+    // Store all headers in the mData-variable
+    for (var i = 0; i < listener.mHeaders.length; i++)
+    {
+      var name = listener.mHeaders[i].name;
+      if (typeof this.mData['ORGHEADER'].data[name] == 'undefined')
+        this.mData['ORGHEADER'].data[name] = [];
+      this.mData['ORGHEADER'].data[name].push(listener.mHeaders[i].value);
+    }
+
+    // Store all attachments in the mData-variable
+    for (var i = 0; i < listener.mAttachments.length; i++)
+    {
+      var attachment = listener.mAttachments[i];
+      for (var fields in attachment)
+        this.mData['ORGATT'].data[fields][i] = attachment[fields];
+    }
   }
 ,
   escapeRegExp: function(aStr)
@@ -811,10 +1099,10 @@ wzQuicktextVar.prototype = {
   removeBadHTML: function (aStr)
   {
     // Remove the head-tag
-    aStr = aStr.replace(/<head(| [^>]*)>.*<\/head>/gi, '');
+    aStr = aStr.replace(/<head(| [^>]*)>.*<\/head>/gim, '');
 
     // Remove html and body tags
-    aStr = aStr.replace(/<(|\/)(head|body)(| [^>]*)>/gi, '');
+    aStr = aStr.replace(/<(|\/)(head|body)(| [^>]*)>/gim, '');
 
     return aStr;
   }
@@ -831,7 +1119,7 @@ wzQuicktextVar.prototype = {
 }
 
 var wzQuicktextVarModule = {
-  mClassID:     Components.ID("{5ec6a467-1500-4290-a3c5-24130e77aed4}"),
+  mClassID:     Components.ID("{baf42192-e051-4319-956d-1e1f2a81077e}"),
   mClassName:   "Quicktext Variables",
   mContractID:  "@hesslow.se/quicktext/variables;1"
 ,

@@ -18,10 +18,12 @@ var quicktext =
   mStringBundle:        null,
   mChangesMade:         false,
   mTextChangesMade:     [],
+  mScriptChangesMade:   [],
   mGeneralChangesMade:  [],
   mLoaded:              false,
   mTreeArray:           [],
   mCollapseState:       [],
+  mScriptIndex:         null,
   mPickedIndex:         null,
   mOS:                  "WINNT"
 ,
@@ -84,6 +86,7 @@ var quicktext =
   close: function(aClose)
   {
     this.saveText();
+    this.saveScript();
 
     if (this.mChangesMade)
     {
@@ -124,6 +127,7 @@ var quicktext =
   save: function()
   {
     this.saveText();
+    this.saveScript();
 
     if (document.getElementById("checkbox-viewPopup"))
       gQuicktext.viewPopup = document.getElementById("checkbox-viewPopup").checked;
@@ -142,6 +146,7 @@ var quicktext =
 
     this.mChangesMade = false;
     this.mTextChangesMade = [];
+    this.mScriptChangesMade = [];
     this.mGeneralChangesMade = [];
     this.disableSave();
   }
@@ -175,6 +180,7 @@ var quicktext =
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'type', document.getElementById('text-type').value);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'keyword', document.getElementById('text-keyword').value.replace(/[\s]/g, ''));
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'subject', document.getElementById('text-subject').value);
+        this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'attachments', document.getElementById('text-attachments').value);
       }
       else
       {
@@ -213,6 +219,33 @@ var quicktext =
     return false;
   }
 ,
+  saveScript: function()
+  {
+    if (this.mScriptIndex != null)
+    {
+      var title = document.getElementById('script-title').value;
+      if (title.replace(/[\s]/g, '') == "")
+        title = this.mStringBundle.getString("newScript");
+
+      this.saveScriptCell(this.mScriptIndex, 'name', title);
+      this.saveScriptCell(this.mScriptIndex, 'script', document.getElementById('script').value);
+    }
+  }
+,
+  saveScriptCell: function (aIndex, aColumn, aValue)
+  {
+    var script = gQuicktext.getScript(aIndex, true);
+    if (typeof script[aColumn] != "undefined" && script[aColumn] != aValue)
+    {
+      script[aColumn] = aValue;
+      
+
+      this.changesMade();
+      return true;
+    }
+    return false;
+  }
+,
   noSpaceForKeyword: function(e)
   {
     if (e.charCode == KeyEvent.DOM_VK_SPACE)
@@ -244,8 +277,8 @@ var quicktext =
     if (!this.mPickedIndex)
       return;
 
-    var ids = ['text-title', 'text', 'text-shortcutBasic', 'text-type', 'text-keyword', 'text-subject'];
-    var keys = ['name', 'text', 'shortcut', 'type', 'keyword', 'subject'];
+    var ids = ['text-title', 'text', 'text-shortcutBasic', 'text-type', 'text-keyword', 'text-subject', 'text-attachments'];
+    var keys = ['name', 'text', 'shortcut', 'type', 'keyword', 'subject', 'attachments'];
 
     if (this.shortcutTypeAdv())
       ids[2] = 'text-shortcutAdv';
@@ -303,6 +336,36 @@ var quicktext =
     }
   }
 ,
+  checkForScriptChanges: function(aIndex)
+  {
+    if (this.mScriptIndex == null)
+      return;
+
+    var ids = ['script-title', 'script'];
+    var keys = ['name', 'script'];
+
+    var value = document.getElementById(ids[aIndex]).value;
+    switch (aIndex)
+    {
+      case 0:
+        if (value.replace(/[\s]/g, '') == "")
+          value = this.mStringBundle.getString("newScript");
+        break;
+    }
+
+    if (gQuicktext.getScript(this.mScriptIndex, true)[keys[aIndex]] != value)
+      this.scriptChangeMade(aIndex);
+    else
+      this.noScriptChangeMade(aIndex);
+
+    if (aIndex == 0)
+    {
+      this.updateVariableGUI();
+      var listItem = document.getElementById('script-list').getItemAtIndex(this.mScriptIndex);
+      listItem.label = value;
+    }
+  }
+,
   changesMade: function()
   {
     this.mChangesMade = true;
@@ -311,7 +374,7 @@ var quicktext =
 ,
   anyChangesMade: function()
   {
-    if (this.textChangesMade() || this.generalChangesMade())
+    if (this.textChangesMade() || this.scriptChangesMade() || this.generalChangesMade())
       return true;
 
     return false;
@@ -369,6 +432,33 @@ var quicktext =
       this.disableSave();
   }
 ,
+  scriptChangesMade: function()
+  {
+    for (var i = 0; i < this.mScriptChangesMade.length; i++)
+    {
+      if (typeof this.mScriptChangesMade[i] != "undefined" && this.mScriptChangesMade[i] == true)
+        return true;
+    }
+
+    return false;
+  }
+,
+  scriptChangeMade: function(aIndex)
+  {
+    this.enableSave();
+
+    this.mScriptChangesMade[aIndex] = true;
+  }
+,
+  noScriptChangeMade: function(aIndex)
+  {
+    this.mScriptChangesMade[aIndex] = false;
+
+    if (!this.mChangesMade && !this.anyChangesMade())
+      this.disableSave();
+  }
+,
+
   /*
    * GUI CHANGES
    */
@@ -409,6 +499,9 @@ var quicktext =
 
     // Update the variable menu 
     this.updateVariableGUI();
+
+    // Update Script list
+    this.updateScriptGUI();
 
     // Update the tree
     this.buildTreeGUI();
@@ -451,6 +544,29 @@ var quicktext =
             textElem = groupParent.appendChild(textElem);
           }
         }
+      }
+    }
+    else
+      topParent.setAttribute('hidden', true);
+
+    var topParent = document.getElementById('variables-scripts');
+    for (var i = topParent.childNodes.length-1; i >= 0 ; i--)
+      topParent.removeChild(topParent.childNodes[i]);
+
+    var scriptLength = gQuicktext.getScriptLength(true);
+    if (scriptLength > 0)
+    {
+      topParent.removeAttribute('hidden');
+      parent = document.createElement("menupopup");
+      parent = topParent.appendChild(parent);
+
+      for (var i = 0; i < scriptLength; i++)
+      {
+        var script = gQuicktext.getScript(i, true);
+        var textElem = document.createElement("menuitem");
+        textElem.setAttribute('label', script.name);
+        textElem.setAttribute('oncommand', "quicktext.insertVariable('SCRIPT="+ script.name +"');");
+        textElem = parent.appendChild(textElem);
       }
     }
     else
@@ -533,6 +649,7 @@ var quicktext =
     if ((file = gQuicktext.pickFile(window, 2, 0, this.mStringBundle.getString("importFile"))) != null)
     {
       this.saveText();
+      this.saveScript();
 
       var length = this.mTreeArray.length;
       gQuicktext.importFromFile(file, 0, false, true);
@@ -542,6 +659,69 @@ var quicktext =
       document.getElementById('group-tree').treeBoxObject.rowCountChanged(length-1, this.mTreeArray.length-length);
       this.updateButtonStates();
     }
+  }
+,
+  exportScriptsToFile: function()
+  {
+    if ((file = gQuicktext.pickFile(window, 2, 1, this.mStringBundle.getString("exportFile"))) != null)
+      gQuicktext.exportScriptsToFile(file);
+  }
+,
+  importScriptsFromFile: function()
+  {
+    if ((file = gQuicktext.pickFile(window, 2, 0, this.mStringBundle.getString("importFile"))) != null)
+    {
+      this.saveText();
+      this.saveScript();
+
+      gQuicktext.importFromFile(file, 0, false, true);
+
+      this.changesMade();
+      this.updateScriptGUI();
+      this.updateButtonStates();
+    }
+  }
+,
+  browseAttachment: function()
+  {
+    if ((file = gQuicktext.pickFile(window, -1, 0, this.mStringBundle.getString("attachmentFile"))) != null)
+    {
+      var filePath = file.path;
+      var attachments = document.getElementById('text-attachments').value;
+      if (attachments != "")
+        document.getElementById('text-attachments').value = attachments +";"+ filePath;
+      else
+        document.getElementById('text-attachments').value = filePath;
+      this.checkForTextChanges(6);
+    }
+  }
+,
+  pickScript: function()
+  {
+    var index = document.getElementById('script-list').value;
+    if (index == null)
+    {
+      document.getElementById('script-title').value = "";
+      document.getElementById('script').value = "";
+      this.mScriptIndex = null;
+      return;
+    }
+
+    if (this.mScriptIndex != index)
+    {
+      if (this.scriptChangesMade())
+      {
+        this.changesMade();
+        this.mScriptChangesMade = [];
+      }
+      this.saveScript();
+    }
+
+    this.mScriptIndex = index;
+
+    var script = gQuicktext.getScript(index, true);
+    document.getElementById('script-title').value = script.name;
+    document.getElementById('script').value = script.script;
   }
 ,
   pickText: function()
@@ -578,6 +758,7 @@ var quicktext =
       document.getElementById('text').value = text.text;
       document.getElementById('text-keyword').value = text.keyword;
       document.getElementById('text-subject').value = text.subject;
+      document.getElementById('text-attachments').value = text.attachments;
 
       document.getElementById('label-shortcutModifier').value = this.mStringBundle.getString(document.getElementById('select-shortcutModifier').value +"Key") +"+";
 
@@ -618,6 +799,7 @@ var quicktext =
       document.getElementById("text").value = "";
       document.getElementById("text-keyword").value = "";
       document.getElementById("text-subject").value = "";
+      document.getElementById("text-attachments").value = "";
     }
 
     var disabled = false;
@@ -806,6 +988,106 @@ var quicktext =
           this.selectTreeRow(selectedIndex);
       }
     }
+  }
+,
+  addScript: function()
+  {
+    this.saveScript();
+
+    var title = this.mStringBundle.getString("newScript");
+    gQuicktext.addScript(title, true);
+
+    this.updateScriptGUI();
+    this.updateButtonStates();
+
+    var listElem = document.getElementById('script-list');
+    selectedIndex = listElem.getRowCount()-1;
+    listElem.selectedIndex = selectedIndex;
+
+    this.changesMade();
+
+    var titleElem = document.getElementById('script-title');
+    titleElem.focus();
+    titleElem.setSelectionRange(0, title.length);
+  }
+,
+  removeScript: function()
+  {
+    this.saveScript();
+
+    var scriptIndex = document.getElementById('script-list').value;
+    if (scriptIndex != null)
+    {
+      var title = gQuicktext.getScript(scriptIndex, true).name;
+      if (confirm (this.mStringBundle.getFormattedString("remove", [title])))
+      {
+        gQuicktext.removeScript(scriptIndex, true);
+        this.changesMade();
+
+        if (gQuicktext.getScriptLength(true) > 0)
+        {
+          var selectedIndex = document.getElementById('script-list').selectedIndex -1;
+          if (selectedIndex < 0)
+            selectedIndex = 0;
+          this.mScriptIndex = selectedIndex;
+        }
+        else
+        {
+          this.mScriptIndex = null;
+          selectedIndex = -1;
+        }
+
+        document.getElementById('script-list').selectedIndex = selectedIndex;
+
+        this.updateScriptGUI();
+        this.updateVariableGUI();
+        this.updateButtonStates();
+      }
+    }
+  }
+,
+
+  updateScriptGUI: function()
+  {
+    // Update the listmenu in the scripttab and the variable-menu
+    var scriptLength = gQuicktext.getScriptLength(true);
+
+    listElem = document.getElementById('script-list');
+    var selectedIndex = listElem.selectedIndex;
+    var oldLength = listElem.getRowCount();
+
+    if (scriptLength > 0)
+    {
+      for (var i = 0; i < scriptLength; i++)
+      {
+        var script = gQuicktext.getScript(i, true);
+        if (i < oldLength)
+        {
+          var listItem = listElem.getItemAtIndex(i);
+          listItem.label = script.name;
+          listItem.value = i;
+        }
+        else
+        {
+          listElem.appendItem(script.name, i);
+        }
+      }
+    }
+
+    if (oldLength > scriptLength)
+    {
+      for (var i = scriptLength; i < oldLength; i++)
+        listElem.removeItemAt(scriptLength);
+    }
+
+    if (selectedIndex >= 0)
+      listElem.selectedIndex = selectedIndex;
+    else if (scriptLength > 0)
+      listElem.selectedIndex = 0;
+    else
+      listElem.selectedIndex = -1;
+
+    this.pickScript();
   }
 ,
   /*
@@ -1085,6 +1367,11 @@ var quicktext =
       document.getElementById('group-button-add-text').setAttribute("disabled", true);
       document.getElementById('group-button-remove').setAttribute("disabled", true);
     }
+
+    if (gQuicktext.getScriptLength(true))
+      document.getElementById('script-button-remove').removeAttribute("disabled");
+    else
+      document.getElementById('script-button-remove').setAttribute("disabled", true);
   }
 ,
   openHomepage: function()

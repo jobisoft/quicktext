@@ -1,7 +1,7 @@
-<!ENTITY quicktext.label "Quicktext">
+<!ENTITY quicktext.label "Quicktext Pro">
 <!ENTITY quicktext.shortname.label "Quicktext">
 
-<!ENTITY quicktext.settings.title "Quicktext Inställningar">
+<!ENTITY quicktext.settings.title "Quicktext Pro Inställningar">
 <!ENTITY quicktext.settings.label "Inställningar">
 <!ENTITY quicktext.file.label "Arkiv">
 <!ENTITY quicktext.goToHomepage.label "Gå till hemsidan">
@@ -90,7 +90,7 @@
 <!ENTITY quicktext.insertTextFromFileAsHTML.label "Infoga fil som HTML">
 <!ENTITY quicktext.insertTextFromFileAsText.label "Infoga fil som text">
 
-<!ENTITY quicktext.about.title "Om Quicktext">
+<!ENTITY quicktext.about.title "Om Quicktext Pro">
 <!ENTITY quicktext.aboutInfo.label "Tack för att du installerade Quicktext Pro. Detta är den kommersiella versionen av Quicktext. Detta betyder att du måste ha en licens för att använda detta tillägget. Om du inte har en licens var vänlig att avinstallera Quicktext Pro och installera gratisversionen av Quicktext som du hittar på Quicktext hemsidan. I det fallet att du inte har någon licens skulle jag även vilja att du kontaktar mig och berättar hur du fick tag på detta tillägg.">
 <!ENTITY quicktext.aboutInfo2.label "Tack för att du installerade Quicktext. Detta är gratis versionen av Quicktext. Om du vill ha mer features så finns Quicktext Pro att köpa från hemsidan. Pro-versionen gör det enklare att dela texter mellan användare och har också fler taggar som inte är tillgängliga i denna versionen av Quicktext. Den har också skriptstöd vilket gör att du kan få den att göra nästan vad som helst.">
 <!ENTITY quicktext.homepage.label "Hemsida">

@@ -1,16 +1,25 @@
 const kDebug        = true;
 
 function wzQuicktextHeader() {
+  this.mType        = "";
+  this.mValue     = "";
 }
 
 wzQuicktextHeader.prototype = {
-  get type() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
-  set type(aType) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  get type() { return this.mType; },
+  set type(aType) { if (typeof aType != 'undefined') return this.mType = aType; }
 ,
-  get value() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
-  set value(aValue) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  get value() { return this.mValue; },
+  set value(aValue) { if (typeof aValue != 'undefined') return this.mValue = aValue; }
 ,
-  clone: function() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  clone: function()
+  {
+    var newHeader = new wzQuicktextHeader();
+    newHeader.type = this.mType;
+    newHeader.value = this.mValue;
+
+    return newHeader;
+  }
 ,
   QueryInterface: function(aIID)
   {
@@ -24,7 +33,7 @@ wzQuicktextHeader.prototype = {
 }
 
 var wzQuicktextHeaderModule = {
-  mClassID:     Components.ID("{881334e8-1913-4769-9bca-89ebe05ab7f4}"),
+  mClassID:     Components.ID("{67805190-0eaf-11db-9cd8-0800200c9a66}"),
   mClassName:   "Quicktext Header",
   mContractID:  "@hesslow.se/quicktext/header;1"
 ,

@@ -16,12 +16,12 @@
   <vbox height="60">
     <spacer flex="1" />
     <hbox>
-      <spacer flex="1" /><image src="chrome://quicktext/skin/logo.png" width="241" height="39" /><spacer flex="1" />
+      <spacer flex="1" /><image src="chrome://quicktext/skin/logo.png" width="241" height="52" /><spacer flex="1" />
     </hbox>
     <spacer flex="1" />
   </vbox>
 	<groupbox width="350">
-	  <description>&quicktext.aboutInfo2.label;</description>
+	  <description>&quicktext.aboutInfo.label;</description>
 	  <label value="&quicktext.homepage.label;:" style="font-weight: bold; margin-top: 5px;"/>
 	  <label value="http://extensions.hesslow.se/quicktext/" style="cursor: pointer; color: #0000E0" onclick="quicktext.openHomepage();"/>
 	  <label value="&quicktext.developer.label;:" style="font-weight: bold; margin-top: 5px;"/>

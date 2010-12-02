@@ -10,8 +10,10 @@ var wzQuicktext = {
   mSettingsLoaded:      false,
   mGroup:               [],
   mTexts:               [],
+  mScripts:             [],
   mEditingGroup:        [],
   mEditingTexts:        [],
+  mEditingScripts:      [],
   mPrefService:         null,
   mPrefBranch:          null,
   mViewToolbar:         true,
@@ -204,6 +206,7 @@ var wzQuicktext = {
                     this.mTexts[i][j].type        = tmpText[j][3];
                     this.mTexts[i][j].keyword     = tmpText[j][4];
                     this.mTexts[i][j].subject     = tmpText[j][5];
+                    this.mTexts[i][j].attachments = tmpText[j][6];
 
                     if (!(this.mTexts[i][j].shortcut > 0))
                       this.mTexts[i][j].shortcut = "";
@@ -219,6 +222,12 @@ var wzQuicktext = {
         // Create the template.xml file. So we use it in the future
         this.exportTemplatesToFile(quicktextFile);
       }
+
+      // If the script-file exists import it
+      var scriptFile = this.mQuicktextDir.clone();
+      scriptFile.append("scripts.xml");
+      if (scriptFile.exists())
+        this.importFromFile(scriptFile, 0, true, false);
     }
 
     // Get prefs
@@ -264,11 +273,24 @@ var wzQuicktext = {
       this.mDefaultImport = this.getLocalizedUnicharPref("defaultImport");
       if (this.mDefaultImport != null)
       {
-        try {
-          var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
-          fp.initWithPath(this.parseFilePath(this.mDefaultImport));
-          this.importFromFile(fp, 1, true, false);
-        } catch (e) {}
+        var defaultImport = this.mDefaultImport.split(";");
+        defaultImport.reverse();
+  
+        for (var i = 0; i < defaultImport.length; i++)
+        {
+          try {
+            if (defaultImport[i].match(/^(http|https):\/\//))
+            {
+              this.importFromHTTPFile(defaultImport[i], 1, true, false); 
+            }
+            else
+            {
+              var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+              fp.initWithPath(this.parseFilePath(defaultImport[i]));
+              this.importFromFile(fp, 1, true, false);
+            }
+          } catch (e) {}
+        }
       }
     }
 
@@ -288,6 +310,11 @@ var wzQuicktext = {
     var quicktextFile = this.mQuicktextDir.clone();
     quicktextFile.append("templates.xml");
     this.exportTemplatesToFile(quicktextFile);
+
+    // Create the scripts.xml file
+    var quicktextFile = this.mQuicktextDir.clone();
+    quicktextFile.append("scripts.xml");
+    this.exportScriptsToFile(quicktextFile);
 
     this.startEditing();
 
@@ -471,22 +498,44 @@ var wzQuicktext = {
 ,
   addScript: function(aName, aEditingMode)
   {
-    throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    var tmp = Components.classes["@hesslow.se/quicktext/script;1"].createInstance(Components.interfaces.wzIQuicktextScript);
+    tmp.name = aName;
+    tmp.type = 0;
+
+    if (aEditingMode)
+      this.mEditingScripts.push(tmp);
+    else
+      this.mScripts.push(tmp);
   }
 ,
   removeScript: function(aIndex, aEditingMode)
   {
-    throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    if (aEditingMode)
+      this.mEditingScripts.splice(aIndex, 1);
+    else
+      this.mScripts.splice(aIndex, 1);
   }
 ,
   getScript: function(aIndex, aEditingMode)
   {
-    throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    if (aEditingMode)
+    {
+      if (typeof this.mEditingScripts[aIndex] != 'undefined')
+        return this.mEditingScripts[aIndex];
+    }
+    else
+    {
+      if (typeof this.mScripts[aIndex] != 'undefined')
+        return this.mScripts[aIndex];
+    }
   }
 ,
   getScriptLength: function(aEditingMode)
   {
-    throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    if (aEditingMode)
+      return this.mEditingScripts.length;
+    else
+      return this.mScripts.length;
   }
 ,
 
@@ -503,6 +552,12 @@ var wzQuicktext = {
         for (var j = 0; j < this.mTexts[i].length; j++)
           this.mEditingTexts[i][j] = this.mTexts[i][j].clone();
     }
+
+    this.mEditingScripts = [];
+    for (var i = 0; i < this.mScripts.length; i++)
+    {
+      this.mEditingScripts[i] = this.mScripts[i].clone();
+    }
   }
 ,
 
@@ -518,6 +573,12 @@ var wzQuicktext = {
       if (this.mEditingTexts[i])
         for (var j = 0; j < this.mEditingTexts[i].length; j++)
           this.mTexts[i][j] = this.mEditingTexts[i][j].clone();
+    }
+
+    this.mScripts = [];
+    for (var i = 0; i < this.mEditingScripts.length; i++)
+    {
+      this.mScripts[i] = this.mEditingScripts[i].clone();
     }
   }
 ,
@@ -554,10 +615,12 @@ var wzQuicktext = {
     file.initWithFile(aFile);
     if(file.exists())
     {
-      var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"].createInstance(Components.interfaces.nsIFileInputStream);
+      var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
+                              .createInstance(Components.interfaces.nsIFileInputStream);
       fiStream.init(file, 1, 0, false);
 
-      var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"].createInstance(Components.interfaces.nsIScriptableInputStream);
+      var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
+                              .createInstance(Components.interfaces.nsIScriptableInputStream);
       siStream.init(fiStream);
       var bomheader = siStream.read(2);
 
@@ -664,7 +727,13 @@ var wzQuicktext = {
    */
   exportScriptsToFile: function(aFile)
   {
-    throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
+    var buffer = "<?xml version=\"1.0\"?>\n<quicktext version=\"2\">\n\t<filetype>scripts</filetype>\n";
+    for (var i = 0; i < this.mScripts.length; i++)
+    {
+      buffer += "\t<script>\n\t\t<name><![CDATA["+ this.removeIllegalChars(this.mScripts[i].name) +"]]></name>\n\t\t<body><![CDATA["+ this.removeIllegalChars(this.mScripts[i].script) +"]]></body>\n\t</script>\n";
+    }
+    buffer += "</quicktext>";
+    this.writeFile(aFile, buffer);
   }
 ,
   exportTemplatesToFile: function(aFile)
@@ -687,6 +756,18 @@ var wzQuicktext = {
               buffer += "\t\t\t\t<subject><![CDATA["+ this.removeIllegalChars(text.subject) +"]]></subject>\n";
             if (text.text != "")
               buffer += "\t\t\t\t<body><![CDATA["+ this.removeIllegalChars(text.text) +"]]></body>\n";
+            if (text.attachments != "")
+              buffer += "\t\t\t\t<attachments><![CDATA["+ this.removeIllegalChars(text.attachments) +"]]></attachments>\n";
+            if (headerLength = text.getHeaderLength() > 0)
+            {
+              buffer += "\t\t\t\t<headers>\n";
+              for (var k = 0; k < headerLength; k++)
+              {
+                var header = text.getHeader(k);
+                buffer += "\t\t\t\t\t<header>\n\t\t\t\t\t\t<type><![CDATA["+ header.type +"]]></type>\n\t\t\t\t\t\t<value><![CDATA["+ header.value +"]]></value>\n\t\t\t\t\t</header>\n";
+              }
+              buffer += "\t\t\t\t</headers>\n";
+            }
             buffer += "\t\t\t</text>\n";
           }
           buffer += "\t\t</texts>\n\t</menu>\n";
@@ -709,15 +790,23 @@ var wzQuicktext = {
   {
     var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
     req.open('GET', aURI, true);
-    req.aQuicktext = this;
-    req.aType = aType;
-    req.aBefore = aBefore;
+    req.mQuicktext = this;
+    req.mType = aType;
+    req.mBefore = aBefore;
+    req.mEditingMode = aEditingMode
     req.onload = function(event)
     {
       var self = event.target;
       if (self.status == 200)
-        self.aQuicktext.parseImport(self.responseText, self.aType, self.aBefore, self.aEditingMode);
-        self.aQuicktext.notifyObservers("updatesettings", "");
+      {
+        if (typeof self.mQuicktext != 'undefined')
+        {
+          self.mQuicktext.parseImport(self.responseText, self.mType, self.mBefore, self.mEditingMode);
+          self.mQuicktext.notifyObservers("updatesettings", "");
+        }
+        else
+          debug('Something strange has happen!');
+      }
     }
     req.send(null);
   }
@@ -731,6 +820,7 @@ var wzQuicktext = {
 
     var group = [];
     var texts = [];
+    var scripts = [];
 
     switch (version)
     {
@@ -738,6 +828,18 @@ var wzQuicktext = {
         var filetype = this.getTagValue(dom.documentElement, "filetype");
         switch (filetype)
         {
+          case "scripts":
+            var elems = dom.documentElement.getElementsByTagName("script");
+            for (var i = 0; i < elems.length; i++)
+            {
+              var tmp = Components.classes["@hesslow.se/quicktext/script;1"].createInstance(Components.interfaces.wzIQuicktextScript);
+              tmp.name = this.getTagValue(elems[i], "name");
+              tmp.script = this.getTagValue(elems[i], "body");
+              tmp.type = aType;
+
+              scripts.push(tmp);
+            }
+            break;
           case "":
           case "templates":
             var elems = dom.documentElement.getElementsByTagName("menu");
@@ -762,6 +864,15 @@ var wzQuicktext = {
                   tmp.type = subElems[j].getAttribute("type");
                   tmp.keyword = this.getTagValue(subElems[j], "keyword");
                   tmp.subject = this.getTagValue(subElems[j], "subject");
+                  tmp.attachments = this.getTagValue(subElems[j], "attachments");
+
+                  var headersTag = subElems[j].getElementsByTagName("headers");
+                  if (headersTag.length > 0)
+                  {
+                    var headers = headersTag[0].getElementsByTagName("header");
+                    for (var k = 0; k < headers.length; k++)
+                      tmp.addHeader(this.getTagValue(headers[k], "type"), this.getTagValue(headers[k], "value"));
+                  }
 
                   subTexts.push(tmp);
                 }
@@ -807,6 +918,29 @@ var wzQuicktext = {
       default:
         // Alert the user that there version of Quicktext can't import the file, need to upgrade
         return;
+    }
+
+    if (scripts.length > 0)
+    {
+      if (aBefore)
+      {
+        scripts.reverse();
+        if (!aEditingMode)
+          for (var i = 0; i < scripts.length; i++)
+            this.mScripts.unshift(scripts[i]);
+
+        for (var i = 0; i < scripts.length; i++)
+          this.mEditingScripts.unshift(scripts[i]);
+      }
+      else
+      {
+        if (!aEditingMode)
+          for (var i = 0; i < scripts.length; i++)
+            this.mScripts.push(scripts[i]);
+
+        for (var i = 0; i < scripts.length; i++)
+          this.mEditingScripts.push(scripts[i]);
+      }
     }
 
     if (group.length > 0 && texts.length > 0)
@@ -923,7 +1057,7 @@ var wzQuicktext = {
  * JUST NEEDED
  */
 var wzQuicktextModule = {
-  mClassID:     Components.ID("{cd2c2f5d-ffc5-46c7-a7d1-9db359718af2}"),
+  mClassID:     Components.ID("{b4b8f795-8d4d-4663-ad68-c219818739e1}"),
   mClassName:   "Quicktext",
   mContractID:  "@hesslow.se/quicktext/main;1"
 ,

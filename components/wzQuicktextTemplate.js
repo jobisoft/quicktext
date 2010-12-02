@@ -8,6 +8,7 @@ function wzQuicktextTemplate() {
   this.mKeyword     = "";
   this.mSubject     = "";
   this.mAttachments = "";
+  this.mHeaders     = [];
 }
 
 wzQuicktextTemplate.prototype = {
@@ -29,16 +30,31 @@ wzQuicktextTemplate.prototype = {
   get subject() { return this.mSubject; },
   set subject(aSubject) { if (typeof aSubject != 'undefined') return this.mSubject = aSubject; }
 ,
-  get attachments() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
-  set attachments(aAttachments) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  get attachments() { return this.mAttachments; },
+  set attachments(aAttachments) { if (typeof aAttachments != 'undefined') return this.mAttachments = aAttachments; }
 ,
-  getHeader: function (aIndex) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  getHeader: function (aIndex)
+  {
+    return this.mHeaders[aIndex];
+  }
 ,
-  addHeader: function (aType, aValue) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  addHeader: function (aType, aValue)
+  {
+    var tmp = Components.classes["@hesslow.se/quicktext/header;1"].createInstance(Components.interfaces.wzIQuicktextHeader);
+    tmp.type = aType;
+    tmp.value = aValue;
+    this.mHeaders.push(tmp);
+  }
 ,
-  removeHeader: function (aIndex) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  removeHeader: function (aIndex)
+  {
+    this.mHeaders.splice(aIndex, 0);
+  }
 ,
-  getHeaderLength: function() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
+  getHeaderLength: function()
+  {
+    return this.mHeaders.length;
+  }
 ,
   clone: function()
   {
@@ -49,6 +65,10 @@ wzQuicktextTemplate.prototype = {
     newTemplate.type = this.mType;
     newTemplate.keyword = this.mKeyword;
     newTemplate.subject = this.mSubject;
+    newTemplate.attachments = this.mAttachments;
+
+    for (var i = 0; i < this.mHeaders.length; i++)
+      newTemplate.addHeader(this.mHeaders[i].type, this.mHeaders[i].value);
 
     return newTemplate;
   }
@@ -65,7 +85,7 @@ wzQuicktextTemplate.prototype = {
 }
 
 var wzQuicktextTemplateModule = {
-  mClassID:     Components.ID("{6ff3be3e-7b38-4475-87ea-b49e7c431515}"),
+  mClassID:     Components.ID("{5f9705d0-8d1a-11da-a72b-0800200c9a66}"),
   mClassName:   "Quicktext Template",
   mContractID:  "@hesslow.se/quicktext/template;1"
 ,
