@@ -1,0 +1,97 @@
+<!ENTITY quicktext.label "Quicktext">
+<!ENTITY quicktext.shortname.label "Quicktext">
+
+<!ENTITY quicktext.settings.title "Quicktext Inställningar">
+<!ENTITY quicktext.settings.label "Inställningar">
+<!ENTITY quicktext.file.label "Arkiv">
+<!ENTITY quicktext.goToHomepage.label "Gå till hemsidan">
+<!ENTITY quicktext.help.label "Hjälp">
+<!ENTITY quicktext.close.label "Stäng">
+<!ENTITY quicktext.save.label "Spara">
+
+<!ENTITY quicktext.general.label "Allmänt">
+<!ENTITY quicktext.templates.label "Mallar">
+<!ENTITY quicktext.scripts.label "Skript">
+
+<!ENTITY quicktext.rightClickSetting.label "Visa Quicktext-menyn vid högerklick">
+<!ENTITY quicktext.collapseSetting.label "Collapse group when it only contains one template">
+<!ENTITY quicktext.modifierSetting.label "är den tangent jag vill använda för kortkommandon">
+<!ENTITY quicktext.shortcutTypeAdv.label "Använd avancerat läge för kortkommandon">
+<!ENTITY quicktext.keywordKeySetting.label "är den tangent jag vill använda för att aktivera nyckelord">
+
+<!ENTITY quicktext.altKey.label "Alt">
+<!ENTITY quicktext.controlKey.label "Ctrl">
+<!ENTITY quicktext.metaKey.label "Meta">
+<!ENTITY quicktext.tabKey.label "Tab">
+<!ENTITY quicktext.spaceKey.label "Mellanslag">
+<!ENTITY quicktext.enterKey.label "Enter">
+
+<!ENTITY quicktext.defaultImport.label "Importeras vid uppstart">
+
+<!ENTITY quicktext.sharingTemplates.label "Dela mallar">
+<!ENTITY quicktext.sharingScripts.label "Dela skript">
+<!ENTITY quicktext.export.label "Export">
+<!ENTITY quicktext.import.label "Import">
+
+<!ENTITY quicktext.title.label "Titel">
+<!ENTITY quicktext.addGroup.label "Lägg till grupp">
+<!ENTITY quicktext.addTemplate.label "Lägg till mall">
+<!ENTITY quicktext.addScript.label "Lägg till skript">
+<!ENTITY quicktext.remove.label "Ta bort">
+<!ENTITY quicktext.shortcut.label "Kortkommando">
+
+<!ENTITY quicktext.group.label "Grupp">
+<!ENTITY quicktext.template.label "Mall">
+<!ENTITY quicktext.script.label "Skript">
+
+<!ENTITY quicktext.variables.label "Variabler">
+
+<!ENTITY quicktext.to.label "Till">
+<!ENTITY quicktext.from.label "Från">
+<!ENTITY quicktext.firstname.label "Förnamn">
+<!ENTITY quicktext.lastname.label "Efternamn">
+<!ENTITY quicktext.fullname.label "Fullständiga namnet">
+<!ENTITY quicktext.displayname.label "Kortnamn">
+<!ENTITY quicktext.nickname.label "Smeknamn">
+<!ENTITY quicktext.email.label "E-post">
+<!ENTITY quicktext.worknumber.label "Jobbnummer">
+<!ENTITY quicktext.faxnumber.label "Faxnummer">
+<!ENTITY quicktext.homenumber.label "Hemnummer">
+<!ENTITY quicktext.cellularnumber.label "Mobilnummer">
+<!ENTITY quicktext.jobtitle.label "Arbetstitel">
+<!ENTITY quicktext.custom1.label "Övrigt 1">
+<!ENTITY quicktext.custom2.label "Övrigt 2">
+<!ENTITY quicktext.custom3.label "Övrigt 3">
+<!ENTITY quicktext.custom4.label "Övrigt 4">
+
+<!ENTITY quicktext.dateTime.label "Datum/Tid">
+
+<!ENTITY quicktext.other.label "Övrigt">
+<!ENTITY quicktext.clipboard.label "Urklipp">
+<!ENTITY quicktext.cursor.label "Markörposition">
+<!ENTITY quicktext.subject.label "Ämne">
+<!ENTITY quicktext.version.label "Thunderbird version">
+
+<!ENTITY quicktext.attachments.label "Bifogade filer">
+<!ENTITY quicktext.filename.label "Filnamn">
+<!ENTITY quicktext.filenameAndSize.label "Filnamn and storlek">
+
+<!ENTITY quicktext.insertAs.label "Infoga som">
+<!ENTITY quicktext.HTML.label "HTML">
+<!ENTITY quicktext.text.label "Text">
+
+<!ENTITY quicktext.none.label "Inget">
+
+<!ENTITY quicktext.keyword.label "Nyckelord">
+<!ENTITY quicktext.browse.label "Bläddra">
+
+<!ENTITY quicktext.ownVariables.label "Dina egna variabler">
+
+<!ENTITY quicktext.insertTextFromFileAsHTML.label "Infoga fil som HTML">
+<!ENTITY quicktext.insertTextFromFileAsText.label "Infoga fil som text">
+
+<!ENTITY quicktext.about.title "Om Quicktext">
+<!ENTITY quicktext.aboutInfo.label "Tack för att du installerade Quicktext Pro. Detta är den kommersiella versionen av Quicktext. Detta betyder att du måste ha en licens för att använda detta tillägget. Om du inte har en licens var vänlig att avinstallera Quicktext Pro och installera gratisversionen av Quicktext som du hittar på Quicktext hemsidan. I det fallet att du inte har någon licens skulle jag även vilja att du kontaktar mig och berättar hur du fick tag på detta tillägg.">
+<!ENTITY quicktext.aboutInfo2.label "Tack för att du installerade Quicktext. Detta är gratis versionen av Quicktext. Om du vill ha mer features så finns Quicktext Pro att köpa från hemsidan. Pro-versionen gör det enklare att dela texter mellan användare och har också fler taggar som inte är tillgängliga i denna versionen av Quicktext. Den har också skriptstöd vilket gör att du kan få den att göra nästan vad som helst.">
+<!ENTITY quicktext.homepage.label "Hemsida">
+<!ENTITY quicktext.developer.label "Utvecklare">

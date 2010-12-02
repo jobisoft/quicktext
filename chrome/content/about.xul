@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+
+<!DOCTYPE dialog SYSTEM "chrome://quicktext/locale/quicktext.dtd">
+
+<dialog
+	xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+	title="&quicktext.about.title;"
+	id="quicktextAboutWindow"
+	buttonlabelaccept="&quicktext.close.label;"
+	buttons="accept">
+	
+	<script type="application/x-javascript" src="chrome://quicktext/content/about.js" />
+
+  <vbox height="60">
+    <spacer flex="1" />
+    <hbox>
+      <spacer flex="1" /><image src="chrome://quicktext/skin/logo.png" width="241" height="39" /><spacer flex="1" />
+    </hbox>
+    <spacer flex="1" />
+  </vbox>
+	<groupbox width="350">
+	  <description>&quicktext.aboutInfo2.label;</description>
+	  <label value="&quicktext.homepage.label;:" style="font-weight: bold; margin-top: 5px;"/>
+	  <label value="http://extensions.hesslow.se/quicktext/" style="cursor: pointer; color: #0000E0" onclick="quicktext.openHomepage();"/>
+	  <label value="&quicktext.developer.label;:" style="font-weight: bold; margin-top: 5px;"/>
+	  <label value="Emil Hesslow"/>
+	</groupbox>
+
+</dialog>

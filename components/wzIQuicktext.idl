@@ -1,0 +1,111 @@
+#include "nsISupports.idl"
+#include "nsIFile.idl"
+#include "nsIDOMWindow.idl"
+#include "nsIObserver.idl"
+#include "nsIEditor.idl"
+
+[scriptable, uuid(a3c2ad4e-2e2c-4c72-b1e0-0ac74b479ad2)]
+interface wzIQuicktextHeader : nsISupports
+{
+  attribute AString     type;
+  attribute AString     value;
+
+  wzIQuicktextHeader    clone();
+};
+
+[scriptable, uuid(582d7ed1-50d0-439f-9457-6d3e6b7af827)]
+interface wzIQuicktextTemplate : nsISupports
+{
+  attribute AString     name;
+  attribute AString     text;
+  attribute AString     shortcut;
+  attribute AString     type;
+  attribute AString     keyword;
+  attribute AString     subject;
+  attribute AString     attachments;
+
+  wzIQuicktextHeader    getHeader(in PRInt32 aIndex);
+  void                  addHeader(in AString aType, in AString aValue);
+  void                  removeHeader(in PRInt32 aIndex);
+  PRInt32               getHeaderLength();
+
+  wzIQuicktextTemplate  clone();
+};
+
+[scriptable, uuid(b42b3fb0-8df8-11da-a72b-0800200c9a66)]
+interface wzIQuicktextGroup : nsISupports
+{
+  attribute AString     name;
+  attribute AString     type;
+
+  wzIQuicktextGroup     clone();
+};
+
+[scriptable, uuid(67419c2b-5a07-4943-84fa-b9245d2cb680)]
+interface wzIQuicktextVar : nsISupports
+{
+  void                  init(in nsIDOMWindow aWindow);
+  AString               parse(in AString aStr);
+  AString               removeBadHTML(in AString aStr);
+};
+
+[scriptable, uuid(aaae2e95-9649-452d-8635-6b1c593615ac)]
+interface wzIQuicktextScript : nsISupports
+{
+  attribute AString     name;
+  attribute PRInt32     type;
+  attribute AString     script;
+
+  wzIQuicktextScript    clone();
+};
+
+[scriptable, uuid(a5996c8c-15ee-4cd8-b386-84d9fcaa5061)]
+interface wzIQuicktext : nsISupports
+{
+  attribute boolean     viewToolbar;
+  attribute boolean     viewPopup;
+  attribute boolean     collapseGroup;
+  attribute boolean     firstTime;
+  attribute PRUint32    keywordKey;
+  attribute AString     defaultImport;
+  attribute AString     shortcutModifier;
+  attribute boolean     shortcutTypeAdv;
+  attribute AString     collapseState;
+
+  boolean               loadSettings(in boolean aReload);
+  void                  saveSettings();
+
+  void                  addObserver(in nsIObserver aObserver);
+  void                  removeObserver(in nsIObserver aObserver);
+
+  void                  startEditing();
+  void                  resetEditing();
+
+  wzIQuicktextGroup     getGroup(in PRInt32 aGroupIndex, in boolean aEditingMode);
+  void                  addGroup(in AString aName, in boolean aEditingMode);
+  void                  removeGroup(in PRInt32 aRow, in boolean aEditingMode);
+  PRInt32               getGroupLength(in boolean aEditingMode);
+  void                  moveGroup(in PRInt32 aFromIndex, in PRInt32 aToIndex, in boolean aEditingMode);
+
+  wzIQuicktextTemplate  getText(in PRInt32 aGroupIndex, in PRInt32 aRow, in boolean aEditingMode);
+  void                  addText(in PRInt32 aGroupIndex, in AString aName, in boolean aEditingMode);
+  void                  removeText(in PRInt32 aGroupIndex, in PRInt32 aRow, in boolean aEditingMode);
+  PRInt32               getTextLength(in PRInt32 aGroupIndex, in boolean aEditingMode);
+  boolean               doTextExists(in PRInt32 aGroupIndex, in PRInt32 aTextIndex, in boolean aEditingMode);
+  void                  moveText(in PRInt32 aFromGroupIndex, in PRInt32 aFromTextIndex, in PRInt32 aToGroupIndex, in PRInt32 aToTextIndex, in boolean aEditingMode);
+
+  wzIQuicktextScript    getScript(in PRInt32 aScriptIndex, in boolean aEditingMode);
+  void                  addScript(in AString aName, in boolean aEditingMode);
+  void                  removeScript(in PRInt32 aScriptIndex, in boolean aEditingMode);
+  PRInt32               getScriptLength(in boolean aEditingMode);
+
+  nsIFile               pickFile(in nsIDOMWindow aWindow, in PRInt32 aType, in PRInt32 aMode, in AString aTitle);
+  boolean               exportTemplatesToFile(in nsIFile aFile);
+  boolean               exportScriptsToFile(in nsIFile aFile);
+  boolean               importFromFile(in nsIFile aFile, in PRInt32 aType, in boolean aBefore, in boolean aEditingMode);
+  AString               readFile(in nsIFile aFile);
+  void                  writeFile(in nsIFile aFile, in AString aData);
+  AString               parseFilePath(in AString aPath);
+
+  void                  openHomepage();
+};
