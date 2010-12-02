@@ -623,7 +623,7 @@ var quicktext = {
       var groupLength = gQuicktext.getGroupLength(false);
 
       var found = false;
-      if (typeof this.mKeywords[lastword.toLowerCase()] != "undefined")
+      if (this.mKeywords.hasOwnProperty(lastword.toLowerCase()))
       {
         editor.selection.removeAllRanges();
         editor.selection.addRange(lastwordRange);
