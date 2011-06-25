@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 const kDebug          = true;
 const persistentTags  = ['VERSION'];
 const allowedTags     = ['ATT', 'CLIPBOARD', 'DATE', 'FILE', 'FROM', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'VERSION'];
@@ -119,6 +121,11 @@ function wzQuicktextVar()
 }
 
 wzQuicktextVar.prototype = {
+  classID:          Components.ID("{5ec6a467-1500-4290-a3c5-24130e77aed4}"),
+  classDescription: "Quicktext Variables",
+  contractID:       "@hesslow.se/quicktext/variables;1",
+  QueryInterface:   XPCOMUtils.generateQI([Components.interfaces.wzIQuicktextVar, Components.interfaces.nsISupports])
+,
   init: function(aWindow)
   {
     // Save the window we are in
@@ -204,7 +211,7 @@ wzQuicktextVar.prototype = {
     // This is because we want to handle recursive use of tags.
     var rexp = new RegExp("\\[\\[(("+ allowedTags.join("|") +")(\\_[a-z]+)?)", "ig");
     var results = [];
-    while (result = rexp.exec(aStr))
+    while ((result = rexp.exec(aStr)))
       results.push(result);
 
     // If we don't found any tags we return
@@ -542,7 +549,7 @@ wzQuicktextVar.prototype = {
     this.mData['FROM'].data = {
       'email': this.mWindow.getCurrentIdentity().email,
       'firstname': '',
-      'lastname': '',
+      'lastname': ''
     };
 
     for (var databaseIndex = 0; databaseIndex < this.mDatabases.length; databaseIndex++)
@@ -830,68 +837,14 @@ wzQuicktextVar.prototype = {
   }
 }
 
-var wzQuicktextVarModule = {
-  mClassID:     Components.ID("{5ec6a467-1500-4290-a3c5-24130e77aed4}"),
-  mClassName:   "Quicktext Variables",
-  mContractID:  "@hesslow.se/quicktext/variables;1"
-,
-  firstTime:    true
-,
-  getClassObject: function(aCompMgr, aCID, aIID)
-  {
-    if (!aCID.equals(this.mClassID))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    if (!aIID.equals(Components.interfaces.nsIFactory))
-      throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-
-    return this.mFactory;
-  }
-,
-  registerSelf: function(aCompMgr, aFileSpec, aLocation, aType)
-  {
-    if (this.firstTime)
-    {
-      this.firstTime = false;
-      throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    }
-
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    aCompMgr.registerFactoryLocation(this.mClassID, this.mClassName, this.mContractID, aFileSpec, aLocation, aType);
-  }
-,
-  unregisterSelf: function(aCompMgr, aFileSpec, aLocation)
-  {
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    aCompMgr.unregisterFactoryLocation(this.mClassID, aFileSpec);
-  }
-,
-  canUnload: function(aCompMgr)
-  {
-    return true;
-  }
-,
-  /* factory object */
-  mFactory:
-  {
-    createInstance: function(aOuter, aIID)
-    {
-      if (aOuter != null)
-        throw Components.results.NS_ERROR_NO_AGGREGATION;
-
-      return new wzQuicktextVar();
-    },
-
-    lockFactory: function(aLock)
-    {
-      // quiten warnings
-    }
-  }
-};
-
-function NSGetModule(aCompMgr, aFileSpec)
-{
-  return wzQuicktextVarModule;
-}
+/**
+ * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
+ * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
+ */
+if (XPCOMUtils.generateNSGetFactory)
+  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktextVar]);
+else
+  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextVar]);
 
 if (!kDebug)
   debug = function(m) {};

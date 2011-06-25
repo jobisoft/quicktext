@@ -1,3 +1,5 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 const kDebug        = true;
 const kSepChar1a    = String.fromCharCode(65533, 65533);
 const kSepChar1b    = String.fromCharCode(164, 164);
@@ -6,7 +8,13 @@ const kIllegalChars = String.fromCharCode(1) +"-"+ String.fromCharCode(8) + Stri
 const kFileShortcuts = ['ProfD', 'UsrDocs', 'Home', 'Desk', 'Pers'];
 const kHomepage     = "http://extensions.hesslow.se/quicktext/";
 
-var wzQuicktext = {
+function wzQuicktext() {}
+wzQuicktext.prototype = {
+  classID:              Components.ID("{cd2c2f5d-ffc5-46c7-a7d1-9db359718af2}"),
+  classDescription:     "Quicktext",
+  contractID:           "@hesslow.se/quicktext/main;1",
+  QueryInterface:       XPCOMUtils.generateQI([Components.interfaces.wzIQuicktext, Components.interfaces.nsISupports])
+,
   mSettingsLoaded:      false,
   mGroup:               [],
   mTexts:               [],
@@ -904,96 +912,16 @@ var wzQuicktext = {
     for (var i = 0; i < this.mObserverList.length; i++)
       this.mObserverList[i].observe(this, aTopic, aData);
   }
-,
-  /*
-   * OTHER STUFF
-   */
-  QueryInterface: function(aIID)
-  {
-    if (aIID.equals(Components.interfaces.wzIQuicktext) ||
-        aIID.equals(Components.interfaces.nsISupports))
-      return this;
-
-    Components.returnCode = Components.results.NS_ERROR_NO_INTERFACE;
-    return null;
-  }
 }
 
-/*
- * JUST NEEDED
+/**
+ * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
+ * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
  */
-var wzQuicktextModule = {
-  mClassID:     Components.ID("{cd2c2f5d-ffc5-46c7-a7d1-9db359718af2}"),
-  mClassName:   "Quicktext",
-  mContractID:  "@hesslow.se/quicktext/main;1"
-,
-  firstTime:    true
-,
-  getClassObject: function(aCompMgr, aCID, aIID)
-  {
-    if (!aCID.equals(this.mClassID))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    if (!aIID.equals(Components.interfaces.nsIFactory))
-      throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-
-    return this.mFactory;
-  }
-,
-  registerSelf: function(aCompMgr, aFileSpec, aLocation, aType)
-  {
-    if (this.firstTime)
-    {
-      this.firstTime = false;
-      throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    }
-
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    aCompMgr.registerFactoryLocation(this.mClassID, this.mClassName, this.mContractID, aFileSpec, aLocation, aType);
-
-    // this.getCategoryManager().addCategoryEntry("app-startup",this.mClassName, "service," + this.mContractID, true, true);
-  }
-,
-  unregisterSelf: function(aCompMgr, aFileSpec, aLocation)
-  {
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    aCompMgr.unregisterFactoryLocation(this.mClassID, aFileSpec);
-
-    // this.getCategoryManager().deleteCategoryEntry("app-startup",this.mClassName, true);
-  }
-,
-  getCategoryManager: function()
-  {
-    return Components.classes["@mozilla.org/categorymanager;1"].
-      getService(Components.interfaces.nsICategoryManager);
-  }
-,
-  canUnload: function(aCompMgr)
-  {
-    return true;
-  }
-,
-  /* factory object */
-  mFactory:
-  {
-    createInstance: function(aOuter, aIID)
-    {
-      if (aOuter != null)
-        throw Components.results.NS_ERROR_NO_AGGREGATION;
-
-      return wzQuicktext.QueryInterface(aIID);
-    },
-
-    lockFactory: function(aLock)
-    {
-      // quiten warnings
-    }
-  }
-};
-
-function NSGetModule(aCompMgr, aFileSpec)
-{
-  return wzQuicktextModule;
-}
+if (XPCOMUtils.generateNSGetFactory)
+  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktext]);
+else
+  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktext]);
 
 if (!kDebug)
   debug = function(m) {};

@@ -1,9 +1,16 @@
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+
 const kDebug        = true;
 
 function wzQuicktextHeader() {
 }
 
 wzQuicktextHeader.prototype = {
+  classID:          Components.ID("{881334e8-1913-4769-9bca-89ebe05ab7f4}"),
+  classDescription: "Quicktext Header",
+  contractID:       "@hesslow.se/quicktext/header;1",
+  QueryInterface:   XPCOMUtils.generateQI([Components.interfaces.wzIQuicktextHeader, Components.interfaces.nsISupports])
+,
   get type() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; },
   set type(aType) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
 ,
@@ -11,80 +18,16 @@ wzQuicktextHeader.prototype = {
   set value(aValue) { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
 ,
   clone: function() { throw Components.results.NS_ERROR_NOT_IMPLEMENTED; }
-,
-  QueryInterface: function(aIID)
-  {
-    if (aIID.equals(Components.interfaces.wzIQuicktextHeader) ||
-        aIID.equals(Components.interfaces.nsISupports))
-      return this;
-
-    Components.returnCode = Components.results.NS_ERROR_NO_INTERFACE;
-    return null;
-  }
 }
 
-var wzQuicktextHeaderModule = {
-  mClassID:     Components.ID("{881334e8-1913-4769-9bca-89ebe05ab7f4}"),
-  mClassName:   "Quicktext Header",
-  mContractID:  "@hesslow.se/quicktext/header;1"
-,
-  firstTime:    true
-,
-  getClassObject: function(aCompMgr, aCID, aIID)
-  {
-    if (!aCID.equals(this.mClassID))
-      throw Components.results.NS_ERROR_NO_INTERFACE;
-    if (!aIID.equals(Components.interfaces.nsIFactory))
-      throw Components.results.NS_ERROR_NOT_IMPLEMENTED;
-
-    return this.mFactory;
-  }
-,
-  registerSelf: function(aCompMgr, aFileSpec, aLocation, aType)
-  {
-    if (this.firstTime)
-    {
-      this.firstTime = false;
-      throw Components.results.NS_ERROR_FACTORY_REGISTER_AGAIN;
-    }
-
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    aCompMgr.registerFactoryLocation(this.mClassID, this.mClassName, this.mContractID, aFileSpec, aLocation, aType);
-  }
-,
-  unregisterSelf: function(aCompMgr, aFileSpec, aLocation)
-  {
-    aCompMgr = aCompMgr.QueryInterface(Components.interfaces.nsIComponentRegistrar);
-    aCompMgr.unregisterFactoryLocation(this.mClassID, aFileSpec);
-  }
-,
-  canUnload: function(aCompMgr)
-  {
-    return true;
-  }
-,
-  /* factory object */
-  mFactory:
-  {
-    createInstance: function(aOuter, aIID)
-    {
-      if (aOuter != null)
-        throw Components.results.NS_ERROR_NO_AGGREGATION;
-
-      return new wzQuicktextHeader();
-    },
-
-    lockFactory: function(aLock)
-    {
-      // quiten warnings
-    }
-  }
-};
-
-function NSGetModule(aCompMgr, aFileSpec)
-{
-  return wzQuicktextHeaderModule;
-}
+/**
+ * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
+ * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
+ */
+if (XPCOMUtils.generateNSGetFactory)
+  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktextHeader]);
+else
+  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextHeader]);
 
 if (!kDebug)
   debug = function(m) {};
