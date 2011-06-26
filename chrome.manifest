@@ -15,20 +15,20 @@ locale	quicktext	sv-SE	chrome/locale/sv-SE/
 
 interfaces components/wzIQuicktext.xpt
 
-component {cd2c2f5d-ffc5-46c7-a7d1-9db359718af2} components/wzQuicktext.js
-contract @hesslow.se/quicktext/main;1 {cd2c2f5d-ffc5-46c7-a7d1-9db359718af2}
+component {b4b8f795-8d4d-4663-ad68-c219818739e1} components/wzQuicktext.js
+contract @hesslow.se/quicktext/main;1 {b4b8f795-8d4d-4663-ad68-c219818739e1}
 
 component {e85ebe60-8df8-11da-a72b-0800200c9a66} components/wzQuicktextGroup.js
 contract @hesslow.se/quicktext/group;1 {e85ebe60-8df8-11da-a72b-0800200c9a66}
 
-component {881334e8-1913-4769-9bca-89ebe05ab7f4} components/wzQuicktextHeader.js
-contract @hesslow.se/quicktext/header;1 {881334e8-1913-4769-9bca-89ebe05ab7f4}
+component {67805190-0eaf-11db-9cd8-0800200c9a66} components/wzQuicktextHeader.js
+contract @hesslow.se/quicktext/header;1 {67805190-0eaf-11db-9cd8-0800200c9a66}
 
-component {5971120e-84ce-4f2b-9418-ed924c88fe10} components/wzQuicktextScript.js
-contract @hesslow.se/quicktext/script;1 {5971120e-84ce-4f2b-9418-ed924c88fe10}
+component {1d3a4cc6-c543-4800-b9ec-48ec5fa810fb} components/wzQuicktextScript.js
+contract @hesslow.se/quicktext/script;1 {1d3a4cc6-c543-4800-b9ec-48ec5fa810fb}
 
-component {6ff3be3e-7b38-4475-87ea-b49e7c431515} components/wzQuicktextTemplate.js
-contract @hesslow.se/quicktext/template;1 {6ff3be3e-7b38-4475-87ea-b49e7c431515}
+component {5f9705d0-8d1a-11da-a72b-0800200c9a66} components/wzQuicktextTemplate.js
+contract @hesslow.se/quicktext/template;1 {5f9705d0-8d1a-11da-a72b-0800200c9a66}
 
-component {5ec6a467-1500-4290-a3c5-24130e77aed4} components/wzQuicktextVar.js
-contract @hesslow.se/quicktext/variables;1 {5ec6a467-1500-4290-a3c5-24130e77aed4}
+component {baf42192-e051-4319-956d-1e1f2a81077e} components/wzQuicktextVar.js
+contract @hesslow.se/quicktext/variables;1 {baf42192-e051-4319-956d-1e1f2a81077e}
