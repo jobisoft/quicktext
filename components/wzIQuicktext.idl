@@ -1,8 +1,8 @@
 #include "nsISupports.idl"
-#include "nsIFile.idl"
-#include "nsIDOMWindow.idl"
-#include "nsIObserver.idl"
-#include "nsIEditor.idl"
+interface nsIFile;
+interface nsIDOMWindow;
+interface nsIObserver;
+interface nsIEditor;
 
 [scriptable, uuid(a3c2ad4e-2e2c-4c72-b1e0-0ac74b479ad2)]
 interface wzIQuicktextHeader : nsISupports
