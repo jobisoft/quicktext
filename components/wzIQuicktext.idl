@@ -1,7 +1,7 @@
 #include "nsISupports.idl"
-#include "nsIDOMWindow.idl"
 
 interface nsIFile;
+interface nsIDOMWindow;
 interface nsIObserver;
 interface nsIEditor;
 
