@@ -15,15 +15,17 @@
     <em:updateURL>http://extensions.hesslow.se/update.php?id=%ITEM_ID%&amp;u=1</em:updateURL>
     <em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rYPpH6l6E5F+Yq4Jn09JaOSJYV2raG29T2UeFJzK2MUxMqZs5/ElQyPqBQs9+ncqa4XC5KN8kWxfckWtiCOJcJ8ajIhowl1d09wBacZJdC0sIOXScyL5+MXjR3qKzYzCt+0bhSTn2rNuC7D0qrAyL2kdqDc6G89YmysTNzf3PQIDAQAB</em:updateKey>
 
+    <!-- Thunderbird -->
     <em:targetApplication>
-      <!-- Thunderbird -->
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
-        <em:minVersion>5.0b2</em:minVersion>
+        <em:minVersion>5.0b2pre</em:minVersion>
         <em:maxVersion>6.*</em:maxVersion>
       </Description>
+    </em:targetApplication>
 
-      <!-- Postbox -->
+    <!-- Postbox -->
+    <em:targetApplication>
       <Description>
         <em:id>postbox@postbox-inc.com</em:id>
         <em:minVersion>2.5b4</em:minVersion>
