@@ -5,7 +5,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>{8845e3b3-e8fb-40e2-95e9-ec40294818c4}</em:id>
     <em:name>Quicktext</em:name>
-    <em:version>0.9.11.2</em:version>
+    <em:version>0.9.11.3</em:version>
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use varibles like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
@@ -20,7 +20,7 @@
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>5.0b2pre</em:minVersion>
-        <em:maxVersion>7.*</em:maxVersion>
+        <em:maxVersion>10.0.a2</em:maxVersion>
       </Description>
     </em:targetApplication>
 
@@ -29,7 +29,7 @@
       <Description>
         <em:id>postbox@postbox-inc.com</em:id>
         <em:minVersion>2.5b4</em:minVersion>
-        <em:maxVersion>2.5.*</em:maxVersion>
+        <em:maxVersion>3.0.*</em:maxVersion>
       </Description>
     </em:targetApplication>
   </Description>
