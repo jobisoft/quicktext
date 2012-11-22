@@ -69,52 +69,6 @@ function wzQuicktextVar()
   // Need the Main Quicktext component
   this.mQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
 
-  // Set up the variables for the addressbook
-  this.mDirectories = [];
-  this.mDatabases = [];
-
-  if ("@mozilla.org/abmanager;1" in Components.classes)
-  {
-    // In the future it will probably work to do like this:
-    // var card = dir.cardForProperty(...);
-    // that means that the database-array is not necessary and
-    // it will support LDAP and MacOSX address book also
-
-    var abManager = Components.classes["@mozilla.org/abmanager;1"].getService(Components.interfaces.nsIAbManager);
-    var dirs = abManager.directories;
-    while (dirs.hasMoreElements())
-    {
-      var dir = dirs.getNext();
-      if (dir instanceof Components.interfaces.nsIAbMDBDirectory)
-      {
-        this.mDatabases.push(dir.database);
-        this.mDirectories.push(dir.QueryInterface(Components.interfaces.nsIAbDirectory));
-      }
-    }
-  }
-  else
-  {
-    var rdfService = Components.classes["@mozilla.org/rdf/rdf-service;1"].getService(Components.interfaces.nsIRDFService);
-    var directory = rdfService.GetResource("moz-abdirectory://").QueryInterface(Components.interfaces.nsIAbDirectory);
-    var addressBook = Components.classes["@mozilla.org/addressbook;1"].getService(Components.interfaces.nsIAddressBook);
-
-    var cn = directory.childNodes;
-    while (cn.hasMoreElements())
-    {
-      var abook = cn.getNext();
-      if (abook instanceof Components.interfaces.nsIAbDirectory)
-      {
-        // abook.URI only exists in 3.0 so fallback so it works on other versions also
-        var uri = (abook.URI) ? abook.URI : abook.directoryProperties.URI;
-
-        try {
-          this.mDatabases.push(addressBook.getAbDatabaseFromURI(uri));
-          this.mDirectories.push(abook);
-        } catch(e) {}
-      }
-    }
-  }
-
   // Add prefs for preferences
   this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
   this.mPrefBranch = this.mPrefService.getBranch("quicktext.");
@@ -543,7 +497,7 @@ wzQuicktextVar.prototype = {
   {
     if (this.mData['FROM'] && this.mData['FROM'].checked)
       return this.mData['FROM'].data;
-    
+
     this.mData['FROM'] = {};
     this.mData['FROM'].checked = true;
     this.mData['FROM'].data = {
@@ -552,18 +506,14 @@ wzQuicktextVar.prototype = {
       'lastname': ''
     };
 
-    for (var databaseIndex = 0; databaseIndex < this.mDatabases.length; databaseIndex++)
+    var card = this.getCardForEmail(this.mData['FROM'].data['email'].toLowerCase());
+    if (card != null)
     {
-      var card = this.mDatabases[databaseIndex].getCardFromAttribute(this.mDirectories[databaseIndex], "LowercasePrimaryEmail", this.mData['FROM'].data['email'].toLowerCase(), true);
-      if (card != null)
-      {
-        var props = this.getPropertiesFromCard(card);
-        for (var p in props)
-          this.mData['FROM'].data[p] = props[p];
+      var props = this.getPropertiesFromCard(card);
+      for (var p in props)
+        this.mData['FROM'].data[p] = props[p];
 
-        this.mData['FROM'].data['fullname'] = TrimString(this.mData['FROM'].data['firstname'] +" "+ this.mData['FROM'].data['lastname']);
-        break;
-      }
+      this.mData['FROM'].data['fullname'] = TrimString(this.mData['FROM'].data['firstname'] +" "+ this.mData['FROM'].data['lastname']);
     }
 
     return this.mData['FROM'].data;
@@ -601,43 +551,8 @@ wzQuicktextVar.prototype = {
         var notFound = true;
         if (name != "")
         {
-          forLoop:
-          for (var dirIndex = 0; dirIndex < this.mDirectories.length; dirIndex++)
-          {
-            subDirectories = this.mDirectories[dirIndex].childNodes;
-            while (subDirectories.hasMoreElements())
-            {
-              subDirectory = subDirectories.getNext().QueryInterface(Components.interfaces.nsIAbDirectory);
-              if (subDirectory.dirName.toLowerCase() == name.toLowerCase())
-              {
-                notFound = false;
+          // TODO: Add code for getting info about all people in a mailing list
 
-                var listCardsCount = subDirectory.addressLists.Count();
-                for (var j = 0;  j < listCardsCount; j++)
-                {
-                  var k = this.mData['TO'].data['email'].length;
-                  var card = subDirectory.addressLists.QueryElementAt(j, Components.interfaces.nsIAbCard);
-
-                  this.mData['TO'].data['email'][k] = card.primaryEmail;
-                  this.mData['TO'].data['fullname'][k] = TrimString(card.firstName +" "+ card.lastName);
-
-                  var props = this.getPropertiesFromCard(card);
-                  for (var p in props)
-                  {
-                    if (typeof this.mData['TO'].data[p] == 'undefined')
-                      this.mData['TO'].data[p] = []
-                    if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
-                      this.mData['TO'].data[p][k] = props[p];
-                  }
-                }
-                break forLoop;
-              }
-            }
-          }
-        }
-
-        if (notFound)
-        {
           var k = this.mData['TO'].data['email'].length;
           this.mData['TO'].data['email'][k] = emailAddresses.value[i];
           this.mData['TO'].data['firstname'][k] = "";
@@ -649,7 +564,7 @@ wzQuicktextVar.prototype = {
             {
               tempnames = name.split(",");
               this.mData['TO'].data['lastname'][k] = tempnames.splice(0, 1);
-              this.mData['TO'].data['firstname'][k] = tempnames.join(",");                
+              this.mData['TO'].data['firstname'][k] = tempnames.join(",");
             }
             else
             {
@@ -659,20 +574,16 @@ wzQuicktextVar.prototype = {
             }
           }
 
-          for (var databaseIndex = 0; databaseIndex < this.mDatabases.length; databaseIndex++)
+          var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
+          if (card != null)
           {
-            card = this.mDatabases[databaseIndex].getCardFromAttribute(this.mDirectories[databaseIndex], "LowercasePrimaryEmail", this.mData['TO'].data['email'][k].toLowerCase(), true);
-            if (card != null)
+            var props = this.getPropertiesFromCard(card);
+            for (var p in props)
             {
-              var props = this.getPropertiesFromCard(card);
-              for (var p in props)
-              {
-                if (typeof this.mData['TO'].data[p] == 'undefined')
-                  this.mData['TO'].data[p] = []
-                if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
-                  this.mData['TO'].data[p][k] = props[p];
-              }
-              break;
+              if (typeof this.mData['TO'].data[p] == 'undefined')
+                this.mData['TO'].data[p] = []
+              if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
+                this.mData['TO'].data[p][k] = props[p];
             }
           }
 
@@ -793,6 +704,66 @@ wzQuicktextVar.prototype = {
       size = size / 1024;
     }
     return Math.round(size) + " " + unit[i];
+  }
+,
+  getCardForEmail: function(aAddress) {
+    // The Thunderbird way
+    if ("@mozilla.org/abmanager;1" in Components.classes)
+    {
+      let enumerator = Components.classes["@mozilla.org/abmanager;1"]
+        .getService(Components.interfaces.nsIAbManager)
+        .directories;
+
+      let cardForEmailAddress;
+      let addrbook;
+      while (!cardForEmailAddress && enumerator.hasMoreElements())
+      {
+        addrbook = enumerator.getNext().QueryInterface(Components.interfaces.nsIAbDirectory);
+        try
+        {
+          card = addrbook.cardForEmailAddress(aAddress);
+          if (card)
+            return card;
+        } catch (ex) {}
+      }
+
+      return null;
+    }
+
+    // Fallback to old way for Postbox. This does actually not work. databases will be empty but there is no errors
+    var databases = [];
+    var directories = [];
+    var rdfService = Components.classes["@mozilla.org/rdf/rdf-service;1"].getService(Components.interfaces.nsIRDFService);
+    var directory = rdfService.GetResource("moz-abdirectory://").QueryInterface(Components.interfaces.nsIAbDirectory);
+    var addressBook = Components.classes["@mozilla.org/addressbook;1"].getService(Components.interfaces.nsIAddressBook);
+
+    var cn = directory.childNodes;
+    while (cn.hasMoreElements())
+    {
+      var abook = cn.getNext();
+      if (abook instanceof Components.interfaces.nsIAbDirectory)
+      {
+        // abook.URI only exists in 3.0 so fallback so it works on other versions also
+        var uri = (abook.URI) ? abook.URI : abook.directoryProperties.URI;
+
+        try {
+          databases.push(addressBook.getAbDatabaseFromURI(uri));
+          directories.push(abook);
+        } catch(e) {}
+      }
+    }
+
+    Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage("DATABASES: "+ databases.length);
+
+    for (var databaseIndex = 0; databaseIndex < databases.length; databaseIndex++)
+    {
+      var card = databases[databaseIndex].getCardFromAttribute(directories[databaseIndex], "LowercasePrimaryEmail", aAddress, true);
+      Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage("card: "+ card);
+      if (card)
+        return card;
+    }
+
+    return null;
   }
 ,
   getPropertiesFromCard: function(card)
