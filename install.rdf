@@ -5,7 +5,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>quicktextpro@extensions.hesslow.se</em:id>
     <em:name>Quicktext Pro</em:name>
-    <em:version>0.9.11.4</em:version>
+    <em:version>0.9.11.5</em:version>
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use varibles like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
