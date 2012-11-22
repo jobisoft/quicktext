@@ -546,49 +546,44 @@ wzQuicktextVar.prototype = {
     {
       for (var i = 0; i < numOfAddresses; i++)
       {
+        // TODO: Add code for getting info about all people in a mailing list
+
+        var k = this.mData['TO'].data['email'].length;
+        this.mData['TO'].data['email'][k] = emailAddresses.value[i];
+        this.mData['TO'].data['firstname'][k] = "";
+        this.mData['TO'].data['lastname'][k] = "";
+
         var name = names.value[i];
-
-        var notFound = true;
-        if (name != "")
+        if (name)
         {
-          // TODO: Add code for getting info about all people in a mailing list
-
-          var k = this.mData['TO'].data['email'].length;
-          this.mData['TO'].data['email'][k] = emailAddresses.value[i];
-          this.mData['TO'].data['firstname'][k] = "";
-          this.mData['TO'].data['lastname'][k] = "";
-
-          if (name != "")
+          if (name.indexOf(",") > -1)
           {
-            if (name.indexOf(",") > -1)
-            {
-              tempnames = name.split(",");
-              this.mData['TO'].data['lastname'][k] = tempnames.splice(0, 1);
-              this.mData['TO'].data['firstname'][k] = tempnames.join(",");
-            }
-            else
-            {
-              tempnames = name.split(" ");
-              this.mData['TO'].data['firstname'][k] = tempnames.splice(0, 1);
-              this.mData['TO'].data['lastname'][k] = tempnames.join(" ");
-            }
+            tempnames = name.split(",");
+            this.mData['TO'].data['lastname'][k] = tempnames.splice(0, 1);
+            this.mData['TO'].data['firstname'][k] = tempnames.join(",");
           }
-
-          var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
-          if (card != null)
+          else
           {
-            var props = this.getPropertiesFromCard(card);
-            for (var p in props)
-            {
-              if (typeof this.mData['TO'].data[p] == 'undefined')
-                this.mData['TO'].data[p] = []
-              if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
-                this.mData['TO'].data[p][k] = props[p];
-            }
+            tempnames = name.split(" ");
+            this.mData['TO'].data['firstname'][k] = tempnames.splice(0, 1);
+            this.mData['TO'].data['lastname'][k] = tempnames.join(" ");
           }
-
-          this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
         }
+
+        var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
+        if (card != null)
+        {
+          var props = this.getPropertiesFromCard(card);
+          for (var p in props)
+          {
+            if (typeof this.mData['TO'].data[p] == 'undefined')
+              this.mData['TO'].data[p] = []
+            if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
+              this.mData['TO'].data[p][k] = props[p];
+          }
+        }
+
+        this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
       }
     }
 
