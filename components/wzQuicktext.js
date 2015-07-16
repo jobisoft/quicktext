@@ -633,7 +633,7 @@ wzQuicktext.prototype = {
       var bomheader = siStream.read(2);
 
       // unicode
-      if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF")
+      if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
       {
         fiStream.close();
         fiStream.init(file, 1, 0, false);
