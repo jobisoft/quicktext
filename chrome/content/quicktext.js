@@ -1,5 +1,6 @@
 var gQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
 var gQuicktextVar = Components.classes["@hesslow.se/quicktext/variables;1"].createInstance(Components.interfaces.wzIQuicktextVar);
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var quicktextStateListener = {
   NotifyComposeBodyReady: function()
@@ -439,7 +440,7 @@ var quicktext = {
       found = true;
       aEditor.selection.removeAllRanges();
       aEditor.selection.addRange(foundRange);
-      aEditor.deleteSelection(0);
+      aEditor.selection.deleteFromDocument();
       startRange.setEnd(foundRange.endContainer, foundRange.endOffset);
       startRange.setStart(foundRange.endContainer, foundRange.endOffset);
     }
@@ -665,17 +666,11 @@ var quicktext = {
     return policy;
   }
 ,
-  QueryInterface: function(aIID)
-  {
-    if (aIID.equals(Components.interfaces.nsIObserver) ||
-        aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
-        aIID.equals(Components.interfaces.nsIFactory) ||
-        aIID.equals(Components.interfaces.nsISupports))
-      return this;
-
-    Components.returnCode = Components.results.NS_ERROR_NO_INTERFACE;
-    return null;
-  }
+  QueryInterface: XPCOMUtils.generateQI([
+    Components.interfaces.nsIObserver,
+    Components.interfaces.nsISupportsWeakReference,
+    Components.interfaces.nsIFactory,
+    ])
 }
 
 // Make Array.indexOf work in Firefox versions older than 1.1

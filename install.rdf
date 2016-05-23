@@ -3,24 +3,22 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>{8845e3b3-e8fb-40e2-95e9-ec40294818c4}</em:id>
+    <em:id>{8845E3B3-E8FB-40E2-95E9-EC40294818C4}</em:id>
     <em:name>Quicktext</em:name>
-    <em:version>0.9.11.6</em:version>
+    <em:version>0.9.11.7</em:version>
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use varibles like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
     <em:aboutURL>chrome://quicktext/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://quicktext/skin/icon.png</em:iconURL>
     <em:homepageURL>http://extensions.hesslow.se/quicktext</em:homepageURL>
-    <em:updateURL>http://extensions.hesslow.se/update.php?id=%ITEM_ID%</em:updateURL>
-    <em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDc0QW5X4z8aAOlsWNzAlCEExTb3i6ywpPe4FWcD8ABk45reRyPtHELPYkzdi0n2mJK7LyFbt0dJklpbYyhEEvhM4ehLUQWaGON+o6VjB4e8FYVdHjq775w/WgyBHt9n5Mf6VMC/6HGqeTBo4yPx2BpjpeFnqpn5s55VQJnazVNQIDAQAB</em:updateKey>
 
     <!-- Thunderbird -->
     <em:targetApplication>
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>17.0</em:minVersion>
-        <em:maxVersion>38.*</em:maxVersion>
+        <em:maxVersion>45.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 
