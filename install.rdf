@@ -5,22 +5,21 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>quicktextpro@extensions.hesslow.se</em:id>
     <em:name>Quicktext Pro</em:name>
-    <em:version>0.9.11.6</em:version>
-    <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use varibles like [[TO=firstname]]. With settings for everything.</em:description>
+    <em:version>0.9.11.7</em:version>
+    <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
+    <em:contributor>R Kent James</em:contributor>
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
     <em:aboutURL>chrome://quicktext/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://quicktext/skin/icon.png</em:iconURL>
     <em:homepageURL>http://extensions.hesslow.se/quicktext</em:homepageURL>
-    <em:updateURL>http://extensions.hesslow.se/update.php?id=%ITEM_ID%&amp;u=1</em:updateURL>
-    <em:updateKey>MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC/rYPpH6l6E5F+Yq4Jn09JaOSJYV2raG29T2UeFJzK2MUxMqZs5/ElQyPqBQs9+ncqa4XC5KN8kWxfckWtiCOJcJ8ajIhowl1d09wBacZJdC0sIOXScyL5+MXjR3qKzYzCt+0bhSTn2rNuC7D0qrAyL2kdqDc6G89YmysTNzf3PQIDAQAB</em:updateKey>
 
     <!-- Thunderbird -->
     <em:targetApplication>
       <Description>
         <em:id>{3550f703-e582-4d05-9a08-453d09bdfdc6}</em:id>
         <em:minVersion>17.0</em:minVersion>
-        <em:maxVersion>38.*</em:maxVersion>
+        <em:maxVersion>45.*</em:maxVersion>
       </Description>
     </em:targetApplication>
 

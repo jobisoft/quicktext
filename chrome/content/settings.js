@@ -1,4 +1,5 @@
 var gQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
+Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var dragObserver =
 { 
@@ -1403,15 +1404,9 @@ var quicktext =
     return policy;
   }
 ,
-  QueryInterface: function(aIID)
-  {
-    if (aIID.equals(Components.interfaces.nsIObserver) ||
-        aIID.equals(Components.interfaces.nsISupportsWeakReference) ||
-        aIID.equals(Components.interfaces.nsIFactory) ||
-        aIID.equals(Components.interfaces.nsISupports))
-      return this;
-
-    Components.returnCode = Components.results.NS_ERROR_NO_INTERFACE;
-    return null;
-  }
+  QueryInterface: XPCOMUtils.generateQI([
+    Components.interfaces.nsIObserver,
+    Components.interfaces.nsISupportsWeakReference,
+    Components.interfaces.nsIFactory,
+    ])
 }
