@@ -11,7 +11,7 @@ var quicktext = {
   {
     removeEventListener("load", quicktext.firstTimeLoad, false);
     gQuicktext.firstTime = false;
-    setTimeout("quicktext.displayMessage();", 1);
+    //setTimeout("quicktext.displayMessage();", 1); - display info about pro version, which is no longer avail, confusing
   }
 ,
   displayMessage: function()

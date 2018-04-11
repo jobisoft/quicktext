@@ -92,7 +92,7 @@ wzQuicktextVar.prototype = {
   parse: function(aStr)
   {
     // Just save some of the tag-data.
-    tmpData = {};
+    let tmpData = {};
     for (var i in this.mData)
     {
       if (persistentTags.indexOf(i) > -1)
@@ -165,6 +165,7 @@ wzQuicktextVar.prototype = {
     // This is because we want to handle recursive use of tags.
     var rexp = new RegExp("\\[\\[(("+ allowedTags.join("|") +")(\\_[a-z]+)?)", "ig");
     var results = [];
+    var result = null;
     while ((result = rexp.exec(aStr)))
       results.push(result);
 
@@ -379,7 +380,7 @@ wzQuicktextVar.prototype = {
     if (aVariables.length == 1 && aVariables[0] != "")
     {
       // Tries to open the file and returning the content
-      var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+      var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
       try {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
@@ -558,13 +559,13 @@ wzQuicktextVar.prototype = {
         {
           if (name.indexOf(",") > -1)
           {
-            tempnames = name.split(",");
+            let tempnames = name.split(",");
             this.mData['TO'].data['lastname'][k] = tempnames.splice(0, 1);
             this.mData['TO'].data['firstname'][k] = tempnames.join(",");
           }
           else
           {
-            tempnames = name.split(" ");
+            let tempnames = name.split(" ");
             this.mData['TO'].data['firstname'][k] = tempnames.splice(0, 1);
             this.mData['TO'].data['lastname'][k] = tempnames.join(" ");
           }
@@ -664,14 +665,20 @@ wzQuicktextVar.prototype = {
     this.mData['TIME'].checked = true;
     this.mData['TIME'].data = {};
 
-    var dateTimeService = Components.classes["@mozilla.org/intl/scriptabledateformat;1"].getService(Components.interfaces.nsIScriptableDateFormat);
     var timeStamp = new Date();
+    var options = {};
+    options["DATE-long"] = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
+    options["DATE-short"] = { year: 'numeric', month: '2-digit', day: '2-digit' }; 
+    options["TIME-seconds"] = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    options["TIME-noseconds"] = { hour: '2-digit', minute: '2-digit' }; 
+      
+    let fields = Object.keys(options);
+    for (let i=0; i<fields.length; i++) {
+        let field = fields[i];
+        let fieldinfo = field.split("-");
+	this.mData[fieldinfo[0]].data[fieldinfo[1]] = TrimString(new Intl.DateTimeFormat([], options[field]).format(timeStamp));
+    }
 
-    this.mData['DATE'].data['long'] = TrimString(dateTimeService.FormatDate("", dateTimeService.dateFormatLong, timeStamp.getFullYear(), timeStamp.getMonth()+1, timeStamp.getDate()));
-    this.mData['DATE'].data['short'] = TrimString(dateTimeService.FormatDate("", dateTimeService.dateFormatShort, timeStamp.getFullYear(), timeStamp.getMonth()+1, timeStamp.getDate()));
-
-    this.mData['TIME'].data['seconds'] = TrimString(dateTimeService.FormatTime("", dateTimeService.timeFormatSeconds, timeStamp.getHours(), timeStamp.getMinutes(), timeStamp.getSeconds()));
-    this.mData['TIME'].data['noseconds'] = TrimString(dateTimeService.FormatTime("", dateTimeService.timeFormatNoSeconds, timeStamp.getHours(), timeStamp.getMinutes(), timeStamp.getSeconds()));
   }
 ,
   escapeRegExp: function(aStr)
@@ -763,7 +770,7 @@ wzQuicktextVar.prototype = {
 ,
   getPropertiesFromCard: function(card)
   {
-    retval = {}
+    let retval = {}
     // New stuff in Thunderbird 3.0
     if (card.properties) {
       var props = card.properties;
@@ -812,10 +819,8 @@ if (XPCOMUtils.generateNSGetFactory)
 else
   var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextVar]);
 
-if (!kDebug)
-  debug = function(m) {};
-else
-  debug = function(m) {dump("\t *** wzQuicktextVar: " + m + "\n");};
+var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
+
 
 function TrimString(aStr)
 {
