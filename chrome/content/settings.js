@@ -467,17 +467,22 @@ var quicktext =
   {
 
     // Set the date/time in the variablemenu
-    var dateTimeService = Components.classes["@mozilla.org/intl/scriptabledateformat;1"].getService(Components.interfaces.nsIScriptableDateFormat);
     var timeStamp = new Date();
 
-    if (document.getElementById("date-short"))
-      document.getElementById("date-short").setAttribute("label", this.mStringBundle.getFormattedString("date", [dateTimeService.FormatDate("", dateTimeService.dateFormatShort, timeStamp.getFullYear(), timeStamp.getMonth()+1, timeStamp.getDate())]));
-    if (document.getElementById("date-long"))
-      document.getElementById("date-long").setAttribute("label", this.mStringBundle.getFormattedString("date", [dateTimeService.FormatDate("", dateTimeService.dateFormatLong, timeStamp.getFullYear(), timeStamp.getMonth()+1, timeStamp.getDate())]));
-    if (document.getElementById("time-noseconds"))
-      document.getElementById("time-noseconds").setAttribute("label", this.mStringBundle.getFormattedString("time", [dateTimeService.FormatTime("", dateTimeService.timeFormatNoSeconds, timeStamp.getHours(), timeStamp.getMinutes(), timeStamp.getSeconds())]));
-    if (document.getElementById("time-seconds"))
-      document.getElementById("time-seconds").setAttribute("label", this.mStringBundle.getFormattedString("time", [dateTimeService.FormatTime("", dateTimeService.timeFormatSeconds, timeStamp.getHours(), timeStamp.getMinutes(), timeStamp.getSeconds())]));
+    var options = {};
+    options["date-short"] = { year: 'numeric', month: '2-digit', day: '2-digit' }; 
+    options["date-long"] = { weekday: 'long', year: 'numeric', month: 'long', day: '2-digit' };
+    options["time-noseconds"] = { hour: '2-digit', minute: '2-digit' }; 
+    options["time-seconds"] = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+      
+    let fields = Object.keys(options);
+    for (let i=0; i<fields.length; i++) {
+        let field = fields[i];
+        let fieldtype = field.split("-")[0];
+        if (document.getElementById(field)) {
+            document.getElementById(field).setAttribute("label", this.mStringBundle.getFormattedString(fieldtype, [new Intl.DateTimeFormat([], options[field]).format(timeStamp)]));
+        }
+    }
 
     // Update info in the generalsettings tab
     if (document.getElementById("checkbox-viewPopup"))
