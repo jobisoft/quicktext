@@ -160,7 +160,7 @@ wzQuicktext.prototype = {
     this.mQuicktextDir = profileDir;
     this.mQuicktextDir.append("quicktext");
     if (!this.mQuicktextDir.exists())
-      this.mQuicktextDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, parseInt("0755", 8));
+      this.mQuicktextDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0o755);
 
     if (!this.mQuicktextDir.isDirectory())
     {
@@ -602,7 +602,7 @@ wzQuicktext.prototype = {
   {
     var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
 
-    foStream.init(aFile, 0x02 | 0x08 | 0x20,  parseInt("0664", 8), 0);
+    foStream.init(aFile, 0x02 | 0x08 | 0x20,  0o664, 0);
 
     // Polyfill for convertToByteArray, which no longer works with UTF-16 (https://bugzilla.mozilla.org/show_bug.cgi?id=1391020#c36)
     let chunk = [];
