@@ -673,7 +673,7 @@ wzQuicktextVar.prototype = {
     options["TIME-noseconds"] = { hour: '2-digit', minute: '2-digit' }; 
       
     let fields = Object.keys(options);
-    for (let i=0; i<fields.length; i++) {
+    for (let i=0; i < fields.length; i++) {
         let field = fields[i];
         let fieldinfo = field.split("-");
 	this.mData[fieldinfo[0]].data[fieldinfo[1]] = TrimString(new Intl.DateTimeFormat([], options[field]).format(timeStamp));

@@ -118,7 +118,7 @@ var quicktext = {
     options["time-seconds"] = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
       
     let fields = Object.keys(options);
-    for (let i=0; i<fields.length; i++) {
+    for (let i=0; i < fields.length; i++) {
         let field = fields[i];
         let fieldtype = field.split("-")[0];
         if (document.getElementById(field)) {

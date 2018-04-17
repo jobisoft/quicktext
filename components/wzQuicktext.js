@@ -604,32 +604,19 @@ wzQuicktext.prototype = {
 
     foStream.init(aFile, 0x02 | 0x08 | 0x20,  parseInt("0664", 8), 0);
 
-    // Unicode
-    if (true)
-    {
-        //no longer works in TB60 - see bug 1391020 (https://bugzilla.mozilla.org/show_bug.cgi?id=1391020#c36)
-        //var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-        //converter.charset = "UTF-16"; 
-        //var chunk = converter.convertToByteArray(aData, {});
-
-        //Polyfill for convertToByteArray, which no longer works with UTF-16
-        let chunk = [];
-        for (let l=0; l<aData.length; l++) {
-            let c = aData.charCodeAt(l);
-            //fixed endianness
-            chunk.push( c & 0xFF );
-            chunk.push( (c >> 8) & 0xFF );
-        }
-
-        //write byte array
-        var boStream = Components.classes["@mozilla.org/binaryoutputstream;1"].createInstance(Components.interfaces.nsIBinaryOutputStream);
-        boStream.setOutputStream(foStream);
-        boStream.writeByteArray(chunk, chunk.length);
+    // Polyfill for convertToByteArray, which no longer works with UTF-16 (https://bugzilla.mozilla.org/show_bug.cgi?id=1391020#c36)
+    let chunk = [];
+    for (let l=0; l < aData.length; l++) {
+        let c = aData.charCodeAt(l);
+        //fixed endianness
+        chunk.push(c & 0xFF);
+        chunk.push((c >> 8) & 0xFF);
     }
-    else
-    {
-      foStream.write(aData, aData.length);
-    }
+
+    // write byte array
+    var boStream = Components.classes["@mozilla.org/binaryoutputstream;1"].createInstance(Components.interfaces.nsIBinaryOutputStream);
+    boStream.setOutputStream(foStream);
+    boStream.writeByteArray(chunk, chunk.length);
 
     foStream.close();
   }
