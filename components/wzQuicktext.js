@@ -656,10 +656,20 @@ wzQuicktext.prototype = {
     if(this.mDefaultDir)
       filePicker.displayDirectory = this.mDefaultDir;
 
-    var result = filePicker.show();
-    if(result == filePicker.returnOK || result == filePicker.returnReplace)
-      return filePicker.file;
+    // Lazy implementation from: https://wiki.mozilla.org/Thunderbird/Add-ons_Guide_57#Removed_interfaces_in_mozilla57
+    let done = false;
+    let rv, result;
+    filePicker.open(result => {
+        rv = result;
+        done = true;
+    });
 
+    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+    while (!done) {
+        thread.processNextEvent(true);
+    }
+
+    if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
     return null;
   }
 ,
