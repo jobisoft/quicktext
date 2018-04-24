@@ -251,7 +251,7 @@ var quicktext =
   {
     if (e.charCode == KeyEvent.DOM_VK_SPACE)
     {
-      e.preventBubble();
+      e.stopPropagation();
       e.preventDefault();
     }
   }

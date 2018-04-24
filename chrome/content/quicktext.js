@@ -651,7 +651,7 @@ var quicktext = {
       {
         this.mShortcutString += String.fromCharCode(e.charCode);
 
-        e.preventBubble();
+        e.stopPropagation();
         e.preventDefault();
       }
     }
@@ -666,7 +666,7 @@ var quicktext = {
       {
         this.insertTemplate(this.mShortcuts[shortcut][0], this.mShortcuts[shortcut][1]);
 
-        e.preventBubble();
+        e.stopPropagation();
         e.preventDefault();
       }
     }
@@ -694,7 +694,7 @@ var quicktext = {
       {
         this.insertTemplate(this.mShortcuts[this.mShortcutString][0], this.mShortcuts[this.mShortcutString][1]);
 
-        e.preventBubble();
+        e.stopPropagation();
         e.preventDefault();
       }
 
@@ -796,7 +796,7 @@ var quicktext = {
       editor.endTransaction();
       if (found)
       {
-        e.preventBubble();
+        e.stopPropagation();
         e.preventDefault();
       }
     }
