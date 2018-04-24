@@ -5,7 +5,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>{8845E3B3-E8FB-40E2-95E9-EC40294818C4}</em:id>
     <em:name>Quicktext</em:name>
-    <em:version>0.9.11.12</em:version>
+    <em:version>0.9.12</em:version>
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:contributor>R Kent James</em:contributor>
