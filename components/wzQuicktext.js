@@ -670,10 +670,10 @@ wzQuicktext.prototype = {
     // Polyfill for convertToByteArray, which no longer works with UTF-16
     let chunk = [];
     for (let l=0; l < aData.length; l++) {
-        let c = aData.charCodeAt(l);
-        //fixed endianness
-        chunk.push(c & 0xFF);
-        chunk.push((c >> 8) & 0xFF);
+      let c = aData.charCodeAt(l);
+      //fixed endianness
+      chunk.push(c & 0xFF);
+      chunk.push((c >> 8) & 0xFF);
     }
 
     //write byte array
@@ -721,15 +721,15 @@ wzQuicktext.prototype = {
 
     // Lazy implementation from: https://wiki.mozilla.org/Thunderbird/Add-ons_Guide_57#Removed_interfaces_in_mozilla57
     let done = false;
-    let rv, result;
+    let rv;
     filePicker.open(result => {
-        rv = result;
-        done = true;
+      rv = result;
+      done = true;
     });
  
     let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
     while (!done) {
-        thread.processNextEvent(true);
+      thread.processNextEvent(true);
     }
 
     if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
