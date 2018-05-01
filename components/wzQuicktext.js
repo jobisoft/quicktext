@@ -607,10 +607,10 @@ wzQuicktext.prototype = {
     // Polyfill for convertToByteArray, which no longer works with UTF-16 (https://bugzilla.mozilla.org/show_bug.cgi?id=1391020#c36)
     let chunk = [];
     for (let l=0; l < aData.length; l++) {
-        let c = aData.charCodeAt(l);
-        //fixed endianness
-        chunk.push(c & 0xFF);
-        chunk.push((c >> 8) & 0xFF);
+      let c = aData.charCodeAt(l);
+      //fixed endianness
+      chunk.push(c & 0xFF);
+      chunk.push((c >> 8) & 0xFF);
     }
 
     // write byte array
