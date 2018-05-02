@@ -607,10 +607,10 @@ wzQuicktext.prototype = {
     // Polyfill for convertToByteArray, which no longer works with UTF-16 (https://bugzilla.mozilla.org/show_bug.cgi?id=1391020#c36)
     let chunk = [];
     for (let l=0; l < aData.length; l++) {
-        let c = aData.charCodeAt(l);
-        //fixed endianness
-        chunk.push(c & 0xFF);
-        chunk.push((c >> 8) & 0xFF);
+      let c = aData.charCodeAt(l);
+      //fixed endianness
+      chunk.push(c & 0xFF);
+      chunk.push((c >> 8) & 0xFF);
     }
 
     // write byte array
@@ -656,10 +656,20 @@ wzQuicktext.prototype = {
     if(this.mDefaultDir)
       filePicker.displayDirectory = this.mDefaultDir;
 
-    var result = filePicker.show();
-    if(result == filePicker.returnOK || result == filePicker.returnReplace)
-      return filePicker.file;
+    // Lazy implementation from: https://wiki.mozilla.org/Thunderbird/Add-ons_Guide_57#Removed_interfaces_in_mozilla57
+    let done = false;
+    let rv;
+    filePicker.open(result => {
+      rv = result;
+      done = true;
+    });
 
+    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+    while (!done) {
+      thread.processNextEvent(true);
+    }
+
+    if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
     return null;
   }
 ,
