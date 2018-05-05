@@ -1109,8 +1109,6 @@ else
 var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
 
 
-
-
 function TrimString(aStr)
 {
   if (!aStr) return "";
