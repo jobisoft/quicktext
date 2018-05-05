@@ -43,7 +43,4 @@ if (XPCOMUtils.generateNSGetFactory)
 else
   var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextScript]);
 
-if (!kDebug)
-  debug = function(m) {};
-else
-  debug = function(m) {dump("\t *** wzQuicktextScript: " + m + "\n");};
+var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};

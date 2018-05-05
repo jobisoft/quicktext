@@ -162,7 +162,7 @@ wzQuicktext.prototype = {
     this.mQuicktextDir = profileDir;
     this.mQuicktextDir.append("quicktext");
     if (!this.mQuicktextDir.exists())
-      this.mQuicktextDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0755);
+      this.mQuicktextDir.create(Components.interfaces.nsIFile.DIRECTORY_TYPE, 0o755);
 
     if (!this.mQuicktextDir.isDirectory())
     {
@@ -266,7 +266,7 @@ wzQuicktext.prototype = {
     if (this.mPrefBranch.getPrefType("defaultDir") == this.mPrefBranch.PREF_STRING)
     {
       var defaultDir = this.mPrefBranch.getCharPref("defaultDir");
-      this.mDefaultDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+      this.mDefaultDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
       try {
         this.mDefaultDir.initWithPath(defaultDir);
       }
@@ -293,7 +293,7 @@ wzQuicktext.prototype = {
             }
             else
             {
-              var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+              var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
               fp.initWithPath(this.parseFilePath(defaultImport[i]));
               this.importFromFile(fp, 1, true, false);
             }
@@ -619,7 +619,7 @@ wzQuicktext.prototype = {
   readFile: function(aFile)
   {
     var text = "";
-    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsILocalFile);
+    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
     file.initWithFile(aFile);
     if(file.exists())
     {
@@ -665,25 +665,21 @@ wzQuicktext.prototype = {
   {
     var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
 
-    foStream.init(aFile, 0x02 | 0x08 | 0x20, 0664, 0);
+    foStream.init(aFile, 0x02 | 0x08 | 0x20, 0o664, 0);
 
-    // Unicode
-    if (true)
-    {
-      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-      converter.charset = "UTF-16";
-
-      var chunk = converter.ConvertFromUnicode(aData);
-      foStream.write(chunk, chunk.length);
-
-      var fin = converter.Finish();
-      if (fin.length > 0)
-        foStream.write(fin, fin.length);
+    // Polyfill for convertToByteArray, which no longer works with UTF-16
+    let chunk = [];
+    for (let l=0; l < aData.length; l++) {
+      let c = aData.charCodeAt(l);
+      //fixed endianness
+      chunk.push(c & 0xFF);
+      chunk.push((c >> 8) & 0xFF);
     }
-    else
-    {
-      foStream.write(aData, aData.length);
-    }
+
+    //write byte array
+    var boStream = Components.classes["@mozilla.org/binaryoutputstream;1"].createInstance(Components.interfaces.nsIBinaryOutputStream);
+    boStream.setOutputStream(foStream);
+    boStream.writeByteArray(chunk, chunk.length);
 
     foStream.close();
   }
@@ -723,10 +719,20 @@ wzQuicktext.prototype = {
     if(this.mDefaultDir)
       filePicker.displayDirectory = this.mDefaultDir;
 
-    var result = filePicker.show();
-    if(result == filePicker.returnOK || result == filePicker.returnReplace)
-      return filePicker.file;
+    // Lazy implementation from: https://wiki.mozilla.org/Thunderbird/Add-ons_Guide_57#Removed_interfaces_in_mozilla57
+    let done = false;
+    let rv;
+    filePicker.open(result => {
+      rv = result;
+      done = true;
+    });
+ 
+    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+    while (!done) {
+      thread.processNextEvent(true);
+    }
 
+    if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
     return null;
   }
 ,
@@ -766,6 +772,8 @@ wzQuicktext.prototype = {
               buffer += "\t\t\t\t<body><![CDATA["+ this.removeIllegalChars(text.text) +"]]></body>\n";
             if (text.attachments != "")
               buffer += "\t\t\t\t<attachments><![CDATA["+ this.removeIllegalChars(text.attachments) +"]]></attachments>\n";
+            
+            var headerLength = 0;
             if (headerLength = text.getHeaderLength() > 0)
             {
               buffer += "\t\t\t\t<headers>\n";
@@ -790,7 +798,7 @@ wzQuicktext.prototype = {
   {
     var start = this.mGroup.length;
 
-    data = this.readFile(aFile);
+    var data = this.readFile(aFile);
     this.parseImport(data, aType, aBefore, aEditingMode);
   }
 ,
@@ -1057,10 +1065,10 @@ if (XPCOMUtils.generateNSGetFactory)
 else
   var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktext]);
 
-if (!kDebug)
-  debug = function(m) {};
-else
-  debug = function(m) {dump("\t *** wzQuicktext: " + m + "\n");};
+var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
+
+
+
 
 function TrimString(aStr)
 {
