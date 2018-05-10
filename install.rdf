@@ -11,7 +11,6 @@
     <em:contributor>R Kent James</em:contributor>
     <em:contributor>John Bieling</em:contributor>    
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
-    <em:aboutURL>chrome://quicktext/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://quicktext/skin/icon.png</em:iconURL>
     <em:homepageURL>https://github.com/thundernest/quicktext</em:homepageURL>
 
