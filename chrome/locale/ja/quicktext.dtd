@@ -89,9 +89,3 @@
 
 <!ENTITY quicktext.insertTextFromFileAsHTML.label "ファイルを HTML として挿入">
 <!ENTITY quicktext.insertTextFromFileAsText.label "ファイルをテキストとして挿入">
-
-<!ENTITY quicktext.about.title "Quicktext Pro について">
-<!ENTITY quicktext.aboutInfo.label "Quicktext Pro をインストールしてくださりありがとうございます。この拡張機能は Quicktext の有料バージョンです。よって拡張機能を使用するにはライセンスが必要になります。もしあなたがライセンスを持っていない場合は速やかに Quicktext Pro を削除し、Quicktext のホームページから無料バージョンをインストールしてください。またその Quicktext Pro をどこで入手したのかについて私に知らせてください。">
-<!ENTITY quicktext.aboutInfo2.label "Quicktext をインストールしてくださりありがとうございます。この拡張機能は Quicktext の無料バージョンです。より多くの機能を必要とする場合は有料の Quicktext Pro があります。Quicktext Pro にはテキストを共有する機能や Quicktext Pro でしか利用できないタグを備えています。またスクリプトをサポートしているので、あなたが必要とする動作を柔軟に加える事ができます。">
-<!ENTITY quicktext.homepage.label "ホームページ">
-<!ENTITY quicktext.developer.label "開発者">

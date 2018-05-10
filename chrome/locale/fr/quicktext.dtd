@@ -89,9 +89,3 @@
 
 <!ENTITY quicktext.insertTextFromFileAsHTML.label "Insérer un fichier en HTML">
 <!ENTITY quicktext.insertTextFromFileAsText.label "Insérer un fichier en texte">
-
-<!ENTITY quicktext.about.title "À propos de Quicktext Pro">
-<!ENTITY quicktext.aboutInfo.label "Merci d'avoir installé Quicktext Pro. Il s'agit de la version commerciale de Quicktext. Ce qui signifie que vous devez avoir une licence pour utiliser cette extension. Si vous ne disposez pas d'une licence veuillez désinstaller la version Pro puis installer la version gratuite de Quicktext que vous pouvez trouver sur le site Web de Quicktext. Dans l'hypothèse où vous n'avez pas de licence, j'aimerais aussi que vous me contactiez pour me dire par quel moyen vous vous êtes procuré cette version.">
-<!ENTITY quicktext.aboutInfo2.label "Merci d'avoir installé Quicktext. Il s'agit de la version gratuite de Quicktext. Si vous voulez disposer de davantage de fonctionnalités vous pouvez vous procurer Quicktext Pro en l'achetant sur le site Web. La version Pro rend plus facile le partage de textes entre collègues et propose également plusieurs 'balises' qui ne sont pas disponibles dans cette version de Quicktext. Elle offre aussi la prise en charge des scripts, si bien que vous pouvez en faire presque tout ce qui vous convient.">
-<!ENTITY quicktext.homepage.label "Site Web">
-<!ENTITY quicktext.developer.label "Auteur">
