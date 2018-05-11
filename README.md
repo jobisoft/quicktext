@@ -2,4 +2,4 @@ Quicktext is a Thunderbird extension, which has been created by Emil Hesslow. Ho
 
 Volunteers will try to keep Quicktext going, but support will be limited. You may use the [issue section](https://github.com/thundernest/quicktext/issues) of this repository to report bugs, but do not expect fast responses. You may also discuss Quicktext related issues with other users at https://discourse.mozilla.org/c/thunderbird.
 
-More information and usage desriptions can be found in the [wiki](https://github.com/thundernest/quicktext/wiki) of this repository.
+More information and usage descriptions can be found in the [wiki](https://github.com/thundernest/quicktext/wiki) of this repository.
