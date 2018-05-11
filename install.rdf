@@ -3,17 +3,16 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 
   <Description about="urn:mozilla:install-manifest">
-    <em:id>quicktextpro@extensions.hesslow.se</em:id>
+    <em:id>{8845E3B3-E8FB-40E2-95E9-EC40294818C4}</em:id>
     <em:name>Quicktext Pro</em:name>
-    <em:version>0.9.12</em:version>
+    <em:version>0.9.14</em:version>
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:contributor>R Kent James</em:contributor>
     <em:contributor>John Bieling</em:contributor>    
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
-    <em:aboutURL>chrome://quicktext/content/about.xul</em:aboutURL>
     <em:iconURL>chrome://quicktext/skin/icon.png</em:iconURL>
-    <em:homepageURL>http://extensions.hesslow.se/quicktext</em:homepageURL>
+    <em:homepageURL>https://github.com/thundernest/quicktext</em:homepageURL>
 
     <!-- Thunderbird -->
     <em:targetApplication>
@@ -24,13 +23,5 @@
       </Description>
     </em:targetApplication>
 
-    <!-- Postbox -->
-    <em:targetApplication>
-      <Description>
-        <em:id>postbox@postbox-inc.com</em:id>
-        <em:minVersion>3.0.6</em:minVersion>
-        <em:maxVersion>3.0.*</em:maxVersion>
-      </Description>
-    </em:targetApplication>
   </Description>
 </RDF>
