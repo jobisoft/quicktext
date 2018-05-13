@@ -1,4 +1,6 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.importGlobalProperties(["XMLHttpRequest"]);
+
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
@@ -740,14 +742,17 @@ wzQuicktextVar.prototype = {
 
     if (url != "")
     {
+      var debug = false;
+      var method = "post";
       var post = [];
+      
       if (aVariables.length > 0)
       {
         var variables = aVariables.shift().split(";");
         for (var k = 0; k < variables.length; k++)
         {
           var tag = variables[k].toLowerCase();
-          var data = this["process_"+ tag]();
+          var data = null;
 
           switch (tag)
           {
@@ -755,6 +760,7 @@ wzQuicktextVar.prototype = {
             case 'att':
             case 'orgheader':
             case 'orgatt':
+              data = this["process_"+ tag]();
               if (typeof data != 'undefined')
               {
                 for (var i in data)
@@ -766,6 +772,7 @@ wzQuicktextVar.prototype = {
             case 'version':
             case 'date':
             case 'time':
+              data = this["process_"+ tag]();
               if (typeof data != 'undefined')
               {
                 for (var i in data)
@@ -775,20 +782,55 @@ wzQuicktextVar.prototype = {
             case 'subject':
             case 'clipboard':
             case 'counter':
+              data = this["process_"+ tag]();
               if (typeof data != 'undefined')
                 post.push(tag +'='+ data);
+              break;
+
+            case 'post':
+            case 'get':
+            case 'options':
+              method = tag;
+              break;
+
+            case 'debug':
+              debug = true;
               break;
           }
         }
       }
 
-      var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
-      req.open('POST', url, false);
-      req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-      req.send(post.join("&"));
+      var req = new XMLHttpRequest();
+      req.open(method, url, true);
+      if (method == "post") req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      let status = -1;
+      let response = "";
 
-      if (req.status == 200)
-        return req.responseText;
+      req.ontimeout = function () {
+        status = 408;
+        if (debug) response = "Quicktext timeout";
+      };
+
+      req.onerror = function () {
+        status = req.status;
+        if (debug) response = "error ("+status+")";
+      };
+
+      req.onload = function() {
+        status = req.status;
+        if (req.status == 200) response = req.responseText;
+        else 	if (debug) response = "error ("+status+")";
+      };
+
+      if (method == "post") req.send(post.join("&"));
+      else req.send();
+
+      let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+      while (status === -1) {
+        thread.processNextEvent(true);
+      }
+
+      return response;
     }
 
     return "";
