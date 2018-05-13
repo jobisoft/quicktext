@@ -597,6 +597,8 @@ wzQuicktext.prototype = {
   {
     var results = [];
     var rexp = new RegExp ("\\[("+ kFileShortcuts.join("|") +")\\]", "g");
+
+    let result = null;
     while (result = rexp.exec(aPath))
       results.push(result);
 
