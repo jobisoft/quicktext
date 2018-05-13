@@ -534,8 +534,6 @@ wzQuicktextVar.prototype = {
 
     // To get the attachments we look in the attachment-field
     // in compose-window.
-    var url = Components.classes["@mozilla.org/network/standard-url;1"].createInstance();
-    url = url.QueryInterface(Components.interfaces.nsIURL);
 
     var bucket = this.mWindow.document.getElementById("attachmentBucket");
     for (var index = 0; index < bucket.getRowCount(); index++)
@@ -544,11 +542,10 @@ wzQuicktextVar.prototype = {
       var attachment = item.attachment;
       if (attachment)
       {
-        url.spec = attachment.url;
         var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
         var fileHandler = ios.getProtocolHandler("file").QueryInterface(Components.interfaces.nsIFileProtocolHandler);
         try {
-          var file = fileHandler.getFileFromURLSpec(url.spec);
+          var file = fileHandler.getFileFromURLSpec(attachment.url);
           if (file.exists())
             this.mData['ATT'].data.push([attachment.name, file.fileSize]);
         }
