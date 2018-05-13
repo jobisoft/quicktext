@@ -980,13 +980,10 @@ wzQuicktextVar.prototype = {
     var listener = streamListener();
     mms.streamMessage(msgURI, listener, null, null, true, "filter");
 
-    const eqs = Components.interfaces.nsIEventQueueService;
-    while (listener.mBusy)
-    {
-      // This works like a yield. Not sure why
-      Components.classes["@mozilla.org/event-queue-service;1"]
-        .getService(eqs).getSpecialEventQueue(eqs.UI_THREAD_EVENT_QUEUE)
-        .processPendingEvents();
+    //lazy async, wait for listener
+    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+    while (listener.mBusy) {
+      thread.processNextEvent(true);
     }
 
     // Store all headers in the mData-variable
