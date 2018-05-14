@@ -132,10 +132,10 @@ wzQuicktext.prototype = {
 ,
   openHomepage: function()
   {
-    var uri = Components. classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService).newURI(kHomepage, null, null);
-    var com = Components.classes["@mozilla.org/uriloader/external-helper-app-service;1"];
-    var httpHandler = com.createInstance(Components.interfaces.nsIExternalProtocolService);
-    httpHandler.loadUrl(uri);
+    let ioservice = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
+    let uriToOpen = ioservice.newURI(kHomepage, null, null);
+    let extps = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"].getService(Components.interfaces.nsIExternalProtocolService);
+    extps.loadURI(uriToOpen, null);    
   }
 ,
   loadSettings: function(aReload)
