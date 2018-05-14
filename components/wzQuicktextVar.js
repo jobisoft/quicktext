@@ -522,6 +522,8 @@ wzQuicktextVar.prototype = {
       }
     }
 
+    //if we reach this point, the user requested an non-existing script
+    this.mWindow.alert("Quicktext skript <"+scriptName +"> not found!");
     return "";
   }
 ,
