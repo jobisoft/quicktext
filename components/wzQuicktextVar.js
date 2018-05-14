@@ -499,7 +499,7 @@ wzQuicktextVar.prototype = {
       var script = this.mQuicktext.getScript(i, false);
       if (script.name == scriptName)
       {
-        returnValue = "";
+        let returnValue = "";
         try {
           var s = Components.utils.Sandbox(this.mWindow);
           s.mQuicktext = this;
