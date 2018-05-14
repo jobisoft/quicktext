@@ -150,6 +150,7 @@ var quicktext =
     this.mScriptChangesMade = [];
     this.mGeneralChangesMade = [];
     this.disableSave();
+    this.updateGUI();    
   }
 ,
   shortcutTypeAdv: function()
