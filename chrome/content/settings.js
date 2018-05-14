@@ -633,12 +633,14 @@ var quicktext =
 
     var selNewStart = selStart + 4 + aStr.length;
     textbox.setSelectionRange(selNewStart, selNewStart);
+    this.enableSave();    
   }
 ,
   insertFileVariable: function()
   {
     if ((file = gQuicktext.pickFile(window, -1, 0, this.mStringBundle.getString("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
+      this.enableSave();
   }
 ,
 
