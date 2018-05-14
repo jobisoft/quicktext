@@ -1,7 +1,7 @@
-<!ENTITY quicktext.label "Quicktext Pro">
+<!ENTITY quicktext.label "Quicktext">
 <!ENTITY quicktext.shortname.label "Quicktext">
 
-<!ENTITY quicktext.settings.title "Quicktext Pro の設定">
+<!ENTITY quicktext.settings.title "Quicktext の設定">
 <!ENTITY quicktext.settings.label "設定">
 <!ENTITY quicktext.file.label "ファイル">
 <!ENTITY quicktext.goToHomepage.label "ホームページへ移動">

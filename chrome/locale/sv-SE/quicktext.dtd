@@ -1,7 +1,7 @@
-<!ENTITY quicktext.label "Quicktext Pro">
+<!ENTITY quicktext.label "Quicktext">
 <!ENTITY quicktext.shortname.label "Quicktext">
 
-<!ENTITY quicktext.settings.title "Quicktext Pro Inställningar">
+<!ENTITY quicktext.settings.title "Quicktext Inställningar">
 <!ENTITY quicktext.settings.label "Inställningar">
 <!ENTITY quicktext.file.label "Arkiv">
 <!ENTITY quicktext.goToHomepage.label "Gå till hemsidan">
