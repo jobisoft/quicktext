@@ -1,4 +1,6 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.importGlobalProperties(["XMLHttpRequest"]);
+
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
@@ -497,7 +499,7 @@ wzQuicktextVar.prototype = {
       var script = this.mQuicktext.getScript(i, false);
       if (script.name == scriptName)
       {
-        returnValue = "";
+        let returnValue = "";
         try {
           var s = Components.utils.Sandbox(this.mWindow);
           s.mQuicktext = this;
@@ -520,6 +522,8 @@ wzQuicktextVar.prototype = {
       }
     }
 
+    //if we reach this point, the user requested an non-existing script
+    this.mWindow.alert("Quicktext skript <"+scriptName +"> not found!");
     return "";
   }
 ,
@@ -534,8 +538,6 @@ wzQuicktextVar.prototype = {
 
     // To get the attachments we look in the attachment-field
     // in compose-window.
-    var url = Components.classes["@mozilla.org/network/standard-url;1"].createInstance();
-    url = url.QueryInterface(Components.interfaces.nsIURL);
 
     var bucket = this.mWindow.document.getElementById("attachmentBucket");
     for (var index = 0; index < bucket.getRowCount(); index++)
@@ -544,11 +546,10 @@ wzQuicktextVar.prototype = {
       var attachment = item.attachment;
       if (attachment)
       {
-        url.spec = attachment.url;
         var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
         var fileHandler = ios.getProtocolHandler("file").QueryInterface(Components.interfaces.nsIFileProtocolHandler);
         try {
-          var file = fileHandler.getFileFromURLSpec(url.spec);
+          var file = fileHandler.getFileFromURLSpec(attachment.url);
           if (file.exists())
             this.mData['ATT'].data.push([attachment.name, file.fileSize]);
         }
@@ -743,14 +744,17 @@ wzQuicktextVar.prototype = {
 
     if (url != "")
     {
+      var debug = false;
+      var method = "post";
       var post = [];
+      
       if (aVariables.length > 0)
       {
         var variables = aVariables.shift().split(";");
         for (var k = 0; k < variables.length; k++)
         {
           var tag = variables[k].toLowerCase();
-          var data = this["process_"+ tag]();
+          var data = null;
 
           switch (tag)
           {
@@ -758,6 +762,7 @@ wzQuicktextVar.prototype = {
             case 'att':
             case 'orgheader':
             case 'orgatt':
+              data = this["process_"+ tag]();
               if (typeof data != 'undefined')
               {
                 for (var i in data)
@@ -769,6 +774,7 @@ wzQuicktextVar.prototype = {
             case 'version':
             case 'date':
             case 'time':
+              data = this["process_"+ tag]();
               if (typeof data != 'undefined')
               {
                 for (var i in data)
@@ -778,20 +784,55 @@ wzQuicktextVar.prototype = {
             case 'subject':
             case 'clipboard':
             case 'counter':
+              data = this["process_"+ tag]();
               if (typeof data != 'undefined')
                 post.push(tag +'='+ data);
+              break;
+
+            case 'post':
+            case 'get':
+            case 'options':
+              method = tag;
+              break;
+
+            case 'debug':
+              debug = true;
               break;
           }
         }
       }
 
-      var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
-      req.open('POST', url, false);
-      req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-      req.send(post.join("&"));
+      var req = new XMLHttpRequest();
+      req.open(method, url, true);
+      if (method == "post") req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+      let status = -1;
+      let response = "";
 
-      if (req.status == 200)
-        return req.responseText;
+      req.ontimeout = function () {
+        status = 408;
+        if (debug) response = "Quicktext timeout";
+      };
+
+      req.onerror = function () {
+        status = req.status;
+        if (debug) response = "error ("+status+")";
+      };
+
+      req.onload = function() {
+        status = req.status;
+        if (req.status == 200) response = req.responseText;
+        else 	if (debug) response = "error ("+status+")";
+      };
+
+      if (method == "post") req.send(post.join("&"));
+      else req.send();
+
+      let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+      while (status === -1) {
+        thread.processNextEvent(true);
+      }
+
+      return response;
     }
 
     return "";
@@ -941,13 +982,10 @@ wzQuicktextVar.prototype = {
     var listener = streamListener();
     mms.streamMessage(msgURI, listener, null, null, true, "filter");
 
-    const eqs = Components.interfaces.nsIEventQueueService;
-    while (listener.mBusy)
-    {
-      // This works like a yield. Not sure why
-      Components.classes["@mozilla.org/event-queue-service;1"]
-        .getService(eqs).getSpecialEventQueue(eqs.UI_THREAD_EVENT_QUEUE)
-        .processPendingEvents();
+    //lazy async, wait for listener
+    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
+    while (listener.mBusy) {
+      thread.processNextEvent(true);
     }
 
     // Store all headers in the mData-variable

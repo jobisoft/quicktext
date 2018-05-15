@@ -367,36 +367,22 @@ var quicktext = {
   {
     if (aStr != "")
     {
-	  aStr = gQuicktextVar.parse(aStr);
+      aStr = gQuicktextVar.parse(aStr);
       var files = aStr.split(";");
+
       for (var i = 0; i < files.length; i++)
       {
         var currentFile = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-		currentFile.initWithPath(files[i]);
-		if (!currentFile.exists())
-		  continue;
+        currentFile.initWithPath(files[i]);
+        if (!currentFile.exists())
+          continue;
 
-		// Thunderbird 3 support
-		if (typeof AddFileAttachment == 'function')
-		{
-		  AddFileAttachment(currentFile);
-		}
-		else
-		{
-		  var ioService = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-		  var fileHandler = ioService.getProtocolHandler("file").QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-		  var currentAttachment = fileHandler.getURLSpecFromFile(currentFile);
-  
-		  var attachment = Components.classes["@mozilla.org/messengercompose/attachment;1"].createInstance(Components.interfaces.nsIMsgAttachment);
-		  attachment.url = currentAttachment;
-  
-		  if (!DuplicateFileCheck(currentAttachment))
-		  {
-			AddAttachment(attachment);
-			ChangeAttachmentBucketVisibility(false);
-			gContentChanged = true;
-		  }
-		}
+        var attachment = FileToAttachment(currentFile);
+        if (!DuplicateFileAlreadyAttached(attachment.url))
+        {
+          AddAttachments([attachment]);
+        }
+
       }
     }
   }
