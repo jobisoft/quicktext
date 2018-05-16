@@ -271,8 +271,6 @@ var quicktext = {
       
     }
 
-      // This is for personalscripts  
-      // this.updateOwnVariables("quicktext.insertVariable");
     //add event listeners
     let items = document.getElementsByClassName("customEventListenerForDynamicMenu");
     for (let i=0; i < items.length; i++)

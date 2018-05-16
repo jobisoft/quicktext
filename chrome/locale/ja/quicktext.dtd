@@ -85,7 +85,5 @@
 <!ENTITY quicktext.keyword.label "キーワード">
 <!ENTITY quicktext.browse.label "参照">
 
-<!ENTITY quicktext.ownVariables.label "あなたのタグ">
-
 <!ENTITY quicktext.insertTextFromFileAsHTML.label "ファイルを HTML として挿入">
 <!ENTITY quicktext.insertTextFromFileAsText.label "ファイルをテキストとして挿入">

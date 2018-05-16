@@ -236,10 +236,6 @@
                               </menu>
                               <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />
                               <menu label="&quicktext.scripts.label;" id="variables-scripts" />
-                              <menu label="&quicktext.ownVariables.label;" id="quicktext-own-vars" hidden="true">
-                                <menupopup>
-                                </menupopup>
-                              </menu>
                             </menupopup>
                           </menu>
                         </vbox>

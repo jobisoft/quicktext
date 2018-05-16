@@ -122,10 +122,6 @@
               <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
             </menupopup>
           </menu>
-          <menu label="&quicktext.ownVariables.label;" id="quicktext-own-vars" hidden="true">
-            <menupopup>
-            </menupopup>
-          </menu>
         </menupopup>
       </toolbarbutton>
       <toolbarbutton type="menu" id="quicktext-other" label="&quicktext.other.label;">
