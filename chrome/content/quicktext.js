@@ -359,7 +359,7 @@ var quicktext = {
       this.insertBody(text.text, text.type, aHandleTransaction);
 
       // If we insert any headers we maybe needs to return the placement of the focus
-      setTimeout("quicktext.moveFocus();", 1);
+      setTimeout(function () {quicktext.moveFocus();}, 1);
     }
   }
 ,
