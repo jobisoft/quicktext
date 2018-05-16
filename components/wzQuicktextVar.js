@@ -1152,15 +1152,3 @@ function TrimString(aStr)
   if (!aStr) return "";
   return aStr.replace(/(^\s+)|(\s+$)/g, '')
 }
-
-// Make Array.indexOf work in Firefox versions older than 1.1
-if  (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(item)
-  {
-    for (var i = 0; i < this.length; i++)
-        if (this[i] == item)
-            return i;
-    return -1;
-  };
-}
