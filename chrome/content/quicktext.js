@@ -75,8 +75,8 @@ var quicktext = {
     var contentFrame = GetCurrentEditorElement();
     contentFrame.removeEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
 
-  	// Remove the eventlistener for the popup-menu.
-  	var menu = document.getElementById("msgComposeContext");
+    // Remove the eventlistener for the popup-menu.
+    var menu = document.getElementById("msgComposeContext");
     menu.removeEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
 
     // Need to update GUI when the Quicktext-button is added to the toolbar.
@@ -86,11 +86,11 @@ var quicktext = {
   }
 ,
 
-	/**
-	 * This is called when the var gMsgCompose is init. We now take
-	 * the extraArguments value and listen for state changes so
-	 * we know when the editor is finished.
-	 */
+  /**
+   * This is called when the var gMsgCompose is init. We now take
+   * the extraArguments value and listen for state changes so
+   * we know when the editor is finished.
+   */
   windowInit: function()
   {
   	gMsgCompose.RegisterStateListener(quicktextStateListener);
