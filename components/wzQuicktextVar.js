@@ -1123,16 +1123,6 @@ wzQuicktextVar.prototype = {
 
     return aStr;
   }
-,
-  QueryInterface: function(aIID)
-  {
-    if (aIID.equals(Components.interfaces.wzIQuicktextVar) ||
-        aIID.equals(Components.interfaces.nsISupports))
-      return this;
-
-    Components.returnCode = Components.results.NS_ERROR_NO_INTERFACE;
-    return null;
-  }
 }
 
 /**
