@@ -40,7 +40,7 @@
   <toolbarpalette id="MsgComposeToolbarPalette">
     <toolbarbutton class="toolbarbutton-1" type="menu"
                    id="button-quicktext" label="&quicktext.shortname.label;"
-                   orient="vertical">
+                   orient="horizontal">
       <menupopup />
     </toolbarbutton>
   </toolbarpalette>
