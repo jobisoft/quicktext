@@ -1,8 +1,7 @@
-pref("quicktext.defaultImport", "");
-pref("quicktext.menuCollapse", true);
-pref("quicktext.toolbar", true);
-pref("quicktext.popup", false);
-pref("quicktext.keywordKey", 9);
-pref("quicktext.shortcutModifier", "alt");
-pref("quicktext.shortcutTypeAdv", false);
-pref("quicktext.firstTime", true);
+pref("extensions.quicktext.defaultImport", "");
+pref("extensions.quicktext.menuCollapse", true);
+pref("extensions.quicktext.toolbar", true);
+pref("extensions.quicktext.popup", false);
+pref("extensions.quicktext.keywordKey", 9);
+pref("extensions.quicktext.shortcutModifier", "alt");
+pref("extensions.quicktext.shortcutTypeAdv", false);

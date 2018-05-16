@@ -149,7 +149,7 @@ wzQuicktext.prototype = {
     this.mOS = appInfo.OS;
 
     this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    this.mPrefBranch = this.mPrefService.getBranch("quicktext.");
+    this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
 
     this.mGroup = [];
     this.mTexts = [];
