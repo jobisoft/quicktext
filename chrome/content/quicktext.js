@@ -46,14 +46,13 @@ var quicktext = {
       var contentFrame = GetCurrentEditorElement();
       contentFrame.addEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
 
-    	// Add an eventlistener for the popup-menu.
-    	var menu = document.getElementById("msgComposeContext");
-	    menu.addEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
+      // Add an eventlistener for the popup-menu.
+      var menu = document.getElementById("msgComposeContext");
+      menu.addEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
 
-      // Need to update GUI when the Quicktext-button is added to the toolbar.
-      var composeToolbar = (document.getElementById("composeToolbar")) ? document.getElementById("composeToolbar") : document.getElementById("composeToolbar2");
-      if (composeToolbar)
-        composeToolbar.addEventListener("DOMNodeInserted", function(e) { quicktext.toolbarButtonAdded(e); }, false);
+      // Need to update GUI when the Quicktext-button is added to the toolbar (updating on ANY change to the toolbar is much more simple, and it does not hurt) 
+      window.addEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
+
     }
   }
 ,
@@ -78,11 +77,6 @@ var quicktext = {
     // Remove the eventlistener for the popup-menu.
     var menu = document.getElementById("msgComposeContext");
     menu.removeEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
-
-    // Need to update GUI when the Quicktext-button is added to the toolbar.
-    var composeToolbar = (document.getElementById("composeToolbar")) ? document.getElementById("composeToolbar") : document.getElementById("composeToolbar2");
-    if (composeToolbar)
-      composeToolbar.removeEventListener("DOMNodeInserted", function(e) { quicktext.toolbarButtonAdded(e); }, false);
   }
 ,
 
@@ -287,12 +281,6 @@ var quicktext = {
     var hidden = !gQuicktext.viewPopup;
     document.getElementById("quicktext-popup").hidden = hidden;
     document.getElementById("quicktext-popupsep").hidden = hidden;
-  }
-,
-  toolbarButtonAdded: function(aEvent)
-  {
-    if (aEvent.originalTarget && aEvent.originalTarget.getAttribute("id") == "button-quicktext")
-      this.updateGUI();
   }
 ,
   openSettings: function()
