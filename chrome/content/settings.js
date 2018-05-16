@@ -547,7 +547,8 @@ var quicktext =
             var textElem = document.createElement("menuitem");
             var text = gQuicktext.getText(i, j, true);
             textElem.setAttribute('label', text.name);
-            textElem.setAttribute('oncommand', "quicktext.insertVariable('TEXT="+ group.name +"|"+ text.name +"');");
+            textElem.setAttribute('group', group.name);
+            textElem.addEventListener("command", function() { quicktext.insertVariable("TEXT="+ this.getAttribute("group") +"|"+ this.getAttribute("label")); });
             textElem = groupParent.appendChild(textElem);
           }
         }
@@ -572,7 +573,7 @@ var quicktext =
         var script = gQuicktext.getScript(i, true);
         var textElem = document.createElement("menuitem");
         textElem.setAttribute('label', script.name);
-        textElem.setAttribute('oncommand', "quicktext.insertVariable('SCRIPT="+ script.name +"');");
+        textElem.addEventListener("command", function() { quicktext.insertVariable("SCRIPT="+ this.getAttribute("label")); });
         textElem = parent.appendChild(textElem);
       }
     }
