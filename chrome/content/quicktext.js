@@ -66,9 +66,9 @@ var quicktext = {
     // Remove the observer
     gQuicktext.removeObserver(this);
 
-    window.removeEventListener("keypress", function(e) { quicktext.windowKeyPress(e); }, false);
-    window.removeEventListener("keydown", function(e) { quicktext.windowKeyDown(e); }, false);
-    window.removeEventListener("keyup", function(e) { quicktext.windowKeyUp(e); }, false);
+    window.removeEventListener("keypress", function(e) { quicktext.windowKeyPress(e); }, true);
+    window.removeEventListener("keydown", function(e) { quicktext.windowKeyDown(e); }, true);
+    window.removeEventListener("keyup", function(e) { quicktext.windowKeyUp(e); }, true);
 
     // Remove the eventlistener from the editor
     var contentFrame = GetCurrentEditorElement();
@@ -77,6 +77,8 @@ var quicktext = {
     // Remove the eventlistener for the popup-menu.
     var menu = document.getElementById("msgComposeContext");
     menu.removeEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
+
+    window.removeEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
   }
 ,
 
