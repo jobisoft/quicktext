@@ -193,6 +193,7 @@ var quicktext = {
               menupopup.appendChild(toolbarbutton);
             }
           }
+          toolbarbuttonGroup = null;
 
           // Update the keyshortcuts
           for (var j = 0; j < textLength; j++)
@@ -231,12 +232,12 @@ var quicktext = {
           //rebuild via copy from the quicktext toolbar - loop over toolbarbuttons inside toolbar
           for (let i = 0; i < toolbar.childNodes.length; i++)
           {
+            let menu;
             let node = toolbar.childNodes[i];
             switch (node.nodeName)
             {
               case "toolbarbutton":
                 // Check if the group is collapse or not
-                var menu;
                 if (node.getAttribute("type") == "menu")
                 {
                   menu = document.createElement("menu");
@@ -260,6 +261,7 @@ var quicktext = {
                 rootElement.appendChild(document.createElement("menuseparator"));
                 break;
             }
+            menu = null;
           }
           
         }
