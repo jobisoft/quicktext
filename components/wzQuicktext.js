@@ -170,8 +170,16 @@ wzQuicktext.prototype = {
     if (this.mPrefBranch.getPrefType("menuCollapse") == this.mPrefBranch.PREF_BOOL)
       this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
 
-    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT)
+    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
       this.mKeywordKey = this.mPrefBranch.getIntPref("keywordKey");
+      
+      //migrate old keywordKey if differs from default(9)
+      if (this.mPrefBranchOld.prefHasUserValue("keywordKey") && this.mPrefBranchOld.getPrefType("keywordKey") == this.mPrefBranchOld.PREF_INT && this.mPrefBranchOld.getIntPref("keywordKey") != 9) {
+        this.mKeywordKey = this.mPrefBranchOld.getIntPref("keywordKey");
+        this.mPrefBranchOld.setIntPref("keywordKey", 9);
+        this.mPrefBranch.setIntPref("keywordKey", this.mKeywordKey);
+      }
+    }
 
     if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL)
       this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
@@ -187,7 +195,7 @@ wzQuicktext.prototype = {
       this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");
       
       //migrate: Use (and clear) old data if present
-      if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
+      if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getPrefType("defaultImport") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
         this.mDefaultImport = this.mPrefBranchOld.getCharPref("defaultImport");
         this.mPrefBranchOld.setCharPref("defaultImport", "");
         this.mPrefBranch.setCharPref("defaultImport", this.mDefaultImport);
