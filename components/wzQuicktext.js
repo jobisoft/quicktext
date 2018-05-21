@@ -172,8 +172,7 @@ wzQuicktext.prototype = {
 
     if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
       this.mKeywordKey = this.mPrefBranch.getIntPref("keywordKey");
-      
-      //migrate old keywordKey if differs from default(9)
+      //migrate old keywordKey (and reset to default), if differs from default(9)
       if (this.mPrefBranchOld.prefHasUserValue("keywordKey") && this.mPrefBranchOld.getPrefType("keywordKey") == this.mPrefBranchOld.PREF_INT && this.mPrefBranchOld.getIntPref("keywordKey") != 9) {
         this.mKeywordKey = this.mPrefBranchOld.getIntPref("keywordKey");
         this.mPrefBranchOld.setIntPref("keywordKey", 9);
@@ -181,19 +180,32 @@ wzQuicktext.prototype = {
       }
     }
 
-    if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL)
+    if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL) {
       this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
+      //migrate old shortcutTypeAdv (and reset to default), if differs from default(false)
+      if (this.mPrefBranchOld.prefHasUserValue("shortcutTypeAdv") && this.mPrefBranchOld.getPrefType("shortcutTypeAdv") == this.mPrefBranchOld.PREF_BOOL && this.mPrefBranchOld.getBoolPref("shortcutTypeAdv") != false) {
+        this.mShortcutTypeAdv = this.mPrefBranchOld.getBoolPref("shortcutTypeAdv");
+        this.mPrefBranchOld.setBoolPref("shortcutTypeAdv", false);
+        this.mPrefBranch.setBoolPref("shortcutTypeAdv", this.mShortcutTypeAdv);
+      }
+    }
 
-    if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING)
+    if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING) {
       this.mShortcutModifier = this.mPrefBranch.getCharPref("shortcutModifier");
+      //migrate: Use (and clear) old data if present
+      if (this.mPrefBranchOld.prefHasUserValue("shortcutModifier") && this.mPrefBranchOld.getPrefType("shortcutModifier") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("shortcutModifier") != "") {
+        this.mShortcutModifier = this.mPrefBranchOld.getCharPref("shortcutModifier");
+        this.mPrefBranchOld.setCharPref("shortcutModifier", "");
+        this.mPrefBranch.setCharPref("shortcutModifier", this.mShortcutModifier);
+      }
+    }
 
     if (this.mPrefBranch.getPrefType("collapseState") == this.mPrefBranch.PREF_STRING)
       this.mCollapseState = this.mPrefBranch.getCharPref("collapseState");
     
     if (this.mPrefBranch.getPrefType("defaultImport") == this.mPrefBranch.PREF_STRING)
     {
-      this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");
-      
+      this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");      
       //migrate: Use (and clear) old data if present
       if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getPrefType("defaultImport") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
         this.mDefaultImport = this.mPrefBranchOld.getCharPref("defaultImport");
