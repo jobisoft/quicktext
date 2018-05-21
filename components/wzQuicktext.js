@@ -57,7 +57,7 @@ wzQuicktext.prototype = {
   set defaultImport(aDefaultImport)
   {
     this.mDefaultImport = aDefaultImport;
-    this.setUnicharPref("defaultImport", aDefaultImport);
+    this.mPrefBranch.setCharPref("defaultImport", aDefaultImport);
 
     return this.mDefaultImport;
   }
@@ -184,7 +184,15 @@ wzQuicktext.prototype = {
     
     if (this.mPrefBranch.getPrefType("defaultImport") == this.mPrefBranch.PREF_STRING)
     {
-      this.mDefaultImport = this.getLocalizedUnicharPref("defaultImport");
+      this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");
+      
+      //migrate: Use (and clear) old data if present
+      if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
+        this.mDefaultImport = this.mPrefBranchOld.getCharPref("defaultImport");
+        this.mPrefBranchOld.setCharPref("defaultImport", "");
+        this.mPrefBranch.setCharPref("defaultImport", this.mDefaultImport);
+      }
+      
       if (this.mDefaultImport != null)
       {
         var defaultImport = this.mDefaultImport.split(";");
@@ -917,6 +925,7 @@ wzQuicktext.prototype = {
   /*
    * PREF FUNCTIONS
    */
+  //unused, only used to store filenames/webaddr, no need for fancy stuff - use getCharPref now
   getLocalizedUnicharPref: function (aPrefName)
   {
     try {
@@ -926,6 +935,7 @@ wzQuicktext.prototype = {
     return null;        // quiet warnings
   }
 ,
+  //unused, only used to store filenames/webaddr, no need for fancy stuff - use setCharPref now
   setUnicharPref: function (aPrefName, aPrefValue)
   {
     try {
