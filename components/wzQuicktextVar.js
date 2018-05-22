@@ -1,4 +1,5 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("chrome://quicktext/content/utils.js");
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);
 
 
@@ -951,17 +952,11 @@ wzQuicktextVar.prototype = {
     this.mData['TIME'].data = {};
 
     var timeStamp = new Date();
-    var options = {};
-    options["DATE-long"] = { weekday: "long", year: "numeric", month: "long", day: "2-digit" };
-    options["DATE-short"] = { year: "numeric", month: "2-digit", day: "2-digit" }; 
-    options["TIME-seconds"] = { hour: "2-digit", minute: "2-digit", second: "2-digit" };
-    options["TIME-noseconds"] = { hour: "2-digit", minute: "2-digit" }; 
-      
-    let fields = Object.keys(options);
+    let fields = ["DATE-long", "DATE-short", "TIME-seconds", "TIME-noseconds"];
     for (let i=0; i < fields.length; i++) {
         let field = fields[i];
         let fieldinfo = field.split("-");
-        this.mData[fieldinfo[0]].data[fieldinfo[1]] = TrimString(new Intl.DateTimeFormat([], options[field]).format(timeStamp));
+        this.mData[fieldinfo[0]].data[fieldinfo[1]] = TrimString(quicktextUtils.dateTimeFormat(field, timeStamp));
     }
  }
 ,
