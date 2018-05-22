@@ -24,39 +24,23 @@ wzQuicktext.prototype = {
   mEditingScripts:      [],
   mPrefService:         null,
   mPrefBranch:          null,
-  mViewToolbar:         true,
-  mViewPopup:           false,
   mCollapseGroup:       true,
   mDefaultImport:       "",
   mKeywordKey:          9,
   mShortcutModifier:    "alt",
   mShortcutTypeAdv:     false,
-  mFirstTime:           true,
-  mDefaultDir:          null,
   mQuicktextDir:        null,
   mObserverList:        [],
   mOS:                  "WINNT",
   mCollapseState:       ""
 ,
-  get viewToolbar() { return this.mViewToolbar; },
-  set viewToolbar(aViewToolbar)
-  {
-    this.mViewToolbar = aViewToolbar;
-    this.mPrefBranch.setBoolPref("toolbar", aViewToolbar);
-
-    this.notifyObservers("updatetoolbar", "");
-
-    return this.mViewToolbar;
-  }
+  //obsolete but cannot remove due to IDL
+  get viewToolbar() { return true; },
+  set viewToolbar(aViewToolbar) {}
 ,
-  get viewPopup() { return this.mViewPopup; },
-  set viewPopup(aViewPopup)
-  {
-    this.mViewPopup = aViewPopup;
-    this.mPrefBranch.setBoolPref("popup", aViewPopup);
-
-    return this.mViewPopup;
-  }
+  //obsolete but cannot remove due to IDL
+  get viewPopup() { return false; },
+  set viewPopup(aViewPopup) {}
 ,
   get collapseGroup() { return this.mCollapseGroup; },
   set collapseGroup(aCollapseGroup)
@@ -73,7 +57,7 @@ wzQuicktext.prototype = {
   set defaultImport(aDefaultImport)
   {
     this.mDefaultImport = aDefaultImport;
-    this.setUnicharPref("defaultImport", aDefaultImport);
+    this.mPrefBranch.setCharPref("defaultImport", aDefaultImport);
 
     return this.mDefaultImport;
   }
@@ -96,14 +80,9 @@ wzQuicktext.prototype = {
     return this.mShortcutModifier;
   }
 ,
-  get firstTime() { return this.mFirstTime; },
-  set firstTime(aFirstTime)
-  {
-    this.mFirstTime = aFirstTime;
-    this.mPrefBranch.setBoolPref("firstTime", aFirstTime);
-
-    return this.mFirstTime;
-  }
+  //obsolete but cannot remove due to IDL
+  get firstTime() { return false },
+  set firstTime(aFirstTime) {}
 ,
   get collapseState() { return this.mCollapseState; },
   set collapseState(aCollapseState)
@@ -149,7 +128,8 @@ wzQuicktext.prototype = {
     this.mOS = appInfo.OS;
 
     this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    this.mPrefBranch = this.mPrefService.getBranch("quicktext.");
+    this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
+    this.mPrefBranchOld = this.mPrefService.getBranch("quicktext.");
 
     this.mGroup = [];
     this.mTexts = [];
@@ -178,58 +158,6 @@ wzQuicktext.prototype = {
       {
         this.importFromFile(quicktextFile, 0, true, false);
       }
-      else
-      {
-        // If we don't find the file that could mean that the user has used
-        // an old version of the extension so we get that data and makes the file
-
-        if (this.mPrefBranch.getPrefType("menu") == this.mPrefBranch.PREF_STRING)
-        {
-          var menuPref = this.getLocalizedUnicharPref("menu");
-          if (menuPref != null)
-          {
-            var groupItems = this.specialSplitString(menuPref, [kSepChar1a, kSepChar1b]);
-
-            for (var i = 0; i < groupItems.length; i++)
-            {
-              this.mGroup[i] = Components.classes["@hesslow.se/quicktext/group;1"].createInstance(Components.interfaces.wzIQuicktextGroup);
-              this.mGroup[i].name = groupItems[i];
-              this.mGroup[i].type = 0;
-
-              this.mTexts[i] = [];
-              if (this.mPrefBranch.getPrefType("texts" + (i+1)) == this.mPrefBranch.PREF_STRING)
-              {
-                var tmpText = this.getLocalizedUnicharPref("texts" + (i+1));
-                if (tmpText != null)
-                {
-                  tmpText = this.specialSplitString(tmpText, [kSepChar1a, kSepChar1b]);
-                  for (var j = 0; j < tmpText.length; j++)
-                  {
-                    tmpText[j] = this.specialSplitString(tmpText[j], [kSepChar2]);
-
-                    this.mTexts[i][j] = Components.classes["@hesslow.se/quicktext/template;1"].createInstance(Components.interfaces.wzIQuicktextTemplate);
-                    this.mTexts[i][j].name        = tmpText[j][0];
-                    this.mTexts[i][j].text        = tmpText[j][1];
-                    this.mTexts[i][j].shortcut    = tmpText[j][2];
-                    this.mTexts[i][j].type        = tmpText[j][3];
-                    this.mTexts[i][j].keyword     = tmpText[j][4];
-                    this.mTexts[i][j].subject     = tmpText[j][5];
-                    this.mTexts[i][j].attachments = tmpText[j][6];
-
-                    if (!(this.mTexts[i][j].shortcut > 0))
-                      this.mTexts[i][j].shortcut = "";
-                    if (this.mTexts[i][j].shortcut == 10)
-                      this.mTexts[i][j].shortcut = 0;
-                  }
-                }
-              }
-            }
-          }
-        }
-
-        // Create the template.xml file. So we use it in the future
-        this.exportTemplatesToFile(quicktextFile);
-      }
 
       // If the script-file exists import it
       var scriptFile = this.mQuicktextDir.clone();
@@ -239,46 +167,52 @@ wzQuicktext.prototype = {
     }
 
     // Get prefs
-    if (this.mPrefBranch.getPrefType("toolbar") == this.mPrefBranch.PREF_BOOL)
-      this.mViewToolbar = this.mPrefBranch.getBoolPref("toolbar");
-
     if (this.mPrefBranch.getPrefType("menuCollapse") == this.mPrefBranch.PREF_BOOL)
       this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
 
-    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT)
+    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
       this.mKeywordKey = this.mPrefBranch.getIntPref("keywordKey");
+      //migrate old keywordKey (and reset to default), if differs from default(9)
+      if (this.mPrefBranchOld.prefHasUserValue("keywordKey") && this.mPrefBranchOld.getPrefType("keywordKey") == this.mPrefBranchOld.PREF_INT && this.mPrefBranchOld.getIntPref("keywordKey") != 9) {
+        this.mKeywordKey = this.mPrefBranchOld.getIntPref("keywordKey");
+        this.mPrefBranchOld.setIntPref("keywordKey", 9);
+        this.mPrefBranch.setIntPref("keywordKey", this.mKeywordKey);
+      }
+    }
 
-    if (this.mPrefBranch.getPrefType("firstTime") == this.mPrefBranch.PREF_BOOL)
-      this.mFirstTime = this.mPrefBranch.getBoolPref("firstTime");
-
-    if (this.mPrefBranch.getPrefType("popup") == this.mPrefBranch.PREF_BOOL)
-      this.mViewPopup = this.mPrefBranch.getBoolPref("popup");
-
-    if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL)
+    if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL) {
       this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
+      //migrate old shortcutTypeAdv (and reset to default), if differs from default(false)
+      if (this.mPrefBranchOld.prefHasUserValue("shortcutTypeAdv") && this.mPrefBranchOld.getPrefType("shortcutTypeAdv") == this.mPrefBranchOld.PREF_BOOL && this.mPrefBranchOld.getBoolPref("shortcutTypeAdv") != false) {
+        this.mShortcutTypeAdv = this.mPrefBranchOld.getBoolPref("shortcutTypeAdv");
+        this.mPrefBranchOld.setBoolPref("shortcutTypeAdv", false);
+        this.mPrefBranch.setBoolPref("shortcutTypeAdv", this.mShortcutTypeAdv);
+      }
+    }
 
-    if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING)
+    if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING) {
       this.mShortcutModifier = this.mPrefBranch.getCharPref("shortcutModifier");
+      //migrate: Use (and clear) old data if present
+      if (this.mPrefBranchOld.prefHasUserValue("shortcutModifier") && this.mPrefBranchOld.getPrefType("shortcutModifier") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("shortcutModifier") != "") {
+        this.mShortcutModifier = this.mPrefBranchOld.getCharPref("shortcutModifier");
+        this.mPrefBranchOld.setCharPref("shortcutModifier", "");
+        this.mPrefBranch.setCharPref("shortcutModifier", this.mShortcutModifier);
+      }
+    }
 
     if (this.mPrefBranch.getPrefType("collapseState") == this.mPrefBranch.PREF_STRING)
       this.mCollapseState = this.mPrefBranch.getCharPref("collapseState");
-
-    if (this.mPrefBranch.getPrefType("defaultDir") == this.mPrefBranch.PREF_STRING)
-    {
-      var defaultDir = this.mPrefBranch.getCharPref("defaultDir");
-      this.mDefaultDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-      try {
-        this.mDefaultDir.initWithPath(defaultDir);
-      }
-      catch (e)
-      {
-        this.mDefaultDir = null;
-      }
-    }
     
     if (this.mPrefBranch.getPrefType("defaultImport") == this.mPrefBranch.PREF_STRING)
     {
-      this.mDefaultImport = this.getLocalizedUnicharPref("defaultImport");
+      this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");      
+      //migrate: Use (and clear) old data if present
+      if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getPrefType("defaultImport") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
+        this.mDefaultImport = this.mPrefBranchOld.getCharPref("defaultImport");
+        this.mPrefBranchOld.setCharPref("defaultImport", "");
+        this.mPrefBranch.setCharPref("defaultImport", this.mDefaultImport);
+      }
+      
       if (this.mDefaultImport != null)
       {
         var defaultImport = this.mDefaultImport.split(";");
@@ -718,9 +652,6 @@ wzQuicktext.prototype = {
 
     filePicker.appendFilters(filePicker.filterAll);
 
-    if(this.mDefaultDir)
-      filePicker.displayDirectory = this.mDefaultDir;
-
     // Lazy implementation from: https://wiki.mozilla.org/Thunderbird/Add-ons_Guide_57#Removed_interfaces_in_mozilla57
     let done = false;
     let rv;
@@ -1014,6 +945,7 @@ wzQuicktext.prototype = {
   /*
    * PREF FUNCTIONS
    */
+  //unused, only used to store filenames/webaddr, no need for fancy stuff - use getCharPref now
   getLocalizedUnicharPref: function (aPrefName)
   {
     try {
@@ -1023,6 +955,7 @@ wzQuicktext.prototype = {
     return null;        // quiet warnings
   }
 ,
+  //unused, only used to store filenames/webaddr, no need for fancy stuff - use setCharPref now
   setUnicharPref: function (aPrefName, aPrefValue)
   {
     try {

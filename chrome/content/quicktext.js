@@ -46,14 +46,13 @@ var quicktext = {
       var contentFrame = GetCurrentEditorElement();
       contentFrame.addEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
 
-    	// Add an eventlistener for the popup-menu.
-    	var menu = document.getElementById("msgComposeContext");
-	    menu.addEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
+      // Add an eventlistener for the popup-menu.
+      var menu = document.getElementById("msgComposeContext");
+      menu.addEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
 
-      // Need to update GUI when the Quicktext-button is added to the toolbar.
-      var composeToolbar = (document.getElementById("composeToolbar")) ? document.getElementById("composeToolbar") : document.getElementById("composeToolbar2");
-      if (composeToolbar)
-        composeToolbar.addEventListener("DOMNodeInserted", function(e) { quicktext.toolbarButtonAdded(e); }, false);
+      // Need to update GUI when the Quicktext-button is added to the toolbar (updating on ANY change to the toolbar is much more simple, and it does not hurt) 
+      window.addEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
+
     }
   }
 ,
@@ -67,30 +66,27 @@ var quicktext = {
     // Remove the observer
     gQuicktext.removeObserver(this);
 
-    window.removeEventListener("keypress", function(e) { quicktext.windowKeyPress(e); }, false);
-    window.removeEventListener("keydown", function(e) { quicktext.windowKeyDown(e); }, false);
-    window.removeEventListener("keyup", function(e) { quicktext.windowKeyUp(e); }, false);
+    window.removeEventListener("keypress", function(e) { quicktext.windowKeyPress(e); }, true);
+    window.removeEventListener("keydown", function(e) { quicktext.windowKeyDown(e); }, true);
+    window.removeEventListener("keyup", function(e) { quicktext.windowKeyUp(e); }, true);
 
     // Remove the eventlistener from the editor
     var contentFrame = GetCurrentEditorElement();
     contentFrame.removeEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
 
-  	// Remove the eventlistener for the popup-menu.
-  	var menu = document.getElementById("msgComposeContext");
+    // Remove the eventlistener for the popup-menu.
+    var menu = document.getElementById("msgComposeContext");
     menu.removeEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
 
-    // Need to update GUI when the Quicktext-button is added to the toolbar.
-    var composeToolbar = (document.getElementById("composeToolbar")) ? document.getElementById("composeToolbar") : document.getElementById("composeToolbar2");
-    if (composeToolbar)
-      composeToolbar.removeEventListener("DOMNodeInserted", function(e) { quicktext.toolbarButtonAdded(e); }, false);
+    window.removeEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
   }
 ,
 
-	/**
-	 * This is called when the var gMsgCompose is init. We now take
-	 * the extraArguments value and listen for state changes so
-	 * we know when the editor is finished.
-	 */
+  /**
+   * This is called when the var gMsgCompose is init. We now take
+   * the extraArguments value and listen for state changes so
+   * we know when the editor is finished.
+   */
   windowInit: function()
   {
   	gMsgCompose.RegisterStateListener(quicktextStateListener);
@@ -130,39 +126,45 @@ var quicktext = {
     this.mKeywords = {};
 
     // Update the toolbar
-    if ((toolbar = document.getElementById("quicktext-toolbar")) != null)
+    var toolbar = document.getElementById("quicktext-toolbar");
+    if (toolbar != null)
     {
+
+      //clear toolbar and store current "variables" and "other" menus (the two rightmost ones)
       var toolbarbuttonVar = null;
       var toolbarbuttonOther = null;
-
       var length = toolbar.childNodes.length;
       for(var i = length-1; i >= 0; i--)
       {
-        toolbarbutton = toolbar.childNodes[i];
-        switch(toolbarbutton.getAttribute("id"))
+        var element = toolbar.childNodes[i];
+        switch(element.getAttribute("id"))
         {
           case 'quicktext-variables':
-            toolbarbuttonVar = toolbarbutton.cloneNode(true);
+            toolbarbuttonVar = element.cloneNode(true);
             break;
           case 'quicktext-other':
-            toolbarbuttonOther = toolbarbutton.cloneNode(true);
+            toolbarbuttonOther = element.cloneNode(true);
             break;
         }
-        toolbar.removeChild(toolbarbutton);
+        toolbar.removeChild(element);
       }
 
+      //rebuild template groups (the leftmost entries)
       var groupLength = gQuicktext.getGroupLength(false);
       for (var i = 0; i < groupLength; i++)
       {
         var textLength = gQuicktext.getTextLength(i, false);
         if (textLength)
         {
+          //Add first level element, this will be either a menu or a button (if only one text in this group)
           var toolbarbuttonGroup = toolbar.appendChild(document.createElement("toolbarbutton"));
 
           if (textLength == 1 && gQuicktext.collapseGroup)
           {
-            toolbarbuttonGroup.setAttribute("oncommand", "quicktext.insertTemplate(\"" + i + "\",\"0\");");
             toolbarbuttonGroup.setAttribute("label", gQuicktext.getText(i, 0, false).name);
+            toolbarbuttonGroup.setAttribute("i", i);
+            toolbarbuttonGroup.setAttribute("j", 0);
+            toolbarbuttonGroup.setAttribute("class", "customEventListenerForDynamicMenu");
           }
           else
           {
@@ -170,13 +172,16 @@ var quicktext = {
             toolbarbuttonGroup.setAttribute("label", gQuicktext.getGroup(i, false).name);
             var menupopup = toolbarbuttonGroup.appendChild(document.createElement("menupopup"));
 
+            //add second level elements: all found texts of this group
             for (var j = 0; j < textLength; j++)
             {
               var text = gQuicktext.getText(i, j, false);
 
               var toolbarbutton = document.createElement("menuitem");
-              toolbarbutton.setAttribute("oncommand", "quicktext.insertTemplate(\"" + i + "\",\"" + j + "\");");   // event.target.value
               toolbarbutton.setAttribute("label", text.name);
+              toolbarbutton.setAttribute("i", i);
+              toolbarbutton.setAttribute("j", j);
+              toolbarbutton.setAttribute("class", "customEventListenerForDynamicMenu");
 
               var shortcut = text.shortcut;
               if (shortcut > 0)
@@ -188,6 +193,7 @@ var quicktext = {
               menupopup.appendChild(toolbarbutton);
             }
           }
+          toolbarbuttonGroup = null;
 
           // Update the keyshortcuts
           for (var j = 0; j < textLength; j++)
@@ -204,92 +210,71 @@ var quicktext = {
         }
       }
 
+      //add a flex spacer to push the VAR and OTHER elements to the right 
       var spacer = document.createElement("spacer");
       spacer.setAttribute("flex", "1");
       toolbar.appendChild(spacer);
       toolbar.appendChild(toolbarbuttonVar);
       toolbar.appendChild(toolbarbuttonOther);
 
-      // Update the main toolbar
-      if (document.getElementById("button-quicktext") != null && (mainToolbar = document.getElementById("button-quicktext").childNodes[0]) != null)
-      {
-        var length = mainToolbar.childNodes.length;
-        for(var i = length-1; i >= 0; i--)
-          mainToolbar.removeChild(mainToolbar.childNodes[i]);
+            
+      // Update the toolbar inside the toolbarpalette and the drop-down menu - if used
+      let optionalUI = ["button-quicktext", "quicktext-popup"];
+      for (let a=0; a < optionalUI.length; a++) { 
+        if (document.getElementById(optionalUI[a]) != null && document.getElementById(optionalUI[a]).childNodes[0] != null) {
+          let rootElement = document.getElementById(optionalUI[a]).childNodes[0]; //get the menupop
+          
+          //clear
+          let length = rootElement.childNodes.length;
+          for (let i = length-1; i >= 0; i--)
+            rootElement.removeChild(rootElement.childNodes[i]);
 
-        for (var i = 0; i < toolbar.childNodes.length; i++)
-        {
-          var node = toolbar.childNodes[i];
-          switch (node.nodeName)
+          //rebuild via copy from the quicktext toolbar - loop over toolbarbuttons inside toolbar
+          for (let i = 0; i < toolbar.childNodes.length; i++)
           {
-            case "toolbarbutton":
-              // Check if the group is collapse or not
-              var menu;
-              if (node.getAttribute("type") == "menu")
-              {
-                menu = document.createElement("menu");
-                menu.setAttribute("label", node.getAttribute("label"));
-  
-                for (var j = 0; j < node.childNodes.length; j++)
-                  menu.appendChild(node.childNodes[j].cloneNode(true));
-              }
-              else
-              {
-                menu = document.createElement("menuitem");
-                menu.setAttribute("label", node.getAttribute("label"));
-                menu.setAttribute("oncommand", node.getAttribute("oncommand"));
-              }
-              mainToolbar.appendChild(menu);
-              break;
-            case "spacer":
-              mainToolbar.appendChild(document.createElement("menuseparator"));
-              break;
+            let menu;
+            let node = toolbar.childNodes[i];
+            switch (node.nodeName)
+            {
+              case "toolbarbutton":
+                // Check if the group is collapse or not
+                if (node.getAttribute("type") == "menu")
+                {
+                  menu = document.createElement("menu");
+                  menu.setAttribute("label", node.getAttribute("label"));
+    
+                  for (let j = 0; j < node.childNodes.length; j++) {
+                    menu.appendChild(node.childNodes[j].cloneNode(true));
+                  }
+                }
+                else
+                {
+                  menu = document.createElement("menuitem");
+                  menu.setAttribute("label", node.getAttribute("label"));
+                  menu.setAttribute("i", node.getAttribute("i"));
+                  menu.setAttribute("j", node.getAttribute("j"));
+                  menu.setAttribute("class", "customEventListenerForDynamicMenu");
+                }
+                rootElement.appendChild(menu);
+                break;
+              case "spacer":
+                rootElement.appendChild(document.createElement("menuseparator"));
+                break;
+            }
+            menu = null;
           }
+          
         }
       }
-
-      // Update the popupmenu
-      if (document.getElementById("quicktext-popup") != null && (popup = document.getElementById("quicktext-popup").childNodes[0]) != null)
-      {
-        var length = popup.childNodes.length;
-        for(var i = length-1; i >= 0; i--)
-          popup.removeChild(popup.childNodes[i]);
-
-        for (var i = 0; i < toolbar.childNodes.length; i++)
-        {
-          var node = toolbar.childNodes[i];
-          switch (node.nodeName)
-          {
-            case "toolbarbutton":
-              var menu;
-              if (node.getAttribute("type") == "menu")
-              {
-                menu = document.createElement("menu");
-                menu.setAttribute("label", node.getAttribute("label"));
-  
-                for (var j = 0; j < node.childNodes.length; j++)
-                  menu.appendChild(node.childNodes[j].cloneNode(true));
-              }
-              else
-              {
-                menu = document.createElement("menuitem");
-                menu.setAttribute("label", node.getAttribute("label"));
-                menu.setAttribute("oncommand", node.getAttribute("oncommand"));
-              }
-              popup.appendChild(menu);
-              break;
-            case "spacer":
-              popup.appendChild(document.createElement("menuseparator"));
-              break;
-          }
-        }
-      }
-
-      // This is for personalscripts  
-      // this.updateOwnVariables("quicktext.insertVariable");
+      
     }
 
-    this.visibleToolbar();
+    //add event listeners
+    let items = document.getElementsByClassName("customEventListenerForDynamicMenu");
+    for (let i=0; i < items.length; i++)
+    {
+      items[i].addEventListener("command", function() { quicktext.insertTemplate(this.getAttribute("i"), this.getAttribute("j")); }, true);
+    }
   }
 ,
   popupshowing: function(aEvent)
@@ -299,37 +284,17 @@ var quicktext = {
     document.getElementById("quicktext-popupsep").hidden = hidden;
   }
 ,
-  toolbarButtonAdded: function(aEvent)
-  {
-    if (aEvent.originalTarget && aEvent.originalTarget.getAttribute("id") == "button-quicktext")
-      this.updateGUI();
-  }
-,
   openSettings: function()
   {
     var settingsHandle = window.open("chrome://quicktext/content/settings.xul", "quicktextConfig", "chrome,resizable,centerscreen");
     settingsHandle.focus();
   }
 ,
-  toogleToolbar: function()
-  {
-    gQuicktext.viewToolbar = !gQuicktext.viewToolbar;
-  }
+  //unused
+  toogleToolbar: function() {}
 ,
-  visibleToolbar: function()
-  {
-    // Set the view of the toolbar to what it should be
-    if (gQuicktext.viewToolbar)
-    {
-      document.getElementById("quicktext-view").setAttribute("checked", true);
-      document.getElementById("quicktext-toolbar").removeAttribute("collapsed");
-    }
-    else
-    {
-      document.getElementById("quicktext-view").removeAttribute("checked");
-      document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
-    }    
-  }
+  //unused
+  visibleToolbar: function() {}
 ,
 
   /*
@@ -359,7 +324,7 @@ var quicktext = {
       this.insertBody(text.text, text.type, aHandleTransaction);
 
       // If we insert any headers we maybe needs to return the placement of the focus
-      setTimeout("quicktext.moveFocus();", 1);
+      setTimeout(function () {quicktext.moveFocus();}, 1);
     }
   }
 ,
@@ -798,9 +763,6 @@ var quicktext = {
       case "updatesettings":
         this.updateGUI();
         break;
-      case "updatetoolbar":
-        this.visibleToolbar();
-        break;
     }
   }
 ,
@@ -815,16 +777,4 @@ var quicktext = {
     Components.interfaces.nsISupportsWeakReference,
     Components.interfaces.nsIFactory,
     ])
-}
-
-// Make Array.indexOf work in Firefox versions older than 1.1
-if  (!Array.prototype.indexOf)
-{
-  Array.prototype.indexOf = function(item)
-  {
-    for (var i = 0; i < this.length; i++)
-        if (this[i] == item)
-            return i;
-    return -1;
-  };
 }

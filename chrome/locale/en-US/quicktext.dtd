@@ -85,7 +85,5 @@
 <!ENTITY quicktext.keyword.label "Keyword">
 <!ENTITY quicktext.browse.label "Browse">
 
-<!ENTITY quicktext.ownVariables.label "Your own variables">
-
 <!ENTITY quicktext.insertTextFromFileAsHTML.label "Insert file as HTML">
 <!ENTITY quicktext.insertTextFromFileAsText.label "Insert file as text">

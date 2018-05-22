@@ -40,7 +40,7 @@
   <toolbarpalette id="MsgComposeToolbarPalette">
     <toolbarbutton class="toolbarbutton-1" type="menu"
                    id="button-quicktext" label="&quicktext.shortname.label;"
-                   orient="vertical">
+                   orient="horizontal">
       <menupopup />
     </toolbarbutton>
   </toolbarpalette>
@@ -51,10 +51,6 @@
 		  <menupopup />
 		</menu>
 	</popup>
-
-  <menupopup id="menu_View_Popup">
-    <menuitem id="quicktext-view" type="checkbox" label="&quicktext.label;" oncommand="quicktext.toogleToolbar();"/>
-  </menupopup>
 
   <menupopup id="taskPopup">
     <menuitem id="quicktext-settings" label="&quicktext.label;" oncommand="quicktext.openSettings();" insertafter="tasksMenuAddressBook" class="menu-iconic quicktext-icon menuitem-iconic" />
@@ -120,10 +116,6 @@
               <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
               <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />
               <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
-            </menupopup>
-          </menu>
-          <menu label="&quicktext.ownVariables.label;" id="quicktext-own-vars" hidden="true">
-            <menupopup>
             </menupopup>
           </menu>
         </menupopup>

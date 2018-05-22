@@ -85,7 +85,5 @@
 <!ENTITY quicktext.keyword.label "Nyckelord">
 <!ENTITY quicktext.browse.label "Bläddra">
 
-<!ENTITY quicktext.ownVariables.label "Dina egna variabler">
-
 <!ENTITY quicktext.insertTextFromFileAsHTML.label "Infoga fil som HTML">
 <!ENTITY quicktext.insertTextFromFileAsText.label "Infoga fil som text">
