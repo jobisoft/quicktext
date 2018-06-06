@@ -24,6 +24,7 @@ wzQuicktext.prototype = {
   mEditingScripts:      [],
   mPrefService:         null,
   mPrefBranch:          null,
+  mViewPopup:           false,
   mCollapseGroup:       true,
   mDefaultImport:       "",
   mKeywordKey:          9,
@@ -38,9 +39,14 @@ wzQuicktext.prototype = {
   get viewToolbar() { return true; },
   set viewToolbar(aViewToolbar) {}
 ,
-  //obsolete but cannot remove due to IDL
-  get viewPopup() { return false; },
-  set viewPopup(aViewPopup) {}
+  get viewPopup() { return this.mViewPopup; },
+  set viewPopup(aViewPopup)
+  {
+    this.mViewPopup = aViewPopup;
+    this.mPrefBranch.setBoolPref("popup", aViewPopup);
+
+    return this.mViewPopup;
+  }
 ,
   get collapseGroup() { return this.mCollapseGroup; },
   set collapseGroup(aCollapseGroup)
@@ -180,6 +186,9 @@ wzQuicktext.prototype = {
       }
     }
 
+    if (this.mPrefBranch.getPrefType("popup") == this.mPrefBranch.PREF_BOOL)
+      this.mViewPopup = this.mPrefBranch.getBoolPref("popup");
+    
     if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL) {
       this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
       //migrate old shortcutTypeAdv (and reset to default), if differs from default(false)
