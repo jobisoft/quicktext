@@ -35,9 +35,16 @@ wzQuicktext.prototype = {
   mOS:                  "WINNT",
   mCollapseState:       ""
 ,
-  //obsolete but cannot remove due to IDL
-  get viewToolbar() { return true; },
-  set viewToolbar(aViewToolbar) {}
+  get viewToolbar() { return this.mViewToolbar; },
+  set viewToolbar(aViewToolbar)
+  {
+    this.mViewToolbar = aViewToolbar;
+    this.mPrefBranch.setBoolPref("toolbar", aViewToolbar);
+
+    this.notifyObservers("updatetoolbar", "");
+
+    return this.mViewToolbar;
+  }
 ,
   get viewPopup() { return this.mViewPopup; },
   set viewPopup(aViewPopup)
@@ -173,6 +180,9 @@ wzQuicktext.prototype = {
     }
 
     // Get prefs
+    if (this.mPrefBranch.getPrefType("toolbar") == this.mPrefBranch.PREF_BOOL)
+      this.mViewToolbar = this.mPrefBranch.getBoolPref("toolbar");
+
     if (this.mPrefBranch.getPrefType("menuCollapse") == this.mPrefBranch.PREF_BOOL)
       this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
 
