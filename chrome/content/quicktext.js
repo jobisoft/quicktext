@@ -526,7 +526,7 @@ var quicktext = {
             if (specialRange && endRange)
             {
               var newRange = editor.document.createRange();
-              newRange.setStart(specialRange[0].childNodes[specialRange[1]], specialRange[2]);
+              newRange.setStart(startRange.startContainer, 0);
               newRange.setEnd(endRange.endContainer, endRange.endOffset);
   
               // Take care of the CURSOR-tag
