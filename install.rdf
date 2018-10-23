@@ -8,7 +8,7 @@
     <em:name>Quicktext</em:name>
     <em:version>1.1</em:version>
     <em:unpack>true</em:unpack>
-    <em:description>Toolbar, scripts, templates for unlimited options, including [[TO=firstname]] variables, for fast text insertion</em:description>
+    <em:description>Toolbar, scripts and templates with unlimited options, including [[TO=firstname]] variables, for fast text insertion</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:contributor>R Kent James</em:contributor>
     <em:contributor>John Bieling</em:contributor>    
@@ -31,7 +31,7 @@
       <Description>
         <em:locale>hu</em:locale>
         <em:name>Gyorsszöveg (Quicktext)</em:name>
-        <em:description>Eszköztár, parancsfájlok, sablonok a korlátlan lehetőségekhez, beleértve a [[Címzett=Keresztnév]] változókat is, a szöveg gyors beillesztéséhez</em:description>
+        <em:description>Eszköztár, parancsfájlok és sablonok korlátlan lehetőségekkel, beleértve a [[Címzett=Keresztnév]] változókat, a gyors szövegbeillesztéshez</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>    
         <em:translator>Óvári (hu)</em:translator>
