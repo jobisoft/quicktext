@@ -1,0 +1,89 @@
+<!ENTITY quicktext.label "Gyorsszöveg">
+<!ENTITY quicktext.shortname.label "Gyorsszöveg">
+
+<!ENTITY quicktext.settings.title "Gyorsszöveg beállítások">
+<!ENTITY quicktext.settings.label "Beállítások">
+<!ENTITY quicktext.file.label "Fájl">
+<!ENTITY quicktext.goToHomepage.label "Ugrás a honlapra">
+<!ENTITY quicktext.help.label "Súgó">
+<!ENTITY quicktext.close.label "Bezárás">
+<!ENTITY quicktext.save.label "Mentés">
+
+<!ENTITY quicktext.general.label "Általános">
+<!ENTITY quicktext.templates.label "Sablonok">
+<!ENTITY quicktext.scripts.label "Parancsfájlok">
+
+<!ENTITY quicktext.rightClickSetting.label "Jobb kattintással a gyorsszöveg menü megnyitása">
+<!ENTITY quicktext.collapseSetting.label "Csoport összecsukása amikor egy sablont tartalmaz">
+<!ENTITY quicktext.modifierSetting.label "billentyű módosít a billentyűparancsot">
+<!ENTITY quicktext.shortcutTypeAdv.label "Használja a speciális módot a gyorsbillentyűkhöz">
+<!ENTITY quicktext.keywordKeySetting.label "billentyű a kulcsszó aktiválásához">
+
+<!ENTITY quicktext.altKey.label "Alt">
+<!ENTITY quicktext.controlKey.label "Ctrl">
+<!ENTITY quicktext.metaKey.label "Meta">
+<!ENTITY quicktext.tabKey.label "Fül">
+<!ENTITY quicktext.spaceKey.label "Szóköz">
+<!ENTITY quicktext.enterKey.label "Enter">
+
+<!ENTITY quicktext.defaultImport.label "Importálás indításkor">
+
+<!ENTITY quicktext.sharingTemplates.label "Sablonok megosztása">
+<!ENTITY quicktext.sharingScripts.label "Parancsfájlok megosztása">
+<!ENTITY quicktext.export.label "Exportálása">
+<!ENTITY quicktext.import.label "Importálása">
+
+<!ENTITY quicktext.title.label "Cím">
+<!ENTITY quicktext.addGroup.label "Csoport hozzáadása">
+<!ENTITY quicktext.addTemplate.label "Sablon hozzáadása">
+<!ENTITY quicktext.addScript.label "Parancsfájl hozzáadása">
+<!ENTITY quicktext.remove.label "Eltávolítás">
+<!ENTITY quicktext.shortcut.label "Gyorsbillentyű">
+
+<!ENTITY quicktext.group.label "Csoport">
+<!ENTITY quicktext.template.label "Sablon">
+<!ENTITY quicktext.script.label "Parancsfájl">
+
+<!ENTITY quicktext.variables.label "Változók">
+
+<!ENTITY quicktext.to.label "Címzett">
+<!ENTITY quicktext.from.label "Feladó">
+<!ENTITY quicktext.firstname.label "Keresztnév">
+<!ENTITY quicktext.lastname.label "Vezetéknév">
+<!ENTITY quicktext.fullname.label "Teljes név">
+<!ENTITY quicktext.displayname.label "Megjelenítendő név">
+<!ENTITY quicktext.nickname.label "Becenév">
+<!ENTITY quicktext.email.label "E-mail">
+<!ENTITY quicktext.worknumber.label "Munkahelyi szám">
+<!ENTITY quicktext.faxnumber.label "Fax szám">
+<!ENTITY quicktext.homenumber.label "Otthoni szám">
+<!ENTITY quicktext.cellularnumber.label "Mobiltelefonszám">
+<!ENTITY quicktext.jobtitle.label "Munka megnevezése">
+<!ENTITY quicktext.custom1.label "1. egyéni">
+<!ENTITY quicktext.custom2.label "2. egyéni">
+<!ENTITY quicktext.custom3.label "3. egyéni">
+<!ENTITY quicktext.custom4.label "4. egyéni">
+
+<!ENTITY quicktext.dateTime.label "Dátum/idő">
+
+<!ENTITY quicktext.other.label "Más">
+<!ENTITY quicktext.clipboard.label "Vágólap">
+<!ENTITY quicktext.cursor.label "Kurzor helyezkedő">
+<!ENTITY quicktext.subject.label "Tárgy">
+<!ENTITY quicktext.version.label "Thunderbird verzió">
+
+<!ENTITY quicktext.attachments.label "Mellékletek">
+<!ENTITY quicktext.filename.label "Fájlnév">
+<!ENTITY quicktext.filenameAndSize.label "Fájlnév és fájlméret">
+
+<!ENTITY quicktext.insertAs.label "Irányított beszúrása…">
+<!ENTITY quicktext.HTML.label "HTML">
+<!ENTITY quicktext.text.label "Szöveg">
+
+<!ENTITY quicktext.none.label "Nincs">
+
+<!ENTITY quicktext.keyword.label "Kulcsszó">
+<!ENTITY quicktext.browse.label "Tallózás…">
+
+<!ENTITY quicktext.insertTextFromFileAsHTML.label "Fájl beszúrása mint HTML formátum">
+<!ENTITY quicktext.insertTextFromFileAsText.label "Fájl beszúrása mint szöveg formátum">
