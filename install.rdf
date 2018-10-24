@@ -8,7 +8,7 @@
     <em:name>Quicktext</em:name>
     <em:version>1.1</em:version>
     <em:unpack>true</em:unpack>
-    <em:description>Toolbar, scripts and templates with unlimited options, including [[TO=firstname]] variables, for fast text insertion</em:description>
+    <em:description>Adds a toolbar with unlimited number of text to quickly insert. It's also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
     <em:creator>Emil Hesslow</em:creator>
     <em:contributor>R Kent James</em:contributor>
     <em:contributor>John Bieling</em:contributor>    
