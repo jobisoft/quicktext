@@ -12,6 +12,7 @@
     <em:creator>Emil Hesslow</em:creator>
     <em:contributor>R Kent James</em:contributor>
     <em:contributor>John Bieling</em:contributor>    
+    <em:translator>Óvári (hu)</em:translator>    
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
     <em:iconURL>chrome://quicktext/skin/icon.png</em:iconURL>
     <em:homepageURL>https://github.com/thundernest/quicktext</em:homepageURL>
@@ -24,6 +25,18 @@
         <em:maxVersion>60.*</em:maxVersion>
       </Description>
     </em:targetApplication>
+
+    <!-- Hungarian -->
+    <em:localized>
+      <Description>
+        <em:locale>hu</em:locale>
+        <em:name>Gyorsszöveg (Quicktext)</em:name>
+        <em:description>Eszköztár, parancsfájlok és sablonok korlátlan lehetőségekkel, beleértve a [[Címzett=Keresztnév]] változókat, a gyors szövegbeillesztéshez</em:description>
+        <em:contributor>R Kent James</em:contributor>
+        <em:contributor>John Bieling</em:contributor>    
+        <em:translator>Óvári (hu)</em:translator>
+      </Description>
+    </em:localized>
 
   </Description>
 </RDF>
