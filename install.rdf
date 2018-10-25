@@ -11,6 +11,7 @@
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It’s also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
     <em:contributor>R Kent James</em:contributor>
     <em:contributor>John Bieling</em:contributor>
+    <em:contributor>Philippe Lieser</em:contributor>
     <em:translator>(de)</em:translator>
     <em:translator>Emil Hesslow (en-US)</em:translator>
     <em:translator>(fr)</em:translator>
@@ -39,6 +40,7 @@
         <em:description>Adds a toolbar with unlimited number of text to quickly insert. It’s also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
         <em:translator>(de)</em:translator>
         <em:translator>Emil Hesslow (en-US)</em:translator>
         <em:translator>(fr)</em:translator>
@@ -56,6 +58,7 @@
         <em:description>Adds a toolbar with unlimited number of text to quickly insert. It’s also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
         <em:translator>(de)</em:translator>
         <em:translator>Emil Hesslow (en-US)</em:translator>
         <em:translator>(fr)</em:translator>
@@ -73,6 +76,7 @@
         <em:description>Eszköztár, parancsfájlok és sablonok korlátlan lehetőségekkel, beleértve a [[Címzett=Keresztnév]] változókat, a gyors szövegbeillesztéshez</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
         <em:translator>(de)</em:translator>
         <em:translator>Emil Hesslow (en-US)</em:translator>
         <em:translator>(fr)</em:translator>
@@ -90,6 +94,7 @@
         <em:description>Adds a toolbar with unlimited number of text to quickly insert. It’s also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
         <em:translator>(de)</em:translator>
         <em:translator>Emil Hesslow (en-US)</em:translator>
         <em:translator>(fr)</em:translator>
@@ -107,6 +112,7 @@
         <em:description>Adds a toolbar with unlimited number of text to quickly insert. It’s also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
         <em:translator>(de)</em:translator>
         <em:translator>Emil Hesslow (en-US)</em:translator>
         <em:translator>(fr)</em:translator>
