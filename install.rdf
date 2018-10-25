@@ -6,7 +6,7 @@
     <em:id>{8845E3B3-E8FB-40E2-95E9-EC40294818C4}</em:id>
     <em:type>2</em:type> <!-- type=extension --> 
     <em:name>Quicktext</em:name>
-    <em:version>1.2</em:version>
+    <em:version>1.1</em:version>
     <em:unpack>true</em:unpack>
     <em:description>Adds a toolbar with unlimited number of text to quickly insert. It’s also possible to use variables like [[TO=firstname]]. With settings for everything.</em:description>
     <em:contributor>R Kent James</em:contributor>
