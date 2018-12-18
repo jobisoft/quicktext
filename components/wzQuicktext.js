@@ -1,4 +1,6 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://gre/modules/Task.jsm");
+Components.utils.import("resource://gre/modules/osfile.jsm");
 
 const kDebug        = true;
 const kSepChar1a    = String.fromCharCode(65533, 65533);
@@ -590,6 +592,7 @@ wzQuicktext.prototype = {
       // unicode
       if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
       {
+        //bomheader found - old UTF-16 format
         fiStream.close();
         fiStream.init(file, 1, 0, false);
 
@@ -602,9 +605,8 @@ wzQuicktext.prototype = {
         text = converter.convertFromByteArray(tmp, tmp.length);
 
         biStream.close();
-      }
-      else
-      {
+      } else {
+        //bomheader not found - new simple format created with OS.File.writeAtomic and apparently some other type, because this was here before 
         text = bomheader + siStream.read(-1);
         siStream.close();
       }
@@ -618,25 +620,12 @@ wzQuicktext.prototype = {
 ,
   writeFile: function(aFile, aData)
   {
-    var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
-
-    foStream.init(aFile, 0x02 | 0x08 | 0x20, 0o664, 0);
-
-    // Polyfill for convertToByteArray, which no longer works with UTF-16
-    let chunk = [];
-    for (let l=0; l < aData.length; l++) {
-      let c = aData.charCodeAt(l);
-      //fixed endianness
-      chunk.push(c & 0xFF);
-      chunk.push((c >> 8) & 0xFF);
-    }
-
-    //write byte array
-    var boStream = Components.classes["@mozilla.org/binaryoutputstream;1"].createInstance(Components.interfaces.nsIBinaryOutputStream);
-    boStream.setOutputStream(foStream);
-    boStream.writeByteArray(chunk, chunk.length);
-
-    foStream.close();
+    //this will execute async/parallel to the main thread, which is not waiting for this task to finish 
+    Task.spawn(function* () {
+        //MDN states, instead of checking if dir exists, just create it and catch error on exist (but it does not even throw)
+        yield OS.File.makeDir(aFile.parent.path);
+        yield OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
+    }).catch(Components.utils.reportError);
   }
 ,
   pickFile: function(aWindow, aType, aMode, aTitle)
