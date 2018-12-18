@@ -807,33 +807,32 @@ wzQuicktextVar.prototype = {
       var req = new XMLHttpRequest();
       req.open(method, url, true);
       if (method == "post") req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-      let status = -1;
       let response = "";
 
+      //Lazy async-to-sync implementation with ACK from Philipp Kewisch
+      //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
+      let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
+      
       req.ontimeout = function () {
-        status = 408;
         if (debug) response = "Quicktext timeout";
+        inspector.exitNestedEventLoop();
       };
 
       req.onerror = function () {
-        status = req.status;
-        if (debug) response = "error ("+status+")";
+        if (debug) response = "error (" + req.status + ")";
+        inspector.exitNestedEventLoop();
       };
 
       req.onload = function() {
-        status = req.status;
         if (req.status == 200) response = req.responseText;
-        else 	if (debug) response = "error ("+status+")";
+        else 	if (debug) response = "error (" + req.status + ")";
+        inspector.exitNestedEventLoop();
       };
 
       if (method == "post") req.send(post.join("&"));
       else req.send();
 
-      let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
-      while (status === -1) {
-        thread.processNextEvent(true);
-      }
-
+      inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
       return response;
     }
 
