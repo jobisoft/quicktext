@@ -7,18 +7,16 @@ const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION'];
 
-function streamListener()
+function streamListener(aInspector)
 {
   var newStreamListener = {
     mAttachments: [],
-    mHeaders:     [],
-    mBusy:        true,
+    mHeaders: [],
 
     onStartRequest : function (aRequest, aContext)
     {
       this.mAttachments = [];
-      this.mHeaders     = [];
-      this.mBusy        = true;
+      this.mHeaders = [];
 
       var channel = aRequest.QueryInterface(Components.interfaces.nsIChannel);
       channel.URI.QueryInterface(Components.interfaces.nsIMsgMailNewsUrl);
@@ -26,7 +24,7 @@ function streamListener()
     },
     onStopRequest : function (aRequest, aContext, aStatusCode)
     {
-      this.mBusy = false;  // if needed, you can poll this var to see if we are done collecting attachment details
+      aInspector.exitNestedEventLoop();
     },
     onDataAvailable : function (aRequest, aContext, aInputStream, aOffset, aCount) {},
     onStartHeaders: function() {},
@@ -975,14 +973,15 @@ wzQuicktextVar.prototype = {
 
     var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance(Components.interfaces.nsIMessenger);
     var mms = messenger.messageServiceFromURI(msgURI).QueryInterface(Components.interfaces.nsIMsgMessageService);
-    var listener = streamListener();
+
+    //Lazy async-to-sync implementation with ACK from Philipp Kewisch
+    //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
+    let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
+    let listener = streamListener(inspector);
     mms.streamMessage(msgURI, listener, null, null, true, "filter");
 
     //lazy async, wait for listener
-    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
-    while (listener.mBusy) {
-      thread.processNextEvent(true);
-    }
+    inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
 
     // Store all headers in the mData-variable
     for (var i = 0; i < listener.mHeaders.length; i++)
