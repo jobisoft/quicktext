@@ -333,6 +333,14 @@ var quicktext = {
       this.insertHeaders(text);
       this.insertSubject(text.subject);
       this.insertAttachments(text.attachments);
+
+      if (text.text != "" && text.text.indexOf('[[CURSOR]]') > -1)
+      {
+        // only if we really have text to insert with a [[CURSOR]] tag,
+        // focus the message body first
+        this.focusMessageBody();
+      }
+
       this.insertBody(text.text, text.type, aHandleTransaction);
 
       // If we insert any headers we maybe needs to return the placement of the focus
@@ -472,6 +480,17 @@ var quicktext = {
     }
   }
 ,
+  focusMessageBody: function()
+  {
+    // advance focus until we are at the message body
+    var maxsteps = 50;
+    for (var i = 0; this.mLastFocusedElement.name != "browser.message.body" && i < maxsteps; i++)
+    {
+      document.commandDispatcher.advanceFocus();
+      this.mLastFocusedElement = (document.commandDispatcher.focusedWindow != window) ? document.commandDispatcher.focusedWindow : document.commandDispatcher.focusedElement;
+    }
+  }
+,
   insertSubject: function(aStr)
   {
     if (aStr != "")
@@ -555,22 +574,24 @@ var quicktext = {
     finder.caseSensitive = true;
     finder.findBackwards = false;
 
-    var found = false;
-    while ((foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange)) != null)
-    {
-      found = true;
-      aEditor.selection.removeAllRanges();
-      aEditor.selection.addRange(foundRange);
-      aEditor.selection.deleteFromDocument();
-      startRange.setEnd(foundRange.endContainer, foundRange.endOffset);
-      startRange.setStart(foundRange.endContainer, foundRange.endOffset);
-    }
+    setTimeout(function() {
+      var found = false;
+      while ((foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange)) != null)
+      {
+        found = true;
+        aEditor.selection.removeAllRanges();
+        aEditor.selection.addRange(foundRange);
+        aEditor.selection.deleteFromDocument();
+        startRange.setEnd(foundRange.endContainer, foundRange.endOffset);
+        startRange.setStart(foundRange.endContainer, foundRange.endOffset);
+      }
 
-    if (!found)
-    {
-      aEditor.selection.removeAllRanges();
-      aEditor.selection.addRange(endRange);
-    }
+      if (!found)
+      {
+        aEditor.selection.removeAllRanges();
+        aEditor.selection.addRange(endRange);
+      }
+    });
   }
 ,
   dumpTree: function(aNode, aLevel)
