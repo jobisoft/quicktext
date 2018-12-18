@@ -676,8 +676,8 @@ wzQuicktext.prototype = {
     let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
     let rv, result;
     filePicker.open(result => {
-        rv = result;
-        inspector.exitNestedEventLoop();
+      rv = result;
+      inspector.exitNestedEventLoop();
     });
     inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
 
