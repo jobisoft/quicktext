@@ -671,18 +671,15 @@ wzQuicktext.prototype = {
 
     filePicker.appendFilters(filePicker.filterAll);
 
-    // Lazy implementation from: https://wiki.mozilla.org/Thunderbird/Add-ons_Guide_57#Removed_interfaces_in_mozilla57
-    let done = false;
-    let rv;
+    //Lazy async-to-sync implementation with ACK from Philipp Kewisch
+    //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
+    let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
+    let rv, result;
     filePicker.open(result => {
-      rv = result;
-      done = true;
+        rv = result;
+        inspector.exitNestedEventLoop();
     });
- 
-    let thread = Components.classes["@mozilla.org/thread-manager;1"].getService().currentThread;
-    while (!done) {
-      thread.processNextEvent(true);
-    }
+    inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
 
     if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
     return null;
