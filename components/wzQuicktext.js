@@ -589,27 +589,26 @@ wzQuicktext.prototype = {
       siStream.init(fiStream);
       var bomheader = siStream.read(2);
 
+      var charset = "UTF-8";
       // unicode
       if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
       {
         //bomheader found - old UTF-16 format
-        fiStream.close();
-        fiStream.init(file, 1, 0, false);
-
-        var biStream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Components.interfaces.nsIBinaryInputStream);
-        biStream.setInputStream(fiStream);
-        var tmp = biStream.readByteArray(biStream.available());
-
-        var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-        converter.charset = "UTF-16";
-        text = converter.convertFromByteArray(tmp, tmp.length);
-
-        biStream.close();
-      } else {
-        //bomheader not found - new simple format created with OS.File.writeAtomic and apparently some other type, because this was here before 
-        text = bomheader + siStream.read(-1);
-        siStream.close();
+        charset = "UTF-16";
       }
+      //bomheader not found - new simple format created with OS.File.writeAtomic
+      fiStream.close();
+      fiStream.init(file, 1, 0, false);
+
+      var biStream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Components.interfaces.nsIBinaryInputStream);
+      biStream.setInputStream(fiStream);
+      var tmp = biStream.readByteArray(biStream.available());
+
+      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+      converter.charset = charset;
+      text = converter.convertFromByteArray(tmp, tmp.length);
+
+      biStream.close();
       fiStream.close();
 
       // Removes \r because that makes crashes on atleast on Windows.
