@@ -1,4 +1,5 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.importGlobalProperties(["XMLHttpRequest"]);
 
 const kDebug        = true;
 const kSepChar1a    = String.fromCharCode(65533, 65533);
