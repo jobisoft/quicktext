@@ -753,7 +753,7 @@ wzQuicktext.prototype = {
 ,
   importFromHTTPFile: function(aURI, aType, aBefore, aEditingMode)
   {
-    var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
+    var req = new XMLHttpRequest();
     req.open('GET', aURI, true);
     req.mQuicktext = this;
     req.mType = aType;
