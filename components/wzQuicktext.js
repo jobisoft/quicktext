@@ -576,52 +576,68 @@ wzQuicktext.prototype = {
   readFile: function(aFile)
   {
     var text = "";
-    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+
+    var file = Components.classes["@mozilla.org/file/local;1"]
+                .createInstance(Components.interfaces.nsIFile);
     file.initWithFile(aFile);
     if(file.exists())
     {
       var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
-                              .createInstance(Components.interfaces.nsIFileInputStream);
+                      .createInstance(Components.interfaces.nsIFileInputStream);
 
       var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
-                              .createInstance(Components.interfaces.nsIScriptableInputStream);
+                      .createInstance(Components.interfaces.nsIScriptableInputStream);
       
       var biStream = Components.classes["@mozilla.org/binaryinputstream;1"]
-                            .createInstance(Components.interfaces.nsIBinaryInputStream);
+                      .createInstance(Components.interfaces.nsIBinaryInputStream);
 
       var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
-                              .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+                      .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
 
-      //nsIScriptableInputStream::read is assuming a ISO-Latin-1 encoding, 
-      //which is our fallback encoding if it is not UTF-16 and not UTF-8
-      //https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIScriptableInputStream#read()
+      
       fiStream.init(file, 1, 0, false);
       siStream.init(fiStream);
-      var bomheader = siStream.read(2);
-      text = bomheader + siStream.read(-1);
+      //Get the first two bytes to decide, whether this file is an old UTF-16
+      //quicktext XML config file or not. Also get the rest of the file, which
+      //is later used as a fallback, if the file cannot be read as UTF.
+      //Note: nsIScriptableInputStream::read assumes ISO-Latin-1 encoding. 
+      //https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/
+      //Interface/nsIScriptableInputStream#read()
+      var fileHeader = siStream.read(2);
+      var fileBody = siStream.read(-1);
       siStream.close();
       fiStream.close();
 
-      //get the raw 8bit data
-      fiStream.init(file, 1, 0, false);
-      biStream.setInputStream(fiStream);
-      var raw = biStream.readByteArray(biStream.available());
-      biStream.close();
-      fiStream.close();
-
-      var utf = ""
-      if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
-      {
-        //Old UTF-16 format (probably without bomheader, but nsIScriptableInputStream::read(2) returned a single char 
-        utf = "UTF-16";
+      //Original test by Emil to test for the old UTF-16 quicktext XML config
+      //file format. The old PRO version of quicktext actually stored a byte
+      //order mark (BOM), but not the standard version. There the length == 1
+      //test is used, which however is not a general test for UTF-16. It works,
+      //if the file starts with <? xml .. ?>: In UTF-16 the first 2 bytes
+      //store just the "<" char, in UTF-8 the first 2 bytes store "<?", because
+      //both these chars are "simple" and only need 8bit.
+      //If this is not an old UTF-16 XML config file, the file is assumed to be
+      //UTF-8 encoded.
+      if (fileHeader == "\xFF\xFE" || fileHeader == "\xFE\xFF" || fileHeader.length == 1) {
+        converter.charset = "UTF-16";
       } else {
-        //check for UTF-8 (TODO!)
-        utf = "UTF-8";
+        converter.charset = "UTF-8";
       }
 
-      if (utf) {
-        converter.charset = utf;
+      //Try to interpret the file as UTF and convert it to a Javascript string.
+      //If that failes, the file is probably not UTF and the ISO-Latin-1
+      //falback is used instead.
+      try {
+        //Get file as raw byte array
+        fiStream.init(file, 1, 0, false);
+        biStream.setInputStream(fiStream);
+        let raw = biStream.readByteArray(biStream.available());
+        biStream.close();
+        fiStream.close();
+
         text = converter.convertFromByteArray(raw, raw.length);
+      } catch (e) {
+        //ISO-Latin-1 falback obtained via nsIScriptableInputStream::read
+        text = fileHeader + fileBody;
       }
 
       // Removes \r because that makes crashes on atleast on Windows.
@@ -632,9 +648,11 @@ wzQuicktext.prototype = {
 ,
   writeFile: function(aFile, aData)
   {
-    //this will execute async/parallel to the main thread, which is not waiting for this task to finish 
+    //this will execute async/parallel to the main thread, which is not waiting
+    //for this task to finish 
     Task.spawn(function* () {
-        //MDN states, instead of checking if dir exists, just create it and catch error on exist (but it does not even throw)
+        //MDN states, instead of checking if dir exists, just create it and
+        //catch error on exist (but it does not even throw)
         yield OS.File.makeDir(aFile.parent.path);
         yield OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
     }).catch(Components.utils.reportError);
