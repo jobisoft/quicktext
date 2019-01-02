@@ -1,4 +1,6 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+Components.utils.import("resource://gre/modules/Task.jsm");
+Components.utils.import("resource://gre/modules/osfile.jsm");
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);
 
 const kDebug        = true;
@@ -575,41 +577,69 @@ wzQuicktext.prototype = {
   readFile: function(aFile)
   {
     var text = "";
-    var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+
+    var file = Components.classes["@mozilla.org/file/local;1"]
+                .createInstance(Components.interfaces.nsIFile);
     file.initWithFile(aFile);
     if(file.exists())
     {
       var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
-                              .createInstance(Components.interfaces.nsIFileInputStream);
-      fiStream.init(file, 1, 0, false);
+                      .createInstance(Components.interfaces.nsIFileInputStream);
 
       var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
-                              .createInstance(Components.interfaces.nsIScriptableInputStream);
+                      .createInstance(Components.interfaces.nsIScriptableInputStream);
+      
+      var biStream = Components.classes["@mozilla.org/binaryinputstream;1"]
+                      .createInstance(Components.interfaces.nsIBinaryInputStream);
+
+      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+                      .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+
+      
+      fiStream.init(file, 1, 0, false);
       siStream.init(fiStream);
-      var bomheader = siStream.read(2);
-
-      // unicode
-      if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
-      {
-        fiStream.close();
-        fiStream.init(file, 1, 0, false);
-
-        var biStream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Components.interfaces.nsIBinaryInputStream);
-        biStream.setInputStream(fiStream);
-        var tmp = biStream.readByteArray(biStream.available());
-
-        var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-        converter.charset = "UTF-16";
-        text = converter.convertFromByteArray(tmp, tmp.length);
-
-        biStream.close();
-      }
-      else
-      {
-        text = bomheader + siStream.read(-1);
-        siStream.close();
-      }
+      //Get the first two bytes to decide, whether this file is an old UTF-16
+      //quicktext XML config file or not. Also get the rest of the file, which
+      //is later used as a fallback, if the file cannot be read as UTF.
+      //Note: nsIScriptableInputStream::read assumes ISO-Latin-1 encoding. 
+      //https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/
+      //Interface/nsIScriptableInputStream#read()
+      var fileHeader = siStream.read(2);
+      var fileBody = siStream.read(-1);
+      siStream.close();
       fiStream.close();
+
+      //Original test by Emil to test for the old UTF-16 quicktext XML config
+      //file format. The old PRO version of quicktext actually stored a byte
+      //order mark (BOM), but not the standard version. There the length == 1
+      //test is used, which however is not a general test for UTF-16. It works,
+      //if the file starts with <? xml .. ?>: In UTF-16 the first 2 bytes
+      //store just the "<" char, in UTF-8 the first 2 bytes store "<?", because
+      //both these chars are "simple" and only need 8bit.
+      //If this is not an old UTF-16 XML config file, the file is assumed to be
+      //UTF-8 encoded.
+      if (fileHeader == "\xFF\xFE" || fileHeader == "\xFE\xFF" || fileHeader.length == 1) {
+        converter.charset = "UTF-16";
+      } else {
+        converter.charset = "UTF-8";
+      }
+
+      //Try to interpret the file as UTF and convert it to a Javascript string.
+      //If that failes, the file is probably not UTF and the ISO-Latin-1
+      //falback is used instead.
+      try {
+        //Get file as raw byte array
+        fiStream.init(file, 1, 0, false);
+        biStream.setInputStream(fiStream);
+        let raw = biStream.readByteArray(biStream.available());
+        biStream.close();
+        fiStream.close();
+
+        text = converter.convertFromByteArray(raw, raw.length);
+      } catch (e) {
+        //ISO-Latin-1 falback obtained via nsIScriptableInputStream::read
+        text = fileHeader + fileBody;
+      }
 
       // Removes \r because that makes crashes on atleast on Windows.
       text = text.replace(/\r\n/g, "\n");
@@ -619,25 +649,14 @@ wzQuicktext.prototype = {
 ,
   writeFile: function(aFile, aData)
   {
-    var foStream = Components.classes["@mozilla.org/network/file-output-stream;1"].createInstance(Components.interfaces.nsIFileOutputStream);
-
-    foStream.init(aFile, 0x02 | 0x08 | 0x20, 0o664, 0);
-
-    // Polyfill for convertToByteArray, which no longer works with UTF-16
-    let chunk = [];
-    for (let l=0; l < aData.length; l++) {
-      let c = aData.charCodeAt(l);
-      //fixed endianness
-      chunk.push(c & 0xFF);
-      chunk.push((c >> 8) & 0xFF);
-    }
-
-    //write byte array
-    var boStream = Components.classes["@mozilla.org/binaryoutputstream;1"].createInstance(Components.interfaces.nsIBinaryOutputStream);
-    boStream.setOutputStream(foStream);
-    boStream.writeByteArray(chunk, chunk.length);
-
-    foStream.close();
+    //this will execute async/parallel to the main thread, which is not waiting
+    //for this task to finish 
+    Task.spawn(function* () {
+        //MDN states, instead of checking if dir exists, just create it and
+        //catch error on exist (but it does not even throw)
+        yield OS.File.makeDir(aFile.parent.path);
+        yield OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
+    }).catch(Components.utils.reportError);
   }
 ,
   pickFile: function(aWindow, aType, aMode, aTitle)
