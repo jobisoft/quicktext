@@ -1,6 +1,7 @@
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 Components.utils.import("resource://gre/modules/Task.jsm");
 Components.utils.import("resource://gre/modules/osfile.jsm");
+Components.utils.importGlobalProperties(["XMLHttpRequest"]);
 
 const kDebug        = true;
 const kSepChar1a    = String.fromCharCode(65533, 65533);
@@ -772,7 +773,7 @@ wzQuicktext.prototype = {
 ,
   importFromHTTPFile: function(aURI, aType, aBefore, aEditingMode)
   {
-    var req = Components.classes["@mozilla.org/xmlextras/xmlhttprequest;1"].createInstance(Components.interfaces.nsIXMLHttpRequest);
+    var req = new XMLHttpRequest();
     req.open('GET', aURI, true);
     req.mQuicktext = this;
     req.mType = aType;
