@@ -582,34 +582,47 @@ wzQuicktext.prototype = {
     {
       var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
                               .createInstance(Components.interfaces.nsIFileInputStream);
-      fiStream.init(file, 1, 0, false);
 
       var siStream = Components.classes["@mozilla.org/scriptableinputstream;1"]
                               .createInstance(Components.interfaces.nsIScriptableInputStream);
+      
+      var biStream = Components.classes["@mozilla.org/binaryinputstream;1"]
+                            .createInstance(Components.interfaces.nsIBinaryInputStream);
+
+      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
+                              .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
+
+      //nsIScriptableInputStream::read is assuming a ISO-Latin-1 encoding, 
+      //which is our fallback encoding if it is not UTF-16 and not UTF-8
+      //https://developer.mozilla.org/en-US/docs/Mozilla/Tech/XPCOM/Reference/Interface/nsIScriptableInputStream#read()
+      fiStream.init(file, 1, 0, false);
       siStream.init(fiStream);
       var bomheader = siStream.read(2);
-
-      var charset = "UTF-8";
-      // unicode
-      if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
-      {
-        //bomheader found - old UTF-16 format
-        charset = "UTF-16";
-      }
-      //bomheader not found - new simple format created with OS.File.writeAtomic
+      text = bomheader + siStream.read(-1);
+      siStream.close();
       fiStream.close();
+
+      //get the raw 8bit data
       fiStream.init(file, 1, 0, false);
-
-      var biStream = Components.classes["@mozilla.org/binaryinputstream;1"].createInstance(Components.interfaces.nsIBinaryInputStream);
       biStream.setInputStream(fiStream);
-      var tmp = biStream.readByteArray(biStream.available());
-
-      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"].createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-      converter.charset = charset;
-      text = converter.convertFromByteArray(tmp, tmp.length);
-
+      var raw = biStream.readByteArray(biStream.available());
       biStream.close();
       fiStream.close();
+
+      var utf = ""
+      if (bomheader == "\xFF\xFE" || bomheader == "\xFE\xFF" || bomheader.length == 1)
+      {
+        //Old UTF-16 format (probably without bomheader, but nsIScriptableInputStream::read(2) returned a single char 
+        utf = "UTF-16";
+      } else {
+        //check for UTF-8 (TODO!)
+        utf = "UTF-8";
+      }
+
+      if (utf) {
+        converter.charset = utf;
+        text = converter.convertFromByteArray(raw, raw.length);
+      }
 
       // Removes \r because that makes crashes on atleast on Windows.
       text = text.replace(/\r\n/g, "\n");
