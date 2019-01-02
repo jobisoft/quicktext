@@ -626,7 +626,7 @@ wzQuicktext.prototype = {
 
       //Try to interpret the file as UTF and convert it to a Javascript string.
       //If that failes, the file is probably not UTF and the ISO-Latin-1
-      //falback is used instead.
+      //fallback is used instead.
       try {
         //Get file as raw byte array
         fiStream.init(file, 1, 0, false);
@@ -637,7 +637,7 @@ wzQuicktext.prototype = {
 
         text = converter.convertFromByteArray(raw, raw.length);
       } catch (e) {
-        //ISO-Latin-1 falback obtained via nsIScriptableInputStream::read
+        //ISO-Latin-1 fallback obtained via nsIScriptableInputStream::read
         text = fileHeader + fileBody;
       }
 
