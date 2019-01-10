@@ -13,7 +13,7 @@ locale	quicktext	fr  	chrome/locale/fr/
 locale	quicktext	hu  	chrome/locale/hu/
 locale	quicktext	ja  	chrome/locale/ja/
 locale	quicktext	sv-SE	chrome/locale/sv-SE/
-locale	quicktext	ru	  chrome/locale/ru/
+locale	quicktext	ru chrome/locale/ru/
 
 interfaces components/wzIQuicktext.xpt
 
