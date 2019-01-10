@@ -1,17 +1,17 @@
 <!ENTITY quicktext.label "Quicktext">
 <!ENTITY quicktext.shortname.label "Quicktext">
 
-<!ENTITY quicktext.settings.title "Quicktext Settings">
-<!ENTITY quicktext.settings.label "Settings">
-<!ENTITY quicktext.file.label "File">
-<!ENTITY quicktext.goToHomepage.label "Go to homepage">
-<!ENTITY quicktext.help.label "Help">
-<!ENTITY quicktext.close.label "Close">
-<!ENTITY quicktext.save.label "Save">
+<!ENTITY quicktext.settings.title "Настройки Quicktext">
+<!ENTITY quicktext.settings.label "Настройки">
+<!ENTITY quicktext.file.label "Файл">
+<!ENTITY quicktext.goToHomepage.label "На домашнюю страницу">
+<!ENTITY quicktext.help.label "Помощь">
+<!ENTITY quicktext.close.label "Закрыть">
+<!ENTITY quicktext.save.label "Сохранить">
 
-<!ENTITY quicktext.general.label "General">
-<!ENTITY quicktext.templates.label "Templates">
-<!ENTITY quicktext.scripts.label "Scripts">
+<!ENTITY quicktext.general.label "Главное">
+<!ENTITY quicktext.templates.label "Шаблоны">
+<!ENTITY quicktext.scripts.label "Скрипты">
 
 <!ENTITY quicktext.rightClickSetting.label "View Quicktext-menu on right-click">
 <!ENTITY quicktext.collapseSetting.label "Collapse group when it only contains one template">
