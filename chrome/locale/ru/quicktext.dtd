@@ -40,11 +40,11 @@
 <!ENTITY quicktext.remove.label "Remove">
 <!ENTITY quicktext.shortcut.label "Shortcut">
 
-<!ENTITY quicktext.group.label "Group">
-<!ENTITY quicktext.template.label "Template">
-<!ENTITY quicktext.script.label "Script">
+<!ENTITY quicktext.group.label "Группа">
+<!ENTITY quicktext.template.label "Шаблон">
+<!ENTITY quicktext.script.label "Скрипт">
 
-<!ENTITY quicktext.variables.label "Variables">
+<!ENTITY quicktext.variables.label "Переменные">
 
 <!ENTITY quicktext.to.label "Кому">
 <!ENTITY quicktext.from.label "От">
@@ -53,7 +53,7 @@
 <!ENTITY quicktext.fullname.label "ФИО">
 <!ENTITY quicktext.displayname.label "Отображаемое имя">
 <!ENTITY quicktext.nickname.label "Псевдоним">
-<!ENTITY quicktext.email.label "Email">
+<!ENTITY quicktext.email.label "E-mail">
 <!ENTITY quicktext.worknumber.label "Рабочий телефон">
 <!ENTITY quicktext.faxnumber.label "Факс">
 <!ENTITY quicktext.homenumber.label "Домашний телефон">
