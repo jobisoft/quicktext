@@ -121,6 +121,25 @@
         <em:translator>Okänd (sv-SE)</em:translator>
       </Description>
     </em:localized>
-
+    
+    <!-- Russian -->
+    <em:localized>
+      <Description>
+        <em:locale>ru</em:locale>
+        <em:name>Quicktext</em:name>
+        <em:description>Добавляет панель инструментов с неограниченным количеством текста для быстрой вставки. Также можно использовать переменные, такие как [[TO = имя]]. С настройками для всего.</em:description>
+        <em:contributor>R Kent James</em:contributor>
+        <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
+        <em:translator>Unbekannt (de)</em:translator>
+        <em:translator>Emil Hesslow (en-US)</em:translator>
+        <em:translator>Unbekannt (fr)</em:translator>
+        <em:translator>Óvári (hu)</em:translator>
+        <em:translator>Unbekannt (ja)</em:translator>
+        <em:translator>Unbekannt (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
+      </Description>
+    </em:localized>
+    
   </Description>
 </RDF>
