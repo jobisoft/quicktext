@@ -1,1 +1,89 @@
+<!ENTITY quicktext.label "Quicktext">
+<!ENTITY quicktext.shortname.label "Quicktext">
 
+<!ENTITY quicktext.settings.title "Quicktext Settings">
+<!ENTITY quicktext.settings.label "Settings">
+<!ENTITY quicktext.file.label "File">
+<!ENTITY quicktext.goToHomepage.label "Go to homepage">
+<!ENTITY quicktext.help.label "Help">
+<!ENTITY quicktext.close.label "Close">
+<!ENTITY quicktext.save.label "Save">
+
+<!ENTITY quicktext.general.label "General">
+<!ENTITY quicktext.templates.label "Templates">
+<!ENTITY quicktext.scripts.label "Scripts">
+
+<!ENTITY quicktext.rightClickSetting.label "View Quicktext-menu on right-click">
+<!ENTITY quicktext.collapseSetting.label "Collapse group when it only contains one template">
+<!ENTITY quicktext.modifierSetting.label "is the modifier I want to use for the keyboard shortcuts">
+<!ENTITY quicktext.shortcutTypeAdv.label "Use advanced mode for shortcuts">
+<!ENTITY quicktext.keywordKeySetting.label "is the key I want to use for activating a keyword">
+
+<!ENTITY quicktext.altKey.label "Alt">
+<!ENTITY quicktext.controlKey.label "Ctrl">
+<!ENTITY quicktext.metaKey.label "Meta">
+<!ENTITY quicktext.tabKey.label "Tab">
+<!ENTITY quicktext.spaceKey.label "Space">
+<!ENTITY quicktext.enterKey.label "Enter">
+
+<!ENTITY quicktext.defaultImport.label "Import on startup">
+
+<!ENTITY quicktext.sharingTemplates.label "Sharing templates">
+<!ENTITY quicktext.sharingScripts.label "Sharing scripts">
+<!ENTITY quicktext.export.label "Export">
+<!ENTITY quicktext.import.label "Import">
+
+<!ENTITY quicktext.title.label "Title">
+<!ENTITY quicktext.addGroup.label "Add group">
+<!ENTITY quicktext.addTemplate.label "Add template">
+<!ENTITY quicktext.addScript.label "Add script">
+<!ENTITY quicktext.remove.label "Remove">
+<!ENTITY quicktext.shortcut.label "Shortcut">
+
+<!ENTITY quicktext.group.label "Group">
+<!ENTITY quicktext.template.label "Template">
+<!ENTITY quicktext.script.label "Script">
+
+<!ENTITY quicktext.variables.label "Variables">
+
+<!ENTITY quicktext.to.label "To">
+<!ENTITY quicktext.from.label "From">
+<!ENTITY quicktext.firstname.label "Firstname">
+<!ENTITY quicktext.lastname.label "Lastname">
+<!ENTITY quicktext.fullname.label "Fullname">
+<!ENTITY quicktext.displayname.label "Displayname">
+<!ENTITY quicktext.nickname.label "Nickname">
+<!ENTITY quicktext.email.label "Email">
+<!ENTITY quicktext.worknumber.label "Worknumber">
+<!ENTITY quicktext.faxnumber.label "Faxnumber">
+<!ENTITY quicktext.homenumber.label "Homenumber">
+<!ENTITY quicktext.cellularnumber.label "Cellularnumber">
+<!ENTITY quicktext.jobtitle.label "Jobtitle">
+<!ENTITY quicktext.custom1.label "Custom 1">
+<!ENTITY quicktext.custom2.label "Custom 2">
+<!ENTITY quicktext.custom3.label "Custom 3">
+<!ENTITY quicktext.custom4.label "Custom 4">
+
+<!ENTITY quicktext.dateTime.label "Date/Time">
+
+<!ENTITY quicktext.other.label "Other">
+<!ENTITY quicktext.clipboard.label "Clipboard">
+<!ENTITY quicktext.cursor.label "Cursor position">
+<!ENTITY quicktext.subject.label "Subject">
+<!ENTITY quicktext.version.label "Thunderbird version">
+
+<!ENTITY quicktext.attachments.label "Attachments">
+<!ENTITY quicktext.filename.label "Filename">
+<!ENTITY quicktext.filenameAndSize.label "Filename and size">
+
+<!ENTITY quicktext.insertAs.label "Insert as">
+<!ENTITY quicktext.HTML.label "HTML">
+<!ENTITY quicktext.text.label "Text">
+
+<!ENTITY quicktext.none.label "None">
+
+<!ENTITY quicktext.keyword.label "Keyword">
+<!ENTITY quicktext.browse.label "Browse">
+
+<!ENTITY quicktext.insertTextFromFileAsHTML.label "Insert file as HTML">
+<!ENTITY quicktext.insertTextFromFileAsText.label "Insert file as text">
