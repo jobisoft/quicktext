@@ -46,8 +46,8 @@
 
 <!ENTITY quicktext.variables.label "Variables">
 
-<!ENTITY quicktext.to.label "To">
-<!ENTITY quicktext.from.label "From">
+<!ENTITY quicktext.to.label "Кому">
+<!ENTITY quicktext.from.label "От">
 <!ENTITY quicktext.firstname.label "Firstname">
 <!ENTITY quicktext.lastname.label "Lastname">
 <!ENTITY quicktext.fullname.label "Fullname">
@@ -64,7 +64,7 @@
 <!ENTITY quicktext.custom3.label "Custom 3">
 <!ENTITY quicktext.custom4.label "Custom 4">
 
-<!ENTITY quicktext.dateTime.label "Date/Time">
+<!ENTITY quicktext.dateTime.label "Дата/Время">
 
 <!ENTITY quicktext.other.label "Other">
 <!ENTITY quicktext.clipboard.label "Clipboard">
