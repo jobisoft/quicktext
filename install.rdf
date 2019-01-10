@@ -132,7 +132,7 @@
     <em:localized>
       <Description>
         <em:locale>ru</em:locale>
-        <em:name>Quicktext</em:name>
+        <em:name>Quicktext (Быстрая вставка текста)</em:name>
         <em:description>Добавляет панель инструментов с неограниченным количеством текста для быстрой вставки. Также можно использовать переменные, такие как [[TO = имя]]. С настройками для всего.</em:description>
         <em:contributor>R Kent James</em:contributor>
         <em:contributor>John Bieling</em:contributor>
