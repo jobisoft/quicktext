@@ -13,8 +13,8 @@
 <!ENTITY quicktext.templates.label "Шаблоны">
 <!ENTITY quicktext.scripts.label "Скрипты">
 
-<!ENTITY quicktext.rightClickSetting.label "View Quicktext-menu on right-click">
-<!ENTITY quicktext.collapseSetting.label "Collapse group when it only contains one template">
+<!ENTITY quicktext.rightClickSetting.label "Просмотр Quicktext-меню по правому клику">
+<!ENTITY quicktext.collapseSetting.label "Свернуть группу, если она содержит только один шаблон">
 <!ENTITY quicktext.modifierSetting.label "is the modifier I want to use for the keyboard shortcuts">
 <!ENTITY quicktext.shortcutTypeAdv.label "Use advanced mode for shortcuts">
 <!ENTITY quicktext.keywordKeySetting.label "is the key I want to use for activating a keyword">
@@ -23,15 +23,15 @@
 <!ENTITY quicktext.controlKey.label "Ctrl">
 <!ENTITY quicktext.metaKey.label "Meta">
 <!ENTITY quicktext.tabKey.label "Tab">
-<!ENTITY quicktext.spaceKey.label "Space">
+<!ENTITY quicktext.spaceKey.label "Пробел">
 <!ENTITY quicktext.enterKey.label "Enter">
 
-<!ENTITY quicktext.defaultImport.label "Import on startup">
+<!ENTITY quicktext.defaultImport.label "Импорт при запуске">
 
-<!ENTITY quicktext.sharingTemplates.label "Sharing templates">
-<!ENTITY quicktext.sharingScripts.label "Sharing scripts">
-<!ENTITY quicktext.export.label "Export">
-<!ENTITY quicktext.import.label "Import">
+<!ENTITY quicktext.sharingTemplates.label "Шаблоны обмена">
+<!ENTITY quicktext.sharingScripts.label "Скрипты обмена">
+<!ENTITY quicktext.export.label "Экспорт">
+<!ENTITY quicktext.import.label "Импорт">
 
 <!ENTITY quicktext.title.label "Title">
 <!ENTITY quicktext.addGroup.label "Add group">
