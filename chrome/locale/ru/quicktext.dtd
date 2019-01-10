@@ -28,8 +28,8 @@
 
 <!ENTITY quicktext.defaultImport.label "Импорт при запуске">
 
-<!ENTITY quicktext.sharingTemplates.label "Шаблоны обмена">
-<!ENTITY quicktext.sharingScripts.label "Скрипты обмена">
+<!ENTITY quicktext.sharingTemplates.label "Обмен шаблонов">
+<!ENTITY quicktext.sharingScripts.label "Обмен скриптов">
 <!ENTITY quicktext.export.label "Экспорт">
 <!ENTITY quicktext.import.label "Импорт">
 
