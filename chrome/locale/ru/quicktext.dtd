@@ -48,17 +48,17 @@
 
 <!ENTITY quicktext.to.label "Кому">
 <!ENTITY quicktext.from.label "От">
-<!ENTITY quicktext.firstname.label "Firstname">
-<!ENTITY quicktext.lastname.label "Lastname">
-<!ENTITY quicktext.fullname.label "Fullname">
-<!ENTITY quicktext.displayname.label "Displayname">
-<!ENTITY quicktext.nickname.label "Nickname">
+<!ENTITY quicktext.firstname.label "Имя">
+<!ENTITY quicktext.lastname.label "Фамилия">
+<!ENTITY quicktext.fullname.label "ФИО">
+<!ENTITY quicktext.displayname.label "Отображаемое имя">
+<!ENTITY quicktext.nickname.label "Псевдоним">
 <!ENTITY quicktext.email.label "Email">
-<!ENTITY quicktext.worknumber.label "Worknumber">
-<!ENTITY quicktext.faxnumber.label "Faxnumber">
-<!ENTITY quicktext.homenumber.label "Homenumber">
-<!ENTITY quicktext.cellularnumber.label "Cellularnumber">
-<!ENTITY quicktext.jobtitle.label "Jobtitle">
+<!ENTITY quicktext.worknumber.label "Рабочий телефон">
+<!ENTITY quicktext.faxnumber.label "Факс">
+<!ENTITY quicktext.homenumber.label "Домашний телефон">
+<!ENTITY quicktext.cellularnumber.label "Мобильный телефон">
+<!ENTITY quicktext.jobtitle.label "Должность">
 <!ENTITY quicktext.custom1.label "Прочее 1">
 <!ENTITY quicktext.custom2.label "Прочее 2">
 <!ENTITY quicktext.custom3.label "Прочее 3">
