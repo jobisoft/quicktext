@@ -76,14 +76,14 @@
 <!ENTITY quicktext.filename.label "Filename">
 <!ENTITY quicktext.filenameAndSize.label "Filename and size">
 
-<!ENTITY quicktext.insertAs.label "Insert as">
+<!ENTITY quicktext.insertAs.label "Вставить как">
 <!ENTITY quicktext.HTML.label "HTML">
-<!ENTITY quicktext.text.label "Text">
+<!ENTITY quicktext.text.label "Текст">
 
-<!ENTITY quicktext.none.label "None">
+<!ENTITY quicktext.none.label "Ничто">
 
-<!ENTITY quicktext.keyword.label "Keyword">
-<!ENTITY quicktext.browse.label "Browse">
+<!ENTITY quicktext.keyword.label "Kлючевое слово">
+<!ENTITY quicktext.browse.label "Просмотр">
 
-<!ENTITY quicktext.insertTextFromFileAsHTML.label "Insert file as HTML">
-<!ENTITY quicktext.insertTextFromFileAsText.label "Insert file as text">
+<!ENTITY quicktext.insertTextFromFileAsHTML.label "Вставить файл как HTML">
+<!ENTITY quicktext.insertTextFromFileAsText.label "Вставить файл как текст">
