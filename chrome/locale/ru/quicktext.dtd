@@ -38,7 +38,7 @@
 <!ENTITY quicktext.addTemplate.label "Добавить шаблон">
 <!ENTITY quicktext.addScript.label "Добавить скрипт">
 <!ENTITY quicktext.remove.label "Удалить">
-<!ENTITY quicktext.shortcut.label "Shortcut">
+<!ENTITY quicktext.shortcut.label "Сочетание">
 
 <!ENTITY quicktext.group.label "Группа">
 <!ENTITY quicktext.template.label "Шаблон">
