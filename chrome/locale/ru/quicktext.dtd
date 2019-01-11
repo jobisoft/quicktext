@@ -15,9 +15,9 @@
 
 <!ENTITY quicktext.rightClickSetting.label "Просмотр Quicktext-меню по правому клику">
 <!ENTITY quicktext.collapseSetting.label "Свернуть группу, если она содержит только один шаблон">
-<!ENTITY quicktext.modifierSetting.label "is the modifier I want to use for the keyboard shortcuts">
+<!ENTITY quicktext.modifierSetting.label "модификатор, который использовать для сочетаний клавиш">
 <!ENTITY quicktext.shortcutTypeAdv.label "Использовать расширенный режим для ярлыков">
-<!ENTITY quicktext.keywordKeySetting.label "is the key I want to use for activating a keyword">
+<!ENTITY quicktext.keywordKeySetting.label "клавиша, которую использовать для активации ключевого слова">
 
 <!ENTITY quicktext.altKey.label "Alt">
 <!ENTITY quicktext.controlKey.label "Ctrl">
