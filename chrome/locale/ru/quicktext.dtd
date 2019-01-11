@@ -80,7 +80,7 @@
 <!ENTITY quicktext.HTML.label "HTML">
 <!ENTITY quicktext.text.label "Текст">
 
-<!ENTITY quicktext.none.label "Ничто">
+<!ENTITY quicktext.none.label "Пусто">
 
 <!ENTITY quicktext.keyword.label "Kлючевое слово">
 <!ENTITY quicktext.browse.label "Просмотр">
