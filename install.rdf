@@ -19,6 +19,7 @@
     <em:translator>Óvári (hu)</em:translator>
     <em:translator>Unknown (ja)</em:translator>
     <em:translator>Unknown (sv-SE)</em:translator>
+    <em:translator>Alexey Sinitsyn (ru)</em:translator>
     <em:optionsURL>chrome://quicktext/content/settings.xul</em:optionsURL>
     <em:iconURL>chrome://quicktext/skin/icon.png</em:iconURL>
     <em:homepageURL>https://github.com/thundernest/quicktext</em:homepageURL>
@@ -47,6 +48,7 @@
         <em:translator>Óvári (hu)</em:translator>
         <em:translator>Unbekannt (ja)</em:translator>
         <em:translator>Unbekannt (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
       </Description>
     </em:localized>
 
@@ -65,6 +67,7 @@
         <em:translator>Óvári (hu)</em:translator>
         <em:translator>Inconnu (ja)</em:translator>
         <em:translator>Inconnu (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
       </Description>
     </em:localized>
 
@@ -83,6 +86,7 @@
         <em:translator>Óvári (hu)</em:translator>
         <em:translator>Ismeretlen (ja)</em:translator>
         <em:translator>Ismeretlen (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
       </Description>
     </em:localized>
 
@@ -101,6 +105,7 @@
         <em:translator>Óvári (hu)</em:translator>
         <em:translator>不明 (ja)</em:translator>
         <em:translator>不明 (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
       </Description>
     </em:localized>
 
@@ -119,8 +124,28 @@
         <em:translator>Óvári (hu)</em:translator>
         <em:translator>Okänd (ja)</em:translator>
         <em:translator>Okänd (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
       </Description>
     </em:localized>
-
+    
+    <!-- Russian -->
+    <em:localized>
+      <Description>
+        <em:locale>ru</em:locale>
+        <em:name>Quicktext (Быстрая вставка текста)</em:name>
+        <em:description>Добавляет панель инструментов с неограниченным количеством текста для быстрой вставки. Также можно использовать переменные, такие как [[TO = имя]]. С настройками для всего.</em:description>
+        <em:contributor>R Kent James</em:contributor>
+        <em:contributor>John Bieling</em:contributor>
+        <em:contributor>Philippe Lieser</em:contributor>
+        <em:translator>Unbekannt (de)</em:translator>
+        <em:translator>Emil Hesslow (en-US)</em:translator>
+        <em:translator>Unbekannt (fr)</em:translator>
+        <em:translator>Óvári (hu)</em:translator>
+        <em:translator>Unbekannt (ja)</em:translator>
+        <em:translator>Unbekannt (sv-SE)</em:translator>
+        <em:translator>Alexey Sinitsyn (ru)</em:translator>
+      </Description>
+    </em:localized>
+    
   </Description>
 </RDF>

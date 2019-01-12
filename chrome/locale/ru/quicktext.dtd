@@ -1,0 +1,89 @@
+<!ENTITY quicktext.label "Quicktext">
+<!ENTITY quicktext.shortname.label "Quicktext">
+
+<!ENTITY quicktext.settings.title "Настройки Quicktext">
+<!ENTITY quicktext.settings.label "Настройки">
+<!ENTITY quicktext.file.label "Файл">
+<!ENTITY quicktext.goToHomepage.label "На домашнюю страницу">
+<!ENTITY quicktext.help.label "Помощь">
+<!ENTITY quicktext.close.label "Закрыть">
+<!ENTITY quicktext.save.label "Сохранить">
+
+<!ENTITY quicktext.general.label "Главное">
+<!ENTITY quicktext.templates.label "Шаблоны">
+<!ENTITY quicktext.scripts.label "Скрипты">
+
+<!ENTITY quicktext.rightClickSetting.label "Просмотр Quicktext-меню по правому клику">
+<!ENTITY quicktext.collapseSetting.label "Свернуть группу, если она содержит только один шаблон">
+<!ENTITY quicktext.modifierSetting.label "модификатор, который использовать для сочетаний клавиш">
+<!ENTITY quicktext.shortcutTypeAdv.label "Использовать расширенный режим для ярлыков">
+<!ENTITY quicktext.keywordKeySetting.label "клавиша, которую использовать для активации ключевого слова">
+
+<!ENTITY quicktext.altKey.label "Alt">
+<!ENTITY quicktext.controlKey.label "Ctrl">
+<!ENTITY quicktext.metaKey.label "Meta">
+<!ENTITY quicktext.tabKey.label "Tab">
+<!ENTITY quicktext.spaceKey.label "Пробел">
+<!ENTITY quicktext.enterKey.label "Enter">
+
+<!ENTITY quicktext.defaultImport.label "Импорт при запуске">
+
+<!ENTITY quicktext.sharingTemplates.label "Обмен шаблонов">
+<!ENTITY quicktext.sharingScripts.label "Обмен скриптов">
+<!ENTITY quicktext.export.label "Экспорт">
+<!ENTITY quicktext.import.label "Импорт">
+
+<!ENTITY quicktext.title.label "Заглавие">
+<!ENTITY quicktext.addGroup.label "Добавить группу">
+<!ENTITY quicktext.addTemplate.label "Добавить шаблон">
+<!ENTITY quicktext.addScript.label "Добавить скрипт">
+<!ENTITY quicktext.remove.label "Удалить">
+<!ENTITY quicktext.shortcut.label "Сочетание">
+
+<!ENTITY quicktext.group.label "Группа">
+<!ENTITY quicktext.template.label "Шаблон">
+<!ENTITY quicktext.script.label "Скрипт">
+
+<!ENTITY quicktext.variables.label "Переменные">
+
+<!ENTITY quicktext.to.label "Кому">
+<!ENTITY quicktext.from.label "От">
+<!ENTITY quicktext.firstname.label "Имя">
+<!ENTITY quicktext.lastname.label "Фамилия">
+<!ENTITY quicktext.fullname.label "ФИО">
+<!ENTITY quicktext.displayname.label "Отображаемое имя">
+<!ENTITY quicktext.nickname.label "Псевдоним">
+<!ENTITY quicktext.email.label "E-mail">
+<!ENTITY quicktext.worknumber.label "Рабочий телефон">
+<!ENTITY quicktext.faxnumber.label "Факс">
+<!ENTITY quicktext.homenumber.label "Домашний телефон">
+<!ENTITY quicktext.cellularnumber.label "Мобильный телефон">
+<!ENTITY quicktext.jobtitle.label "Должность">
+<!ENTITY quicktext.custom1.label "Прочее 1">
+<!ENTITY quicktext.custom2.label "Прочее 2">
+<!ENTITY quicktext.custom3.label "Прочее 3">
+<!ENTITY quicktext.custom4.label "Прочее 4">
+
+<!ENTITY quicktext.dateTime.label "Дата/Время">
+
+<!ENTITY quicktext.other.label "Прочее">
+<!ENTITY quicktext.clipboard.label "Буфер обмена">
+<!ENTITY quicktext.cursor.label "Позиция курсора">
+<!ENTITY quicktext.subject.label "Тема">
+<!ENTITY quicktext.version.label "Версия Thunderbird">
+
+<!ENTITY quicktext.attachments.label "Вложения">
+<!ENTITY quicktext.filename.label "Имя файла">
+<!ENTITY quicktext.filenameAndSize.label "Имя файла и размер">
+
+<!ENTITY quicktext.insertAs.label "Вставить как">
+<!ENTITY quicktext.HTML.label "HTML">
+<!ENTITY quicktext.text.label "Текст">
+
+<!ENTITY quicktext.none.label "Пусто">
+
+<!ENTITY quicktext.keyword.label "Kлючевое слово">
+<!ENTITY quicktext.browse.label "Просмотр">
+
+<!ENTITY quicktext.insertTextFromFileAsHTML.label "Вставить файл как HTML">
+<!ENTITY quicktext.insertTextFromFileAsText.label "Вставить файл как текст">
