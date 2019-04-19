@@ -107,7 +107,7 @@ var quicktext = {
   {
     // Set the date/time in the variablemenu
     var timeStamp = new Date();
-    let fields = ["date-short", "date-long", "time-noseconds", "time-seconds"];
+    let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
     for (let i=0; i < fields.length; i++) {
         let field = fields[i];
         let fieldtype = field.split("-")[0];
