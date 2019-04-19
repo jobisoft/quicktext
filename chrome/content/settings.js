@@ -2,19 +2,6 @@ var gQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(C
 Components.utils.import("chrome://quicktext/content/utils.js");
 Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
-var dragObserver =
-{ 
-  onDragStart: function (evt, transferData, action)
-  {
-    if (evt.originalTarget.localName != 'treechildren')
-      return false;
-
-    transferData.data = new TransferData();
-    transferData.data.addDataForFlavour("quicktextTree", evt.target.getAttribute("label"));
-    return true;
-  }
-}
-
 var quicktext =
 {
   mStringBundle:        null,
