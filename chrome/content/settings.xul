@@ -139,7 +139,8 @@
                 <hbox><button id="group-button-add-text" label="&quicktext.addTemplate.label;" flex="1" oncommand="quicktext.addText();" /></hbox>
                 <tree id="group-tree"
                       onselect="quicktext.pickText();"
-                      ondraggesture="nsDragAndDrop.startDrag(event, dragObserver)"
+                      draggable="true"
+                      ondragstart="event.dataTransfer.setData('quicktextTree', event.target.getAttribute('label'))"
                       flex="1"
                       seltype="single"
                       selstyle="primary"
