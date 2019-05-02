@@ -1,7 +1,6 @@
 overlay	chrome://messenger/content/messengercompose/messengercompose.xul	      chrome://quicktext/content/quicktext.xul
+style   chrome://messenger/content/customizeToolbar.xul                                  chrome://quicktext/skin/quicktext.css
 overlay	chrome://messenger/content/messenger.xul	                              chrome://quicktext/content/main.xul
-
-style	  chrome://global/content/customizeToolbar.xul	chrome://quicktext/skin/quicktext.css
 
 content	quicktext	chrome/content/
 
