@@ -1,7 +1,8 @@
-var gQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
-var gQuicktextVar = Components.classes["@hesslow.se/quicktext/variables;1"].createInstance(Components.interfaces.wzIQuicktextVar);
+var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
+Components.utils.import("chrome://quicktext/content/components/wzQuicktextVar.js");
+var gQuicktextVar = new wzQuicktextVar();
+
 Components.utils.import("chrome://quicktext/content/utils.js");
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
 
 var quicktextStateListener = {
   NotifyComposeBodyReady: function()
@@ -801,16 +802,4 @@ var quicktext = {
         break;
     }
   }
-,
-  createInstance: function(aOuter, aIID)
-  {
-    if (aOuter != null) throw Components.results.NS_ERROR_NO_AGGREGATION;
-    return policy;
-  }
-,
-  QueryInterface: XPCOMUtils.generateQI([
-    Components.interfaces.nsIObserver,
-    Components.interfaces.nsISupportsWeakReference,
-    Components.interfaces.nsIFactory,
-    ])
 }

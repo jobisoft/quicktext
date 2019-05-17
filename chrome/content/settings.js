@@ -1,9 +1,8 @@
-var gQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
-Components.utils.import("chrome://quicktext/content/utils.js");
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
 
-var quicktext =
-{
+Components.utils.import("chrome://quicktext/content/utils.js");
+
+var quicktext = {
   mStringBundle:        null,
   mChangesMade:         false,
   mTextChangesMade:     [],
@@ -1387,16 +1386,4 @@ var quicktext =
       // this.updateGUI();
     }
   }
-,
-  createInstance: function(aOuter, aIID)
-  {
-    if (aOuter != null) throw Components.results.NS_ERROR_NO_AGGREGATION;
-    return policy;
-  }
-,
-  QueryInterface: XPCOMUtils.generateQI([
-    Components.interfaces.nsIObserver,
-    Components.interfaces.nsISupportsWeakReference,
-    Components.interfaces.nsIFactory,
-    ])
 }

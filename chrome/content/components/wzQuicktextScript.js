@@ -1,4 +1,4 @@
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+var EXPORTED_SYMBOLS = ["wzQuicktextScript"];
 
 const kDebug        = true;
 
@@ -9,11 +9,6 @@ function wzQuicktextScript() {
 }
 
 wzQuicktextScript.prototype = {
-  classID:          Components.ID("{1d3a4cc6-c543-4800-b9ec-48ec5fa810fb}"),
-  classDescription: "Quicktext Script",
-  contractID:       "@hesslow.se/quicktext/script;1",
-  QueryInterface:   XPCOMUtils.generateQI([Components.interfaces.wzIQuicktextScript, Components.interfaces.nsISupports])
-,
   get name() { return this.mName; },
   set name(aName) { if (typeof aName != 'undefined') return this.mName = aName; }
 ,
@@ -34,13 +29,5 @@ wzQuicktextScript.prototype = {
   }
 }
 
-/**
- * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
- * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
- */
-if (XPCOMUtils.generateNSGetFactory)
-  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktextScript]);
-else
-  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextScript]);
 
 var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};

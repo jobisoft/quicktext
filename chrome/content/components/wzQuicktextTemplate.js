@@ -1,4 +1,6 @@
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+var EXPORTED_SYMBOLS = ["wzQuicktextTemplate"];
+
+Components.utils.import("chrome://quicktext/content/components/wzQuicktextHeader.js");
 
 const kDebug        = true;
 
@@ -14,11 +16,6 @@ function wzQuicktextTemplate() {
 }
 
 wzQuicktextTemplate.prototype = {
-  classID:          Components.ID("{5f9705d0-8d1a-11da-a72b-0800200c9a66}"),
-  classDescription: "Quicktext Template",
-  contractID:       "@hesslow.se/quicktext/template;1",
-  QueryInterface:   XPCOMUtils.generateQI([Components.interfaces.wzIQuicktextTemplate, Components.interfaces.nsISupports])
-,
   get name() { return this.mName; },
   set name(aName) { if (typeof aName != 'undefined') return this.mName = aName; }
 ,
@@ -47,7 +44,7 @@ wzQuicktextTemplate.prototype = {
 ,
   addHeader: function (aType, aValue)
   {
-    var tmp = Components.classes["@hesslow.se/quicktext/header;1"].createInstance(Components.interfaces.wzIQuicktextHeader);
+    var tmp = new wzQuicktextHeader();
     tmp.type = aType;
     tmp.value = aValue;
     this.mHeaders.push(tmp);
@@ -81,13 +78,5 @@ wzQuicktextTemplate.prototype = {
   }
 }
 
-/**
- * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
- * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
- */
-if (XPCOMUtils.generateNSGetFactory)
-  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktextTemplate]);
-else
-  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextTemplate]);
 
 var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
