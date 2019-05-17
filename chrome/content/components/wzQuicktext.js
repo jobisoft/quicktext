@@ -1,7 +1,6 @@
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
-Components.utils.import("chrome://quicktext/content/components/wzQuicktextGroup.js");
-Components.utils.import("chrome://quicktext/content/components/wzQuicktextTemplate.js");
-Components.utils.import("chrome://quicktext/content/components/wzQuicktextScript.js");
+var { wzQuicktextGroup } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextGroup.js", null);
+var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextTemplate.js", null);
+var { wzQuicktextScript } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextScript.js", null);
 Components.utils.import("resource://gre/modules/Task.jsm");
 Components.utils.import("resource://gre/modules/osfile.jsm");
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);
@@ -16,8 +15,7 @@ const kIllegalChars = String.fromCharCode(1) +"-"+ String.fromCharCode(8) + Stri
 const kFileShortcuts = ['ProfD', 'UsrDocs', 'Home', 'Desk', 'Pers'];
 const kHomepage     = "https://github.com/thundernest/quicktext/wiki/";
 
-function wzQuicktext() {}
-wzQuicktext.prototype = {
+var gQuicktext = {
   mSettingsLoaded:      false,
   mGroup:               [],
   mTexts:               [],
@@ -1038,5 +1036,3 @@ function TrimString(aStr)
   if (!aStr) return "";
   return aStr.replace(/(^\s+)|(\s+$)/g, '')
 }
-
-var gQuicktext = new wzQuicktext();

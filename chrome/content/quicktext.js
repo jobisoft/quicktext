@@ -1,5 +1,5 @@
 var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
-Components.utils.import("chrome://quicktext/content/components/wzQuicktextVar.js");
+var { wzQuicktextVar } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextVar.js", null);
 var gQuicktextVar = new wzQuicktextVar();
 
 Components.utils.import("chrome://quicktext/content/utils.js");

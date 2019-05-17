@@ -1,6 +1,6 @@
 var EXPORTED_SYMBOLS = ["wzQuicktextTemplate"];
 
-Components.utils.import("chrome://quicktext/content/components/wzQuicktextHeader.js");
+var { wzQuicktextHeader } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextHeader.js", null);
 
 const kDebug        = true;
 
