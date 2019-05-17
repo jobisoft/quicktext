@@ -1,6 +1,6 @@
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
+var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
 
-Components.utils.import("chrome://quicktext/content/utils.js");
+Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
 
 var quicktext = {
   mStringBundle:        null,

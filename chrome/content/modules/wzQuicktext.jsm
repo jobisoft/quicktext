@@ -1,6 +1,6 @@
-var { wzQuicktextGroup } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextGroup.js", null);
-var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextTemplate.js", null);
-var { wzQuicktextScript } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextScript.js", null);
+var { wzQuicktextGroup } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm", null);
+var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm", null);
+var { wzQuicktextScript } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm", null);
 Components.utils.import("resource://gre/modules/Task.jsm");
 Components.utils.import("resource://gre/modules/osfile.jsm");
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);

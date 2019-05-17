@@ -1,4 +1,4 @@
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
+var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
 
 var quicktext = {
   openSettings: function()
