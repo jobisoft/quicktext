@@ -1,7 +1,9 @@
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
+
 Components.utils.import("chrome://quicktext/content/utils.js");
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);
 
+var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
@@ -68,7 +70,7 @@ function wzQuicktextVar()
   this.mWindow      = null;
 
   // Need the Main Quicktext component
-  this.mQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
+  this.mQuicktext = gQuicktext;
 
   // Add prefs for preferences
   this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
@@ -77,11 +79,6 @@ function wzQuicktextVar()
 }
 
 wzQuicktextVar.prototype = {
-  classID:          Components.ID("{baf42192-e051-4319-956d-1e1f2a81077e}"),
-  classDescription: "Quicktext Variables",
-  contractID:       "@hesslow.se/quicktext/variables;1",
-  QueryInterface:   XPCOMUtils.generateQI([Components.interfaces.wzIQuicktextVar, Components.interfaces.nsISupports])
-,
   init: function(aWindow)
   {
     // Save the window we are in
@@ -1120,14 +1117,6 @@ wzQuicktextVar.prototype = {
   }
 }
 
-/**
- * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
- * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
- */
-if (XPCOMUtils.generateNSGetFactory)
-  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktextVar]);
-else
-  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktextVar]);
 
 var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
 

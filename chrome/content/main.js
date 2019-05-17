@@ -1,4 +1,4 @@
-var gQuicktext = Components.classes["@hesslow.se/quicktext/main;1"].getService(Components.interfaces.wzIQuicktext);
+var { gQuicktext } = Components.utils.import("chrome://quicktext/content/components/wzQuicktext.js", null);
 
 var quicktext = {
   openSettings: function()

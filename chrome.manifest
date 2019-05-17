@@ -13,23 +13,3 @@ locale	quicktext	hu  	chrome/locale/hu/
 locale	quicktext	ja  	chrome/locale/ja/
 locale	quicktext	sv-SE	chrome/locale/sv-SE/
 locale	quicktext	ru      chrome/locale/ru/
-
-interfaces chrome/content/components/wzIQuicktext.xpt
-
-component {b4b8f795-8d4d-4663-ad68-c219818739e1} chrome/content/components/wzQuicktext.js
-contract @hesslow.se/quicktext/main;1 {b4b8f795-8d4d-4663-ad68-c219818739e1}
-
-component {e85ebe60-8df8-11da-a72b-0800200c9a66} chrome/content/components/wzQuicktextGroup.js
-contract @hesslow.se/quicktext/group;1 {e85ebe60-8df8-11da-a72b-0800200c9a66}
-
-component {67805190-0eaf-11db-9cd8-0800200c9a66} chrome/content/components/wzQuicktextHeader.js
-contract @hesslow.se/quicktext/header;1 {67805190-0eaf-11db-9cd8-0800200c9a66}
-
-component {1d3a4cc6-c543-4800-b9ec-48ec5fa810fb} chrome/content/components/wzQuicktextScript.js
-contract @hesslow.se/quicktext/script;1 {1d3a4cc6-c543-4800-b9ec-48ec5fa810fb}
-
-component {5f9705d0-8d1a-11da-a72b-0800200c9a66} chrome/content/components/wzQuicktextTemplate.js
-contract @hesslow.se/quicktext/template;1 {5f9705d0-8d1a-11da-a72b-0800200c9a66}
-
-component {baf42192-e051-4319-956d-1e1f2a81077e} chrome/content/components/wzQuicktextVar.js
-contract @hesslow.se/quicktext/variables;1 {baf42192-e051-4319-956d-1e1f2a81077e}

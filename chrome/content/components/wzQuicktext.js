@@ -1,7 +1,11 @@
-Components.utils.import("resource://gre/modules/XPCOMUtils.jsm");
+var { wzQuicktextGroup } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextGroup.js", null);
+var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextTemplate.js", null);
+var { wzQuicktextScript } = Components.utils.import("chrome://quicktext/content/components/wzQuicktextScript.js", null);
 Components.utils.import("resource://gre/modules/Task.jsm");
 Components.utils.import("resource://gre/modules/osfile.jsm");
 Components.utils.importGlobalProperties(["XMLHttpRequest"]);
+
+var EXPORTED_SYMBOLS = ["gQuicktext"];
 
 const kDebug        = true;
 const kSepChar1a    = String.fromCharCode(65533, 65533);
@@ -11,13 +15,7 @@ const kIllegalChars = String.fromCharCode(1) +"-"+ String.fromCharCode(8) + Stri
 const kFileShortcuts = ['ProfD', 'UsrDocs', 'Home', 'Desk', 'Pers'];
 const kHomepage     = "https://github.com/thundernest/quicktext/wiki/";
 
-function wzQuicktext() {}
-wzQuicktext.prototype = {
-  classID:              Components.ID("{b4b8f795-8d4d-4663-ad68-c219818739e1}"),
-  classDescription:     "Quicktext",
-  contractID:           "@hesslow.se/quicktext/main;1",
-  QueryInterface:       XPCOMUtils.generateQI([Components.interfaces.wzIQuicktext, Components.interfaces.nsISupports])
-,
+var gQuicktext = {
   mSettingsLoaded:      false,
   mGroup:               [],
   mTexts:               [],
@@ -296,7 +294,7 @@ wzQuicktext.prototype = {
 ,
   addGroup: function(aName, aEditingMode)
   {
-    var tmp = Components.classes["@hesslow.se/quicktext/group;1"].createInstance(Components.interfaces.wzIQuicktextGroup);
+    var tmp = new wzQuicktextGroup();
     tmp.name = aName;
     tmp.type = 0;
 
@@ -384,7 +382,7 @@ wzQuicktext.prototype = {
 ,
   addText: function(aGroupIndex, aName, aEditingMode)
   {
-    var tmp = Components.classes["@hesslow.se/quicktext/template;1"].createInstance(Components.interfaces.wzIQuicktextTemplate);
+    var tmp = new wzQuicktextTemplate();
     tmp.name = aName;
     tmp.shortcut = "";
 
@@ -462,7 +460,7 @@ wzQuicktext.prototype = {
 ,
   addScript: function(aName, aEditingMode)
   {
-    var tmp = Components.classes["@hesslow.se/quicktext/script;1"].createInstance(Components.interfaces.wzIQuicktextScript);
+    var tmp = new wzQuicktextScript();
     tmp.name = aName;
     tmp.type = 0;
 
@@ -817,7 +815,7 @@ wzQuicktext.prototype = {
             var elems = dom.documentElement.getElementsByTagName("script");
             for (var i = 0; i < elems.length; i++)
             {
-              var tmp = Components.classes["@hesslow.se/quicktext/script;1"].createInstance(Components.interfaces.wzIQuicktextScript);
+              var tmp = new wzQuicktextScript();
               tmp.name = this.getTagValue(elems[i], "name");
               tmp.script = this.getTagValue(elems[i], "body");
               tmp.type = aType;
@@ -830,7 +828,7 @@ wzQuicktext.prototype = {
             var elems = dom.documentElement.getElementsByTagName("menu");
             for (var i = 0; i < elems.length; i++)
             {
-              var tmp = Components.classes["@hesslow.se/quicktext/group;1"].createInstance(Components.interfaces.wzIQuicktextGroup);
+              var tmp = new wzQuicktextGroup();
               tmp.name = this.getTagValue(elems[i], "title");
               tmp.type = aType;
     
@@ -842,7 +840,7 @@ wzQuicktext.prototype = {
                 var subElems = textsNodes[0].getElementsByTagName("text");
                 for (var j = 0; j < subElems.length; j++)
                 {
-                  var tmp = Components.classes["@hesslow.se/quicktext/template;1"].createInstance(Components.interfaces.wzIQuicktextTemplate);
+                  var tmp = new wzQuicktextTemplate();
                   tmp.name = this.getTagValue(subElems[j], "name");
                   tmp.text = this.getTagValue(subElems[j], "body");
                   tmp.shortcut = subElems[j].getAttribute("shortcut");
@@ -877,7 +875,7 @@ wzQuicktext.prototype = {
         var elems = dom.documentElement.getElementsByTagName("menu");
         for (var i = 0; i < elems.length; i++)
         {
-          var tmp = Components.classes["@hesslow.se/quicktext/group;1"].createInstance(Components.interfaces.wzIQuicktextGroup);
+          var tmp = new wzQuicktextGroup();
           tmp.name = elems[i].getAttribute("title");
           tmp.type = aType;
 
@@ -887,7 +885,7 @@ wzQuicktext.prototype = {
           var subElems = elems[i].getElementsByTagName("text");
           for (var j = 0; j < subElems.length; j++)
           {
-            var tmp = Components.classes["@hesslow.se/quicktext/template;1"].createInstance(Components.interfaces.wzIQuicktextTemplate);
+            var tmp = new wzQuicktextTemplate();
             tmp.name = subElems[j].getAttribute("title");
             tmp.text = subElems[j].firstChild.nodeValue;
             tmp.shortcut = subElems[j].getAttribute("shortcut");
@@ -1027,14 +1025,6 @@ wzQuicktext.prototype = {
   }
 }
 
-/**
- * XPCOMUtils.generateNSGetFactory was introduced in Mozilla 2 (Firefox 4, SeaMonkey 2.1).
- * XPCOMUtils.generateNSGetModule was introduced in Mozilla 1.9 (Firefox 3.0).
- */
-if (XPCOMUtils.generateNSGetFactory)
-  var NSGetFactory = XPCOMUtils.generateNSGetFactory([wzQuicktext]);
-else
-  var NSGetModule = XPCOMUtils.generateNSGetModule([wzQuicktext]);
 
 var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
 
