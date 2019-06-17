@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet type="text/css" href="chrome://messenger/skin/messenger.css"?>
 
 <!DOCTYPE dialog SYSTEM "chrome://quicktext/locale/quicktext.dtd">
 
@@ -83,7 +84,7 @@
             <hbox flex="1">
               <vbox flex="1">
                 <groupbox>
-                  <caption label="&quicktext.settings.label;" />
+                  <label class="header">&quicktext.settings.label;</label>
                   <vbox>
                     <checkbox label="&quicktext.rightClickSetting.label;" id="checkbox-viewPopup" oncommand="quicktext.checkForGeneralChanges(0);" />
                     <checkbox label="&quicktext.collapseSetting.label;" id="checkbox-collapseGroup" oncommand="quicktext.checkForGeneralChanges(1);" />
@@ -113,18 +114,18 @@
                   </vbox>
                 </groupbox>
                 <groupbox>
-                  <caption label="&quicktext.defaultImport.label;" />
+                  <label class="header">&quicktext.defaultImport.label;</label>
                   <textbox id="text-defaultImport" flex="1" oninput="quicktext.checkForGeneralChanges(5);" />
                 </groupbox>
               </vbox>
               <vbox flex="1">
                 <groupbox>
-                  <caption label="&quicktext.sharingTemplates.label;" />
+                  <label class="header">&quicktext.sharingTemplates.label;</label>
                   <button label="&quicktext.export.label;" oncommand="quicktext.exportTemplatesToFile();" />
                   <button label="&quicktext.import.label;" oncommand="quicktext.importTemplatesFromFile();" />
                 </groupbox>
                 <groupbox>
-                  <caption label="&quicktext.sharingScripts.label;" />
+                  <label class="header">&quicktext.sharingScripts.label;</label>
                   <button label="&quicktext.export.label;" oncommand="quicktext.exportScriptsToFile();" />
                   <button label="&quicktext.import.label;" oncommand="quicktext.importScriptsFromFile();" />
                 </groupbox>
@@ -134,7 +135,6 @@
           <tabpanel id="tab-templates">
             <vbox style="width: 200px">
               <groupbox flex="1">
-                <caption label="&quicktext.title.label;" />
                 <hbox><button id="group-button-add-group" label="&quicktext.addGroup.label;" flex="1" oncommand="quicktext.addGroup();" /></hbox>
                 <hbox><button id="group-button-add-text" label="&quicktext.addTemplate.label;" flex="1" oncommand="quicktext.addText();" /></hbox>
                 <tree id="group-tree"
@@ -161,7 +161,6 @@
             </splitter>
             <vbox flex="1">
               <groupbox flex="1">
-                <caption label="&quicktext.template.label;" id="text-caption"/>
                 <vbox flex="1">
                   <grid flex="1">
                     <columns>
@@ -170,7 +169,9 @@
                     </columns>
                     <rows>
                       <row showfor="text,group">
-                        <label align="center" value="&quicktext.title.label;:" control="text-title" style="margin-top: 6px" />
+                        <vbox pack="center">
+                          <label align="center" class="header"  id="text-caption" basevalue="&quicktext.title.label;" value="&quicktext.title.label;:" control="text-title" />
+                        </vbox>
                         <textbox id="text-title" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(0);"/>
                       </row>
                       <hbox align="right" showfor="text">
@@ -244,7 +245,7 @@
                         </vbox>
                       </hbox>
                       <vbox flex="1" showfor="text">
-                        <textbox id="text" flex="1" multiline="true" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(1);"/>
+                        <html:textarea id="text" rows="10" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(1);"/>
                       </vbox>
                       <row showfor="text">
                         <label align="center" value="&quicktext.insertAs.label;:" control="text-type" style="margin-top: 6px" />
@@ -260,7 +261,7 @@
                             <label id="label-shortcutModifier" align="center" value="" control="text-shortcutBasic" style="margin-top: 6px" />
 
                             <menulist id="text-shortcutBasic" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(2);">
-                              <menupopup>
+                              <menupopup id="popup-shortcutBasic">
                                 <menuitem label="&quicktext.none.label;" value="" />
                                 <menuitem label="1" value="1" />
                                 <menuitem label="2" value="2" />
@@ -303,9 +304,8 @@
           <tabpanel id="tab-scripts">
             <vbox style="width: 200px;">
               <groupbox flex="1">
-                <caption label="&quicktext.title.label;" />
                 <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" /></hbox>
-                <listbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
+                <richlistbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
                 <hbox><button id="script-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeScript();" /></hbox>
               </groupbox>
 
@@ -315,7 +315,6 @@
             </splitter>
             <vbox flex="1">
               <groupbox flex="1">
-                <caption label="&quicktext.script.label;" id="script-caption"/>
                 <vbox flex="1">
                   <grid flex="1">
                     <columns>
@@ -324,11 +323,13 @@
                     </columns>
                     <rows>
                       <row>
-                        <label align="center" value="&quicktext.title.label;:" control="script-title" style="margin-top: 6px" />
+                        <vbox pack="center">
+                          <label align="center" class="header" value="&quicktext.title.label; (&quicktext.script.label;):" control="script-title" />
+                        </vbox>
                         <textbox id="script-title" flex="1" oninput="quicktext.checkForScriptChanges(0);"/>
                       </row>
                       <vbox flex="1">
-                        <textbox id="script" flex="1" multiline="true" oninput="quicktext.checkForScriptChanges(1);"/>
+                        <html:textarea id="script" rows="14" disabled="true" candisable="true" oninput="quicktext.checkForScriptChanges(1);"/>
                       </vbox>
                     </rows>
                   </grid>

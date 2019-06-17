@@ -1,8 +1,8 @@
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
-var { wzQuicktextVar } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm", null);
+var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
+var { wzQuicktextVar } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm");
 var gQuicktextVar = new wzQuicktextVar();
 
-Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
+var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 
 var quicktextStateListener = {
   NotifyComposeBodyReady: function()

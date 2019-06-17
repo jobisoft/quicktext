@@ -1,9 +1,9 @@
-var { wzQuicktextGroup } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm", null);
-var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm", null);
-var { wzQuicktextScript } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm", null);
-Components.utils.import("resource://gre/modules/Task.jsm");
-Components.utils.import("resource://gre/modules/osfile.jsm");
-Components.utils.importGlobalProperties(["XMLHttpRequest"]);
+var { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm");
+var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
+var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
+var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
+
+//ChromeUtils.importGlobalProperties(["XMLHttpRequest"]);
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 
@@ -645,16 +645,12 @@ var gQuicktext = {
     return text;
   }
 ,
-  writeFile: function(aFile, aData)
+  writeFile: async function(aFile, aData)
   {
-    //this will execute async/parallel to the main thread, which is not waiting
-    //for this task to finish 
-    Task.spawn(function* () {
-        //MDN states, instead of checking if dir exists, just create it and
-        //catch error on exist (but it does not even throw)
-        yield OS.File.makeDir(aFile.parent.path);
-        yield OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
-    }).catch(Components.utils.reportError);
+	//MDN states, instead of checking if dir exists, just create it and
+	//catch error on exist (but it does not even throw)
+	await OS.File.makeDir(aFile.parent.path);
+	await OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
   }
 ,
   pickFile: function(aWindow, aType, aMode, aTitle)
@@ -796,7 +792,7 @@ var gQuicktext = {
 ,
   parseImport: function(aData, aType, aBefore, aEditingMode)
   {
-    var parser = Components.classes["@mozilla.org/xmlextras/domparser;1"].createInstance(Components.interfaces.nsIDOMParser);
+    var parser = new DOMParser();
     var dom = parser.parseFromString(aData, "text/xml");
 
     var version = dom.documentElement.getAttribute("version");

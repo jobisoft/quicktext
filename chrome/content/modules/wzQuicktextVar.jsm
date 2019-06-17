@@ -1,9 +1,9 @@
 var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
 
-Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
-Components.utils.importGlobalProperties(["XMLHttpRequest"]);
+var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
+var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
+//ChromeUtils.importGlobalProperties(["XMLHttpRequest"]);
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
