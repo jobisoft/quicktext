@@ -3,8 +3,6 @@ var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/mod
 var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
 var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
 
-//ChromeUtils.importGlobalProperties(["XMLHttpRequest"]);
-
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 
 const kDebug        = true;
