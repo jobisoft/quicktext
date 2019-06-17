@@ -647,10 +647,10 @@ var gQuicktext = {
 ,
   writeFile: async function(aFile, aData)
   {
-	//MDN states, instead of checking if dir exists, just create it and
-	//catch error on exist (but it does not even throw)
-	await OS.File.makeDir(aFile.parent.path);
-	await OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
+    //MDN states, instead of checking if dir exists, just create it and
+    //catch error on exist (but it does not even throw)
+    await OS.File.makeDir(aFile.parent.path);
+    await OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
   }
 ,
   pickFile: function(aWindow, aType, aMode, aTitle)
