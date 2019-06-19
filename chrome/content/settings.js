@@ -725,8 +725,7 @@ var quicktext = {
 
     if (!this.mTreeArray[index])
     {
-      let textCaption = document.getElementById('text-caption');
-      textCaption.value = textCaption.getAttribute("basevalue") + " (" + this.mStringBundle.getString("group") + "): ";
+      document.getElementById('text-caption').textContent = this.mStringBundle.getString("group");
       document.getElementById('text-title').value = "";
       this.showElement("group", true);
       this.mPickedIndex = null;
@@ -748,8 +747,7 @@ var quicktext = {
     if (textIndex > -1)
     {
       var text = gQuicktext.getText(groupIndex, textIndex, true);
-      let textCaption = document.getElementById('text-caption');
-      textCaption.value = textCaption.getAttribute("basevalue") + " (" + this.mStringBundle.getString("template") + "): ";
+      document.getElementById('text-caption').textContent = this.mStringBundle.getString("template");
 
       document.getElementById('text-title').value = text.name;
       document.getElementById('text').value = text.text;
@@ -790,8 +788,7 @@ var quicktext = {
     }
     else
     {
-      let textCaption = document.getElementById('text-caption');
-      textCaption.value = textCaption.getAttribute("basevalue") + " (" + this.mStringBundle.getString("group") + "): ";
+      document.getElementById('text-caption').textContent = this.mStringBundle.getString("group");
 
       document.getElementById("text-title").value = gQuicktext.getGroup(groupIndex, true).name;
       document.getElementById("text").value = "";

@@ -28,3 +28,17 @@ toolbar[iconsize="small"] #button-quicktext[disabled] {
   list-style-image: url("chrome://quicktext/skin/button.small.png");
   -moz-image-region: rect(16px 16px 32px 0px);
 }
+
+groupbox {
+  margin-top: 1em;
+}
+
+groupbox > hbox:first-child {
+  margin-top: -1em;
+  margin-bottom: -5px;
+}
+
+caption {
+  padding: 3px;
+  font-weight: normal;
+}
