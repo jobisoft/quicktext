@@ -8,7 +8,7 @@
   },
   "name": "Quicktext",
   "description": "Adds a toolbar with unlimited number of text to quickly insert. It is also possible to use variables like [[TO=firstname]]. With settings for everything.",
-  "version": "2.0",
+  "version": "2.1",
   "author": "John Bieling",
   "icons": {
     "32": "chrome/skin/icon.png"
