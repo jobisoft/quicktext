@@ -505,66 +505,67 @@ var quicktext = {
 ,
   insertBody: function(aStr, aType, aHandleTransaction)
   {
-	var editor = GetCurrentEditor();
+    var editor = GetCurrentEditor();
 
     if (aStr != "")
     {
       aStr = gQuicktextVar.parse(aStr);
 	  
-	  
-//*******  LangSelector Code  **************
-		var LangSep, Reg_exp = null;
-		while(true){
-			LangSep = "***[CH]***"; if(aStr.includes(LangSep)) {Reg_exp = /[á-žÁ-Ž]/g; break;}			//= "***[CH]***";
-			LangSep = "***[DE]***"; if(aStr.includes(LangSep)) {Reg_exp = /[öäüÖÄÜß]/g; break;	}		//= "***[DE]***";
-			LangSep = "***[ES]***"; if(aStr.includes(LangSep)) {Reg_exp = /[áéíñóúÁÉÍÑÓÚ]/g; break;}		//= "***[ES]***";
-			LangSep = "***[FR]***"; if(aStr.includes(LangSep)) {Reg_exp = /[àâæçêîôœÀÂÆÇÊÎÔŒ]/g;break;}	//= "***[FR]***";
-			LangSep = "***[GR]***"; if(aStr.includes(LangSep)) {Reg_exp = /[α-ωΑ-Ω]/g; break;}			//= "***[GR]***";
-			LangSep = "***[PL]***"; if(aStr.includes(LangSep)) {Reg_exp = /[ąćęłńóśźżĄĘŁŃÓŚŹŻ]/g; break;}//= "***[PL]***";
-			LangSep = "***[RO]***"; if(aStr.includes(LangSep)) {Reg_exp = /[ĂăÂâÎîȘșŞşȚțŢţ]/g; break;}	//= "***[RO]***";
-			LangSep = "***[RU]***"; if(aStr.includes(LangSep)) {Reg_exp = /[а-яА-Я]/g; break;}			//= "***[RU]***";
-			LangSep = "***[TR]***"; if(aStr.includes(LangSep)) {Reg_exp = /[ıöüçğşİÖÜÇĞŞ]/g; break;}		//= "***[TR]***";
-			LangSep = ""; break; // default: pattern not founded
-		}
+      var LangSep, Reg_exp = null;
+      while(true){
+        LangSep = "***[CH]***"; if(aStr.includes(LangSep)) {Reg_exp = /[á-žÁ-Ž]/g; break;}
+        LangSep = "***[DE]***"; if(aStr.includes(LangSep)) {Reg_exp = /[öäüÖÄÜß]/g; break;}
+        LangSep = "***[ES]***"; if(aStr.includes(LangSep)) {Reg_exp = /[áéíñóúÁÉÍÑÓÚ]/g; break;}
+        LangSep = "***[FR]***"; if(aStr.includes(LangSep)) {Reg_exp = /[àâæçêîôœÀÂÆÇÊÎÔŒ]/g; break;}
+        LangSep = "***[GR]***"; if(aStr.includes(LangSep)) {Reg_exp = /[α-ωΑ-Ω]/g; break;}
+        LangSep = "***[PL]***"; if(aStr.includes(LangSep)) {Reg_exp = /[ąćęłńóśźżĄĘŁŃÓŚŹŻ]/g; break;}
+        LangSep = "***[RO]***"; if(aStr.includes(LangSep)) {Reg_exp = /[ĂăÂâÎîȘșŞşȚțŢţ]/g; break;}
+        LangSep = "***[RU]***"; if(aStr.includes(LangSep)) {Reg_exp = /[а-яА-Я]/g; break;}
+        LangSep = "***[TR]***"; if(aStr.includes(LangSep)) {Reg_exp = /[ıöüçğşİÖÜÇĞŞ]/g; break;}
+        LangSep = ""; break; // default: pattern not found
+      }
 		
-		if(Reg_exp == null) // did not matched! Try found direct RegExp...
-		{
-			var SttIdx = aStr.indexOf("***["); 
-			var EndIdx = aStr.indexOf("]***"); 
-//alert("StrIdx = " + SttIdx + ", EndIdx =" + EndIdx);					
-			if((SttIdx > 0) && (EndIdx > 0))
-			{
-				Reg_exp = new RegExp("[" + aStr.substring(SttIdx+4, EndIdx)+ "]", 'g');
-				LangSep = aStr.substring(SttIdx, EndIdx+4);
-			}
-		}
-//alert("Sep = " + LangSep + ", RegExp =" + Reg_exp);
+      if(Reg_exp == null) // did not matched. Try found RegExp directly writed
+      {
+        var SttIdx = aStr.indexOf("***["); 
+        var EndIdx = aStr.indexOf("]***"); 				
+        if((SttIdx > 0) && (EndIdx > 0))
+        {
+          Reg_exp = new RegExp("[" + aStr.substring(SttIdx+4, EndIdx)+ "]", 'g');
+          LangSep = aStr.substring(SttIdx, EndIdx+4);
+        }
+      }
 
-		if(Reg_exp != null) // Separator detected!
-		{		
-			var Texts = aStr.split(LangSep);
-			// get the text of body
-			editor.beginTransaction();
-			var tempString = editor.outputToString('text/plain', 8); // Body Only (text, no HTML)
-			editor.endTransaction();  // this is very impt, remember to end transaction.
-// alert(tempString);
-			tempString = tempString.replace(/(\r?\n){2,}/g, '$1');
-			if(tempString.indexOf("\n") <10)
-				tempString = tempString.substring(tempString.indexOf("\n")+1,500);
-				  
-			var WroteIdx = tempString.indexOf("\n"); // search the end of 1st string			
-			tempString = tempString.substring(WroteIdx+1,500); // delete 1st string and cut 500 symbols max. by remain text
-// alert(tempString);
-			aStr = Texts[0]; // English version is by Default
-			
-			var result = tempString.match(Reg_exp); // Check matches of non-english symbols
-			if(result != null) // globally: matches found?
-			{
-				if(result.length > 9)  // Count of matched symbols must be at least 10
-					aStr = Texts[1];				
-			}
-		}
-//*******  END OF LangSelector Code  **************
+      if(Reg_exp != null) // Separator detected!
+      {		
+        var Texts = aStr.split(LangSep);
+        var result = null; 
+        // get the text of body
+        editor.beginTransaction();
+        var tempString = editor.outputToString('text/plain', 8); // Body Only (text, no HTML)
+        editor.endTransaction();  // this is very impt, remember to end transaction.
+
+        tempString = tempString.replace(/(\r?\n){2,}/g, '$1');
+        if(tempString.indexOf("\n") <10)
+          tempString = tempString.substring(tempString.indexOf("\n")+1, 500);
+            
+        var WroteIdx = tempString.indexOf("\n"); // search the end of 1st string			
+        tempString = tempString.substring(WroteIdx+1, 500); // delete 1st string and cut 500 symbols max. by remain text
+        
+        aStr = Texts[0]; // English version is by Default
+        
+        try{
+          result = tempString.match(Reg_exp); // Find all non-English symbols
+        }
+        catch(e) {
+          alert("Some error in your LangSeparator RegExp. Please check it." );
+        }
+        if(result != null) // At all, symbols present?
+        {
+          if(result.length > 9)  // The count of matched symbols must be at least 10
+            aStr = Texts[1];				
+        }
+      }
 
       if (aStr != "")
       {
