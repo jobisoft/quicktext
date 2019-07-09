@@ -10,6 +10,9 @@ function wzQuicktextTemplate() {
   this.mShortcut    = "";
   this.mType        = "";
   this.mKeyword     = "";
+  this.mCC          = "";
+  this.mBCC         = "";
+  this.mReplyTo     = "";
   this.mSubject     = "";
   this.mAttachments = "";
   this.mHeaders     = [];
@@ -30,6 +33,15 @@ wzQuicktextTemplate.prototype = {
 ,
   get keyword() { return this.mKeyword; },
   set keyword(aKeyword) { if (typeof aKeyword != 'undefined') return this.mKeyword = aKeyword; }
+,
+  get cc() { return this.mCC; },
+  set cc(aCC) { if (typeof aCC != 'undefined') return this.mCC = aCC; }
+,
+  get bcc() { return this.mBCC; },
+  set bcc(aBCC) { if (typeof aBCC != 'undefined') return this.mBCC = aBCC; }
+,
+  get replyTo() { return this.mReplyTo; },
+  set replyTo(aReplyTo) { if (typeof aReplyTo != 'undefined') return this.mReplyTo = aReplyTo; }
 ,
   get subject() { return this.mSubject; },
   set subject(aSubject) { if (typeof aSubject != 'undefined') return this.mSubject = aSubject; }
@@ -68,6 +80,9 @@ wzQuicktextTemplate.prototype = {
     newTemplate.shortcut = this.mShortcut;
     newTemplate.type = this.mType;
     newTemplate.keyword = this.mKeyword;
+    newTemplate.cc = this.mCC;
+    newTemplate.bcc = this.mBCC;
+    newTemplate.replyTo = this.mReplyTo;
     newTemplate.subject = this.mSubject;
     newTemplate.attachments = this.mAttachments;
 
