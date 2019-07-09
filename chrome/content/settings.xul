@@ -254,7 +254,7 @@
                               <menuitem label="&quicktext.text.label;" value="0" />
                               <menuitem label="&quicktext.HTML.label;" value="1" />
                             </menupopup>
-                          </menulist> 
+                          </menulist>
                           <hbox align="right" flex="1">
                             <label align="center" value="&quicktext.shortcut.label;:" control="text-shortcutBasic" style="margin-top: 6px" />
                             <label id="label-shortcutModifier" align="center" value="" control="text-shortcutBasic" style="margin-top: 6px" />
@@ -286,6 +286,18 @@
                       <row showfor="text">
                         <label align="center" value="&quicktext.keyword.label;:" control="text-keyword" style="margin-top: 6px" />
                         <textbox id="text-keyword" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(4);"/>
+                      </row>
+                      <row showfor="text">
+                        <label align="center" value="Add CC:" control="text-cc" style="margin-top: 6px" />
+                        <textbox id="text-cc" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(7);"/>
+                      </row>
+                      <row showfor="text">
+                        <label align="center" value="Add BCC:" control="text-bcc" style="margin-top: 6px" />
+                        <textbox id="text-bcc" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(8);"/>
+                      </row>
+                      <row showfor="text">
+                        <label align="center" value="Reply-To:" control="text-reply-to" style="margin-top: 6px" />
+                        <textbox id="text-reply-to" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(9);"/>
                       </row>
                       <row showfor="text">
                         <label align="center" value="&quicktext.attachments.label;:" control="text-attachments" style="margin-top: 6px" />
