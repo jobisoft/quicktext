@@ -137,7 +137,7 @@ var quicktext = {
     this.mScriptChangesMade = [];
     this.mGeneralChangesMade = [];
     this.disableSave();
-    this.updateGUI();    
+    this.updateGUI();
   }
 ,
   shortcutTypeAdv: function()
@@ -168,6 +168,9 @@ var quicktext = {
 
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'type', document.getElementById('text-type').value);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'keyword', document.getElementById('text-keyword').value.replace(/[\s]/g, ''));
+        this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'cc', document.getElementById('text-cc').value);
+        this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'bcc', document.getElementById('text-bcc').value);
+        this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'replyTo', document.getElementById('text-reply-to').value);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'subject', document.getElementById('text-subject').value);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'attachments', document.getElementById('text-attachments').value);
       }
@@ -227,7 +230,7 @@ var quicktext = {
     if (typeof script[aColumn] != "undefined" && script[aColumn] != aValue)
     {
       script[aColumn] = aValue;
-      
+
 
       this.changesMade();
       return true;
@@ -266,8 +269,8 @@ var quicktext = {
     if (!this.mPickedIndex)
       return;
 
-    var ids = ['text-title', 'text', 'text-shortcutBasic', 'text-type', 'text-keyword', 'text-subject', 'text-attachments'];
-    var keys = ['name', 'text', 'shortcut', 'type', 'keyword', 'subject', 'attachments'];
+    var ids = ['text-title', 'text', 'text-shortcutBasic', 'text-type', 'text-keyword', 'text-subject', 'text-attachments', 'text-cc', 'text-bcc', 'text-reply-to'];
+    var keys = ['name', 'text', 'shortcut', 'type', 'keyword', 'subject', 'attachments', 'text-cc', 'bcc', 'replyTo'];
 
     if (this.shortcutTypeAdv())
       ids[2] = 'text-shortcutAdv';
@@ -482,9 +485,9 @@ var quicktext = {
     if (document.getElementById("text-defaultImport"))
       document.getElementById("text-defaultImport").value = gQuicktext.defaultImport;
     if (document.getElementById("select-keywordKey"))
-      document.getElementById("select-keywordKey").value = gQuicktext.keywordKey;    
+      document.getElementById("select-keywordKey").value = gQuicktext.keywordKey;
 
-    // Update the variable menu 
+    // Update the variable menu
     this.updateVariableGUI();
 
     // Update Script list
@@ -519,7 +522,7 @@ var quicktext = {
           var groupElem = document.createElement("menu");
           groupElem.setAttribute('label', group.name);
           groupElem = parent.appendChild(groupElem);
-  
+
           groupParent = document.createElement("menupopup");
           groupParent = groupElem.appendChild(groupParent);
           for (var j = 0; j < textLength; j++)
@@ -614,7 +617,7 @@ var quicktext = {
 
     var selNewStart = selStart + 4 + aStr.length;
     textbox.setSelectionRange(selNewStart, selNewStart);
-    this.enableSave();    
+    this.enableSave();
   }
 ,
   insertFileVariable: function()
@@ -747,6 +750,9 @@ var quicktext = {
       document.getElementById('text-title').value = text.name;
       document.getElementById('text').value = text.text;
       document.getElementById('text-keyword').value = text.keyword;
+      document.getElementById('text-cc').value = text.cc;
+      document.getElementById('text-bcc').value = text.bcc;
+      document.getElementById('text-reply-to').value = text.replyTo;
       document.getElementById('text-subject').value = text.subject;
       document.getElementById('text-attachments').value = text.attachments;
 
@@ -788,6 +794,9 @@ var quicktext = {
       document.getElementById("text-title").value = gQuicktext.getGroup(groupIndex, true).name;
       document.getElementById("text").value = "";
       document.getElementById("text-keyword").value = "";
+      document.getElementById("text-cc").value = "";
+      document.getElementById("text-bcc").value = "";
+      document.getElementById("text-reply-to").value = "";
       document.getElementById("text-subject").value = "";
       document.getElementById("text-attachments").value = "";
     }
