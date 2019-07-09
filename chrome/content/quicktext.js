@@ -1,5 +1,6 @@
 var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
 var { wzQuicktextVar } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm", null);
+var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm", null);
 var gQuicktextVar = new wzQuicktextVar();
 
 Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
@@ -52,7 +53,7 @@ var quicktext = {
       var menu = document.getElementById("msgComposeContext");
       menu.addEventListener("popupshowing", function(e) { quicktext.popupshowing(e); }, false);
 
-      // Need to update GUI when the Quicktext-button is added to the toolbar (updating on ANY change to the toolbar is much more simple, and it does not hurt) 
+      // Need to update GUI when the Quicktext-button is added to the toolbar (updating on ANY change to the toolbar is much more simple, and it does not hurt)
       window.addEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
 
     }
@@ -206,20 +207,20 @@ var quicktext = {
         }
       }
 
-      //add a flex spacer to push the VAR and OTHER elements to the right 
+      //add a flex spacer to push the VAR and OTHER elements to the right
       var spacer = document.createElement("spacer");
       spacer.setAttribute("flex", "1");
       toolbar.appendChild(spacer);
       toolbar.appendChild(toolbarbuttonVar);
       toolbar.appendChild(toolbarbuttonOther);
 
-            
+
       // Update the toolbar inside the toolbarpalette and the drop-down menu - if used
       let optionalUI = ["button-quicktext", "quicktext-popup"];
-      for (let a=0; a < optionalUI.length; a++) { 
+      for (let a=0; a < optionalUI.length; a++) {
         if (document.getElementById(optionalUI[a]) != null && document.getElementById(optionalUI[a]).childNodes[0] != null) {
           let rootElement = document.getElementById(optionalUI[a]).childNodes[0]; //get the menupop
-          
+
           //clear
           let length = rootElement.childNodes.length;
           for (let i = length-1; i >= 0; i--)
@@ -238,7 +239,7 @@ var quicktext = {
                 {
                   menu = document.createElement("menu");
                   menu.setAttribute("label", node.getAttribute("label"));
-    
+
                   for (let j = 0; j < node.childNodes.length; j++) {
                     menu.appendChild(node.childNodes[j].cloneNode(true));
                   }
@@ -259,10 +260,10 @@ var quicktext = {
             }
             menu = null;
           }
-          
+
         }
       }
-      
+
     }
 
     //add event listeners
@@ -272,7 +273,7 @@ var quicktext = {
       items[i].addEventListener("command", function() { quicktext.insertTemplate(this.getAttribute("i"), this.getAttribute("j")); }, true);
     }
 
-    
+
     this.visibleToolbar();
   }
 ,
@@ -306,7 +307,7 @@ var quicktext = {
     {
       document.getElementById("quicktext-view").removeAttribute("checked");
       document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
-    }    
+    }
   }
 ,
 
@@ -333,6 +334,9 @@ var quicktext = {
       var text = gQuicktext.getText(aGroupIndex, aTextIndex, false);
       this.insertHeaders(text);
       this.insertSubject(text.subject);
+      this.insertCC(text.cc);
+      this.insertBCC(text.bcc);
+      this.insertReplyTo(text.replyTo);
       this.insertAttachments(text.attachments);
 
       if (text.text != "" && text.text.indexOf('[[CURSOR]]') > -1)
@@ -383,7 +387,7 @@ var quicktext = {
     convertHeaderToType["to"]         = "to";
     convertHeaderToType["cc"]         = "cc";
     convertHeaderToType["bcc"]        = "bcc";
-    convertHeaderToType["reply-to"]   = "reply";
+    convertHeaderToType["reply-to"]   = "replyTo";
 
     var convertHeaderToParse          = [];
     convertHeaderToParse["to"]        = "to";
@@ -424,7 +428,7 @@ var quicktext = {
           continue;
 
         tmpRecipientHeaders[header] = [];
-        
+
         // Create an array of emailaddresses for this header that allready added
         var tmpEmailAddresses = {};
         var numOfAddresses = parser.parseHeadersWithArray(gMsgCompose.compFields[convertHeaderToParse[header]], tmpEmailAddresses, {}, {});
@@ -503,6 +507,27 @@ var quicktext = {
     }
   }
 ,
+  insertCC: function(aStr)
+  {
+    var tmp = new wzQuicktextTemplate();
+    tmp.addHeader('cc', aStr);
+    this.insertHeaders(tmp);
+  }
+,
+  insertBCC: function(aStr)
+  {
+    var tmp = new wzQuicktextTemplate();
+    tmp.addHeader('bcc', aStr);
+    this.insertHeaders(tmp);
+  }
+,
+  insertReplyTo: function(aStr)
+  {
+    var tmp = new wzQuicktextTemplate();
+    tmp.addHeader('replyTo', aStr);
+    this.insertHeaders(tmp);
+  }
+,
   insertBody: function(aStr, aType, aHandleTransaction)
   {
     if (aStr != "")
@@ -517,7 +542,7 @@ var quicktext = {
           var editor = GetCurrentEditor();
           if (aHandleTransaction)
             editor.beginTransaction();
-  
+
           if (editor.selection.rangeCount > 0)
           {
             var startRange = editor.selection.getRangeAt(0).cloneRange();
@@ -538,23 +563,23 @@ var quicktext = {
               editor.insertText(aStr);
           }
           catch(e) {}
-  
+
           if (editor.selection.rangeCount > 0)
             var endRange = editor.selection.getRangeAt(0).cloneRange();
-  
+
           try {
             if (specialRange && endRange)
             {
               var newRange = editor.document.createRange();
               newRange.setStart(specialRange[0].childNodes[specialRange[1]], specialRange[2]);
               newRange.setEnd(endRange.endContainer, endRange.endOffset);
-  
+
               // Take care of the CURSOR-tag
               this.parseCursorTag(editor, newRange);
             }
           }
           catch(e) {}
-  
+
           if (aHandleTransaction)
             editor.endTransaction();
         }
