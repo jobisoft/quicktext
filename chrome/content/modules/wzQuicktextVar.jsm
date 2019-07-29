@@ -651,7 +651,13 @@ wzQuicktextVar.prototype = {
       'lastname': ''
     };
 
-    var card = this.getCardForEmail(this.mData['FROM'].data['email'].toLowerCase());
+    let card = this.getCardForEmail(identity.email.toLowerCase());
+    if (card == null && identity.escapedVCard != null)
+    {
+      const manager = Components.classes["@mozilla.org/abmanager;1"]
+        .getService(Components.interfaces.nsIAbManager);
+      card = manager.escapedVCardToAbCard(identity.escapedVCard);
+    }
     if (card != null)
     {
       var props = this.getPropertiesFromCard(card);
