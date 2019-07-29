@@ -640,10 +640,13 @@ wzQuicktextVar.prototype = {
     if (this.mData['FROM'] && this.mData['FROM'].checked)
       return this.mData['FROM'].data;
 
+    const identity = this.mWindow.getCurrentIdentity();
+
     this.mData['FROM'] = {};
     this.mData['FROM'].checked = true;
     this.mData['FROM'].data = {
-      'email': this.mWindow.getCurrentIdentity().email,
+      'email': identity.email,
+      'displayname': identity.fullName,
       'firstname': '',
       'lastname': ''
     };
