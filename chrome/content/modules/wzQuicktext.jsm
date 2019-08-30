@@ -588,10 +588,6 @@ var gQuicktext = {
       var biStream = Components.classes["@mozilla.org/binaryinputstream;1"]
                       .createInstance(Components.interfaces.nsIBinaryInputStream);
 
-      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
-                      .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-
-      
       fiStream.init(file, 1, 0, false);
       siStream.init(fiStream);
       //Get the first two bytes to decide, whether this file is an old UTF-16
@@ -614,12 +610,11 @@ var gQuicktext = {
       //both these chars are "simple" and only need 8bit.
       //If this is not an old UTF-16 XML config file, the file is assumed to be
       //UTF-8 encoded.
+      let charset = 'utf-8';
       if (fileHeader == "\xFF\xFE" || fileHeader == "\xFE\xFF" || fileHeader.length == 1) {
-        converter.charset = "UTF-16";
-      } else {
-        converter.charset = "UTF-8";
+        charset = "utf-16";
       }
-
+      
       //Try to interpret the file as UTF and convert it to a Javascript string.
       //If that failes, the file is probably not UTF and the ISO-Latin-1
       //fallback is used instead.
@@ -630,11 +625,12 @@ var gQuicktext = {
         let raw = biStream.readByteArray(biStream.available());
         biStream.close();
         fiStream.close();
-
-        text = converter.convertFromByteArray(raw, raw.length);
+        let decoder = new TextDecoder(charset); // charset can be omitted, default is utf-8
+        text = decoder.decode(new Uint8Array(raw));
       } catch (e) {
         //ISO-Latin-1 fallback obtained via nsIScriptableInputStream::read
         text = fileHeader + fileBody;
+        Components.utils.reportError(e);		  
       }
 
       // Removes \r because that makes crashes on atleast on Windows.

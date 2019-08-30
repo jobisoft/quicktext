@@ -446,7 +446,7 @@ wzQuicktextVar.prototype = {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
         return this.mQuicktext.readFile(fp);
-      } catch(e) {}
+      } catch(e) { Components.utils.reportError(e); }
     }
 
     return "";
@@ -626,7 +626,7 @@ wzQuicktextVar.prototype = {
               this.mData['CLIPBOARD'].data = clipboard.data.substring(0,clipboardLength.value / 2);
           }
         }
-        catch (e) {}
+        catch (e) { Components.utils.reportError(e); }
       }
     }
 
@@ -859,7 +859,7 @@ wzQuicktextVar.prototype = {
         this.mData['VERSION'].data['full'] = TrimString('Thunderbird '+ this.mPrefService.getBranch("app.").getCharPref("version"));
       }
     }
-    catch(e) {}
+    catch(e) { Components.utils.reportError(e); }
 
     return this.mData['VERSION'].data;
   }
@@ -1066,7 +1066,7 @@ wzQuicktextVar.prototype = {
         try {
           databases.push(addressBook.getAbDatabaseFromURI(uri));
           directories.push(abook);
-        } catch(e) {}
+        } catch(e) { Components.utils.reportError(e); }
       }
     }
 
