@@ -249,7 +249,7 @@ var gQuicktext = {
               fp.initWithPath(this.parseFilePath(defaultImport[i]));
               this.importFromFile(fp, 1, true, false);
             }
-          } catch (e) {}
+          } catch (e) { Components.utils.reportError(e); }
         }
       }
     }
@@ -563,7 +563,7 @@ var gQuicktext = {
           var file = dirSer.get(results[i][1], Components.interfaces.nsIFile);
           rexp = new RegExp ("\\["+ results[i][1] +"\\]", "g");
           aPath = aPath.replace(rexp, file.path);
-        } catch(e) {}
+        } catch(e) { Components.utils.reportError(e); }
       }
     }
 
@@ -975,7 +975,7 @@ var gQuicktext = {
     try {
       return this.mPrefBranch.getComplexValue(aPrefName, Components.interfaces.nsIPrefLocalizedString).data;
     }
-    catch(e) {}
+    catch(e) { Components.utils.reportError(e); }
     return null;        // quiet warnings
   }
 ,
@@ -988,7 +988,7 @@ var gQuicktext = {
       str.data = aPrefValue;
       this.mPrefBranch.setComplexValue(aPrefName, Components.interfaces.nsISupportsString, str);
     }
-    catch(e) {}
+    catch(e) { Components.utils.reportError(e); }
   }
 ,
   /*

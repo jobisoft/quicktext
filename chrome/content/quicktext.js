@@ -537,7 +537,7 @@ var quicktext = {
             else
               editor.insertText(aStr);
           }
-          catch(e) {}
+          catch(e) { Components.utils.reportError(e); }
   
           if (editor.selection.rangeCount > 0)
             var endRange = editor.selection.getRangeAt(0).cloneRange();
@@ -553,7 +553,7 @@ var quicktext = {
               this.parseCursorTag(editor, newRange);
             }
           }
-          catch(e) {}
+          catch(e) { Components.utils.reportError(e); }
   
           if (aHandleTransaction)
             editor.endTransaction();
