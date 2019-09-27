@@ -7,7 +7,7 @@
     }
   },
   "name": "Quicktext",
-  "version": "2.3",
+  "version": "2.4",
   "author": "John Bieling",
   "homepage_url": "https://github.com/thundernest/quicktext",
   "default_locale": "en-US",
