@@ -700,17 +700,22 @@ var quicktext = {
       if (!(selection.rangeCount > 0))
         return;
 
+      // All operations between beginTransaction and endTransaction
+      // are done "at once" as a single atomic action.
       editor.beginTransaction();
-      var selecRange = selection.getRangeAt(0).cloneRange();
-
-
+      
+      // This gives us a range object of the currently selected text
+      // and as the user usually does not have any text selected when
+      // triggering keywords, it is a collapsed range at the current
+      // cursor position.
+      var initialSelectionRange = selection.getRangeAt(0).cloneRange();
+      
       // Ugly solution to just search to the beginning of the line.
       // I set the selection to the beginning of the line save the
       // range and then sets the selection back to was before.
       // Changing the selections was not visible to me. Most likly is
       // that is not even rendered
-
-      var tmpRange = selecRange.cloneRange();
+      var tmpRange = initialSelectionRange.cloneRange();
       tmpRange.collapse(false);
       editor.selection.removeAllRanges();
       editor.selection.addRange(tmpRange);
@@ -722,10 +727,28 @@ var quicktext = {
         return;
       }
 
-      var wholeRange = selection.getRangeAt(0).cloneRange();
-      editor.selection.removeAllRanges();
-      editor.selection.addRange(selecRange);
+      // intraLineMove() extended the selection from the cursor to the
+      // beginning of the line. We can get the last word by simply
+      // chopping up its content.
+      let lastWord = selection.toString().split(" ").pop();
+      let lastWordIsKeyword = this.mKeywords.hasOwnProperty(lastWord.toLowerCase());
 
+      // We now need to get a range, which covers the keyword,
+      // as we want to replace it. So we clone the current selection
+      // into a wholeRange and use nsIFind to find lastWord.
+      var wholeRange = selection.getRangeAt(0).cloneRange();
+
+      // restore to the initialSelectionRange
+      editor.selection.removeAllRanges();
+      editor.selection.addRange(initialSelectionRange);
+
+      //if the last word is not a keyword, abort
+      if (!lastWordIsKeyword || !lastWord) {
+        editor.endTransaction();
+        return;
+      }
+
+      // prepare a range for backward search
       var startRange = editor.document.createRange();
       startRange.setStart(wholeRange.endContainer, wholeRange.endOffset);
       startRange.setEnd(wholeRange.endContainer, wholeRange.endOffset);
@@ -733,57 +756,24 @@ var quicktext = {
       endRange.setStart(wholeRange.startContainer, wholeRange.startOffset);
       endRange.setEnd(wholeRange.startContainer, wholeRange.startOffset);
 
-      var lastwordRange = editor.document.createRange();
-      var found = false;
-      var str = wholeRange.toString();
-      if (str == "")
-      {
-        editor.endTransaction();
-        return;
-      }
-
-      var foundRange;
       var finder = Components.classes["@mozilla.org/embedcomp/rangefind;1"].createInstance().QueryInterface(Components.interfaces.nsIFind);
       finder.findBackwards = true;
-      if ((foundRange = finder.Find(" ", wholeRange, startRange, endRange)) != null)
-      {
-        found = true;
-        if (foundRange.endContainer == selecRange.startContainer && foundRange.endOffset == selecRange.startOffset)
-        {
-          editor.endTransaction();
-          return;
-        }
-
-        lastwordRange.setStart(foundRange.endContainer, foundRange.endOffset);
-        lastwordRange.setEnd(selecRange.endContainer, selecRange.endOffset);
-      }
-      else
-      {
-        lastwordRange.setStart(wholeRange.startContainer, wholeRange.startOffset);
-        lastwordRange.setEnd(selecRange.endContainer, selecRange.endOffset);
-      }
-
-      var lastword = lastwordRange.toString();
-      var groupLength = gQuicktext.getGroupLength(false);
-
-      var found = false;
-      if (this.mKeywords.hasOwnProperty(lastword.toLowerCase()))
-      {
-        editor.selection.removeAllRanges();
-        editor.selection.addRange(lastwordRange);
-
-        var text = this.mKeywords[lastword.toLowerCase()];
-        this.insertTemplate(text[0], text[1], false);
-
-        found = true;
-      }
-
+      var lastWordRange = finder.Find(lastWord, wholeRange, startRange, endRange);
+      if (!lastWordRange) {
+        // that should actually never happen, as we know the word is there.
+        editor.endTransaction();
+        return;
+      }        
+      
+      // replace the keyword
+      editor.selection.removeAllRanges();
+      editor.selection.addRange(lastWordRange);
+      var text = this.mKeywords[lastWord.toLowerCase()];
+      this.insertTemplate(text[0], text[1], false);
       editor.endTransaction();
-      if (found)
-      {
-        e.stopPropagation();
-        e.preventDefault();
-      }
+
+      e.stopPropagation();
+      e.preventDefault();
     }
   },
 
