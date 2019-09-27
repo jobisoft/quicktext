@@ -714,7 +714,7 @@ var quicktext = {
       // I set the selection to the beginning of the line save the
       // range and then sets the selection back to was before.
       // Changing the selections was not visible to me. Most likly is
-      // that is not even rendered
+      // that is not even rendered.
       var tmpRange = initialSelectionRange.cloneRange();
       tmpRange.collapse(false);
       editor.selection.removeAllRanges();
@@ -738,17 +738,17 @@ var quicktext = {
       // into a wholeRange and use nsIFind to find lastWord.
       var wholeRange = selection.getRangeAt(0).cloneRange();
 
-      // restore to the initialSelectionRange
+      // Restore to the initialSelectionRange.
       editor.selection.removeAllRanges();
       editor.selection.addRange(initialSelectionRange);
 
-      //if the last word is not a keyword, abort
+      // If the last word is not a keyword, abort.
       if (!lastWordIsKeyword || !lastWord) {
         editor.endTransaction();
         return;
       }
 
-      // prepare a range for backward search
+      // Prepare a range for backward search.
       var startRange = editor.document.createRange();
       startRange.setStart(wholeRange.endContainer, wholeRange.endOffset);
       startRange.setEnd(wholeRange.endContainer, wholeRange.endOffset);
@@ -760,12 +760,12 @@ var quicktext = {
       finder.findBackwards = true;
       var lastWordRange = finder.Find(lastWord, wholeRange, startRange, endRange);
       if (!lastWordRange) {
-        // that should actually never happen, as we know the word is there.
+        // That should actually never happen, as we know the word is there.
         editor.endTransaction();
         return;
       }        
       
-      // replace the keyword
+      // Replace the keyword.
       editor.selection.removeAllRanges();
       editor.selection.addRange(lastWordRange);
       var text = this.mKeywords[lastWord.toLowerCase()];
