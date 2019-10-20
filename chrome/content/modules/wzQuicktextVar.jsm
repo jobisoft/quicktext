@@ -1020,7 +1020,7 @@ wzQuicktextVar.prototype = {
       i++;
       size = size / 1024;
     }
-    return Math.round(size) + " " + unit[i];
+    return (Math.round(size * 100) / 100) + " " + unit[i];
   }
 ,
   getCardForEmail: function(aAddress) {
