@@ -313,13 +313,13 @@ var quicktext = {
   /*
    * INSERTING TEXT
    */
-  insertVariable: function(aVar)
+  insertVariable: async function(aVar)
   {
     gQuicktextVar.cleanTagData();
-    this.insertBody("[["+ aVar +"]] ", 0, true);
+    await this.insertBody("[["+ aVar +"]] ", 0, true);
   }
 ,
-  insertTemplate: function(aGroupIndex, aTextIndex, aHandleTransaction)
+  insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction)
   {
     if (typeof aHandleTransaction == "undefined")
       aHandleTransaction = true;
@@ -342,7 +342,7 @@ var quicktext = {
         this.focusMessageBody();
       }
 
-      this.insertBody(text.text, text.type, aHandleTransaction);
+      await this.insertBody(text.text, text.type, aHandleTransaction);
 
       // If we insert any headers we maybe needs to return the placement of the focus
       setTimeout(function () {quicktext.moveFocus();}, 1);
@@ -503,7 +503,7 @@ var quicktext = {
     }
   }
 ,
-  insertBody: function(aStr, aType, aHandleTransaction)
+  insertBody: async function(aStr, aType, aHandleTransaction)
   {
     if (aStr != "")
     {
@@ -543,14 +543,14 @@ var quicktext = {
             var endRange = editor.selection.getRangeAt(0).cloneRange();
   
           try {
-            if (specialRange && endRange)
+            if (aStr.indexOf('[[CURSOR]]') > -1 && specialRange && endRange)
             {
               var newRange = editor.document.createRange();
               newRange.setStart(specialRange[0].childNodes[specialRange[1]], specialRange[2]);
               newRange.setEnd(endRange.endContainer, endRange.endOffset);
   
               // Take care of the CURSOR-tag
-              this.parseCursorTag(editor, newRange);
+              await this.parseCursorTag(editor, newRange);
             }
           }
           catch(e) { Components.utils.reportError(e); }
@@ -562,7 +562,7 @@ var quicktext = {
     }
   }
 ,
-  parseCursorTag: function(aEditor, aSearchRange)
+  parseCursorTag: async function(aEditor, aSearchRange)
   {
     var startRange = aEditor.document.createRange();
     startRange.setStart(aSearchRange.startContainer, aSearchRange.startOffset);
@@ -575,10 +575,15 @@ var quicktext = {
     finder.caseSensitive = true;
     finder.findBackwards = false;
 
-    setTimeout(function() {
-      var found = false;
-      while ((foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange)) != null)
-      {
+    let found = false;
+    let failedSearchAttempts = 0;
+    let foundRange = null;
+
+    // Loop until all tags have been replaced, but limit the loop to 10 failed attempts.
+    while (failedSearchAttempts < 10)
+    {
+      // Process the last found tag and update the search region.
+      if (foundRange) {
         found = true;
         aEditor.selection.removeAllRanges();
         aEditor.selection.addRange(foundRange);
@@ -586,13 +591,29 @@ var quicktext = {
         startRange.setEnd(foundRange.endContainer, foundRange.endOffset);
         startRange.setStart(foundRange.endContainer, foundRange.endOffset);
       }
-
-      if (!found)
-      {
-        aEditor.selection.removeAllRanges();
-        aEditor.selection.addRange(endRange);
+      
+      // Search.
+      foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange);
+      
+      // If we have found at least one tag, but the last search failed, we are done.
+      if (found && !foundRange) {
+        break;
       }
-    });
+      
+      // If we have never found one, we might run into the "searched too early bug" and need to delay and try again
+      if (!found && !foundRange) {
+        await new Promise(resolve => setTimeout(resolve, (failedSearchAttempts*5)+1));
+        failedSearchAttempts++;
+        console.log("CURSOR LOG failedSearchAttempts : " + failedSearchAttempts);
+      }
+    }
+
+    if (!found)
+    {
+      console.log("CURSOR LOG Failed to find CURSOR tag!");
+      aEditor.selection.removeAllRanges();
+      aEditor.selection.addRange(endRange);
+    }
   }
 ,
   dumpTree: function(aNode, aLevel)
@@ -617,17 +638,17 @@ var quicktext = {
     return null;
   }
 ,
-  insertContentFromFile: function(aType)
+  insertContentFromFile: async function(aType)
   {
     if ((file = gQuicktext.pickFile(window, aType, 0, this.mStringBundle.getString("insertFile"))) != null)
-      this.insertBody(gQuicktext.readFile(file), aType, true);
+      await this.insertBody(gQuicktext.readFile(file), aType, true);
   }
 ,
 
   /*
    * KEYPRESS
    */
-  windowKeyPress: function(e)
+  windowKeyPress: async function(e)
   {
     if (gQuicktext.shortcutTypeAdv)
     {
@@ -649,7 +670,7 @@ var quicktext = {
           e.ctrlKey && modifier == "control" ||
           e.metaKey && modifier == "meta"))
       {
-        this.insertTemplate(this.mShortcuts[shortcut][0], this.mShortcuts[shortcut][1]);
+        await this.insertTemplate(this.mShortcuts[shortcut][0], this.mShortcuts[shortcut][1]);
 
         e.stopPropagation();
         e.preventDefault();
@@ -667,7 +688,7 @@ var quicktext = {
       this.mShortcutModifierDown = true;
   }
 ,
-  windowKeyUp: function(e)
+  windowKeyUp: async function(e)
   {
     var modifier = gQuicktext.shortcutModifier;
     if (gQuicktext.shortcutTypeAdv && (
@@ -677,7 +698,7 @@ var quicktext = {
     {
       if (this.mShortcutString != "" && typeof this.mShortcuts[this.mShortcutString] != "undefined")
       {
-        this.insertTemplate(this.mShortcuts[this.mShortcutString][0], this.mShortcuts[this.mShortcutString][1]);
+        await this.insertTemplate(this.mShortcuts[this.mShortcutString][0], this.mShortcuts[this.mShortcutString][1]);
 
         e.stopPropagation();
         e.preventDefault();
@@ -688,7 +709,7 @@ var quicktext = {
     }
   }
 ,
-  editorKeyPress: function(e)
+  editorKeyPress: async function(e)
   {
     var key = (e.keyCode > 0) ? e.keyCode : e.charCode;
 
@@ -769,7 +790,7 @@ var quicktext = {
       editor.selection.removeAllRanges();
       editor.selection.addRange(lastWordRange);
       var text = this.mKeywords[lastWord.toLowerCase()];
-      this.insertTemplate(text[0], text[1], false);
+      await this.insertTemplate(text[0], text[1], false);
       editor.endTransaction();
 
       e.stopPropagation();
