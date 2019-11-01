@@ -616,14 +616,13 @@ wzQuicktextVar.prototype = {
         clip.getData(trans,clip.kGlobalClipboard);
 
         var clipboard = {};
-        var clipboardLength = {};
         try {
-          trans.getTransferData("text/unicode", clipboard, clipboardLength);
+          trans.getTransferData("text/unicode", clipboard);
           if (clipboard)
           {
             clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
             if (clipboard)
-              this.mData['CLIPBOARD'].data = clipboard.data.substring(0,clipboardLength.value / 2);
+              this.mData['CLIPBOARD'].data = clipboard.data;
           }
         }
         catch (e) { Components.utils.reportError(e); }
