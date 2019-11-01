@@ -580,7 +580,7 @@ var quicktext = {
     let foundRange = null;
 
     // Loop until all tags have been replaced, but limit the loop to 10 failed attempts.
-    while (failedSearchAttempts < 10)
+    while (failedSearchAttempts < 30)
     {
       // Process the last found tag and update the search region.
       if (foundRange) {
@@ -602,9 +602,8 @@ var quicktext = {
       
       // If we have never found one, we might run into the "searched too early bug" and need to delay and try again
       if (!found && !foundRange) {
-        await new Promise(resolve => setTimeout(resolve, (failedSearchAttempts*5)+1));
+        await new Promise(resolve => setTimeout(resolve, 2));
         failedSearchAttempts++;
-        console.log("CURSOR LOG failedSearchAttempts : " + failedSearchAttempts);
       }
     }
 
@@ -613,6 +612,8 @@ var quicktext = {
       console.log("CURSOR LOG Failed to find CURSOR tag!");
       aEditor.selection.removeAllRanges();
       aEditor.selection.addRange(endRange);
+    } else {
+      console.log("CURSOR LOG failedSearchAttempts : " + failedSearchAttempts);
     }
   }
 ,
