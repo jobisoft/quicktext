@@ -108,6 +108,7 @@
                           <menuitem label="&quicktext.tabKey.label;" value="9" />
                           <menuitem label="&quicktext.spaceKey.label;" value="32" />
                           <menuitem label="&quicktext.enterKey.label;" value="13" />
+						  <menuitem label="&quicktext.f4Key.label;" value="115" />
                         </menupopup>
                       </menulist>
                       <label value="&quicktext.keywordKeySetting.label;" control="select-keywordKey" style="margin-top: 6px" />

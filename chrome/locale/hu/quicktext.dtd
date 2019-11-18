@@ -25,6 +25,7 @@
 <!ENTITY quicktext.tabKey.label "Fül">
 <!ENTITY quicktext.spaceKey.label "Szóköz">
 <!ENTITY quicktext.enterKey.label "Enter">
+<!ENTITY quicktext.f4Key.label "F4">
 
 <!ENTITY quicktext.defaultImport.label "Importálás indításkor">
 

@@ -25,6 +25,7 @@
 <!ENTITY quicktext.tabKey.label "Tab">
 <!ENTITY quicktext.spaceKey.label "Mellanslag">
 <!ENTITY quicktext.enterKey.label "Enter">
+<!ENTITY quicktext.f4Key.label "F4">
 
 <!ENTITY quicktext.defaultImport.label "Importeras vid uppstart">
 

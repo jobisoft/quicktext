@@ -25,6 +25,7 @@
 <!ENTITY quicktext.tabKey.label "Tab">
 <!ENTITY quicktext.spaceKey.label "Leertaste">
 <!ENTITY quicktext.enterKey.label "Eingabe">
+<!ENTITY quicktext.f4Key.label "F4">
 
 <!ENTITY quicktext.defaultImport.label "Standardmäßig importieren">
 
