@@ -25,7 +25,12 @@
 <!ENTITY quicktext.tabKey.label "Tab">
 <!ENTITY quicktext.spaceKey.label "Пробел">
 <!ENTITY quicktext.enterKey.label "Enter">
+<!ENTITY quicktext.f2Key.label "F2">
 <!ENTITY quicktext.f4Key.label "F4">
+<!ENTITY quicktext.f5Key.label "F5">
+<!ENTITY quicktext.f8Key.label "F8">
+<!ENTITY quicktext.f11Key.label "F11">
+<!ENTITY quicktext.f12Key.label "F12">
 
 <!ENTITY quicktext.defaultImport.label "Импорт при запуске">
 
