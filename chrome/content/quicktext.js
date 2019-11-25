@@ -712,7 +712,16 @@ var quicktext = {
 ,
   editorKeyPress: async function(e)
   {
-    var key = (e.keyCode > 0) ? e.keyCode : e.charCode;
+	var key;  
+	if (e.keyCode > 0) {
+		key = e.keyCode;
+	} else {
+		if (e.charCode == 32) {
+			key = e.charCode;
+		} else {
+			return;
+		}
+	}
 
     if (key == gQuicktext.keywordKey)
     {
