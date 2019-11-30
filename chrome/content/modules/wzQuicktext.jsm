@@ -26,7 +26,7 @@ var gQuicktext = {
   mViewPopup:           false,
   mCollapseGroup:       true,
   mDefaultImport:       "",
-  mKeywordKey:          9,
+  mKeywordKey:          "Tab",
   mShortcutModifier:    "alt",
   mShortcutTypeAdv:     false,
   mQuicktextDir:        null,
@@ -78,7 +78,7 @@ var gQuicktext = {
   set keywordKey(aKeywordKey)
   {
     this.mKeywordKey = aKeywordKey;
-    this.mPrefBranch.setIntPref("keywordKey", aKeywordKey);
+    this.mPrefBranch.setCharPref("keywordKey", aKeywordKey);
 
     return this.mKeywordKey;
   }
@@ -186,14 +186,26 @@ var gQuicktext = {
       this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
 
     if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
-      this.mKeywordKey = this.mPrefBranch.getIntPref("keywordKey");
-      //migrate old keywordKey (and reset to default), if differs from default(9)
-      if (this.mPrefBranchOld.prefHasUserValue("keywordKey") && this.mPrefBranchOld.getPrefType("keywordKey") == this.mPrefBranchOld.PREF_INT && this.mPrefBranchOld.getIntPref("keywordKey") != 9) {
-        this.mKeywordKey = this.mPrefBranchOld.getIntPref("keywordKey");
-        this.mPrefBranchOld.setIntPref("keywordKey", 9);
-        this.mPrefBranch.setIntPref("keywordKey", this.mKeywordKey);
+      //migrate old keywordKey (and reset to default), if differs from default(Tab)
+      let code = "Tab";
+      switch(this.mPrefBranch.getIntPref("keywordKey")) {
+        case 32:
+          code = "Space"; 
+          break;
+        case 13: 
+          code = "Enter"; 
+          break;
+        case 9:
+        default:
+          code = "Tab"; 
+          break;
       }
+      this.mPrefBranch.deleteBranch("keywordKey");
+      this.mPrefBranch.setCharPref("keywordKey", code);
     }
+
+    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_STRING)
+      this.mKeywordKey = this.mPrefBranch.getCharPref("keywordKey", this.mKeywordKey);
 
     if (this.mPrefBranch.getPrefType("popup") == this.mPrefBranch.PREF_BOOL)
       this.mViewPopup = this.mPrefBranch.getBoolPref("popup");
