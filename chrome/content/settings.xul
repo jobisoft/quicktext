@@ -105,15 +105,16 @@
                     <hbox>
                       <menulist id="select-keywordKey" oncommand="quicktext.checkForGeneralChanges(4);" style="width: 120px">
                         <menupopup>
-                          <menuitem label="&quicktext.tabKey.label;" value="9" />
-                          <menuitem label="&quicktext.spaceKey.label;" value="32" />
-                          <menuitem label="&quicktext.enterKey.label;" value="13" />
-                          <menuitem label="&quicktext.f2Key.label;" value="113" />
-                          <menuitem label="&quicktext.f4Key.label;" value="115" />
-                          <menuitem label="&quicktext.f5Key.label;" value="116" />
-                          <menuitem label="&quicktext.f8Key.label;" value="119" />
-                          <menuitem label="&quicktext.f11Key.label;" value="122" />
-                          <menuitem label="&quicktext.f12Key.label;" value="123" />
+                          <!-- we are using KeyboardEvent.code as values (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code) -->
+                          <menuitem label="&quicktext.tabKey.label;" value="Tab" />
+                          <menuitem label="&quicktext.spaceKey.label;" value="Space" />
+                          <menuitem label="&quicktext.enterKey.label;" value="Enter" />
+                          <menuitem label="&quicktext.f2Key.label;" value="F2" />
+                          <menuitem label="&quicktext.f4Key.label;" value="F4" />
+                          <menuitem label="&quicktext.f5Key.label;" value="F5" />
+                          <menuitem label="&quicktext.f8Key.label;" value="F8" />
+                          <menuitem label="&quicktext.f11Key.label;" value="F11" />
+                          <menuitem label="&quicktext.f12Key.label;" value="F12" />
                         </menupopup>
                       </menulist>
                       <label value="&quicktext.keywordKeySetting.label;" control="select-keywordKey" style="margin-top: 6px" />

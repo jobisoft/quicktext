@@ -712,9 +712,7 @@ var quicktext = {
 ,
   editorKeyPress: async function(e)
   {
-    var key = (e.keyCode > 0) ? e.keyCode : e.charCode;
-
-    if (key == gQuicktext.keywordKey)
+    if (e.code == gQuicktext.keywordKey)
     {
       var editor = GetCurrentEditor();
       var selection = editor.selection;
