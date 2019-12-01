@@ -688,13 +688,13 @@ wzQuicktextVar.prototype = {
         // TODO: Add code for getting info about all people in a mailing list
 
         var k = this.mData['TO'].data['email'].length;
-        this.mData['TO'].data['email'][k] = emailAddresses.value[i];
-        this.mData['TO'].data['fullname'][k] = names.value[i];
+        this.mData['TO'].data['email'][k] = emailAddresses.value[i].toLowerCase();
+        this.mData['TO'].data['fullname'][k] = TrimString(names.value[i]);
         this.mData['TO'].data['firstname'][k] = "";
         this.mData['TO'].data['lastname'][k] = "";
 
         // take card value, if it exists
-        var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
+        var card = this.getCardForEmail(this.mData['TO'].data['email'][k]);
         if (card != null)
         {
           var props = this.getPropertiesFromCard(card);
@@ -703,10 +703,10 @@ wzQuicktextVar.prototype = {
             if (typeof this.mData['TO'].data[p] == 'undefined')
               this.mData['TO'].data[p] = []
             if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
-              this.mData['TO'].data[p][k] = props[p];
+              this.mData['TO'].data[p][k] = TrimString(props[p]);
           }
-          // generate fullname, if it does not exist
-          if (!this.mData['TO'].data['fullname'][k]) this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
+          // generate fullname from cards first and last name
+          this.mData['TO'].data['fullname'][k] = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].join(" ");
         }
     
         // swap Names if wrong
@@ -716,17 +716,17 @@ wzQuicktextVar.prototype = {
           if (name.indexOf(",") > -1)
           {
             let tempnames = name.split(",");
-            this.mData['TO'].data['lastname'][k] = tempnames.splice(0, 1);
-            this.mData['TO'].data['firstname'][k] = tempnames.join(",");
+            this.mData['TO'].data['lastname'][k] = TrimString(tempnames.splice(0, 1));
+            this.mData['TO'].data['firstname'][k] = TrimString(tempnames.join(","));
           }
           else
           {
             let tempnames = name.split(" ");
-            this.mData['TO'].data['firstname'][k] = tempnames.splice(0, 1);
-            this.mData['TO'].data['lastname'][k] = tempnames.join(" ");
+            this.mData['TO'].data['firstname'][k] = TrimString(tempnames.splice(0, 1));
+            this.mData['TO'].data['lastname'][k] = TrimString(tempnames.join(" "));
           }
           // rebuild fullname
-          this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
+          this.mData['TO'].data['fullname'][k] = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].join(" ");
         }
 
       }
@@ -1127,5 +1127,5 @@ var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : f
 function TrimString(aStr)
 {
   if (!aStr) return "";
-  return aStr.replace(/(^\s+)|(\s+$)/g, '')
+  return aStr.toString().replace(/(^\s+)|(\s+$)/g, '')
 }
