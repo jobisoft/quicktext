@@ -1,11 +1,8 @@
-// options for ESLint
-/* global Components, Services */
-
 "use strict";
 
 var EXPORTED_SYMBOLS = ["quicktextUtils"]
 
-Components.utils.import("resource://gre/modules/Services.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 var quicktextUtils = {
   get dateTimeFormat() {

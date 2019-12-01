@@ -1,6 +1,5 @@
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
-
-Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
+var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
+var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 
 var quicktext = {
   mStringBundle:        null,
@@ -320,7 +319,7 @@ var quicktext = {
       {
         this.mTreeArray[selectedIndex][7] = value;
       }
-      document.getElementById('group-tree').treeBoxObject.invalidateRow(selectedIndex);
+      document.getElementById('group-tree').invalidateRow(selectedIndex);
       this.updateVariableGUI();
     }
   }
@@ -351,7 +350,7 @@ var quicktext = {
     {
       this.updateVariableGUI();
       var listItem = document.getElementById('script-list').getItemAtIndex(this.mScriptIndex);
-      listItem.label = value;
+      listItem.firstChild.value = value;
     }
   }
 ,
@@ -563,9 +562,9 @@ var quicktext = {
 ,
   disableShortcuts: function(aShortcut)
   {
-    var grouplist = document.getElementById('text-shortcutBasic');
+    var grouplist = document.getElementById('popup-shortcutBasic');
     for (var i = 0; i <= 10; i++)
-      grouplist.firstChild.childNodes[i].removeAttribute("disabled");
+      grouplist.childNodes[i].removeAttribute("disabled");
 
     var groupLength = gQuicktext.getGroupLength(true);
     for (var i = 0; i < groupLength; i++)
@@ -575,8 +574,8 @@ var quicktext = {
       {
         var shortcut = gQuicktext.getText(i, j, true).shortcut;
         var selectedIndex = (shortcut == "0") ? 10 : shortcut;
-        if (shortcut != "" && shortcut != aShortcut && grouplist.firstChild.childNodes[selectedIndex])
-          grouplist.firstChild.childNodes[selectedIndex].setAttribute("disabled", true);
+        if (shortcut != "" && shortcut != aShortcut && grouplist.childNodes[selectedIndex])
+          grouplist.childNodes[selectedIndex].setAttribute("disabled", true);
       }
     }
   }
@@ -646,7 +645,7 @@ var quicktext = {
 
       this.changesMade();
       this.makeTreeArray();
-      document.getElementById('group-tree').treeBoxObject.rowCountChanged(length-1, this.mTreeArray.length-length);
+      document.getElementById('group-tree').rowCountChanged(length-1, this.mTreeArray.length-length);
       this.updateButtonStates();
     }
   }
@@ -689,13 +688,19 @@ var quicktext = {
   pickScript: function()
   {
     var index = document.getElementById('script-list').value;
+
     if (index == null)
     {
       document.getElementById('script-title').value = "";
       document.getElementById('script').value = "";
       this.mScriptIndex = null;
+      document.getElementById('script-title').disabled = true;
+      document.getElementById('script').hidden = true;
       return;
     }
+    document.getElementById('script-title').disabled = false;
+    document.getElementById('script').hidden = false;
+
 
     if (this.mScriptIndex != index)
     {
@@ -720,7 +725,7 @@ var quicktext = {
 
     if (!this.mTreeArray[index])
     {
-      document.getElementById('text-caption').setAttribute("label", this.mStringBundle.getString("group"));
+      document.getElementById('text-caption').textContent = this.mStringBundle.getString("group");
       document.getElementById('text-title').value = "";
       this.showElement("group", true);
       this.mPickedIndex = null;
@@ -742,7 +747,7 @@ var quicktext = {
     if (textIndex > -1)
     {
       var text = gQuicktext.getText(groupIndex, textIndex, true);
-      document.getElementById('text-caption').setAttribute("label", this.mStringBundle.getString("template"));
+      document.getElementById('text-caption').textContent = this.mStringBundle.getString("template");
 
       document.getElementById('text-title').value = text.name;
       document.getElementById('text').value = text.text;
@@ -783,7 +788,7 @@ var quicktext = {
     }
     else
     {
-      document.getElementById('text-caption').setAttribute("label", this.mStringBundle.getString("group"));
+      document.getElementById('text-caption').textContent = this.mStringBundle.getString("group");
 
       document.getElementById("text-title").value = gQuicktext.getGroup(groupIndex, true).name;
       document.getElementById("text").value = "";
@@ -853,9 +858,9 @@ var quicktext = {
     this.mCollapseState.push(true);
 
     this.makeTreeArray();
-    var treeBoxObject = document.getElementById('group-tree').treeBoxObject;
-    treeBoxObject.rowCountChanged(this.mTreeArray.length-1, 1);
-    document.getElementById('group-tree').treeBoxObject.invalidateRow(this.mTreeArray.length-1);
+    var treeObject = document.getElementById('group-tree');
+    treeObject.rowCountChanged(this.mTreeArray.length-1, 1);
+    treeObject.invalidateRow(this.mTreeArray.length-1);
 
     selectedIndex = this.mTreeArray.length - 1;
     this.selectTreeRow(selectedIndex);
@@ -897,9 +902,9 @@ var quicktext = {
         selectedIndex += gQuicktext.getTextLength(i, true);
     }
 
-    var treeBoxObject = document.getElementById('group-tree').treeBoxObject;
-    treeBoxObject.rowCountChanged(selectedIndex-1, 1);
-    treeBoxObject.invalidateRow(selectedIndex);
+    var treeObject = document.getElementById('group-tree');
+    treeObject.rowCountChanged(selectedIndex-1, 1);
+    treeObject.invalidateRow(selectedIndex);
     this.selectTreeRow(selectedIndex);
 
     this.updateButtonStates();
@@ -934,26 +939,26 @@ var quicktext = {
         if (this.mTreeArray[selectedIndex+1] && this.mTreeArray[selectedIndex+1][2] < this.mTreeArray[selectedIndex][2])
           moveSelectionUp = true;
 
-        var treeBoxObject = document.getElementById('group-tree').treeBoxObject;
+        var treeObject = document.getElementById('group-tree');
         if (textIndex == -1)
         {
           gQuicktext.removeGroup(groupIndex, true);
 
           if (this.mCollapseState[groupIndex])
-            treeBoxObject.rowCountChanged(selectedIndex, -(textLength+1));
+            treeObject.rowCountChanged(selectedIndex, -(textLength+1));
           else
-            treeBoxObject.rowCountChanged(selectedIndex, -1);
+            treeObject.rowCountChanged(selectedIndex, -1);
 
           this.makeTreeArray();
-          treeBoxObject.invalidate();
+          treeObject.invalidate();
         }
         else
         {
           gQuicktext.removeText(groupIndex, textIndex, true);
 
-          treeBoxObject.rowCountChanged(selectedIndex, -1);
+          treeObject.rowCountChanged(selectedIndex, -1);
           this.makeTreeArray();
-          treeBoxObject.invalidate();
+          treeObject.invalidate();
         }
 
         this.updateVariableGUI();
@@ -1054,12 +1059,17 @@ var quicktext = {
         if (i < oldLength)
         {
           var listItem = listElem.getItemAtIndex(i);
-          listItem.label = script.name;
+          listItem.firstChild.value = script.name;
           listItem.value = i;
         }
         else
         {
-          listElem.appendItem(script.name, i);
+          let newItem = document.createElement("richlistitem");
+          newItem.value = i;
+          let newItemLabel = document.createElement("label");
+          newItemLabel.value = script.name;
+          newItem.appendChild(newItemLabel);
+          listElem.appendChild(newItem);
         }
       }
     }
@@ -1067,7 +1077,7 @@ var quicktext = {
     if (oldLength > scriptLength)
     {
       for (var i = scriptLength; i < oldLength; i++)
-        listElem.removeItemAt(scriptLength);
+        listElem.getItemAtIndex(scriptLength).remove();
     }
 
     if (selectedIndex >= 0)
@@ -1276,7 +1286,7 @@ var quicktext = {
         }
 
         quicktext.makeTreeArray();
-        document.getElementById('group-tree').treeBoxObject.invalidate();
+        document.getElementById('group-tree').invalidate();
         document.getElementById('group-tree').view.selection.select(selectIndex);
         quicktext.changesMade();
       },
@@ -1301,14 +1311,14 @@ var quicktext = {
 
         quicktext.makeTreeArray();
 
-        var treeBoxObject = document.getElementById('group-tree').treeBoxObject;
+        var treeObject = document.getElementById('group-tree');
 
         if (state)
-          treeBoxObject.rowCountChanged(aRow, -quicktext.mTreeArray[aRow][5]);
+          treeObject.rowCountChanged(aRow, -quicktext.mTreeArray[aRow][5]);
         else
-          treeBoxObject.rowCountChanged(aRow, quicktext.mTreeArray[aRow][5]);
+          treeObject.rowCountChanged(aRow, quicktext.mTreeArray[aRow][5]);
 
-        treeBoxObject.invalidate();
+        treeObject.invalidate();
         document.getElementById('group-tree').view.selection.select(aRow);
       },
       setTree: function(aTreebox)
@@ -1317,13 +1327,13 @@ var quicktext = {
       }
     }
 
-    var firstVisibleRow = document.getElementById('group-tree').treeBoxObject.getFirstVisibleRow();
+    var firstVisibleRow = document.getElementById('group-tree').getFirstVisibleRow();
     var selectedIndex = document.getElementById('group-tree').view.selection.currentIndex;
     if (selectedIndex == -1 && this.mTreeArray.length)
       selectedIndex = 0;
 
     document.getElementById('group-tree').view = treeview;
-    document.getElementById('group-tree').treeBoxObject.scrollToRow(firstVisibleRow);
+    document.getElementById('group-tree').scrollToRow(firstVisibleRow);
     this.selectTreeRow(selectedIndex);
 
     this.pickText();
@@ -1332,7 +1342,7 @@ var quicktext = {
   selectTreeRow: function(aRow)
   {
     document.getElementById('group-tree').view.selection.select(aRow);
-    document.getElementById('group-tree').treeBoxObject.ensureRowIsVisible(aRow);
+    document.getElementById('group-tree').ensureRowIsVisible(aRow);
   }
 ,
   updateButtonStates: function()

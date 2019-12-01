@@ -1,9 +1,7 @@
-var { wzQuicktextGroup } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm", null);
-var { wzQuicktextTemplate } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm", null);
-var { wzQuicktextScript } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm", null);
-Components.utils.import("resource://gre/modules/Task.jsm");
-Components.utils.import("resource://gre/modules/osfile.jsm");
-Components.utils.importGlobalProperties(["XMLHttpRequest"]);
+var { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm");
+var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
+var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
+var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 
@@ -28,7 +26,7 @@ var gQuicktext = {
   mViewPopup:           false,
   mCollapseGroup:       true,
   mDefaultImport:       "",
-  mKeywordKey:          9,
+  mKeywordKey:          "Tab",
   mShortcutModifier:    "alt",
   mShortcutTypeAdv:     false,
   mQuicktextDir:        null,
@@ -80,7 +78,7 @@ var gQuicktext = {
   set keywordKey(aKeywordKey)
   {
     this.mKeywordKey = aKeywordKey;
-    this.mPrefBranch.setIntPref("keywordKey", aKeywordKey);
+    this.mPrefBranch.setCharPref("keywordKey", aKeywordKey);
 
     return this.mKeywordKey;
   }
@@ -188,14 +186,26 @@ var gQuicktext = {
       this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
 
     if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
-      this.mKeywordKey = this.mPrefBranch.getIntPref("keywordKey");
-      //migrate old keywordKey (and reset to default), if differs from default(9)
-      if (this.mPrefBranchOld.prefHasUserValue("keywordKey") && this.mPrefBranchOld.getPrefType("keywordKey") == this.mPrefBranchOld.PREF_INT && this.mPrefBranchOld.getIntPref("keywordKey") != 9) {
-        this.mKeywordKey = this.mPrefBranchOld.getIntPref("keywordKey");
-        this.mPrefBranchOld.setIntPref("keywordKey", 9);
-        this.mPrefBranch.setIntPref("keywordKey", this.mKeywordKey);
+      //migrate old keywordKey (and reset to default), if differs from default(Tab)
+      let code = "Tab";
+      switch(this.mPrefBranch.getIntPref("keywordKey")) {
+        case 32:
+          code = "Space"; 
+          break;
+        case 13: 
+          code = "Enter"; 
+          break;
+        case 9:
+        default:
+          code = "Tab"; 
+          break;
       }
+      this.mPrefBranch.deleteBranch("keywordKey");
+      this.mPrefBranch.setCharPref("keywordKey", code);
     }
+
+    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_STRING)
+      this.mKeywordKey = this.mPrefBranch.getCharPref("keywordKey", this.mKeywordKey);
 
     if (this.mPrefBranch.getPrefType("popup") == this.mPrefBranch.PREF_BOOL)
       this.mViewPopup = this.mPrefBranch.getBoolPref("popup");
@@ -251,7 +261,7 @@ var gQuicktext = {
               fp.initWithPath(this.parseFilePath(defaultImport[i]));
               this.importFromFile(fp, 1, true, false);
             }
-          } catch (e) {}
+          } catch (e) { Components.utils.reportError(e); }
         }
       }
     }
@@ -565,7 +575,7 @@ var gQuicktext = {
           var file = dirSer.get(results[i][1], Components.interfaces.nsIFile);
           rexp = new RegExp ("\\["+ results[i][1] +"\\]", "g");
           aPath = aPath.replace(rexp, file.path);
-        } catch(e) {}
+        } catch(e) { Components.utils.reportError(e); }
       }
     }
 
@@ -590,10 +600,6 @@ var gQuicktext = {
       var biStream = Components.classes["@mozilla.org/binaryinputstream;1"]
                       .createInstance(Components.interfaces.nsIBinaryInputStream);
 
-      var converter = Components.classes["@mozilla.org/intl/scriptableunicodeconverter"]
-                      .createInstance(Components.interfaces.nsIScriptableUnicodeConverter);
-
-      
       fiStream.init(file, 1, 0, false);
       siStream.init(fiStream);
       //Get the first two bytes to decide, whether this file is an old UTF-16
@@ -616,12 +622,11 @@ var gQuicktext = {
       //both these chars are "simple" and only need 8bit.
       //If this is not an old UTF-16 XML config file, the file is assumed to be
       //UTF-8 encoded.
+      let charset = 'utf-8';
       if (fileHeader == "\xFF\xFE" || fileHeader == "\xFE\xFF" || fileHeader.length == 1) {
-        converter.charset = "UTF-16";
-      } else {
-        converter.charset = "UTF-8";
+        charset = "utf-16";
       }
-
+      
       //Try to interpret the file as UTF and convert it to a Javascript string.
       //If that failes, the file is probably not UTF and the ISO-Latin-1
       //fallback is used instead.
@@ -632,11 +637,12 @@ var gQuicktext = {
         let raw = biStream.readByteArray(biStream.available());
         biStream.close();
         fiStream.close();
-
-        text = converter.convertFromByteArray(raw, raw.length);
+        let decoder = new TextDecoder(charset); // charset can be omitted, default is utf-8
+        text = decoder.decode(new Uint8Array(raw));
       } catch (e) {
         //ISO-Latin-1 fallback obtained via nsIScriptableInputStream::read
         text = fileHeader + fileBody;
+        Components.utils.reportError(e);		  
       }
 
       // Removes \r because that makes crashes on atleast on Windows.
@@ -645,16 +651,12 @@ var gQuicktext = {
     return text;
   }
 ,
-  writeFile: function(aFile, aData)
+  writeFile: async function(aFile, aData)
   {
-    //this will execute async/parallel to the main thread, which is not waiting
-    //for this task to finish 
-    Task.spawn(function* () {
-        //MDN states, instead of checking if dir exists, just create it and
-        //catch error on exist (but it does not even throw)
-        yield OS.File.makeDir(aFile.parent.path);
-        yield OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
-    }).catch(Components.utils.reportError);
+    //MDN states, instead of checking if dir exists, just create it and
+    //catch error on exist (but it does not even throw)
+    await OS.File.makeDir(aFile.parent.path);
+    await OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
   }
 ,
   pickFile: function(aWindow, aType, aMode, aTitle)
@@ -796,7 +798,7 @@ var gQuicktext = {
 ,
   parseImport: function(aData, aType, aBefore, aEditingMode)
   {
-    var parser = Components.classes["@mozilla.org/xmlextras/domparser;1"].createInstance(Components.interfaces.nsIDOMParser);
+    var parser = new DOMParser();
     var dom = parser.parseFromString(aData, "text/xml");
 
     var version = dom.documentElement.getAttribute("version");
@@ -985,7 +987,7 @@ var gQuicktext = {
     try {
       return this.mPrefBranch.getComplexValue(aPrefName, Components.interfaces.nsIPrefLocalizedString).data;
     }
-    catch(e) {}
+    catch(e) { Components.utils.reportError(e); }
     return null;        // quiet warnings
   }
 ,
@@ -998,7 +1000,7 @@ var gQuicktext = {
       str.data = aPrefValue;
       this.mPrefBranch.setComplexValue(aPrefName, Components.interfaces.nsISupportsString, str);
     }
-    catch(e) {}
+    catch(e) { Components.utils.reportError(e); }
   }
 ,
   /*

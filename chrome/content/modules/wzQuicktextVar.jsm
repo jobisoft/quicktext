@@ -1,9 +1,7 @@
 var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
 
-Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
-Components.utils.importGlobalProperties(["XMLHttpRequest"]);
-
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
+var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
+var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
@@ -448,7 +446,7 @@ wzQuicktextVar.prototype = {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
         return this.mQuicktext.readFile(fp);
-      } catch(e) {}
+      } catch(e) { Components.utils.reportError(e); }
     }
 
     return "";
@@ -618,17 +616,16 @@ wzQuicktextVar.prototype = {
         clip.getData(trans,clip.kGlobalClipboard);
 
         var clipboard = {};
-        var clipboardLength = {};
         try {
-          trans.getTransferData("text/unicode", clipboard, clipboardLength);
+          trans.getTransferData("text/unicode", clipboard);
           if (clipboard)
           {
             clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
             if (clipboard)
-              this.mData['CLIPBOARD'].data = clipboard.data.substring(0,clipboardLength.value / 2);
+              this.mData['CLIPBOARD'].data = clipboard.data;
           }
         }
-        catch (e) {}
+        catch (e) { Components.utils.reportError(e); }
       }
     }
 
@@ -692,11 +689,29 @@ wzQuicktextVar.prototype = {
 
         var k = this.mData['TO'].data['email'].length;
         this.mData['TO'].data['email'][k] = emailAddresses.value[i];
+        this.mData['TO'].data['fullname'][k] = names.value[i];
         this.mData['TO'].data['firstname'][k] = "";
         this.mData['TO'].data['lastname'][k] = "";
 
-        var name = names.value[i];
-        if (name)
+        // take card value, if it exists
+        var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
+        if (card != null)
+        {
+          var props = this.getPropertiesFromCard(card);
+          for (var p in props)
+          {
+            if (typeof this.mData['TO'].data[p] == 'undefined')
+              this.mData['TO'].data[p] = []
+            if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
+              this.mData['TO'].data[p][k] = props[p];
+          }
+          // generate fullname, if it does not exist
+          if (!this.mData['TO'].data['fullname'][k]) this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
+        }
+    
+        // swap Names if wrong
+        var name = this.mData['TO'].data['fullname'][k];
+        if (name) 
         {
           if (name.indexOf(",") > -1)
           {
@@ -710,22 +725,10 @@ wzQuicktextVar.prototype = {
             this.mData['TO'].data['firstname'][k] = tempnames.splice(0, 1);
             this.mData['TO'].data['lastname'][k] = tempnames.join(" ");
           }
+          // rebuild fullname
+          this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
         }
 
-        var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
-        if (card != null)
-        {
-          var props = this.getPropertiesFromCard(card);
-          for (var p in props)
-          {
-            if (typeof this.mData['TO'].data[p] == 'undefined')
-              this.mData['TO'].data[p] = []
-            if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
-              this.mData['TO'].data[p][k] = props[p];
-          }
-        }
-
-        this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
       }
     }
 
@@ -861,7 +864,7 @@ wzQuicktextVar.prototype = {
         this.mData['VERSION'].data['full'] = TrimString('Thunderbird '+ this.mPrefService.getBranch("app.").getCharPref("version"));
       }
     }
-    catch(e) {}
+    catch(e) { Components.utils.reportError(e); }
 
     return this.mData['VERSION'].data;
   }
@@ -1022,7 +1025,7 @@ wzQuicktextVar.prototype = {
       i++;
       size = size / 1024;
     }
-    return Math.round(size) + " " + unit[i];
+    return (Math.round(size * 100) / 100) + " " + unit[i];
   }
 ,
   getCardForEmail: function(aAddress) {
@@ -1068,7 +1071,7 @@ wzQuicktextVar.prototype = {
         try {
           databases.push(addressBook.getAbDatabaseFromURI(uri));
           directories.push(abook);
-        } catch(e) {}
+        } catch(e) { Components.utils.reportError(e); }
       }
     }
 

@@ -1,8 +1,8 @@
-var { gQuicktext } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktext.jsm", null);
-var { wzQuicktextVar } = Components.utils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm", null);
+var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
+var { wzQuicktextVar } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm");
 var gQuicktextVar = new wzQuicktextVar();
 
-Components.utils.import("chrome://quicktext/content/modules/utils.jsm");
+var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 
 var quicktextStateListener = {
   NotifyComposeBodyReady: function()
@@ -313,13 +313,13 @@ var quicktext = {
   /*
    * INSERTING TEXT
    */
-  insertVariable: function(aVar)
+  insertVariable: async function(aVar)
   {
     gQuicktextVar.cleanTagData();
-    this.insertBody("[["+ aVar +"]] ", 0, true);
+    await this.insertBody("[["+ aVar +"]] ", 0, true);
   }
 ,
-  insertTemplate: function(aGroupIndex, aTextIndex, aHandleTransaction)
+  insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction)
   {
     if (typeof aHandleTransaction == "undefined")
       aHandleTransaction = true;
@@ -342,7 +342,7 @@ var quicktext = {
         this.focusMessageBody();
       }
 
-      this.insertBody(text.text, text.type, aHandleTransaction);
+      await this.insertBody(text.text, text.type, aHandleTransaction);
 
       // If we insert any headers we maybe needs to return the placement of the focus
       setTimeout(function () {quicktext.moveFocus();}, 1);
@@ -503,7 +503,7 @@ var quicktext = {
     }
   }
 ,
-  insertBody: function(aStr, aType, aHandleTransaction)
+  insertBody: async function(aStr, aType, aHandleTransaction)
   {
     if (aStr != "")
     {
@@ -537,23 +537,23 @@ var quicktext = {
             else
               editor.insertText(aStr);
           }
-          catch(e) {}
+          catch(e) { Components.utils.reportError(e); }
   
           if (editor.selection.rangeCount > 0)
             var endRange = editor.selection.getRangeAt(0).cloneRange();
   
           try {
-            if (specialRange && endRange)
+            if (aStr.indexOf('[[CURSOR]]') > -1 && specialRange && endRange)
             {
               var newRange = editor.document.createRange();
               newRange.setStart(specialRange[0].childNodes[specialRange[1]], specialRange[2]);
               newRange.setEnd(endRange.endContainer, endRange.endOffset);
   
               // Take care of the CURSOR-tag
-              this.parseCursorTag(editor, newRange);
+              await this.parseCursorTag(editor, newRange);
             }
           }
-          catch(e) {}
+          catch(e) { Components.utils.reportError(e); }
   
           if (aHandleTransaction)
             editor.endTransaction();
@@ -562,7 +562,7 @@ var quicktext = {
     }
   }
 ,
-  parseCursorTag: function(aEditor, aSearchRange)
+  parseCursorTag: async function(aEditor, aSearchRange)
   {
     var startRange = aEditor.document.createRange();
     startRange.setStart(aSearchRange.startContainer, aSearchRange.startOffset);
@@ -575,10 +575,15 @@ var quicktext = {
     finder.caseSensitive = true;
     finder.findBackwards = false;
 
-    setTimeout(function() {
-      var found = false;
-      while ((foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange)) != null)
-      {
+    let found = false;
+    let failedSearchAttempts = 0;
+    let foundRange = null;
+
+    // Loop until all tags have been replaced, but limit the loop to 10 failed attempts.
+    while (failedSearchAttempts < 30)
+    {
+      // Process the last found tag and update the search region.
+      if (foundRange) {
         found = true;
         aEditor.selection.removeAllRanges();
         aEditor.selection.addRange(foundRange);
@@ -586,13 +591,30 @@ var quicktext = {
         startRange.setEnd(foundRange.endContainer, foundRange.endOffset);
         startRange.setStart(foundRange.endContainer, foundRange.endOffset);
       }
-
-      if (!found)
-      {
-        aEditor.selection.removeAllRanges();
-        aEditor.selection.addRange(endRange);
+      
+      // Search.
+      foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange);
+      
+      // If we have found at least one tag, but the last search failed, we are done.
+      if (found && !foundRange) {
+        break;
       }
-    });
+      
+      // If we have never found one, we might run into the "searched too early bug" and need to delay and try again
+      if (!found && !foundRange) {
+        await new Promise(resolve => setTimeout(resolve, 2));
+        failedSearchAttempts++;
+      }
+    }
+
+    if (!found)
+    {
+      console.log("CURSOR LOG Failed to find CURSOR tag!");
+      aEditor.selection.removeAllRanges();
+      aEditor.selection.addRange(endRange);
+    } else {
+      console.log("CURSOR LOG failedSearchAttempts : " + failedSearchAttempts);
+    }
   }
 ,
   dumpTree: function(aNode, aLevel)
@@ -617,17 +639,17 @@ var quicktext = {
     return null;
   }
 ,
-  insertContentFromFile: function(aType)
+  insertContentFromFile: async function(aType)
   {
     if ((file = gQuicktext.pickFile(window, aType, 0, this.mStringBundle.getString("insertFile"))) != null)
-      this.insertBody(gQuicktext.readFile(file), aType, true);
+      await this.insertBody(gQuicktext.readFile(file), aType, true);
   }
 ,
 
   /*
    * KEYPRESS
    */
-  windowKeyPress: function(e)
+  windowKeyPress: async function(e)
   {
     if (gQuicktext.shortcutTypeAdv)
     {
@@ -649,7 +671,7 @@ var quicktext = {
           e.ctrlKey && modifier == "control" ||
           e.metaKey && modifier == "meta"))
       {
-        this.insertTemplate(this.mShortcuts[shortcut][0], this.mShortcuts[shortcut][1]);
+        await this.insertTemplate(this.mShortcuts[shortcut][0], this.mShortcuts[shortcut][1]);
 
         e.stopPropagation();
         e.preventDefault();
@@ -667,7 +689,7 @@ var quicktext = {
       this.mShortcutModifierDown = true;
   }
 ,
-  windowKeyUp: function(e)
+  windowKeyUp: async function(e)
   {
     var modifier = gQuicktext.shortcutModifier;
     if (gQuicktext.shortcutTypeAdv && (
@@ -677,7 +699,7 @@ var quicktext = {
     {
       if (this.mShortcutString != "" && typeof this.mShortcuts[this.mShortcutString] != "undefined")
       {
-        this.insertTemplate(this.mShortcuts[this.mShortcutString][0], this.mShortcuts[this.mShortcutString][1]);
+        await this.insertTemplate(this.mShortcuts[this.mShortcutString][0], this.mShortcuts[this.mShortcutString][1]);
 
         e.stopPropagation();
         e.preventDefault();
@@ -688,11 +710,9 @@ var quicktext = {
     }
   }
 ,
-  editorKeyPress: function(e)
+  editorKeyPress: async function(e)
   {
-    var key = (e.keyCode > 0) ? e.keyCode : e.charCode;
-
-    if (key == gQuicktext.keywordKey)
+    if (e.code == gQuicktext.keywordKey)
     {
       var editor = GetCurrentEditor();
       var selection = editor.selection;
@@ -700,17 +720,22 @@ var quicktext = {
       if (!(selection.rangeCount > 0))
         return;
 
+      // All operations between beginTransaction and endTransaction
+      // are done "at once" as a single atomic action.
       editor.beginTransaction();
-      var selecRange = selection.getRangeAt(0).cloneRange();
-
-
+      
+      // This gives us a range object of the currently selected text
+      // and as the user usually does not have any text selected when
+      // triggering keywords, it is a collapsed range at the current
+      // cursor position.
+      var initialSelectionRange = selection.getRangeAt(0).cloneRange();
+      
       // Ugly solution to just search to the beginning of the line.
       // I set the selection to the beginning of the line save the
       // range and then sets the selection back to was before.
       // Changing the selections was not visible to me. Most likly is
-      // that is not even rendered
-
-      var tmpRange = selecRange.cloneRange();
+      // that is not even rendered.
+      var tmpRange = initialSelectionRange.cloneRange();
       tmpRange.collapse(false);
       editor.selection.removeAllRanges();
       editor.selection.addRange(tmpRange);
@@ -722,10 +747,28 @@ var quicktext = {
         return;
       }
 
-      var wholeRange = selection.getRangeAt(0).cloneRange();
-      editor.selection.removeAllRanges();
-      editor.selection.addRange(selecRange);
+      // intraLineMove() extended the selection from the cursor to the
+      // beginning of the line. We can get the last word by simply
+      // chopping up its content.
+      let lastWord = selection.toString().split(" ").pop();
+      let lastWordIsKeyword = this.mKeywords.hasOwnProperty(lastWord.toLowerCase());
 
+      // We now need to get a range, which covers the keyword,
+      // as we want to replace it. So we clone the current selection
+      // into a wholeRange and use nsIFind to find lastWord.
+      var wholeRange = selection.getRangeAt(0).cloneRange();
+
+      // Restore to the initialSelectionRange.
+      editor.selection.removeAllRanges();
+      editor.selection.addRange(initialSelectionRange);
+
+      // If the last word is not a keyword, abort.
+      if (!lastWordIsKeyword || !lastWord) {
+        editor.endTransaction();
+        return;
+      }
+
+      // Prepare a range for backward search.
       var startRange = editor.document.createRange();
       startRange.setStart(wholeRange.endContainer, wholeRange.endOffset);
       startRange.setEnd(wholeRange.endContainer, wholeRange.endOffset);
@@ -733,57 +776,24 @@ var quicktext = {
       endRange.setStart(wholeRange.startContainer, wholeRange.startOffset);
       endRange.setEnd(wholeRange.startContainer, wholeRange.startOffset);
 
-      var lastwordRange = editor.document.createRange();
-      var found = false;
-      var str = wholeRange.toString();
-      if (str == "")
-      {
-        editor.endTransaction();
-        return;
-      }
-
-      var foundRange;
       var finder = Components.classes["@mozilla.org/embedcomp/rangefind;1"].createInstance().QueryInterface(Components.interfaces.nsIFind);
       finder.findBackwards = true;
-      if ((foundRange = finder.Find(" ", wholeRange, startRange, endRange)) != null)
-      {
-        found = true;
-        if (foundRange.endContainer == selecRange.startContainer && foundRange.endOffset == selecRange.startOffset)
-        {
-          editor.endTransaction();
-          return;
-        }
-
-        lastwordRange.setStart(foundRange.endContainer, foundRange.endOffset);
-        lastwordRange.setEnd(selecRange.endContainer, selecRange.endOffset);
-      }
-      else
-      {
-        lastwordRange.setStart(wholeRange.startContainer, wholeRange.startOffset);
-        lastwordRange.setEnd(selecRange.endContainer, selecRange.endOffset);
-      }
-
-      var lastword = lastwordRange.toString();
-      var groupLength = gQuicktext.getGroupLength(false);
-
-      var found = false;
-      if (this.mKeywords.hasOwnProperty(lastword.toLowerCase()))
-      {
-        editor.selection.removeAllRanges();
-        editor.selection.addRange(lastwordRange);
-
-        var text = this.mKeywords[lastword.toLowerCase()];
-        this.insertTemplate(text[0], text[1], false);
-
-        found = true;
-      }
-
+      var lastWordRange = finder.Find(lastWord, wholeRange, startRange, endRange);
+      if (!lastWordRange) {
+        // That should actually never happen, as we know the word is there.
+        editor.endTransaction();
+        return;
+      }        
+      
+      // Replace the keyword.
+      editor.selection.removeAllRanges();
+      editor.selection.addRange(lastWordRange);
+      var text = this.mKeywords[lastWord.toLowerCase()];
+      await this.insertTemplate(text[0], text[1], false);
       editor.endTransaction();
-      if (found)
-      {
-        e.stopPropagation();
-        e.preventDefault();
-      }
+
+      e.stopPropagation();
+      e.preventDefault();
     }
   },
 
