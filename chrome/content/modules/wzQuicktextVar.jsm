@@ -689,11 +689,29 @@ wzQuicktextVar.prototype = {
 
         var k = this.mData['TO'].data['email'].length;
         this.mData['TO'].data['email'][k] = emailAddresses.value[i];
+        this.mData['TO'].data['fullname'][k] = names.value[i];
         this.mData['TO'].data['firstname'][k] = "";
         this.mData['TO'].data['lastname'][k] = "";
 
-        var name = names.value[i];
-        if (name)
+        // take card value, if it exists
+        var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
+        if (card != null)
+        {
+          var props = this.getPropertiesFromCard(card);
+          for (var p in props)
+          {
+            if (typeof this.mData['TO'].data[p] == 'undefined')
+              this.mData['TO'].data[p] = []
+            if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
+              this.mData['TO'].data[p][k] = props[p];
+          }
+          // generate fullname, if it does not exist
+          if (!this.mData['TO'].data['fullname'][k]) this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
+        }
+    
+        // swap Names if wrong
+        var name = this.mData['TO'].data['fullname'][k];
+        if (name) 
         {
           if (name.indexOf(",") > -1)
           {
@@ -707,22 +725,10 @@ wzQuicktextVar.prototype = {
             this.mData['TO'].data['firstname'][k] = tempnames.splice(0, 1);
             this.mData['TO'].data['lastname'][k] = tempnames.join(" ");
           }
+          // rebuild fullname
+          this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
         }
 
-        var card = this.getCardForEmail(this.mData['TO'].data['email'][k].toLowerCase());
-        if (card != null)
-        {
-          var props = this.getPropertiesFromCard(card);
-          for (var p in props)
-          {
-            if (typeof this.mData['TO'].data[p] == 'undefined')
-              this.mData['TO'].data[p] = []
-            if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
-              this.mData['TO'].data[p][k] = props[p];
-          }
-        }
-
-        this.mData['TO'].data['fullname'][k] = TrimString(this.mData['TO'].data['firstname'][k] +" "+ this.mData['TO'].data['lastname'][k]);
       }
     }
 
