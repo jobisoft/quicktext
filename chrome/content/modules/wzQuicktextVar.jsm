@@ -637,15 +637,24 @@ wzQuicktextVar.prototype = {
     if (this.mData['FROM'] && this.mData['FROM'].checked)
       return this.mData['FROM'].data;
 
+    const identity = this.mWindow.getCurrentIdentity();
+
     this.mData['FROM'] = {};
     this.mData['FROM'].checked = true;
     this.mData['FROM'].data = {
-      'email': this.mWindow.getCurrentIdentity().email,
+      'email': identity.email,
+      'displayname': identity.fullName,
       'firstname': '',
       'lastname': ''
     };
 
-    var card = this.getCardForEmail(this.mData['FROM'].data['email'].toLowerCase());
+    let card = this.getCardForEmail(identity.email.toLowerCase());
+    if (card == null && identity.escapedVCard != null)
+    {
+      const manager = Components.classes["@mozilla.org/abmanager;1"]
+        .getService(Components.interfaces.nsIAbManager);
+      card = manager.escapedVCardToAbCard(identity.escapedVCard);
+    }
     if (card != null)
     {
       var props = this.getPropertiesFromCard(card);
