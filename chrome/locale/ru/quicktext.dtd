@@ -73,6 +73,7 @@
 <!ENTITY quicktext.dateTime.label "Дата/Время">
 
 <!ENTITY quicktext.other.label "Прочее">
+<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
 <!ENTITY quicktext.clipboard.label "Буфер обмена">
 <!ENTITY quicktext.cursor.label "Позиция курсора">

@@ -73,6 +73,7 @@
 <!ENTITY quicktext.dateTime.label "Dátum/idő">
 
 <!ENTITY quicktext.other.label "Más">
+<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
 <!ENTITY quicktext.clipboard.label "Vágólap">
 <!ENTITY quicktext.cursor.label "Kurzor helyezkedő">

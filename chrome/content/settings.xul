@@ -241,6 +241,7 @@
                               </menu>
                               <menu label="&quicktext.other.label;">
                                 <menupopup>
+                                  <menuitem label="&quicktext.header.label;" oncommand="quicktext.insertVariable('HEADER=type|value');" />
                                   <menuitem label="&quicktext.selection.label;" oncommand="quicktext.insertVariable('SELECTION');" />
                                   <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
                                   <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />

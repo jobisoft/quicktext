@@ -68,6 +68,7 @@
 <!ENTITY quicktext.dateTime.label "Date/Heure">
 
 <!ENTITY quicktext.other.label "Autres">
+<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
 <!ENTITY quicktext.clipboard.label "Presse-papiers">
 <!ENTITY quicktext.cursor.label "Position du curseur">
