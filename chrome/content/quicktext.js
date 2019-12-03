@@ -337,6 +337,16 @@ var quicktext = {
       gQuicktextVar.cleanTagData();
 
       var text = gQuicktext.getText(aGroupIndex, aTextIndex, false);
+      
+      // Parse text for HEADER tags and move them to the header object
+      let headers = text.text.match(/\[\[header=[^\]]*\]\]/ig);
+      for (let header of headers) {
+        let parts = header.split(/=|\]\]|\|/);
+        if (parts.length==4) {
+          text.addHeader(parts[1], parts[2]);
+        }
+      }
+      
       this.insertHeaders(text);
       this.insertSubject(text.subject);
       this.insertAttachments(text.attachments);

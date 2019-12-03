@@ -5,7 +5,7 @@ var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQu
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
-const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION'];
+const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
 
 function streamListener(aInspector)
 {
@@ -150,6 +150,7 @@ wzQuicktextVar.prototype = {
           variable_limit = 1;
           break;
         case 'text':
+        case 'header':
           variable_limit = 2;
           break;
       }
@@ -321,6 +322,13 @@ wzQuicktextVar.prototype = {
     if (typeof data[aVariables[0]] != "undefined")
       return data[aVariables[0]];
 
+    return "";
+  }
+,
+  get_header: function(aVariables)
+  {
+    // We do not do anything here but to return an empty string, 
+    // to remove the header tags from the body.
     return "";
   }
 ,
