@@ -342,7 +342,7 @@
                         <textbox id="script-title" flex="1" oninput="quicktext.checkForScriptChanges(0);"/>
                       </row>
                       <vbox flex="1">
-                        <html:textarea id="script" rows="14" disabled="true" candisable="true" oninput="quicktext.checkForScriptChanges(1);"/>
+                        <html:textarea id="script" rows="14" disabled="true" oninput="quicktext.checkForScriptChanges(1);"/>
                       </vbox>
                     </rows>
                   </grid>

@@ -714,7 +714,10 @@ var gQuicktext = {
     var buffer = "<?xml version=\"1.0\"?>\n<quicktext version=\"2\">\n\t<filetype>scripts</filetype>\n";
     for (var i = 0; i < this.mScripts.length; i++)
     {
-      buffer += "\t<script>\n\t\t<name><![CDATA["+ this.removeIllegalChars(this.mScripts[i].name) +"]]></name>\n\t\t<body><![CDATA["+ this.removeIllegalChars(this.mScripts[i].script) +"]]></body>\n\t</script>\n";
+      // Only export scripts which have not been auto imported.
+      if (this.mScripts[i].type == 0) {
+        buffer += "\t<script>\n\t\t<name><![CDATA["+ this.removeIllegalChars(this.mScripts[i].name) +"]]></name>\n\t\t<body><![CDATA["+ this.removeIllegalChars(this.mScripts[i].script) +"]]></body>\n\t</script>\n";
+      }
     }
     buffer += "</quicktext>";
     this.writeFile(aFile, buffer);
@@ -725,6 +728,7 @@ var gQuicktext = {
     var buffer = "<?xml version=\"1.0\"?>\n<quicktext version=\"2\">\n\t<filetype>templates</filetype>\n";
     for (var i = 0; i < this.mGroup.length; i++)
     {
+      // Only export templates which have not been auto imported.
       if (this.mGroup[i].type == 0)
       {
         if (this.mTexts[i])

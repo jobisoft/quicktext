@@ -698,7 +698,6 @@ var quicktext = {
       document.getElementById('script').hidden = true;
       return;
     }
-    document.getElementById('script-title').disabled = false;
     document.getElementById('script').hidden = false;
 
 
@@ -715,8 +714,18 @@ var quicktext = {
     this.mScriptIndex = index;
 
     var script = gQuicktext.getScript(index, true);
+    let disabled = (script.type == 1);
+    
     document.getElementById('script-title').value = script.name;
     document.getElementById('script').value = script.script;
+
+    document.getElementById('script-title').disabled = disabled;
+    document.getElementById('script').disabled = disabled;
+    
+    if (disabled)
+      document.getElementById('script-button-remove').setAttribute("disabled", true);    
+    else
+      document.getElementById('script-button-remove').removeAttribute("disabled");
   }
 ,
   pickText: function()
@@ -1368,7 +1377,9 @@ var quicktext = {
       document.getElementById('group-button-remove').setAttribute("disabled", true);
     }
 
-    if (gQuicktext.getScriptLength(true))
+    let scriptIndex = document.getElementById('script-list').value;
+    let script = gQuicktext.getScript(scriptIndex, true);
+    if (gQuicktext.getScriptLength(true) && script.type == 0)
       document.getElementById('script-button-remove').removeAttribute("disabled");
     else
       document.getElementById('script-button-remove').setAttribute("disabled", true);
