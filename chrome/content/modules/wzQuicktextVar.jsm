@@ -734,8 +734,8 @@ wzQuicktextVar.prototype = {
               this.mData['TO'].data[p][k] = TrimString(props[p]);
           }
           // generate fullname from cards first and last name
-          let parts = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]];
-          if (parts.filter(e => e != "").length > 0) this.mData['TO'].data['fullname'][k] = parts.join(" ");
+          let validParts = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].filter(e => e != "");
+          if (validParts.length > 0) this.mData['TO'].data['fullname'][k] = validParts.join(" ");
         }
     
         // swap Names if wrong
