@@ -18,7 +18,6 @@ var quicktextStateListener = {
 var quicktext = {
   mStringBundle:                null,
   mLoaded:                      false,
-  mSelectionContent:            null,
   mLastFocusedElement:          null,
   mShortcuts:                   {},
   mShortcutString:              "",
@@ -323,7 +322,14 @@ var quicktext = {
   {
     if (typeof aHandleTransaction == "undefined")
       aHandleTransaction = true;
-
+    
+    //store selected content
+    var editor = GetCurrentEditor();
+    var selection = editor.selection;
+    if (selection.rangeCount > 0) {
+      gQuicktext.mSelectionContent = selection.toString();
+    }
+    
     if (gQuicktext.doTextExists(aGroupIndex, aTextIndex, false))
     {
       this.mLastFocusedElement = (document.commandDispatcher.focusedWindow != window) ? document.commandDispatcher.focusedWindow : document.commandDispatcher.focusedElement;

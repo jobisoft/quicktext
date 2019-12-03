@@ -74,6 +74,7 @@
 
 <!ENTITY quicktext.other.label "Other">
 <!ENTITY quicktext.clipboard.label "Clipboard">
+<!ENTITY quicktext.selection.label "Selection">
 <!ENTITY quicktext.cursor.label "Cursor position">
 <!ENTITY quicktext.subject.label "Subject">
 <!ENTITY quicktext.version.label "Thunderbird version">

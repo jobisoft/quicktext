@@ -32,7 +32,8 @@ var gQuicktext = {
   mQuicktextDir:        null,
   mObserverList:        [],
   mOS:                  "WINNT",
-  mCollapseState:       ""
+  mCollapseState:       "",
+  mSelectionContent:    ""  
 ,
   get viewToolbar() { return this.mViewToolbar; },
   set viewToolbar(aViewToolbar)

@@ -73,6 +73,7 @@
 <!ENTITY quicktext.dateTime.label "Datum/Tid">
 
 <!ENTITY quicktext.other.label "Övrigt">
+<!ENTITY quicktext.selection.label "Selection">
 <!ENTITY quicktext.clipboard.label "Urklipp">
 <!ENTITY quicktext.cursor.label "Markörposition">
 <!ENTITY quicktext.subject.label "Ämne">

@@ -5,7 +5,7 @@ var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQu
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
-const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION'];
+const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION'];
 
 function streamListener(aInspector)
 {
@@ -131,6 +131,7 @@ wzQuicktextVar.prototype = {
       {
         case 'att':
         case 'clipboard':
+        case 'selection':
         case 'counter':
         case 'date':
         case 'subject':
@@ -326,6 +327,11 @@ wzQuicktextVar.prototype = {
   get_clipboard: function(aVariables)
   {
     return TrimString(this.process_clipboard(aVariables));
+  }
+,  
+  get_selection: function(aVariables)
+  {
+    return TrimString(this.process_selection(aVariables));
   }
 ,
   get_from: function(aVariables)
@@ -596,6 +602,11 @@ wzQuicktextVar.prototype = {
     return this.mData['INPUT'].data;
   }
 ,
+  process_selection: function(aVariables)
+  {
+    return this.mQuicktext.mSelectionContent;
+  }
+,
   process_clipboard: function(aVariables)
   {
     if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
@@ -792,6 +803,7 @@ wzQuicktextVar.prototype = {
               break;
             case 'subject':
             case 'clipboard':
+            case 'selection':
             case 'counter':
               data = this["process_"+ tag]();
               if (typeof data != 'undefined')

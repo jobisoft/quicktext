@@ -74,6 +74,7 @@
 
 <!ENTITY quicktext.other.label "Andere">
 <!ENTITY quicktext.clipboard.label "Zwischenablage">
+<!ENTITY quicktext.selection.label "Selektion">
 <!ENTITY quicktext.cursor.label "Cursorposition">
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
