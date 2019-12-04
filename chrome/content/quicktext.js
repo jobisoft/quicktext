@@ -340,10 +340,12 @@ var quicktext = {
       
       // Parse text for HEADER tags and move them to the header object
       let headers = text.text.match(/\[\[header=[^\]]*\]\]/ig);
-      for (let header of headers) {
-        let parts = header.split(/=|\]\]|\|/);
-        if (parts.length==4) {
-          text.addHeader(parts[1], parts[2]);
+      if (headers && Array.isArray(headers)) {
+        for (let header of headers) {
+          let parts = header.split(/=|\]\]|\|/);
+          if (parts.length==4) {
+            text.addHeader(parts[1], parts[2]);
+          }
         }
       }
       
