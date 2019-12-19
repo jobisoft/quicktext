@@ -5,7 +5,7 @@ var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQu
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
-const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
+const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
 
 function streamListener(aInspector)
 {
@@ -140,6 +140,7 @@ wzQuicktextVar.prototype = {
           variable_limit = 0;
           break;
         case 'file':
+        case 'image':
         case 'from':
         case 'input':
         case 'orgatt':
@@ -279,6 +280,11 @@ wzQuicktextVar.prototype = {
   get_file: function(aVariables)
   {
     return this.process_file(aVariables);
+  }
+,
+  get_image: function(aVariables)
+  {
+    return this.process_image_content(aVariables);
   }
 ,
   get_text: function(aVariables)
@@ -460,6 +466,28 @@ wzQuicktextVar.prototype = {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
         return this.mQuicktext.readFile(fp);
+      } catch(e) { Components.utils.reportError(e); }
+    }
+
+    return "";
+  }
+,
+  process_image_content: function(aVariables)
+  {
+
+    if (aVariables.length == 1 && aVariables[0] != "")
+    {
+      // Tries to open the file and returning the content
+      var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+      try {
+        aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
+        fp.initWithPath(aVariables[0]);
+        var rawContent = this.mQuicktext.readBinaryFile(fp);
+        var decoder = new TextDecoder('utf-8');
+        var content = this.mWindow.btoa(rawContent);
+        var type = this.mQuicktext.getTypeFromExtension(fp);
+        return "data:" + type + ";filename=" + fp.leafName + ";base64," + content;
+
       } catch(e) { Components.utils.reportError(e); }
     }
 

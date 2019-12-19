@@ -652,6 +652,37 @@ var gQuicktext = {
     return text;
   }
 ,
+  readBinaryFile: function(aFile)
+  {
+
+
+    var data = "";
+
+    var file = Components.classes["@mozilla.org/file/local;1"]
+                .createInstance(Components.interfaces.nsIFile);
+    file.initWithFile(aFile);
+    if(file.exists())
+    {
+      var fiStream = Components.classes["@mozilla.org/network/file-input-stream;1"]
+                      .createInstance(Components.interfaces.nsIFileInputStream);
+
+      var biStream = Components.classes["@mozilla.org/binaryinputstream;1"]
+                      .createInstance(Components.interfaces.nsIBinaryInputStream);
+      
+      //Get file as raw byte array
+      fiStream.init(file, 1, 0, false);
+      biStream.setInputStream(fiStream);
+      var len = biStream.available();
+      data = biStream.readBytes(len);
+      biStream.close();
+      fiStream.close();
+
+    }
+
+    return data;
+
+  }
+,
   writeFile: async function(aFile, aData)
   {
     //MDN states, instead of checking if dir exists, just create it and
@@ -704,6 +735,38 @@ var gQuicktext = {
 
     if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
     return null;
+  }
+,
+  getTypeFromExtension(aFile)
+  {
+
+    var ext = aFile.leafName.substring(aFile.leafName.lastIndexOf('.'));
+
+    // Extracted from https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#Image_types
+    switch(ext)
+    {
+      case ".apng":
+        return "image/apng";
+      case ".bmp":
+        return "image/bmp";
+      case ".gif":
+        return "image/gif";
+      case ".ico", ".cur":
+        return "image/x-icon";
+      case ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp":
+        return "image/jpeg";
+      case ".png":
+        return "image/png";
+      case ".svg":
+        return "image/svg+xml";
+      case ".tif", ".tiff":
+        return "image/tiff";
+      case ".webp":
+        return "image/webp";
+      default:
+        return "application/octet-stream";
+    }
+
   }
 ,
   /*
