@@ -79,6 +79,7 @@
 <!ENTITY quicktext.cursor.label "Position du curseur">
 <!ENTITY quicktext.subject.label "Sujet">
 <!ENTITY quicktext.version.label "Version de Thunderbird">
+<!ENTITY quicktext.image.label "Image src base64">
 
 <!ENTITY quicktext.attachments.label "Pièces jointes">
 <!ENTITY quicktext.filename.label "Nom du fichier">
