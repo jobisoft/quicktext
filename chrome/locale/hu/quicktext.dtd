@@ -79,6 +79,7 @@
 <!ENTITY quicktext.cursor.label "Kurzor helyezkedő">
 <!ENTITY quicktext.subject.label "Tárgy">
 <!ENTITY quicktext.version.label "Thunderbird verzió">
+<!ENTITY quicktext.image.label "Image src base64">
 
 <!ENTITY quicktext.attachments.label "Mellékletek">
 <!ENTITY quicktext.filename.label "Fájlnév">

@@ -623,6 +623,13 @@ var quicktext = {
       this.enableSave();
   }
 ,
+  insertImageVariable: function()
+  {
+    if ((file = gQuicktext.pickFile(window, -1, 0, this.mStringBundle.getString("insertImage"))) != null)
+      this.insertVariable('IMAGE=' + file.path);
+      this.enableSave();
+  }
+,
 
   /*
    * IMPORT/EXPORT FUNCTIONS

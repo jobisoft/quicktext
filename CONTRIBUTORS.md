@@ -14,6 +14,7 @@
 * Janning Vygen
 * bgeiring
 * drakulis
+* Peñalara Software S.L.
 
 ## Translators
 * Alexey Sinitsyn (ru)

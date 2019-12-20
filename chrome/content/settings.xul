@@ -248,6 +248,7 @@
                                   <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
                                   <menuitem label="&quicktext.cursor.label;" oncommand="quicktext.insertVariable('CURSOR');" />
                                   <menuitem label="&quicktext.file.label;" oncommand="quicktext.insertFileVariable();" />
+                                  <menuitem label="&quicktext.image.label;" oncommand="quicktext.insertImageVariable();" />
                                 </menupopup>
                               </menu>
                               <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />
