@@ -73,12 +73,13 @@
 <!ENTITY quicktext.dateTime.label "Дата/Время">
 
 <!ENTITY quicktext.other.label "Прочее">
+<!ENTITY quicktext.clipboard.label "Буфер обмена">
 <!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
-<!ENTITY quicktext.clipboard.label "Буфер обмена">
 <!ENTITY quicktext.cursor.label "Позиция курсора">
 <!ENTITY quicktext.subject.label "Тема">
 <!ENTITY quicktext.version.label "Версия Thunderbird">
+
 <!ENTITY quicktext.image.label "Image src base64">
 
 <!ENTITY quicktext.attachments.label "Вложения">

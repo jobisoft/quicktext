@@ -73,12 +73,13 @@
 <!ENTITY quicktext.dateTime.label "Date/Heure">
 
 <!ENTITY quicktext.other.label "Autres">
+<!ENTITY quicktext.clipboard.label "Presse-papiers">
 <!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
-<!ENTITY quicktext.clipboard.label "Presse-papiers">
 <!ENTITY quicktext.cursor.label "Position du curseur">
 <!ENTITY quicktext.subject.label "Sujet">
 <!ENTITY quicktext.version.label "Version de Thunderbird">
+
 <!ENTITY quicktext.image.label "Image src base64">
 
 <!ENTITY quicktext.attachments.label "Pièces jointes">

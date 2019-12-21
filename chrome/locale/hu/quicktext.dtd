@@ -73,12 +73,13 @@
 <!ENTITY quicktext.dateTime.label "Dátum/idő">
 
 <!ENTITY quicktext.other.label "Más">
+<!ENTITY quicktext.clipboard.label "Vágólap">
 <!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
-<!ENTITY quicktext.clipboard.label "Vágólap">
 <!ENTITY quicktext.cursor.label "Kurzor helyezkedő">
 <!ENTITY quicktext.subject.label "Tárgy">
 <!ENTITY quicktext.version.label "Thunderbird verzió">
+
 <!ENTITY quicktext.image.label "Image src base64">
 
 <!ENTITY quicktext.attachments.label "Mellékletek">
