@@ -790,11 +790,11 @@ var quicktext = {
       editor.selection.removeAllRanges();
       editor.selection.addRange(lastWordRange);
       var text = this.mKeywords[lastWord.toLowerCase()];
-      await this.insertTemplate(text[0], text[1], false);
       editor.endTransaction();
-
       e.stopPropagation();
       e.preventDefault();
+
+      await this.insertTemplate(text[0], text[1]);      
     }
   },
 
