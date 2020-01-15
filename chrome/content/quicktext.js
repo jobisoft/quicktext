@@ -318,11 +318,8 @@ var quicktext = {
     await this.insertBody("[["+ aVar +"]] ", 0, true);
   }
 ,
-  insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction)
+  insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction = true)
   {
-    if (typeof aHandleTransaction == "undefined")
-      aHandleTransaction = true;
-    
     //store selected content
     var editor = GetCurrentEditor();
     var selection = editor.selection;
