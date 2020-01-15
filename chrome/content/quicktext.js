@@ -332,8 +332,7 @@ var quicktext = {
     
     if (gQuicktext.doTextExists(aGroupIndex, aTextIndex, false))
     {
-      this.mLastFocusedElement = (document.commandDispatcher.focusedWindow != window) ? document.commandDispatcher.focusedWindow : document.commandDispatcher.focusedElement;
-
+      this.mLastFocusedElement = document.activeElement;
       gQuicktextVar.cleanTagData();
 
       var text = gQuicktext.getText(aGroupIndex, aTextIndex, false);
@@ -472,20 +471,9 @@ var quicktext = {
 
       if (count > 0)
       {
-        var addressingWidgetFocus = false;
-        var focusedElement = this.mLastFocusedElement;
-        var addressingWidget = document.getElementById("addressingWidget");
-        if (focusedElement == addressingWidget || focusedElement.compareDocumentPosition && focusedElement.compareDocumentPosition(addressingWidget) & Node.DOCUMENT_POSITION_CONTAINS)
-          addressingWidgetFocus = true;
-
         for (var header in tmpRecipientHeaders)
           for (var i = 0; i < tmpRecipientHeaders[header].length; i++)
             AddRecipient("addr_"+ convertHeaderToType[header], tmpRecipientHeaders[header][i]);
-
-        // AddRecipient takes focus so if I don't have focus in the addressingWidget
-        // I want to move it back.
-        if (addressingWidgetFocus)
-          this.mLastFocusedElement = null;
       }
     }
   }
@@ -501,12 +489,10 @@ var quicktext = {
 ,
   focusMessageBody: function()
   {
-    // advance focus until we are at the message body
-    var maxsteps = 50;
-    for (var i = 0; this.mLastFocusedElement.name != "browser.message.body" && i < maxsteps; i++)
-    {
-      document.commandDispatcher.advanceFocus();
-      this.mLastFocusedElement = (document.commandDispatcher.focusedWindow != window) ? document.commandDispatcher.focusedWindow : document.commandDispatcher.focusedElement;
+    let editor = GetCurrentEditorElement();//document.getElementsByTagName("editor");
+    if (editor) {
+      editor.focus();
+      this.mLastFocusedElement = editor;
     }
   }
 ,
