@@ -761,31 +761,29 @@ wzQuicktextVar.prototype = {
             if (props[p] != "" || typeof this.mData['TO'].data[p][k] == 'undefined' || this.mData['TO'].data[p][k] == "")
               this.mData['TO'].data[p][k] = TrimString(props[p]);
           }
-          // generate fullname from cards first and last name
-          let validParts = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].filter(e => e != "");
-          if (validParts.length > 0) this.mData['TO'].data['fullname'][k] = validParts.join(" ");
         }
     
-        // swap Names if wrong
-        var name = this.mData['TO'].data['fullname'][k];
-        if (name) 
+        let validParts = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].filter(e => e.trim() != "");
+        if (validParts.length == 0) {
+          // if no first and last name, generate them from fullname
+          let parts =  this.mData['TO'].data['fullname'][k].replace(/,/g, ", ").split(" ").filter(e => e.trim() != "");
+          this.mData['TO'].data['firstname'][k] = parts.length > 1 ? TrimString(parts.splice(0, 1)) : "";
+          this.mData['TO'].data['lastname'][k] = TrimString(parts.join(" "));
+        } else {
+          // if we have a first and/or last name (which can only happen if read from card), generate fullname from it
+          this.mData['TO'].data['fullname'][k] = validParts.join(" ");          
+        }
+        
+        // swap names if wrong
+        if (this.mData['TO'].data['firstname'][k].endsWith(","))
         {
-          if (name.indexOf(",") > -1)
-          {
-            let tempnames = name.split(",");
-            this.mData['TO'].data['lastname'][k] = TrimString(tempnames.splice(0, 1));
-            this.mData['TO'].data['firstname'][k] = TrimString(tempnames.join(","));
-          }
-          else
-          {
-            let tempnames = name.split(" ");
-            this.mData['TO'].data['firstname'][k] = TrimString(tempnames.splice(0, 1));
-            this.mData['TO'].data['lastname'][k] = TrimString(tempnames.join(" "));
-          }
+          let temp_firstname = this.mData['TO'].data['firstname'][k].replace(/,/g, "");			  
+          let temp_lastname = this.mData['TO'].data['lastname'][k];			  
+          this.mData['TO'].data['firstname'][k] = temp_lastname;
+          this.mData['TO'].data['lastname'][k] = temp_firstname;
           // rebuild fullname
           this.mData['TO'].data['fullname'][k] = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].join(" ");
         }
-
       }
     }
 
