@@ -42,3 +42,13 @@ caption {
   padding: 3px;
   font-weight: normal;
 }
+
+groupbox > .box-title > .header {
+  font-weight: bold;
+  margin-top: -2px;
+  margin-bottom:1em;
+  margin-inline-start: 3px;
+  padding-right: 3px;
+  padding-left: 3px;
+  background-color: -moz-Field;
+}
