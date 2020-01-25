@@ -364,10 +364,19 @@ wzQuicktextVar.prototype = {
 
     if (typeof data[aVariables[0]] != 'undefined')
     {
-      if (aVariables.length < 2)
-        aVariables[1] = ", ";
-
-      return data[aVariables[0]].join(aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t"));
+      // use ", " as default seperator
+      let mainSep = (aVariables.length > 1) ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : ", ";
+      let lastSep = (aVariables.length > 2) ? aVariables[2].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : ", ";
+      
+      // clone the data, so we can work on it without mod the source object
+      let entries = data[aVariables[0]].slice(0);
+      let last = entries.pop();
+      
+      // build the final string
+      let all = [];
+      if (entries.length > 0) all.push(entries.join(mainSep));
+      all.push(last);      
+      return all.join(lastSep);
     }
     else
       return "";
