@@ -260,6 +260,15 @@ var quicktext = {
       this.noGeneralChangeMade(aIndex);
   }
 ,
+  onResize: function()
+  {
+    let textElement = document.getElementById("text");
+    textElement.style.height = (textElement.parentElement.clientHeight - 5) + "px";
+
+    let scriptElement = document.getElementById("script");
+    scriptElement.style.height = (scriptElement.parentElement.clientHeight - 5) + "px";
+  }
+,
   checkForTextChanges: function(aIndex)
   {
     if (!this.mPickedIndex)
@@ -859,6 +868,7 @@ var quicktext = {
       else
         elements[i].hidden = true;
     }
+    this.onResize();    
   }
 ,
 
