@@ -43,6 +43,7 @@
 <!ENTITY quicktext.addGroup.label "Csoport hozzáadása">
 <!ENTITY quicktext.addTemplate.label "Sablon hozzáadása">
 <!ENTITY quicktext.addScript.label "Parancsfájl hozzáadása">
+<!ENTITY quicktext.getScript.label "Community Scripts">
 <!ENTITY quicktext.remove.label "Eltávolítás">
 <!ENTITY quicktext.shortcut.label "Gyorsbillentyű">
 

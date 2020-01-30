@@ -43,6 +43,7 @@
 <!ENTITY quicktext.addGroup.label "グループを追加">
 <!ENTITY quicktext.addTemplate.label "テンプレートを追加">
 <!ENTITY quicktext.addScript.label "スクリプトを追加">
+<!ENTITY quicktext.getScript.label "Community Scripts">
 <!ENTITY quicktext.remove.label "削除">
 <!ENTITY quicktext.shortcut.label "ショートカット">
 

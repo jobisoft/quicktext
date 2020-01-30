@@ -43,6 +43,7 @@
 <!ENTITY quicktext.addGroup.label "Gruppe hinzufügen">
 <!ENTITY quicktext.addTemplate.label "Vorlage hinzufügen">
 <!ENTITY quicktext.addScript.label "Skript hinzufügen">
+<!ENTITY quicktext.getScript.label "Community Scripts">
 <!ENTITY quicktext.remove.label "Entfernen">
 <!ENTITY quicktext.shortcut.label "Tastenkürzel">
 

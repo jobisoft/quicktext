@@ -319,6 +319,7 @@
               <groupbox flex="1">
                 <hbox class="box-title"><label class="header">&quicktext.title.label;</label></hbox>
                 <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" /></hbox>
+                <hbox><button label="&quicktext.getScript.label;" flex="1" oncommand="quicktext.getCommunityScripts();" /></hbox>
                 <richlistbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
                 <hbox><button id="script-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeScript();" /></hbox>
               </groupbox>
