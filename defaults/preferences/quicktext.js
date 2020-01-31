@@ -1,3 +1,4 @@
+pref("extensions.quicktext.settingsFolder", "");
 pref("extensions.quicktext.defaultImport", "");
 pref("extensions.quicktext.menuCollapse", true);
 pref("extensions.quicktext.toolbar", true);
