@@ -19,7 +19,7 @@
   "legacy": {
     "type": "xul",
     "options": {
-      "page": "chrome://quicktext/content/settings.xul",
+      "page": "chrome://quicktext/content/addonoptions.xul",
       "open_in_tab": false
     }
   }

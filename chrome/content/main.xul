@@ -1,11 +1,9 @@
 <?xml version="1.0"?>
-
 <?xml-stylesheet href="chrome://quicktext/skin/quicktext.css" type="text/css"?>
-
 <!DOCTYPE overlay SYSTEM "chrome://quicktext/locale/quicktext.dtd">
 
 <overlay id="quicktextOverlay"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
 
   <script type="application/x-javascript" src="chrome://quicktext/content/main.js" /> 
 
