@@ -1,0 +1,99 @@
+<!ENTITY quicktext.label "Quicktext">
+<!ENTITY quicktext.shortname.label "Quicktext">
+
+<!ENTITY quicktext.settings.title "Configurações do Quicktext">
+<!ENTITY quicktext.settings.label "Configurações">
+<!ENTITY quicktext.file.label "Arquivo">
+<!ENTITY quicktext.goToHomepage.label "Ir para a página inicial">
+<!ENTITY quicktext.help.label "Ajuda">
+<!ENTITY quicktext.close.label "Fechar">
+<!ENTITY quicktext.save.label "Salvar">
+
+<!ENTITY quicktext.general.label "Geral">
+<!ENTITY quicktext.templates.label "Modelos">
+<!ENTITY quicktext.scripts.label "Scripts">
+
+<!ENTITY quicktext.rightClickSetting.label "Exibir menu de texto rápido com o botão direito do mouse">
+<!ENTITY quicktext.collapseSetting.label "Recolher o grupo quando ele contém apenas um modelo">
+<!ENTITY quicktext.modifierSetting.label "é o modificador que eu quero usar para os atalhos do teclado">
+<!ENTITY quicktext.shortcutTypeAdv.label "Use o modo avançado para atalhos">
+<!ENTITY quicktext.keywordKeySetting.label "é a chave que eu quero usar para ativar uma palavra-chave">
+
+<!ENTITY quicktext.altKey.label "Alt">
+<!ENTITY quicktext.controlKey.label "Ctrl">
+<!ENTITY quicktext.metaKey.label "Meta">
+<!ENTITY quicktext.tabKey.label "Tab">
+<!ENTITY quicktext.spaceKey.label "Spaco">
+<!ENTITY quicktext.enterKey.label "Enter">
+<!ENTITY quicktext.f2Key.label "F2">
+<!ENTITY quicktext.f4Key.label "F4">
+<!ENTITY quicktext.f5Key.label "F5">
+<!ENTITY quicktext.f8Key.label "F8">
+<!ENTITY quicktext.f11Key.label "F11">
+<!ENTITY quicktext.f12Key.label "F12">
+
+<!ENTITY quicktext.defaultImport.label "Importar na inicialização">
+
+<!ENTITY quicktext.sharingTemplates.label "Modelos compartilhando ">
+<!ENTITY quicktext.sharingScripts.label "Scripts modelos">
+<!ENTITY quicktext.export.label "Exportar">
+<!ENTITY quicktext.import.label "Importar">
+
+<!ENTITY quicktext.title.label "Títlo">
+<!ENTITY quicktext.addGroup.label "Adicionar grupo">
+<!ENTITY quicktext.addTemplate.label "Adicionar modelo">
+<!ENTITY quicktext.addScript.label "Adicionar script">
+<!ENTITY quicktext.getScript.label "Scripts da comunidade">
+<!ENTITY quicktext.remove.label "Remover">
+<!ENTITY quicktext.shortcut.label "Atalho">
+
+<!ENTITY quicktext.group.label "Grupo">
+<!ENTITY quicktext.template.label "Modelo">
+<!ENTITY quicktext.script.label "Script">
+
+<!ENTITY quicktext.variables.label "Variáveis">
+
+<!ENTITY quicktext.to.label "Para">
+<!ENTITY quicktext.from.label "De">
+<!ENTITY quicktext.firstname.label "Primeiro nome">
+<!ENTITY quicktext.lastname.label "Último nome">
+<!ENTITY quicktext.fullname.label "Nome completo">
+<!ENTITY quicktext.displayname.label "Nome em Exibição">
+<!ENTITY quicktext.nickname.label "Apelido">
+<!ENTITY quicktext.email.label "Email">
+<!ENTITY quicktext.worknumber.label "Número de Trabalho">
+<!ENTITY quicktext.faxnumber.label "Número de fax">
+<!ENTITY quicktext.homenumber.label "Homenumber">
+<!ENTITY quicktext.cellularnumber.label "Cellularnumber">
+<!ENTITY quicktext.jobtitle.label "Jobtitle">
+<!ENTITY quicktext.custom1.label "Custom 1">
+<!ENTITY quicktext.custom2.label "Custom 2">
+<!ENTITY quicktext.custom3.label "Custom 3">
+<!ENTITY quicktext.custom4.label "Custom 4">
+
+<!ENTITY quicktext.dateTime.label "Data/Tempo">
+
+<!ENTITY quicktext.other.label "Outro">
+<!ENTITY quicktext.clipboard.label "Clipboard">
+<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
+<!ENTITY quicktext.selection.label "Seleção">
+<!ENTITY quicktext.cursor.label "Position do Cursor">
+<!ENTITY quicktext.subject.label "Assunto">
+<!ENTITY quicktext.version.label "Versão do Thunderbird">
+<!ENTITY quicktext.image.label "Código base64 da imagem">
+
+<!ENTITY quicktext.attachments.label "Anexos">
+<!ENTITY quicktext.filename.label "Nome do arquivo">
+<!ENTITY quicktext.filenameAndSize.label "Nome do arquivo e tamanho">
+
+<!ENTITY quicktext.insertAs.label "Inserir como">
+<!ENTITY quicktext.HTML.label "HTML">
+<!ENTITY quicktext.text.label "Texto simples">
+
+<!ENTITY quicktext.none.label "Nenhum">
+
+<!ENTITY quicktext.keyword.label "Palavra-chave">
+<!ENTITY quicktext.browse.label "Procurar">
+
+<!ENTITY quicktext.insertTextFromFileAsHTML.label "Inserir arquivo como HTML">
+<!ENTITY quicktext.insertTextFromFileAsText.label "Inserir arquivo como texto">
