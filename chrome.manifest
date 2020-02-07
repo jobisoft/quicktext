@@ -7,6 +7,7 @@ content	quicktext	chrome/content/
 skin    quicktext classic/1.0 chrome/skin/
 
 locale	quicktext	de  	chrome/locale/de/
+locale	quicktext	pt-BR  	chrome/locale/pt_BR/
 locale	quicktext	en-US	chrome/locale/en-US/
 locale	quicktext	es  	chrome/locale/es/
 locale	quicktext	fr  	chrome/locale/fr/
