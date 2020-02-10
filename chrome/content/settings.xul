@@ -345,7 +345,7 @@
                         <textbox id="script-title" flex="1" oninput="quicktext.checkForScriptChanges(0);"/>
                       </row>
                       <vbox class="textarea-container" flex="1">
-                        <html:textarea id="script" rows="10" disabled="true" wrap="off" oninput="quicktext.checkForScriptChanges(1);"/>
+                        <html:textarea id="script" style="font-family:Consolas,Courier New,monospace;" rows="10" disabled="true" wrap="off" oninput="quicktext.checkForScriptChanges(1);"/>
                       </vbox>
                     </rows>
                   </grid>
