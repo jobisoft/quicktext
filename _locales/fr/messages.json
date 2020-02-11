@@ -1,5 +1,5 @@
 {
   "extensionDescription": {
-    "message": "Ajoute une barre d’outils à la fenêtre Email Edit afin que les modules de texte puissent être ajoutés facilement et rapidement. Il est également possible d'utiliser des variables telles que [[TO = prénom]]."
+    "message": "Ajoute une barre d’outils à la fenêtre Email Edit afin que les modules de texte puissent être ajoutés facilement et rapidement. Il est également possible d'utiliser des variables telles que [[TO=firstname]]."
   }
 }
