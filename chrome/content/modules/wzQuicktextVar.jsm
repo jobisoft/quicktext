@@ -366,7 +366,7 @@ wzQuicktextVar.prototype = {
     {
       // use ", " as default seperator
       let mainSep = (aVariables.length > 1) ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : ", ";
-      let lastSep = (aVariables.length > 2) ? aVariables[2].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : ", ";
+      let lastSep = (aVariables.length > 2) ? aVariables[2].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : mainSep;
       
       // clone the data, so we can work on it without mod the source object
       let entries = data[aVariables[0]].slice(0);
