@@ -98,7 +98,7 @@ wzQuicktextVar.prototype = {
     this.mData = tmpData;
   }
 ,
-  parse: function(aStr)
+  parse: function(aStr, aType)
   {
     // Reparse the text until there is no difference in the text
     // or that we parse 100 times (so we don't make an infinitive loop)
@@ -108,13 +108,13 @@ wzQuicktextVar.prototype = {
     do {
       count++;
       oldStr = aStr;
-      aStr = this.parseText(aStr);
+      aStr = this.parseText(aStr, aType);
     } while (aStr != oldStr && count < 20);
 
     return aStr;
   }
 ,
-  parseText: function(aStr)
+  parseText: function(aStr, aType)
   {
     var tags = this.getTags(aStr);
 
@@ -156,12 +156,14 @@ wzQuicktextVar.prototype = {
           break;
       }
 
-      // if the method "get_[tagname]" exists and there is enough arguments we call it
-      if (typeof this["get_"+ tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit)
-        value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
-      else
+      if (tags[i].tagName.toLowerCase() == "image" && aType != 1) {
+        // image tag may only be added in html mode
         value = "";
-
+      } else if (typeof this["get_"+ tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
+        // if the method "get_[tagname]" exists and there is enough arguments we call it
+        value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
+      }
+      
       aStr = this.replaceText(tags[i].tag, value, aStr);
     }
 

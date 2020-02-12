@@ -508,7 +508,7 @@ var quicktext = {
   {
     if (aStr != "")
     {
-      aStr = gQuicktextVar.parse(aStr);
+      aStr = gQuicktextVar.parse(aStr, aType);
 
       if (aStr != "")
       {
