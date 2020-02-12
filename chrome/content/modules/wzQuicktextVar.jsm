@@ -492,7 +492,7 @@ wzQuicktextVar.prototype = {
       // Tries to open the file and returning the content
       try {
         let fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-        fp.initWithPath(this.mQuicktext.parseFilePath(aVariables[0]);
+        fp.initWithPath(this.mQuicktext.parseFilePath(aVariables[0]));
         let rawContent = this.mQuicktext.readBinaryFile(fp);
         let decoder = new TextDecoder('utf-8');
         let content = this.mWindow.btoa(rawContent);
