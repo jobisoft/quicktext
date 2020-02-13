@@ -80,7 +80,7 @@
 <!ENTITY quicktext.cursor.label "Kurzor helyezkedő">
 <!ENTITY quicktext.subject.label "Tárgy">
 <!ENTITY quicktext.version.label "Thunderbird verzió">
-<!ENTITY quicktext.image.label "embedded HTML image">
+<!ENTITY quicktext.image.label "Embedded HTML image">
 
 <!ENTITY quicktext.attachments.label "Mellékletek">
 <!ENTITY quicktext.filename.label "Fájlnév">
