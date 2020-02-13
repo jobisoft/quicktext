@@ -554,6 +554,14 @@ wzQuicktextVar.prototype = {
       if (script.name == scriptName)
       {
         let returnValue = "";
+        
+        var referenceLineNumber = 0
+        try {
+          var error = variableNotAvailable; // provoke an error to create a reference for the other linenumber
+        } catch (eReference) {
+          referenceLineNumber = eReference.lineNumber;
+        }
+        
         try {
           var s = Components.utils.Sandbox(this.mWindow);
           s.mQuicktext = this;
@@ -567,8 +575,10 @@ wzQuicktextVar.prototype = {
             
             // Takes the linenumber where the error where and remove
             // the line that it was run on so we get the line in the script
-            var lineNumber = e.lineNumber-543;
-            this.mWindow.alert("You have an error in your script: "+ script.name +"\n"+ e.name +": "+ e.message +"\nLine ("+ lineNumber +"): "+ lines[lineNumber-1] );
+            // calculate it by using a reference error linenumber and an offset
+            // offset: 10 lines between "variableNotAvailable" and "evalInSandbox"
+            var lineNumber = e.lineNumber - referenceLineNumber - 10;
+            this.mWindow.alert(this.mWindow.quicktext.mStringBundle.getString("scriptError") + " " + script.name + "\n" + e.name + ": "+ e.message + "\n" + this.mWindow.quicktext.mStringBundle.getString("skriptLine") + " " + lineNumber + ": " + lines[lineNumber-1]);
           }
         }
 
@@ -577,7 +587,7 @@ wzQuicktextVar.prototype = {
     }
 
     //if we reach this point, the user requested an non-existing script
-    this.mWindow.alert("Quicktext skript <"+scriptName +"> not found!");
+    this.mWindow.alert(this.mWindow.quicktext.mStringBundle.getFormattedString("scriptNotFound", [scriptName]))
     return "";
   }
 ,
