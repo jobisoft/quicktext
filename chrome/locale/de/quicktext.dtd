@@ -75,12 +75,12 @@
 
 <!ENTITY quicktext.other.label "Andere">
 <!ENTITY quicktext.clipboard.label "Zwischenablage">
-<!ENTITY quicktext.header.label "Header (An, CC, BCC)">
+<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selektion">
 <!ENTITY quicktext.cursor.label "Cursorposition">
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
-<!ENTITY quicktext.image.label "HTML-Bild src (base64 kodiert)">
+<!ENTITY quicktext.image.label "eingebettetes HTML-Bild">
 
 <!ENTITY quicktext.attachments.label "Anhang">
 <!ENTITY quicktext.filename.label "Dateiname">
