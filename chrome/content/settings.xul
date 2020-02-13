@@ -258,7 +258,7 @@
                         </vbox>
                       </hbox>
                       <vbox class="textarea-container" flex="1" showfor="text">
-                        <html:textarea id="text" rows="10" disabled="true" candisable="true" wrap="off" oninput="quicktext.checkForTextChanges(1);"/>
+                        <html:textarea id="text" rows="10" disabled="true" candisable="true" wrap="on" oninput="quicktext.checkForTextChanges(1);"/>
                       </vbox>
                       <row showfor="text">
                         <label align="center" value="&quicktext.insertAs.label;:" control="text-type" style="margin-top: 6px" />
