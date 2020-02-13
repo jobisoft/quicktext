@@ -80,7 +80,7 @@
 <!ENTITY quicktext.cursor.label "Posición del cursos">
 <!ENTITY quicktext.subject.label "Asunto">
 <!ENTITY quicktext.version.label "Versión del Thunderbird">
-<!ENTITY quicktext.image.label "Imagen para src en base64">
+<!ENTITY quicktext.image.label "embedded HTML image">
 
 <!ENTITY quicktext.attachments.label "Adjuntos">
 <!ENTITY quicktext.filename.label "Nombre del fichero">
