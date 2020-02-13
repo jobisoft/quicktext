@@ -80,7 +80,7 @@
 <!ENTITY quicktext.cursor.label "Позиция курсора">
 <!ENTITY quicktext.subject.label "Тема">
 <!ENTITY quicktext.version.label "Версия Thunderbird">
-<!ENTITY quicktext.image.label "embedded HTML image">
+<!ENTITY quicktext.image.label "Embedded HTML image">
 
 <!ENTITY quicktext.attachments.label "Вложения">
 <!ENTITY quicktext.filename.label "Имя файла">
