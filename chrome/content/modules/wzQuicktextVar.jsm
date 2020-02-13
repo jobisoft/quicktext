@@ -575,7 +575,7 @@ wzQuicktextVar.prototype = {
             
             // Takes the linenumber where the error where and remove
             // the line that it was run on so we get the line in the script
-            // previously the line number was hardcoded; replaced by an offset and the line number of a reference error
+            // calculate it by using a reference error linenumber and an offset
             // offset: 10 lines between "variableNotAvailable" and "evalInSandbox"
             var lineNumber = e.lineNumber - referenceLineNumber - 10;
             this.mWindow.alert(this.mWindow.quicktext.mStringBundle.getString("scriptError") + " " + script.name + "\n" + e.name + ": "+ e.message + "\n" + this.mWindow.quicktext.mStringBundle.getString("skriptLine") + " " + lineNumber + ": " + lines[lineNumber-1]);
