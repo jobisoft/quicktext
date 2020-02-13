@@ -80,7 +80,7 @@
 <!ENTITY quicktext.cursor.label "Markörposition">
 <!ENTITY quicktext.subject.label "Ämne">
 <!ENTITY quicktext.version.label "Thunderbird version">
-<!ENTITY quicktext.image.label "embedded HTML image">
+<!ENTITY quicktext.image.label "Embedded HTML image">
 
 <!ENTITY quicktext.attachments.label "Bifogade filer">
 <!ENTITY quicktext.filename.label "Filnamn">
