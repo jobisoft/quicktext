@@ -578,7 +578,7 @@ wzQuicktextVar.prototype = {
             // calculate it by using a reference error linenumber and an offset
             // offset: 10 lines between "variableNotAvailable" and "evalInSandbox"
             var lineNumber = e.lineNumber - referenceLineNumber - 10;
-            this.mWindow.alert(gQuicktext.mStringBundle.GetStringFromNameFromName("scriptError") + " " + script.name + "\n" + e.name + ": "+ e.message + "\n" + this.mWindow.quicktext.mStringBundle.getString("scriptLine") + " " + lineNumber + ": " + lines[lineNumber-1]);
+            this.mWindow.alert(gQuicktext.mStringBundle.GetStringFromName("scriptError") + " " + script.name + "\n" + e.name + ": "+ e.message + "\n" + gQuicktext.mStringBundle.GetStringFromName("scriptLine") + " " + lineNumber + ": " + lines[lineNumber-1]);
           }
         }
 
