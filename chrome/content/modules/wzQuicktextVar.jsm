@@ -578,7 +578,7 @@ wzQuicktextVar.prototype = {
             // calculate it by using a reference error linenumber and an offset
             // offset: 10 lines between "variableNotAvailable" and "evalInSandbox"
             var lineNumber = e.lineNumber - referenceLineNumber - 10;
-            this.mWindow.alert(this.mWindow.quicktext.mStringBundle.getString("scriptError") + " " + script.name + "\n" + e.name + ": "+ e.message + "\n" + this.mWindow.quicktext.mStringBundle.getString("scriptLine") + " " + lineNumber + ": " + lines[lineNumber-1]);
+            this.mWindow.alert(gQuicktext.mStringBundle.GetStringFromNameFromName("scriptError") + " " + script.name + "\n" + e.name + ": "+ e.message + "\n" + this.mWindow.quicktext.mStringBundle.getString("scriptLine") + " " + lineNumber + ": " + lines[lineNumber-1]);
           }
         }
 
@@ -587,7 +587,7 @@ wzQuicktextVar.prototype = {
     }
 
     //if we reach this point, the user requested an non-existing script
-    this.mWindow.alert(this.mWindow.quicktext.mStringBundle.getFormattedString("scriptNotFound", [scriptName]))
+    this.mWindow.alert(gQuicktext.mStringBundle.formatStringFromName("scriptNotFound", [scriptName], 1))
     return "";
   }
 ,
@@ -645,7 +645,7 @@ wzQuicktextVar.prototype = {
       var value = {};
       if (typeof aVariables[2] != 'undefined')
          value.value = aVariables[2].split(";");
-      if (promptService.select(this.mWindow, this.mWindow.quicktext.mStringBundle.getString("inputTitle"), this.mWindow.quicktext.mStringBundle.getFormattedString("inputText", [aVariables[0]]), value.value.length, value.value, checkValue))
+      if (promptService.select(this.mWindow, gQuicktext.mStringBundle.GetStringFromName("inputTitle"), gQuicktext.mStringBundle.formatStringFromName("inputText", [aVariables[0]], 1), value.value.length, value.value, checkValue))
         this.mData['INPUT'].data[aVariables[0]] = value.value[checkValue.value];
       else
         this.mData['INPUT'].data[aVariables[0]] = "";
@@ -656,7 +656,7 @@ wzQuicktextVar.prototype = {
       var value = {};
       if (typeof aVariables[2] != 'undefined')
         value.value = aVariables[2];
-      if (promptService.prompt(this.mWindow, this.mWindow.quicktext.mStringBundle.getString("inputTitle"), this.mWindow.quicktext.mStringBundle.getFormattedString("inputText", [aVariables[0]]), value, null, checkValue))
+      if (promptService.prompt(this.mWindow, gQuicktext.mStringBundle.GetStringFromName("inputTitle"), gQuicktext.mStringBundle.formatStringFromName("inputText", [aVariables[0]], 1), value, null, checkValue))
         this.mData['INPUT'].data[aVariables[0]] = value.value;
       else
         this.mData['INPUT'].data[aVariables[0]] = "";

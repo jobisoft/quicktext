@@ -33,7 +33,8 @@ var gQuicktext = {
   mObserverList:        [],
   mOS:                  "WINNT",
   mCollapseState:       "",
-  mSelectionContent:    ""  
+  mSelectionContent:    "" ,
+  mStringBundle: Services.strings.createBundle("chrome://quicktext/locale/quicktext.properties")	
 ,
   get viewToolbar() { return this.mViewToolbar; },
   set viewToolbar(aViewToolbar)

@@ -18,10 +18,6 @@
 ]]>
   </script>
 
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="quicktextStringBundle" src="chrome://quicktext/locale/quicktext.properties"/>
-  </stringbundleset>
-
   <commandset id="composeCommands">
     <commandset id="quicktextCommands">
       <command id="cmd_quicktextKey1" disabled="true" />

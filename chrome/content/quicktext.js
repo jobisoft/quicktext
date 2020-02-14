@@ -16,7 +16,6 @@ var quicktextStateListener = {
 }
 
 var quicktext = {
-  mStringBundle:                null,
   mLoaded:                      false,
   mLastFocusedElement:          null,
   mShortcuts:                   {},
@@ -29,8 +28,6 @@ var quicktext = {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
-
-      this.mStringBundle = document.getElementById("quicktextStringBundle");
 
       gQuicktext.addObserver(this);
       if (!gQuicktext.loadSettings(false))
@@ -112,7 +109,7 @@ var quicktext = {
         let field = fields[i];
         let fieldtype = field.split("-")[0];
         if (document.getElementById(field)) {
-            document.getElementById(field).setAttribute("label", this.mStringBundle.getFormattedString(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)]));
+            document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
         }
     }
 
@@ -642,7 +639,7 @@ var quicktext = {
 ,
   insertContentFromFile: async function(aType)
   {
-    if ((file = gQuicktext.pickFile(window, aType, 0, this.mStringBundle.getString("insertFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, aType, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
       await this.insertBody(gQuicktext.readFile(file), aType, true);
   }
 ,

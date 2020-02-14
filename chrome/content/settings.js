@@ -2,7 +2,6 @@ var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQu
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 
 var quicktext = {
-  mStringBundle:        null,
   mChangesMade:         false,
   mTextChangesMade:     [],
   mScriptChangesMade:   [],
@@ -19,7 +18,6 @@ var quicktext = {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
-      this.mStringBundle = document.getElementById("quicktextStringBundle");
 
       var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).QueryInterface(Components.interfaces.nsIXULRuntime);
       this.mOS = appInfo.OS;
@@ -82,8 +80,8 @@ var quicktext = {
       if (promptService)
       {
         result = promptService.confirmEx(window,
-                                         this.mStringBundle.getString("saveMessageTitle"),
-                                         this.mStringBundle.getString("saveMessage"),
+                                         gQuicktext.mStringBundle.GetStringFromName("saveMessageTitle"),
+                                         gQuicktext.mStringBundle.GetStringFromName("saveMessage"),
                                          (promptService.BUTTON_TITLE_SAVE * promptService.BUTTON_POS_0) +
                                          (promptService.BUTTON_TITLE_CANCEL * promptService.BUTTON_POS_1) +
                                          (promptService.BUTTON_TITLE_DONT_SAVE * promptService.BUTTON_POS_2),
@@ -155,7 +153,7 @@ var quicktext = {
       {
         var title = document.getElementById('text-title').value;
         if (title.replace(/[\s]/g, '') == "")
-          title = this.mStringBundle.getString("newTemplate");
+          title = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
 
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'name', title);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'text', document.getElementById('text').value);
@@ -174,7 +172,7 @@ var quicktext = {
       {
         var title = document.getElementById('text-title').value;
         if (title.replace(/[\s]/g, '') == "")
-          title = this.mStringBundle.getString("newGroup");
+          title = gQuicktext.mStringBundle.GetStringFromName("newGroup");
 
         this.saveGroupCell(this.mPickedIndex[0], 'name', title);
       }
@@ -213,7 +211,7 @@ var quicktext = {
     {
       var title = document.getElementById('script-title').value;
       if (title.replace(/[\s]/g, '') == "")
-        title = this.mStringBundle.getString("newScript");
+        title = gQuicktext.mStringBundle.GetStringFromName("newScript");
 
       this.saveScriptCell(this.mScriptIndex, 'name', title);
       this.saveScriptCell(this.mScriptIndex, 'script', document.getElementById('script').value);
@@ -286,9 +284,9 @@ var quicktext = {
       case 0:
         if (value.replace(/[\s]/g, '') == "")
           if (this.mPickedIndex[1] > -1)
-            value = this.mStringBundle.getString("newTemplate");
+            value = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
           else
-            value = this.mStringBundle.getString("newGroup");
+            value = gQuicktext.mStringBundle.GetStringFromName("newGroup");
         break;
       case 2:
         if (this.shortcutTypeAdv())
@@ -346,7 +344,7 @@ var quicktext = {
     {
       case 0:
         if (value.replace(/[\s]/g, '') == "")
-          value = this.mStringBundle.getString("newScript");
+          value = gQuicktext.mStringBundle.GetStringFromName("newScript");
         break;
     }
 
@@ -469,7 +467,7 @@ var quicktext = {
         let field = fields[i];
         let fieldtype = field.split("-")[0];
         if (document.getElementById(field)) {
-            document.getElementById(field).setAttribute("label", this.mStringBundle.getFormattedString(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)]));
+            document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
         }
     }
 
@@ -627,14 +625,14 @@ var quicktext = {
 ,
   insertFileVariable: function()
   {
-    if ((file = gQuicktext.pickFile(window, -1, 0, this.mStringBundle.getString("insertFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
       this.enableSave();
   }
 ,
   insertImageVariable: function()
   {
-    if ((file = gQuicktext.pickFile(window, -1, 0, this.mStringBundle.getString("insertImage"))) != null)
+    if ((file = gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
       this.insertVariable('IMAGE=' + file.path);
       this.enableSave();
   }
@@ -645,13 +643,13 @@ var quicktext = {
    */
   exportTemplatesToFile: function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 1, this.mStringBundle.getString("exportFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportTemplatesToFile(file);
   }
 ,
   importTemplatesFromFile: function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 0, this.mStringBundle.getString("importFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
     {
       this.saveText();
       this.saveScript();
@@ -668,13 +666,13 @@ var quicktext = {
 ,
   exportScriptsToFile: function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 1, this.mStringBundle.getString("exportFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportScriptsToFile(file);
   }
 ,
   importScriptsFromFile: function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 0, this.mStringBundle.getString("importFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
     {
       this.saveText();
       this.saveScript();
@@ -689,7 +687,7 @@ var quicktext = {
 ,
   browseAttachment: function()
   {
-    if ((file = gQuicktext.pickFile(window, -1, 0, this.mStringBundle.getString("attachmentFile"))) != null)
+    if ((file = gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("attachmentFile"))) != null)
     {
       var filePath = file.path;
       var attachments = document.getElementById('text-attachments').value;
@@ -750,7 +748,7 @@ var quicktext = {
 
     if (!this.mTreeArray[index])
     {
-      document.getElementById('text-caption').textContent = this.mStringBundle.getString("group");
+      document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("group");
       document.getElementById('text-title').value = "";
       this.showElement("group", true);
       this.mPickedIndex = null;
@@ -772,7 +770,7 @@ var quicktext = {
     if (textIndex > -1)
     {
       var text = gQuicktext.getText(groupIndex, textIndex, true);
-      document.getElementById('text-caption').textContent = this.mStringBundle.getString("template");
+      document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("template");
 
       document.getElementById('text-title').value = text.name;
       document.getElementById('text').value = text.text;
@@ -780,7 +778,7 @@ var quicktext = {
       document.getElementById('text-subject').value = text.subject;
       document.getElementById('text-attachments').value = text.attachments;
 
-      document.getElementById('label-shortcutModifier').value = this.mStringBundle.getString(document.getElementById('select-shortcutModifier').value +"Key") +"+";
+      document.getElementById('label-shortcutModifier').value = gQuicktext.mStringBundle.GetStringFromName(document.getElementById('select-shortcutModifier').value +"Key") +"+";
 
 
       if (this.shortcutTypeAdv())
@@ -813,7 +811,7 @@ var quicktext = {
     }
     else
     {
-      document.getElementById('text-caption').textContent = this.mStringBundle.getString("group");
+      document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("group");
 
       document.getElementById("text-title").value = gQuicktext.getGroup(groupIndex, true).name;
       document.getElementById("text").value = "";
@@ -877,7 +875,7 @@ var quicktext = {
    */
   addGroup: function()
   {
-    var title = this.mStringBundle.getString("newGroup");
+    var title = gQuicktext.mStringBundle.GetStringFromName("newGroup");
     this.saveText();
 
     gQuicktext.addGroup(title, true);
@@ -901,7 +899,7 @@ var quicktext = {
 ,
   addText: function()
   {
-    var title = this.mStringBundle.getString("newTemplate");
+    var title = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
     this.saveText();
 
     var groupIndex = -1;
@@ -954,7 +952,7 @@ var quicktext = {
       if (textIndex > -1)
         title = gQuicktext.getText(groupIndex, textIndex, true).name;
 
-      if (confirm (this.mStringBundle.getFormattedString("remove", [title])))
+      if (confirm (gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1)))
       {
         this.mPickedIndex = null;
 
@@ -1023,7 +1021,7 @@ var quicktext = {
   {
     this.saveScript();
 
-    var title = this.mStringBundle.getString("newScript");
+    var title = gQuicktext.mStringBundle.GetStringFromName("newScript");
     gQuicktext.addScript(title, true);
 
     this.updateScriptGUI();
@@ -1048,7 +1046,7 @@ var quicktext = {
     if (scriptIndex != null)
     {
       var title = gQuicktext.getScript(scriptIndex, true).name;
-      if (confirm (this.mStringBundle.getFormattedString("remove", [title])))
+      if (confirm (gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1)))
       {
         gQuicktext.removeScript(scriptIndex, true);
         this.changesMade();

@@ -7,10 +7,6 @@
 
   <script type="application/x-javascript" src="chrome://quicktext/content/main.js" /> 
 
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="quicktextStringBundle" src="chrome://quicktext/locale/quicktext.properties"/>
-  </stringbundleset>
-
   <menupopup id="taskPopup">
     <menuseparator insertbefore="prefSep" />
     <menuitem id="quicktext-settings" label="&quicktext.label;" oncommand="quicktext.openSettings();" insertbefore="prefSep" class="menu-iconic quicktext-icon menuitem-iconic" />

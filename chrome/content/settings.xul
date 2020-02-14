@@ -29,10 +29,6 @@
   <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
   <script type="application/x-javascript" src="chrome://quicktext/content/settings.js" />
 
-  <stringbundleset id="stringbundleset">
-    <stringbundle id="quicktextStringBundle" src="chrome://quicktext/locale/quicktext.properties"/>
-  </stringbundleset>
-
   <keyset id="quicktextSettingsKeys">
     <key keycode="VK_ESCAPE" xulkey="false" oncommand="quicktext.close(true);"/>
     <key key="s" oncommand="quicktext.save();" modifiers="control"/>
