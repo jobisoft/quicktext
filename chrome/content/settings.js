@@ -623,16 +623,16 @@ var quicktext = {
     this.enableSave();    
   }
 ,
-  insertFileVariable: function()
+  insertFileVariable: async function()
   {
-    if ((file = gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
       this.enableSave();
   }
 ,
-  insertImageVariable: function()
+  insertImageVariable: async function()
   {
-    if ((file = gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
+    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
       this.insertVariable('IMAGE=' + file.path);
       this.enableSave();
   }
@@ -641,15 +641,15 @@ var quicktext = {
   /*
    * IMPORT/EXPORT FUNCTIONS
    */
-  exportTemplatesToFile: function()
+  exportTemplatesToFile: async function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportTemplatesToFile(file);
   }
 ,
-  importTemplatesFromFile: function()
+  importTemplatesFromFile: async function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
     {
       this.saveText();
       this.saveScript();
@@ -664,15 +664,15 @@ var quicktext = {
     }
   }
 ,
-  exportScriptsToFile: function()
+  exportScriptsToFile: async function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportScriptsToFile(file);
   }
 ,
-  importScriptsFromFile: function()
+  importScriptsFromFile: async function()
   {
-    if ((file = gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
     {
       this.saveText();
       this.saveScript();
@@ -685,9 +685,9 @@ var quicktext = {
     }
   }
 ,
-  browseAttachment: function()
+  browseAttachment: async function()
   {
-    if ((file = gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("attachmentFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("attachmentFile"))) != null)
     {
       var filePath = file.path;
       var attachments = document.getElementById('text-attachments').value;

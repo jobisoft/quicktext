@@ -699,7 +699,7 @@ var gQuicktext = {
     await OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
   }
 ,
-  pickFile: function(aWindow, aType, aMode, aTitle)
+  pickFile: async function(aWindow, aType, aMode, aTitle)
   {
     var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
 
@@ -731,15 +731,11 @@ var gQuicktext = {
 
     filePicker.appendFilters(filePicker.filterAll);
 
-    //Lazy async-to-sync implementation with ACK from Philipp Kewisch
-    //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
-    let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
-    let rv, result;
-    filePicker.open(result => {
-      rv = result;
-      inspector.exitNestedEventLoop();
+    let rv = await new Promise(function(resolve, reject) {
+      filePicker.open(result => {
+        resolve(result);
+      });
     });
-    inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
 
     if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
     return null;

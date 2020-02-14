@@ -639,7 +639,7 @@ var quicktext = {
 ,
   insertContentFromFile: async function(aType)
   {
-    if ((file = gQuicktext.pickFile(window, aType, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, aType, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
       await this.insertBody(gQuicktext.readFile(file), aType, true);
   }
 ,
