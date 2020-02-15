@@ -43,7 +43,7 @@ caption {
   font-weight: normal;
 }
 
-groupbox > .box-title > .header {
+dialog[OS=WINNT] groupbox > .box-title > .header {
   font-weight: bold;
   margin-top: -2px;
   margin-bottom:1em;
