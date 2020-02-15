@@ -75,7 +75,7 @@
 
 <!ENTITY quicktext.other.label "Más">
 <!ENTITY quicktext.clipboard.label "Vágólap">
-<!ENTITY quicktext.header.label "Fejléc (Címzett, Másolat, Rejtett másolat)">
+<!ENTITY quicktext.header.label "Fejléc (Címzett [To], Másolat [Cc], Rejtett másolat [Bcc])">
 <!ENTITY quicktext.selection.label "Kijelölés">
 <!ENTITY quicktext.cursor.label "Kurzor helyezkedő">
 <!ENTITY quicktext.subject.label "Tárgy">
