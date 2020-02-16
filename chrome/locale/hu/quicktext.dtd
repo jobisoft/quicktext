@@ -43,7 +43,7 @@
 <!ENTITY quicktext.addGroup.label "Csoport hozzáadása">
 <!ENTITY quicktext.addTemplate.label "Sablon hozzáadása">
 <!ENTITY quicktext.addScript.label "Parancsfájl hozzáadása">
-<!ENTITY quicktext.getScript.label "Community Scripts">
+<!ENTITY quicktext.getScript.label "Közösségi parancsfájlok">
 <!ENTITY quicktext.remove.label "Eltávolítás">
 <!ENTITY quicktext.shortcut.label "Gyorsbillentyű">
 
@@ -75,12 +75,12 @@
 
 <!ENTITY quicktext.other.label "Más">
 <!ENTITY quicktext.clipboard.label "Vágólap">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
-<!ENTITY quicktext.selection.label "Selection">
+<!ENTITY quicktext.header.label "Fejléc (Címzett [To], Másolat [Cc], Rejtett másolat [Bcc])">
+<!ENTITY quicktext.selection.label "Kijelölés">
 <!ENTITY quicktext.cursor.label "Kurzor helyezkedő">
 <!ENTITY quicktext.subject.label "Tárgy">
 <!ENTITY quicktext.version.label "Thunderbird verzió">
-<!ENTITY quicktext.image.label "Embedded HTML image">
+<!ENTITY quicktext.image.label "Beágyazott HTML-kép">
 
 <!ENTITY quicktext.attachments.label "Mellékletek">
 <!ENTITY quicktext.filename.label "Fájlnév">
