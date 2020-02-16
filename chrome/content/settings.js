@@ -630,14 +630,14 @@ var quicktext = {
 ,
   insertFileVariable: async function()
   {
-    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
       this.enableSave();
   }
 ,
   insertImageVariable: async function()
   {
-    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 4, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
       this.insertVariable('IMAGE=' + file.path);
       this.enableSave();
   }
@@ -648,13 +648,13 @@ var quicktext = {
    */
   exportTemplatesToFile: async function()
   {
-    if ((file = await gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 3, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportTemplatesToFile(file);
   }
 ,
   importTemplatesFromFile: async function()
   {
-    if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
     {
       this.saveText();
       this.saveScript();
@@ -671,13 +671,13 @@ var quicktext = {
 ,
   exportScriptsToFile: async function()
   {
-    if ((file = await gQuicktext.pickFile(window, 2, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 3, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportScriptsToFile(file);
   }
 ,
   importScriptsFromFile: async function()
   {
-    if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
     {
       this.saveText();
       this.saveScript();

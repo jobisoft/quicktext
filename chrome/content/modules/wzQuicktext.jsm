@@ -702,11 +702,13 @@ var gQuicktext = {
   pickFile: async function(aWindow, aType, aMode, aTitle)
   {
     var filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
-
+    let checkFileEncoding = true;
+    
     switch(aMode)
     {
       case 1:
         filePicker.init(aWindow, aTitle, filePicker.modeSave);
+        checkFileEncoding = false;
         break;
       default:
         filePicker.init(aWindow, aTitle, filePicker.modeOpen);
@@ -715,17 +717,26 @@ var gQuicktext = {
 
     switch(aType)
     {
-      case 0:
+      case 0: // insert TXT file
         filePicker.appendFilters(filePicker.filterText);
         filePicker.defaultExtension = "txt";
         break;
-      case 1:
+      case 1: // insert HTML file
         filePicker.appendFilters(filePicker.filterHTML);
         filePicker.defaultExtension = "html";
         break;
-      case 2:
+      case 2: // insert file
+        break;
+
+      case 3: // Quicktext XML file
         filePicker.appendFilters(filePicker.filterXML);
         filePicker.defaultExtension = "xml";
+        break;
+
+      case 4: // images
+        filePicker.appendFilters(filePicker.filterImages);
+      default: // attachments
+        checkFileEncoding = false;
         break;
     }
 
@@ -736,9 +747,19 @@ var gQuicktext = {
         resolve(result);
       });
     });
-
-    if(rv == filePicker.returnOK || rv == filePicker.returnReplace) return filePicker.file;
-    return null;
+    
+    if(rv == filePicker.returnOK || rv == filePicker.returnReplace) {
+      if (checkFileEncoding) {
+        let content = this.readFile(filePicker.file);
+        if (content.includes(String.fromCharCode(0xFFFD))) {
+          aWindow.alert(gQuicktext.mStringBundle.GetStringFromName("fileNotUTF8"));
+          return null;
+        }
+      }
+      return filePicker.file;
+    } else {
+      return null;
+    }
   }
 ,
   getTypeFromExtension(aFile)
