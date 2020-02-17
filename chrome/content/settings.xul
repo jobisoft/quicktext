@@ -237,14 +237,20 @@
                               </menu>
                               <menu label="&quicktext.other.label;">
                                 <menupopup>
-                                  <menuitem label="&quicktext.header.label;" oncommand="quicktext.insertVariable('HEADER=type|value');" />
-                                  <menuitem label="&quicktext.selection.label;" oncommand="quicktext.insertVariable('SELECTION');" />
                                   <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
+                                  <menuitem label="&quicktext.counter.label;" oncommand="quicktext.insertVariable('COUNTER');" />
+                                  <menuitem label="&quicktext.input.label;" oncommand="quicktext.insertVariable('INPUT=name|type|options');" />
+                                  <menuitem label="&quicktext.selection.label;" oncommand="quicktext.insertVariable('SELECTION');" />
+                                  <menuitem label="&quicktext.orgatt.label;" oncommand="quicktext.insertVariable('ORGATT=\\n');" />
+                                  <menuitem label="&quicktext.orgheader.label;" oncommand="quicktext.insertVariable('ORGHEADER=type|\\n');" />
                                   <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />
-                                  <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
-                                  <menuitem label="&quicktext.cursor.label;" oncommand="quicktext.insertVariable('CURSOR');" />
-                                  <menuitem label="&quicktext.file.label;" oncommand="quicktext.insertFileVariable();" />
+                                  <menuitem label="&quicktext.url.label;" oncommand="quicktext.insertVariable('URL=url|data');" />
+                                  <menuitem label="&quicktext.insertfile.label;" oncommand="quicktext.insertFileVariable();" />
                                   <menuitem label="&quicktext.image.label;" oncommand="quicktext.insertImageVariable();" />
+                                  <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
+                                  <menuseparator/>
+                                  <menuitem label="&quicktext.header.label;" oncommand="quicktext.insertVariable('HEADER=type|value');" />
+                                  <menuitem label="&quicktext.cursor.label;" oncommand="quicktext.insertVariable('CURSOR');" />
                                 </menupopup>
                               </menu>
                               <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />

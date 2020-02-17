@@ -75,12 +75,18 @@
 
 <!ENTITY quicktext.other.label "Other">
 <!ENTITY quicktext.clipboard.label "Clipboard">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
+<!ENTITY quicktext.header.label "Add header (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Selection">
-<!ENTITY quicktext.cursor.label "Cursor position">
+<!ENTITY quicktext.cursor.label "Set cursor position">
 <!ENTITY quicktext.subject.label "Subject">
 <!ENTITY quicktext.version.label "Thunderbird version">
 <!ENTITY quicktext.image.label "Embedded HTML image">
+<!ENTITY quicktext.counter.label "Counter">
+<!ENTITY quicktext.input.label "Input value from user prompt">
+<!ENTITY quicktext.orgatt.label "Original attachment info">
+<!ENTITY quicktext.orgheader.label "Original header info">
+<!ENTITY quicktext.url.label "Response from URL">
+<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
 
 <!ENTITY quicktext.attachments.label "Attachments">
 <!ENTITY quicktext.filename.label "Filename">

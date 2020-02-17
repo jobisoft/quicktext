@@ -115,6 +115,7 @@
           <menu label="&quicktext.other.label;">
             <menupopup>
               <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
+              <menuitem label="&quicktext.counter.label;" oncommand="quicktext.insertVariable('COUNTER');" />
               <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />
               <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
             </menupopup>

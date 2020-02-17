@@ -81,6 +81,12 @@
 <!ENTITY quicktext.subject.label "Tárgy">
 <!ENTITY quicktext.version.label "Thunderbird verzió">
 <!ENTITY quicktext.image.label "Beágyazott HTML-kép">
+<!ENTITY quicktext.counter.label "Counter">
+<!ENTITY quicktext.input.label "Input value from user prompt">
+<!ENTITY quicktext.orgatt.label "Original attachment info">
+<!ENTITY quicktext.orgheader.label "Original header info">
+<!ENTITY quicktext.url.label "Response from URL">
+<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
 
 <!ENTITY quicktext.attachments.label "Mellékletek">
 <!ENTITY quicktext.filename.label "Fájlnév">

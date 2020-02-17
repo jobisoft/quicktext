@@ -75,12 +75,18 @@
 
 <!ENTITY quicktext.other.label "Andere">
 <!ENTITY quicktext.clipboard.label "Zwischenablage">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
+<!ENTITY quicktext.header.label "Header (To, Cc, Bcc) hinzufügen">
 <!ENTITY quicktext.selection.label "Selektion">
-<!ENTITY quicktext.cursor.label "Cursorposition">
+<!ENTITY quicktext.cursor.label "Cursor positionieren">
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
 <!ENTITY quicktext.image.label "Eingebettetes HTML-Bild">
+<!ENTITY quicktext.counter.label "Counter">
+<!ENTITY quicktext.input.label "Eingabewert von einer Eingabeaufforderung">
+<!ENTITY quicktext.orgatt.label "Ursprüngliche Anhangsinformationen">
+<!ENTITY quicktext.orgheader.label "Ursprüngliche Header-Informationen">
+<!ENTITY quicktext.url.label "Rückgabewert einer URL-Anfrage">
+<!ENTITY quicktext.insertfile.label "Inhalt einer Datei (Quicktext-Variablen werden ersetzt)">
 
 <!ENTITY quicktext.attachments.label "Anhang">
 <!ENTITY quicktext.filename.label "Dateiname">
