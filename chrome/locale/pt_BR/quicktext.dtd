@@ -23,7 +23,7 @@
 <!ENTITY quicktext.controlKey.label "Ctrl">
 <!ENTITY quicktext.metaKey.label "Meta">
 <!ENTITY quicktext.tabKey.label "Tab">
-<!ENTITY quicktext.spaceKey.label "Espaco">
+<!ENTITY quicktext.spaceKey.label "Espaço">
 <!ENTITY quicktext.enterKey.label "Enter">
 <!ENTITY quicktext.f2Key.label "F2">
 <!ENTITY quicktext.f4Key.label "F4">
@@ -34,8 +34,8 @@
 
 <!ENTITY quicktext.defaultImport.label "Importar na inicialização">
 
-<!ENTITY quicktext.sharingTemplates.label "Modelos compartilhando ">
-<!ENTITY quicktext.sharingScripts.label "Scripts modelos">
+<!ENTITY quicktext.sharingTemplates.label "Modelos compartilhandos">
+<!ENTITY quicktext.sharingScripts.label "Scripts compartilhandos">
 <!ENTITY quicktext.export.label "Exportar">
 <!ENTITY quicktext.import.label "Importar">
 
@@ -60,33 +60,33 @@
 <!ENTITY quicktext.fullname.label "Nome completo">
 <!ENTITY quicktext.displayname.label "Nome em Exibição">
 <!ENTITY quicktext.nickname.label "Apelido">
-<!ENTITY quicktext.email.label "Email">
+<!ENTITY quicktext.email.label "E-mail">
 <!ENTITY quicktext.worknumber.label "Número de Trabalho">
 <!ENTITY quicktext.faxnumber.label "Número de fax">
-<!ENTITY quicktext.homenumber.label "Homenumber">
-<!ENTITY quicktext.cellularnumber.label "Cellularnumber">
-<!ENTITY quicktext.jobtitle.label "Jobtitle">
-<!ENTITY quicktext.custom1.label "Custom 1">
-<!ENTITY quicktext.custom2.label "Custom 2">
-<!ENTITY quicktext.custom3.label "Custom 3">
-<!ENTITY quicktext.custom4.label "Custom 4">
+<!ENTITY quicktext.homenumber.label "Número Residencial">
+<!ENTITY quicktext.cellularnumber.label "Número de Celular">
+<!ENTITY quicktext.jobtitle.label "Titulo no trabalho">
+<!ENTITY quicktext.custom1.label "Personalizado 1">
+<!ENTITY quicktext.custom2.label "Personalizado 2">
+<!ENTITY quicktext.custom3.label "Personalizado 3">
+<!ENTITY quicktext.custom4.label "Personalizado 4">
 
 <!ENTITY quicktext.dateTime.label "Data/Tempo">
 
-<!ENTITY quicktext.other.label "Outro">
-<!ENTITY quicktext.clipboard.label "Clipboard">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
+<!ENTITY quicktext.other.label "Outros">
+<!ENTITY quicktext.clipboard.label "Área de transferência">
+<!ENTITY quicktext.header.label "Cabeçalho (To, Cc, Bcc)">
 <!ENTITY quicktext.selection.label "Seleção">
-<!ENTITY quicktext.cursor.label "Position do Cursor">
+<!ENTITY quicktext.cursor.label "Posição do Cursor">
 <!ENTITY quicktext.subject.label "Assunto">
 <!ENTITY quicktext.version.label "Versão do Thunderbird">
 <!ENTITY quicktext.image.label "Embedded HTML image">
-<!ENTITY quicktext.counter.label "Counter">
-<!ENTITY quicktext.input.label "Input value from user prompt">
-<!ENTITY quicktext.orgatt.label "Original attachment info">
-<!ENTITY quicktext.orgheader.label "Original header info">
-<!ENTITY quicktext.url.label "Response from URL">
-<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
+<!ENTITY quicktext.counter.label "Contador">
+<!ENTITY quicktext.input.label "Valor de entrada do prompt do usuário">
+<!ENTITY quicktext.orgatt.label "Informações do anexo original">
+<!ENTITY quicktext.orgheader.label "Informações do cabeçalho original">
+<!ENTITY quicktext.url.label "Resposta da URL">
+<!ENTITY quicktext.insertfile.label "Conteúdo do arquivo (as variáveis do quicktext serão substituídas)">
 
 <!ENTITY quicktext.attachments.label "Anexos">
 <!ENTITY quicktext.filename.label "Nome do arquivo">
