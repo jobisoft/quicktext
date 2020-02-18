@@ -549,7 +549,11 @@ var quicktext = {
 ,
   parseCursorTag: async function(aEditor)
   {
+    //Based on https://searchfox.org/comm-central/source/editor/ui/dialogs/content/EdReplace.js#255
     var searchRange = aEditor.document.createRange();
+    var rootNode = aEditor.rootElement;
+    searchRange.selectNodeContents(rootNode);    
+
     var startRange = aEditor.document.createRange();
     startRange.setStart(searchRange.startContainer, searchRange.startOffset);
     startRange.setEnd(searchRange.startContainer, searchRange.startOffset);
