@@ -516,12 +516,6 @@ var quicktext = {
           if (aHandleTransaction)
             editor.beginTransaction();
   
-          if (editor.selection.rangeCount > 0)
-          {
-            var startRange = editor.selection.getRangeAt(0).cloneRange();
-            var specialRange = [startRange.startContainer.parentNode, this.getChildNodeIndex(startRange.startContainer.parentNode, startRange.startContainer), startRange.startOffset];
-          }
-
           try {
             if (gMsgCompose.composeHTML && aType > 0)
             {
@@ -537,18 +531,11 @@ var quicktext = {
           }
           catch(e) { Components.utils.reportError(e); }
   
-          if (editor.selection.rangeCount > 0)
-            var endRange = editor.selection.getRangeAt(0).cloneRange();
-  
           try {
-            if (aStr.indexOf('[[CURSOR]]') > -1 && specialRange && endRange)
+            if (aStr.indexOf('[[CURSOR]]') > -1)
             {
-              var newRange = editor.document.createRange();
-              newRange.setStart(specialRange[0].childNodes[specialRange[1]], specialRange[2]);
-              newRange.setEnd(endRange.endContainer, endRange.endOffset);
-  
               // Take care of the CURSOR-tag
-              await this.parseCursorTag(editor, newRange);
+              await this.parseCursorTag(editor);
             }
           }
           catch(e) { Components.utils.reportError(e); }
@@ -560,14 +547,15 @@ var quicktext = {
     }
   }
 ,
-  parseCursorTag: async function(aEditor, aSearchRange)
+  parseCursorTag: async function(aEditor)
   {
+    var searchRange = aEditor.document.createRange();
     var startRange = aEditor.document.createRange();
-    startRange.setStart(aSearchRange.startContainer, aSearchRange.startOffset);
-    startRange.setEnd(aSearchRange.startContainer, aSearchRange.startOffset);
+    startRange.setStart(searchRange.startContainer, searchRange.startOffset);
+    startRange.setEnd(searchRange.startContainer, searchRange.startOffset);
     var endRange = aEditor.document.createRange();
-    endRange.setStart(aSearchRange.endContainer, aSearchRange.endOffset);
-    endRange.setEnd(aSearchRange.endContainer, aSearchRange.endOffset);
+    endRange.setStart(searchRange.endContainer, searchRange.endOffset);
+    endRange.setEnd(searchRange.endContainer, searchRange.endOffset);
 
     var finder = Components.classes["@mozilla.org/embedcomp/rangefind;1"].createInstance().QueryInterface(Components.interfaces.nsIFind);
     finder.caseSensitive = true;
@@ -591,7 +579,7 @@ var quicktext = {
       }
       
       // Search.
-      foundRange = finder.Find("[[CURSOR]]", aSearchRange, startRange, endRange);
+      foundRange = finder.Find("[[CURSOR]]", searchRange, startRange, endRange);
       
       // If we have found at least one tag, but the last search failed, we are done.
       if (found && !foundRange) {
@@ -624,17 +612,6 @@ var quicktext = {
     {
       this.dumpTree(aNode.childNodes[i], aLevel+1);
     }
-  }
-,
-  getChildNodeIndex: function(aParentNode, aChildNode)
-  {
-    for(var i = 0; i < aParentNode.childNodes.length; i++)
-    {
-      if (aParentNode.childNodes[i] == aChildNode)
-        return i;
-    }
-
-    return null;
   }
 ,
   insertContentFromFile: async function(aType)
