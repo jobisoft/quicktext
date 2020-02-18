@@ -137,13 +137,13 @@ wzQuicktextVar.prototype = {
         case 'subject':
         case 'time':
         case 'version':
+        case 'orgatt':
           variable_limit = 0;
           break;
         case 'file':
         case 'image':
         case 'from':
         case 'input':
-        case 'orgatt':
         case 'orgheader':
         case 'script':
         case 'to':
