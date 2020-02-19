@@ -81,7 +81,7 @@
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
 <!ENTITY quicktext.image.label "Eingebettetes HTML-Bild">
-<!ENTITY quicktext.counter.label "Counter">
+<!ENTITY quicktext.counter.label "Zähler">
 <!ENTITY quicktext.input.label "Eingabewert von einer Eingabeaufforderung">
 <!ENTITY quicktext.orgatt.label "Ursprüngliche Anhangsinformationen">
 <!ENTITY quicktext.orgheader.label "Ursprüngliche Header-Informationen">
