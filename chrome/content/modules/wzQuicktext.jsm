@@ -2,6 +2,7 @@ var { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/module
 var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
 var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
 var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 
