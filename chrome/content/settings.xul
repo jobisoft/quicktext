@@ -81,7 +81,7 @@
             <hbox flex="1">
               <vbox flex="1">
                 <groupbox>
-                  <hbox class="box-title"><label class="header">&quicktext.settings.label;</label></hbox>
+                  <hbox class="box-title"><label class="header" value="&quicktext.settings.label;"/></hbox>
                   <vbox>
                     <checkbox label="&quicktext.rightClickSetting.label;" id="checkbox-viewPopup" oncommand="quicktext.checkForGeneralChanges(0);" />
                     <checkbox label="&quicktext.collapseSetting.label;" id="checkbox-collapseGroup" oncommand="quicktext.checkForGeneralChanges(1);" />
@@ -118,18 +118,18 @@
                   </vbox>
                 </groupbox>
                 <groupbox>
-                  <hbox class="box-title"><label class="header">&quicktext.defaultImport.label;</label></hbox>
+                  <hbox class="box-title"><label class="header" value="&quicktext.defaultImport.label;"/></hbox>
                   <textbox id="text-defaultImport" flex="1" oninput="quicktext.checkForGeneralChanges(5);" />
                 </groupbox>
               </vbox>
               <vbox flex="1">
                 <groupbox>
-                  <hbox class="box-title"><label class="header">&quicktext.sharingTemplates.label;</label></hbox>
+                  <hbox class="box-title"><label class="header" value="&quicktext.sharingTemplates.label;"/></hbox>
                   <button label="&quicktext.export.label;" oncommand="quicktext.exportTemplatesToFile();" />
                   <button label="&quicktext.import.label;" oncommand="quicktext.importTemplatesFromFile();" />
                 </groupbox>
                 <groupbox>
-                  <hbox class="box-title"><label class="header">&quicktext.sharingScripts.label;</label></hbox>
+                  <hbox class="box-title"><label class="header" value="&quicktext.sharingScripts.label;"/></hbox>
                   <button label="&quicktext.export.label;" oncommand="quicktext.exportScriptsToFile();" />
                   <button label="&quicktext.import.label;" oncommand="quicktext.importScriptsFromFile();" />
                 </groupbox>
@@ -139,7 +139,7 @@
           <tabpanel id="tab-templates">
             <vbox style="width: 200px">
               <groupbox flex="1">
-                <hbox class="box-title"><label class="header">&quicktext.title.label;</label></hbox>
+                <hbox class="box-title"><label class="header" value="&quicktext.title.label;"/></hbox>
                 <hbox><button id="group-button-add-group" label="&quicktext.addGroup.label;" flex="1" oncommand="quicktext.addGroup();" /></hbox>
                 <hbox><button id="group-button-add-text" label="&quicktext.addTemplate.label;" flex="1" oncommand="quicktext.addText();" /></hbox>
                 <tree id="group-tree"
@@ -166,7 +166,7 @@
             </splitter>
             <vbox flex="1">
               <groupbox flex="1">
-                <hbox class="box-title"><label id="text-caption" class="header">&quicktext.template.label;</label></hbox>
+                <hbox class="box-title"><label id="text-caption" class="header" value="&quicktext.template.label;"/></hbox>
                 <vbox flex="1">
                   <grid flex="1">
                     <columns>
@@ -319,7 +319,7 @@
           <tabpanel id="tab-scripts">
             <vbox style="width: 200px;">
               <groupbox flex="1">
-                <hbox class="box-title"><label class="header">&quicktext.title.label;</label></hbox>
+                <hbox class="box-title"><label class="header" value="&quicktext.title.label;"/></hbox>
                 <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" /></hbox>
                 <hbox><button label="&quicktext.getScript.label;" flex="1" oncommand="quicktext.getCommunityScripts();" /></hbox>
                 <richlistbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
@@ -332,7 +332,7 @@
             </splitter>
             <vbox flex="1">
               <groupbox flex="1">
-                <hbox class="box-title"><label id="script-caption" class="header">&quicktext.script.label;</label></hbox>
+                <hbox class="box-title"><label id="script-caption" class="header" value="&quicktext.script.label;"/></hbox>
                 <vbox flex="1">
                   <grid flex="1">
                     <columns>
