@@ -173,13 +173,13 @@ var gQuicktext = {
                                .getService(Components.interfaces.nsIProperties)
                                .get("ProfD", Components.interfaces.nsIFile);
 
-	// check if an alternative path has been given for the config folder
-	if (this.mPrefBranch.getCharPref("settingsFolder"))
-	{
-		profileDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-		profileDir.initWithPath(this.mPrefBranch.getCharPref("settingsFolder"));	  
-	}
-	
+    // check if an alternative path has been given for the config folder
+    if (this.mPrefBranch.getCharPref("settingsFolder"))
+    {
+      profileDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+      profileDir.initWithPath(this.mPrefBranch.getCharPref("settingsFolder"));	  
+    }
+  
     this.mQuicktextDir = profileDir;
     this.mQuicktextDir.append("quicktext");
     if (!this.mQuicktextDir.exists())
