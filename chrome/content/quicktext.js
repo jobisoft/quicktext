@@ -29,6 +29,8 @@ var quicktext = {
     {
       this.mLoaded = true;
 
+      gQuicktext.setLocales(document, ["label"]);
+
       gQuicktext.addObserver(this);
       if (!gQuicktext.loadSettings(false))
         this.updateGUI();

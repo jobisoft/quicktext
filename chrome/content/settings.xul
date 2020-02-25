@@ -3,10 +3,8 @@
 <?xml-stylesheet href="chrome://messenger/skin/messenger.css" type="text/css"?>
 <?xml-stylesheet href="chrome://quicktext/skin/quicktext.css" type="text/css"?>
 
-<!DOCTYPE dialog SYSTEM "chrome://quicktext/locale/quicktext.dtd">
-
 <dialog id="quicktextSettingsWindow"
-        title="&quicktext.settings.title;"
+        i18n-title="quicktext.settings.title"
         xmlns:html="http://www.w3.org/1999/xhtml"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 
@@ -17,8 +15,6 @@
 
         buttons="extra1, cancel"
         defaultButton="extra1"
-        buttonlabelcancel="&quicktext.close.label;"
-        buttonlabelextra1="&quicktext.save.label;"
 
         persist="width height screenX screenY sizemode"
         style="padding: 0px 0px 5px 0px;"
@@ -38,29 +34,29 @@
     <toolbar type="menubar">
       <toolbaritem>
         <menubar style="border:0px;padding:0px;margin:0px;">
-          <menu label="&quicktext.file.label;">
+          <menu i18n-label="quicktext.file.label">
             <menupopup>
-              <menuitem id="toolbar-save" label="&quicktext.save.label;" oncommand="quicktext.save();" />
+              <menuitem id="toolbar-save" i18n-label="quicktext.save.label" oncommand="quicktext.save();" />
               <menuseparator />
-              <menu label="&quicktext.import.label;">
+              <menu i18n-label="quicktext.import.label">
                 <menupopup>
-                  <menuitem label="&quicktext.templates.label;" oncommand="quicktext.importTemplatesFromFile();" />
-                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.importScriptsFromFile();" />
+                  <menuitem i18n-label="quicktext.templates.label" oncommand="quicktext.importTemplatesFromFile();" />
+                  <menuitem i18n-label="quicktext.scripts.label" oncommand="quicktext.importScriptsFromFile();" />
                 </menupopup>
               </menu>
-              <menu label="&quicktext.export.label;">
+              <menu i18n-label="quicktext.export.label">
                 <menupopup>
-                  <menuitem label="&quicktext.templates.label;" oncommand="quicktext.exportTemplatesToFile();" />
-                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.exportScriptsToFile();" />
+                  <menuitem i18n-label="quicktext.templates.label" oncommand="quicktext.exportTemplatesToFile();" />
+                  <menuitem i18n-label="quicktext.scripts.label" oncommand="quicktext.exportScriptsToFile();" />
                 </menupopup>
               </menu>
               <menuseparator />
-              <menuitem label="&quicktext.close.label;" oncommand="quicktext.close(true);" />
+              <menuitem i18n-label="quicktext.close.label" oncommand="quicktext.close(true);" />
             </menupopup>
           </menu>
-          <menu label="&quicktext.help.label;">
+          <menu i18n-label="quicktext.help.label">
             <menupopup>
-              <menuitem label="&quicktext.goToHomepage.label;" oncommand="quicktext.openHomepage();" />
+              <menuitem i18n-label="quicktext.goToHomepage.label" oncommand="quicktext.openHomepage();" />
             </menupopup>
           </menu>
         </menubar>
@@ -72,66 +68,66 @@
     <vbox flex="1">
       <tabbox id="tabbox-main" flex="1" style="margin: 5px 5px 0px 5px;">
         <tabs>
-          <tab label="&quicktext.general.label;" />
-          <tab label="&quicktext.templates.label;" />
-          <tab label="&quicktext.scripts.label;" />
+          <tab i18n-label="quicktext.general.label" />
+          <tab i18n-label="quicktext.templates.label" />
+          <tab i18n-label="quicktext.scripts.label" />
         </tabs>
         <tabpanels flex="1" style="margin: 0px; padding: 0px">
           <tabpanel id="tab-general">
             <hbox flex="1">
               <vbox flex="1">
                 <groupbox>
-                  <hbox class="box-title"><label class="header" value="&quicktext.settings.label;"/></hbox>
+                  <hbox class="box-title"><label class="header" i18n-value="quicktext.settings.label"/></hbox>
                   <vbox>
-                    <checkbox label="&quicktext.rightClickSetting.label;" id="checkbox-viewPopup" oncommand="quicktext.checkForGeneralChanges(0);" />
-                    <checkbox label="&quicktext.collapseSetting.label;" id="checkbox-collapseGroup" oncommand="quicktext.checkForGeneralChanges(1);" />
+                    <checkbox i18n-label="quicktext.rightClickSetting.label" id="checkbox-viewPopup" oncommand="quicktext.checkForGeneralChanges(0);" />
+                    <checkbox i18n-label="quicktext.collapseSetting.label" id="checkbox-collapseGroup" oncommand="quicktext.checkForGeneralChanges(1);" />
                     <spacer height="5" />
                     <hbox>
                       <menulist id="select-shortcutModifier" oncommand="quicktext.checkForGeneralChanges(2); quicktext.shortcutModifierChange(); quicktext.pickText();"  style="width: 120px">
                         <menupopup>
-                          <menuitem label="&quicktext.altKey.label;" value="alt" />
-                          <menuitem label="&quicktext.controlKey.label;" value="control" />
-                          <menuitem label="&quicktext.metaKey.label;" value="meta" />
+                          <menuitem i18n-label="quicktext.altKey.label" value="alt" />
+                          <menuitem i18n-label="quicktext.controlKey.label" value="control" />
+                          <menuitem i18n-label="quicktext.metaKey.label" value="meta" />
                         </menupopup>
                       </menulist>
-                      <label value="&quicktext.modifierSetting.label;" control="select-shortcutModifier" style="margin-top: 6px" />
+                      <label i18n-value="quicktext.modifierSetting.label" control="select-shortcutModifier" style="margin-top: 6px" />
                     </hbox>
-                    <checkbox label="&quicktext.shortcutTypeAdv.label;" id="checkbox-shortcutTypeAdv" oncommand="quicktext.checkForGeneralChanges(3); quicktext.pickText();" />
+                    <checkbox i18n-label="quicktext.shortcutTypeAdv.label" id="checkbox-shortcutTypeAdv" oncommand="quicktext.checkForGeneralChanges(3); quicktext.pickText();" />
                     <spacer height="5" />
                     <hbox>
                       <menulist id="select-keywordKey" oncommand="quicktext.checkForGeneralChanges(4);" style="width: 120px">
                         <menupopup>
                           <!-- we are using KeyboardEvent.code as values (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code) -->
-                          <menuitem label="&quicktext.tabKey.label;" value="Tab" />
-                          <menuitem label="&quicktext.spaceKey.label;" value="Space" />
-                          <menuitem label="&quicktext.enterKey.label;" value="Enter" />
-                          <menuitem label="&quicktext.f2Key.label;" value="F2" />
-                          <menuitem label="&quicktext.f4Key.label;" value="F4" />
-                          <menuitem label="&quicktext.f5Key.label;" value="F5" />
-                          <menuitem label="&quicktext.f8Key.label;" value="F8" />
-                          <menuitem label="&quicktext.f11Key.label;" value="F11" />
-                          <menuitem label="&quicktext.f12Key.label;" value="F12" />
+                          <menuitem i18n-label="quicktext.tabKey.label" value="Tab" />
+                          <menuitem i18n-label="quicktext.spaceKey.label" value="Space" />
+                          <menuitem i18n-label="quicktext.enterKey.label" value="Enter" />
+                          <menuitem i18n-label="quicktext.f2Key.label" value="F2" />
+                          <menuitem i18n-label="quicktext.f4Key.label" value="F4" />
+                          <menuitem i18n-label="quicktext.f5Key.label" value="F5" />
+                          <menuitem i18n-label="quicktext.f8Key.label" value="F8" />
+                          <menuitem i18n-label="quicktext.f11Key.label" value="F11" />
+                          <menuitem i18n-label="quicktext.f12Key.label" value="F12" />
                         </menupopup>
                       </menulist>
-                      <label value="&quicktext.keywordKeySetting.label;" control="select-keywordKey" style="margin-top: 6px" />
+                      <label i18n-value="quicktext.keywordKeySetting.label" control="select-keywordKey" style="margin-top: 6px" />
                     </hbox>
                   </vbox>
                 </groupbox>
                 <groupbox>
-                  <hbox class="box-title"><label class="header" value="&quicktext.defaultImport.label;"/></hbox>
+                  <hbox class="box-title"><label class="header" i18n-value="quicktext.defaultImport.label"/></hbox>
                   <textbox id="text-defaultImport" flex="1" oninput="quicktext.checkForGeneralChanges(5);" />
                 </groupbox>
               </vbox>
               <vbox flex="1">
                 <groupbox>
-                  <hbox class="box-title"><label class="header" value="&quicktext.sharingTemplates.label;"/></hbox>
-                  <button label="&quicktext.export.label;" oncommand="quicktext.exportTemplatesToFile();" />
-                  <button label="&quicktext.import.label;" oncommand="quicktext.importTemplatesFromFile();" />
+                  <hbox class="box-title"><label class="header" i18n-value="quicktext.sharingTemplates.label"/></hbox>
+                  <button i18n-label="quicktext.export.label" oncommand="quicktext.exportTemplatesToFile();" />
+                  <button i18n-label="quicktext.import.label" oncommand="quicktext.importTemplatesFromFile();" />
                 </groupbox>
                 <groupbox>
-                  <hbox class="box-title"><label class="header" value="&quicktext.sharingScripts.label;"/></hbox>
-                  <button label="&quicktext.export.label;" oncommand="quicktext.exportScriptsToFile();" />
-                  <button label="&quicktext.import.label;" oncommand="quicktext.importScriptsFromFile();" />
+                  <hbox class="box-title"><label class="header" i18n-value="quicktext.sharingScripts.label"/></hbox>
+                  <button i18n-label="quicktext.export.label" oncommand="quicktext.exportScriptsToFile();" />
+                  <button i18n-label="quicktext.import.label" oncommand="quicktext.importScriptsFromFile();" />
                 </groupbox>
               </vbox>
             </hbox>
@@ -139,9 +135,9 @@
           <tabpanel id="tab-templates">
             <vbox style="width: 200px">
               <groupbox flex="1">
-                <hbox class="box-title"><label class="header" value="&quicktext.title.label;"/></hbox>
-                <hbox><button id="group-button-add-group" label="&quicktext.addGroup.label;" flex="1" oncommand="quicktext.addGroup();" /></hbox>
-                <hbox><button id="group-button-add-text" label="&quicktext.addTemplate.label;" flex="1" oncommand="quicktext.addText();" /></hbox>
+                <hbox class="box-title"><label class="header" i18n-value="quicktext.title.label"/></hbox>
+                <hbox><button id="group-button-add-group" i18n-label="quicktext.addGroup.label" flex="1" oncommand="quicktext.addGroup();" /></hbox>
+                <hbox><button id="group-button-add-text" i18n-label="quicktext.addTemplate.label" flex="1" oncommand="quicktext.addText();" /></hbox>
                 <tree id="group-tree"
                       onselect="quicktext.pickText();"
                       flex="1"
@@ -158,7 +154,7 @@
                       ondragstart="event.dataTransfer.setData('quicktextTree', event.target.getAttribute('label'))"
                   />
                 </tree>
-                <hbox><button id="group-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeText();" /></hbox>
+                <hbox><button id="group-button-remove" i18n-label="quicktext.remove.label" flex="1" oncommand="quicktext.removeText();" /></hbox>
               </groupbox>
             </vbox>
             <splitter resizebefore="closest" resizeafter="closest">
@@ -166,7 +162,7 @@
             </splitter>
             <vbox flex="1">
               <groupbox flex="1">
-                <hbox class="box-title"><label id="text-caption" class="header" value="&quicktext.template.label;"/></hbox>
+                <hbox class="box-title"><label id="text-caption" class="header" i18n-value="quicktext.template.label"/></hbox>
                 <vbox flex="1">
                   <grid flex="1">
                     <columns>
@@ -176,57 +172,57 @@
                     <rows>
                       <row showfor="text,group">
                         <vbox pack="center">
-                          <label align="center" value="&quicktext.title.label;:" control="text-title" />
+                          <label align="center" i18n-value="quicktext.title.label:" control="text-title" />
                         </vbox>
                         <textbox id="text-title" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(0);"/>
                       </row>
                       <hbox align="right" showfor="text">
                         <vbox height="20px">
-                          <menu label="&quicktext.variables.label;" id="text-variables" disabled="true" flex="1" showfor="text" candisable="true">
+                          <menu i18n-label="quicktext.variables.label" id="text-variables" disabled="true" flex="1" showfor="text" candisable="true">
                             <menupopup>
-                              <menu label="&quicktext.to.label;">
+                              <menu i18n-label="quicktext.to.label">
                                 <menupopup>
-                                  <menuitem label="&quicktext.firstname.label;" oncommand="quicktext.insertVariable('TO=firstname');" />
-                                  <menuitem label="&quicktext.lastname.label;" oncommand="quicktext.insertVariable('TO=lastname');" />
-                                  <menuitem label="&quicktext.fullname.label;" oncommand="quicktext.insertVariable('TO=fullname');" />
-                                  <menuitem label="&quicktext.displayname.label;" oncommand="quicktext.insertVariable('TO=displayname');" />
-                                  <menuitem label="&quicktext.nickname.label;" oncommand="quicktext.insertVariable('TO=nickname');" />
-                                  <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('TO=email');" />
-                                  <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('TO=workphone');" />
-                                  <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('TO=faxnumber');" />
-                                  <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
-                                  <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('TO=jobtitle');" />
-                                  <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('TO=custom1');" />
-                                  <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('TO=custom2');" />
-                                  <menuitem label="&quicktext.custom3.label;" oncommand="quicktext.insertVariable('TO=custom3');" />
-                                  <menuitem label="&quicktext.custom4.label;" oncommand="quicktext.insertVariable('TO=custom4');" />
+                                  <menuitem i18n-label="quicktext.firstname.label" oncommand="quicktext.insertVariable('TO=firstname');" />
+                                  <menuitem i18n-label="quicktext.lastname.label" oncommand="quicktext.insertVariable('TO=lastname');" />
+                                  <menuitem i18n-label="quicktext.fullname.label" oncommand="quicktext.insertVariable('TO=fullname');" />
+                                  <menuitem i18n-label="quicktext.displayname.label" oncommand="quicktext.insertVariable('TO=displayname');" />
+                                  <menuitem i18n-label="quicktext.nickname.label" oncommand="quicktext.insertVariable('TO=nickname');" />
+                                  <menuitem i18n-label="quicktext.email.label" oncommand="quicktext.insertVariable('TO=email');" />
+                                  <menuitem i18n-label="quicktext.worknumber.label" oncommand="quicktext.insertVariable('TO=workphone');" />
+                                  <menuitem i18n-label="quicktext.faxnumber.label" oncommand="quicktext.insertVariable('TO=faxnumber');" />
+                                  <menuitem i18n-label="quicktext.cellularnumber.label" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
+                                  <menuitem i18n-label="quicktext.jobtitle.label" oncommand="quicktext.insertVariable('TO=jobtitle');" />
+                                  <menuitem i18n-label="quicktext.custom1.label" oncommand="quicktext.insertVariable('TO=custom1');" />
+                                  <menuitem i18n-label="quicktext.custom2.label" oncommand="quicktext.insertVariable('TO=custom2');" />
+                                  <menuitem i18n-label="quicktext.custom3.label" oncommand="quicktext.insertVariable('TO=custom3');" />
+                                  <menuitem i18n-label="quicktext.custom4.label" oncommand="quicktext.insertVariable('TO=custom4');" />
                                 </menupopup>
                               </menu>
-                              <menu label="&quicktext.from.label;">
+                              <menu i18n-label="quicktext.from.label">
                                 <menupopup>
-                                  <menuitem label="&quicktext.firstname.label;" oncommand="quicktext.insertVariable('FROM=firstname');" />
-                                  <menuitem label="&quicktext.lastname.label;" oncommand="quicktext.insertVariable('FROM=lastname');" />
-                                  <menuitem label="&quicktext.fullname.label;" oncommand="quicktext.insertVariable('FROM=fullname');" />
-                                  <menuitem label="&quicktext.displayname.label;" oncommand="quicktext.insertVariable('FROM=displayname');" />
-                                  <menuitem label="&quicktext.nickname.label;" oncommand="quicktext.insertVariable('FROM=nickname');" />
-                                  <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('FROM=email');" />
-                                  <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('FROM=workphone');" />
-                                  <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
-                                  <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
-                                  <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
-                                  <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('FROM=custom1');" />
-                                  <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('FROM=custom2');" />
-                                  <menuitem label="&quicktext.custom3.label;" oncommand="quicktext.insertVariable('FROM=custom3');" />
-                                  <menuitem label="&quicktext.custom4.label;" oncommand="quicktext.insertVariable('FROM=custom4');" />
+                                  <menuitem i18n-label="quicktext.firstname.label" oncommand="quicktext.insertVariable('FROM=firstname');" />
+                                  <menuitem i18n-label="quicktext.lastname.label" oncommand="quicktext.insertVariable('FROM=lastname');" />
+                                  <menuitem i18n-label="quicktext.fullname.label" oncommand="quicktext.insertVariable('FROM=fullname');" />
+                                  <menuitem i18n-label="quicktext.displayname.label" oncommand="quicktext.insertVariable('FROM=displayname');" />
+                                  <menuitem i18n-label="quicktext.nickname.label" oncommand="quicktext.insertVariable('FROM=nickname');" />
+                                  <menuitem i18n-label="quicktext.email.label" oncommand="quicktext.insertVariable('FROM=email');" />
+                                  <menuitem i18n-label="quicktext.worknumber.label" oncommand="quicktext.insertVariable('FROM=workphone');" />
+                                  <menuitem i18n-label="quicktext.faxnumber.label" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
+                                  <menuitem i18n-label="quicktext.cellularnumber.label" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
+                                  <menuitem i18n-label="quicktext.jobtitle.label" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
+                                  <menuitem i18n-label="quicktext.custom1.label" oncommand="quicktext.insertVariable('FROM=custom1');" />
+                                  <menuitem i18n-label="quicktext.custom2.label" oncommand="quicktext.insertVariable('FROM=custom2');" />
+                                  <menuitem i18n-label="quicktext.custom3.label" oncommand="quicktext.insertVariable('FROM=custom3');" />
+                                  <menuitem i18n-label="quicktext.custom4.label" oncommand="quicktext.insertVariable('FROM=custom4');" />
                                 </menupopup>
                               </menu>
-                              <menu label="&quicktext.attachments.label;">
+                              <menu i18n-label="quicktext.attachments.label">
                                 <menupopup>
-                                  <menuitem label="&quicktext.filename.label;" oncommand="quicktext.insertVariable('ATT=name');" />
-                                  <menuitem label="&quicktext.filenameAndSize.label;" oncommand="quicktext.insertVariable('ATT=full');" />
+                                  <menuitem i18n-label="quicktext.filename.label" oncommand="quicktext.insertVariable('ATT=name');" />
+                                  <menuitem i18n-label="quicktext.filenameAndSize.label" oncommand="quicktext.insertVariable('ATT=full');" />
                                 </menupopup>
                               </menu>
-                              <menu label="&quicktext.dateTime.label;">
+                              <menu i18n-label="quicktext.dateTime.label">
                                 <menupopup>
                                   <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
                                   <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
@@ -235,26 +231,26 @@
                                   <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
                                 </menupopup>
                               </menu>
-                              <menu label="&quicktext.other.label;">
+                              <menu i18n-label="quicktext.other.label">
                                 <menupopup>
-                                  <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
-                                  <menuitem label="&quicktext.counter.label;" oncommand="quicktext.insertVariable('COUNTER');" />
-                                  <menuitem label="&quicktext.input.label;" oncommand="quicktext.insertVariable('INPUT=name|type|options');" />
-                                  <menuitem label="&quicktext.selection.label;" oncommand="quicktext.insertVariable('SELECTION');" />
-                                  <menuitem label="&quicktext.orgatt.label;" oncommand="quicktext.insertVariable('ORGATT=\\n');" />
-                                  <menuitem label="&quicktext.orgheader.label;" oncommand="quicktext.insertVariable('ORGHEADER=type|\\n');" />
-                                  <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />
-                                  <menuitem label="&quicktext.url.label;" oncommand="quicktext.insertVariable('URL=url|data');" />
-                                  <menuitem label="&quicktext.insertfile.label;" oncommand="quicktext.insertFileVariable();" />
-                                  <menuitem label="&quicktext.image.label;" oncommand="quicktext.insertImageVariable();" />
-                                  <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
+                                  <menuitem i18n-label="quicktext.clipboard.label" oncommand="quicktext.insertVariable('CLIPBOARD');" />
+                                  <menuitem i18n-label="quicktext.counter.label" oncommand="quicktext.insertVariable('COUNTER');" />
+                                  <menuitem i18n-label="quicktext.input.label" oncommand="quicktext.insertVariable('INPUT=name|type|options');" />
+                                  <menuitem i18n-label="quicktext.selection.label" oncommand="quicktext.insertVariable('SELECTION');" />
+                                  <menuitem i18n-label="quicktext.orgatt.label" oncommand="quicktext.insertVariable('ORGATT=\\n');" />
+                                  <menuitem i18n-label="quicktext.orgheader.label" oncommand="quicktext.insertVariable('ORGHEADER=type|\\n');" />
+                                  <menuitem i18n-label="quicktext.subject.label" oncommand="quicktext.insertVariable('SUBJECT');" />
+                                  <menuitem i18n-label="quicktext.url.label" oncommand="quicktext.insertVariable('URL=url|data');" />
+                                  <menuitem i18n-label="quicktext.insertfile.label" oncommand="quicktext.insertFileVariable();" />
+                                  <menuitem i18n-label="quicktext.image.label" oncommand="quicktext.insertImageVariable();" />
+                                  <menuitem i18n-label="quicktext.version.label" oncommand="quicktext.insertVariable('VERSION');" />
                                   <menuseparator/>
-                                  <menuitem label="&quicktext.header.label;" oncommand="quicktext.insertVariable('HEADER=type|value');" />
-                                  <menuitem label="&quicktext.cursor.label;" oncommand="quicktext.insertVariable('CURSOR');" />
+                                  <menuitem i18n-label="quicktext.header.label" oncommand="quicktext.insertVariable('HEADER=type|value');" />
+                                  <menuitem i18n-label="quicktext.cursor.label" oncommand="quicktext.insertVariable('CURSOR');" />
                                 </menupopup>
                               </menu>
-                              <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />
-                              <menu label="&quicktext.scripts.label;" id="variables-scripts" />
+                              <menu i18n-label="quicktext.templates.label" id="quicktext-other-texts" />
+                              <menu i18n-label="quicktext.scripts.label" id="variables-scripts" />
                             </menupopup>
                           </menu>
                         </vbox>
@@ -263,21 +259,21 @@
                         <html:textarea id="text" rows="10" disabled="true" candisable="true" wrap="on" oninput="quicktext.checkForTextChanges(1);"/>
                       </vbox>
                       <row showfor="text">
-                        <label align="center" value="&quicktext.insertAs.label;:" control="text-type" style="margin-top: 6px" />
+                        <label align="center" i18n-value="quicktext.insertAs.label:" control="text-type" style="margin-top: 6px" />
                         <hbox flex="1">
                           <menulist id="text-type" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(3);">
                             <menupopup>
-                              <menuitem label="&quicktext.text.label;" value="0" />
-                              <menuitem label="&quicktext.HTML.label;" value="1" />
+                              <menuitem i18n-label="quicktext.text.label" value="0" />
+                              <menuitem i18n-label="quicktext.HTML.label" value="1" />
                             </menupopup>
                           </menulist> 
                           <hbox align="right" flex="1">
-                            <label align="center" value="&quicktext.shortcut.label;:" control="text-shortcutBasic" style="margin-top: 6px" />
+                            <label align="center" i18n-value="quicktext.shortcut.label:" control="text-shortcutBasic" style="margin-top: 6px" />
                             <label id="label-shortcutModifier" align="center" value="" control="text-shortcutBasic" style="margin-top: 6px" />
 
                             <menulist id="text-shortcutBasic" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(2);">
                               <menupopup id="popup-shortcutBasic">
-                                <menuitem label="&quicktext.none.label;" value="" />
+                                <menuitem i18n-label="quicktext.none.label" value="" />
                                 <menuitem label="1" value="1" />
                                 <menuitem label="2" value="2" />
                                 <menuitem label="3" value="3" />
@@ -296,18 +292,18 @@
                         </hbox>
                       </row>
                       <row showfor="text">
-                        <label align="center" value="&quicktext.subject.label;:" control="text-subject" style="margin-top: 6px" />
+                        <label align="center" i18n-value="quicktext.subject.label:" control="text-subject" style="margin-top: 6px" />
                         <textbox id="text-subject" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(5);"/>
                       </row>
                       <row showfor="text">
-                        <label align="center" value="&quicktext.keyword.label;:" control="text-keyword" style="margin-top: 6px" />
+                        <label align="center" i18n-value="quicktext.keyword.label:" control="text-keyword" style="margin-top: 6px" />
                         <textbox id="text-keyword" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(4);"/>
                       </row>
                       <row showfor="text">
-                        <label align="center" value="&quicktext.attachments.label;:" control="text-attachments" style="margin-top: 6px" />
+                        <label align="center" i18n-value="quicktext.attachments.label:" control="text-attachments" style="margin-top: 6px" />
                         <hbox>
                           <textbox id="text-attachments" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(6);"/>
-                          <button id="button-attachments" label="&quicktext.browse.label;" oncommand="quicktext.browseAttachment();" disabled="true" candisable="true"/>
+                          <button id="button-attachments" i18n-label="quicktext.browse.label" oncommand="quicktext.browseAttachment();" disabled="true" candisable="true"/>
                         </hbox>
                       </row>
                     </rows>
@@ -319,11 +315,11 @@
           <tabpanel id="tab-scripts">
             <vbox style="width: 200px;">
               <groupbox flex="1">
-                <hbox class="box-title"><label class="header" value="&quicktext.title.label;"/></hbox>
-                <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" /></hbox>
-                <hbox><button label="&quicktext.getScript.label;" flex="1" oncommand="quicktext.getCommunityScripts();" /></hbox>
+                <hbox class="box-title"><label class="header" i18n-value="quicktext.title.label"/></hbox>
+                <hbox><button id="script-button-add" i18n-label="quicktext.addScript.label" flex="1" oncommand="quicktext.addScript();" /></hbox>
+                <hbox><button i18n-label="quicktext.getScript.label" flex="1" oncommand="quicktext.getCommunityScripts();" /></hbox>
                 <richlistbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
-                <hbox><button id="script-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeScript();" /></hbox>
+                <hbox><button id="script-button-remove" i18n-label="quicktext.remove.label" flex="1" oncommand="quicktext.removeScript();" /></hbox>
               </groupbox>
 
             </vbox>
@@ -332,7 +328,7 @@
             </splitter>
             <vbox flex="1">
               <groupbox flex="1">
-                <hbox class="box-title"><label id="script-caption" class="header" value="&quicktext.script.label;"/></hbox>
+                <hbox class="box-title"><label id="script-caption" class="header" i18n-value="quicktext.script.label"/></hbox>
                 <vbox flex="1">
                   <grid flex="1">
                     <columns>
@@ -342,7 +338,7 @@
                     <rows>
                       <row>
                         <vbox pack="center">
-                          <label align="center" value="&quicktext.title.label;:" control="script-title" />
+                          <label align="center" i18n-value="quicktext.title.label:" control="script-title" />
                         </vbox>
                         <textbox id="script-title" flex="1" oninput="quicktext.checkForScriptChanges(0);"/>
                       </row>

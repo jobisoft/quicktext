@@ -21,5 +21,6 @@ var quicktext = {
 // For some reason I cannot add an onload to the overlay "main.xul", so I have
 // to call this manually, but only if it is called from messenger.xul
 if (window.location.href == "chrome://messenger/content/messenger.xul") {
+  gQuicktext.setLocales(document, ["label"]);
   gQuicktext.loadSettings(false);
 }

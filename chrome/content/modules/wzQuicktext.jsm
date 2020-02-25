@@ -41,6 +41,21 @@ var gQuicktext = {
     formatStringFromName : ConversionHelper.formatStringFromName
   }
 ,
+  setLocales: function(document, i18nAttributes = ["title", "label", "value"]) {
+    // set all i18n locale values
+    for (let i18nAttribute of i18nAttributes) {
+      for (let node of document.querySelectorAll("[i18n-"+i18nAttribute+"]")) {
+        let i18nId = node.getAttribute("i18n-"+i18nAttribute);
+        // small convinient hack: if the id ends with a colon, then it is not part of the id
+        // but should actually be printed
+        let i18nValue = i18nId.endsWith(":") 
+          ? gQuicktext.mStringBundle.GetStringFromName(i18nId.slice(0, -1)) + ":"
+          : gQuicktext.mStringBundle.GetStringFromName(i18nId);
+        node.setAttribute(i18nAttribute, i18nValue);
+      }      
+    }
+  }
+,
   get viewToolbar() { return this.mViewToolbar; },
   set viewToolbar(aViewToolbar)
   {
