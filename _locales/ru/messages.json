@@ -1,5 +1,366 @@
 {
-  "extensionDescription": {
-    "message": "Менеджер категорий для контактов, также позволяет отправлять электронную почту всем членам категории (групп контактов, основанных на категории)."
-  }
+    "extensionDescription": {
+        "message": "Менеджер категорий для контактов, также позволяет отправлять электронную почту всем членам категории (групп контактов, основанных на категории)."
+    },
+    "altKey": {
+        "message": "Alt"
+    }, 
+    "attachmentFile": {
+        "message": "Выберите файл для добавления во вложения"
+    }, 
+    "controlKey": {
+        "message": "Ctrl"
+    }, 
+    "date": {
+        "message": "Дата ($P1$)", 
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }, 
+    "exportFile": {
+        "message": "Выберите файл для экспорта в (UTF-8)"
+    }, 
+    "fileNotUTF8": {
+        "message": "The selected file does not seem to be UTF-8 encoded and will not loaded correctly. Please select a different file."
+    }, 
+    "group": {
+        "message": "Группа"
+    }, 
+    "importFile": {
+        "message": "Выберите файл для импорта (UTF-8)"
+    }, 
+    "inputText": {
+        "message": "Введите значение $P1$", 
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }, 
+    "inputTitle": {
+        "message": "Значение переменной"
+    }, 
+    "insertFile": {
+        "message": "Выберите файл для вставки (UTF-8)"
+    }, 
+    "insertImage": {
+        "message": "Choose image file to insert"
+    }, 
+    "metaKey": {
+        "message": "Meta"
+    }, 
+    "newGroup": {
+        "message": "Новая группа"
+    }, 
+    "newScript": {
+        "message": "Новый скрипт"
+    }, 
+    "newTemplate": {
+        "message": "Новый шаблон"
+    }, 
+    "quicktext.HTML.label": {
+        "message": "HTML"
+    }, 
+    "quicktext.addGroup.label": {
+        "message": "Добавить группу"
+    }, 
+    "quicktext.addScript.label": {
+        "message": "Добавить скрипт"
+    }, 
+    "quicktext.addTemplate.label": {
+        "message": "Добавить шаблон"
+    }, 
+    "quicktext.altKey.label": {
+        "message": "Alt"
+    }, 
+    "quicktext.attachments.label": {
+        "message": "Вложения"
+    }, 
+    "quicktext.browse.label": {
+        "message": "Просмотр"
+    }, 
+    "quicktext.cellularnumber.label": {
+        "message": "Мобильный телефон"
+    }, 
+    "quicktext.clipboard.label": {
+        "message": "Буфер обмена"
+    }, 
+    "quicktext.close.label": {
+        "message": "Закрыть"
+    }, 
+    "quicktext.collapseSetting.label": {
+        "message": "Свернуть группу, если она содержит только один шаблон"
+    }, 
+    "quicktext.controlKey.label": {
+        "message": "Ctrl"
+    }, 
+    "quicktext.counter.label": {
+        "message": "Counter"
+    }, 
+    "quicktext.cursor.label": {
+        "message": "Позиция курсора"
+    }, 
+    "quicktext.custom1.label": {
+        "message": "Прочее 1"
+    }, 
+    "quicktext.custom2.label": {
+        "message": "Прочее 2"
+    }, 
+    "quicktext.custom3.label": {
+        "message": "Прочее 3"
+    }, 
+    "quicktext.custom4.label": {
+        "message": "Прочее 4"
+    }, 
+    "quicktext.dateTime.label": {
+        "message": "Дата/Время"
+    }, 
+    "quicktext.defaultImport.label": {
+        "message": "Импорт при запуске"
+    }, 
+    "quicktext.displayname.label": {
+        "message": "Отображаемое имя"
+    }, 
+    "quicktext.email.label": {
+        "message": "E-mail"
+    }, 
+    "quicktext.enterKey.label": {
+        "message": "Enter"
+    }, 
+    "quicktext.export.label": {
+        "message": "Экспорт"
+    }, 
+    "quicktext.f11Key.label": {
+        "message": "F11"
+    }, 
+    "quicktext.f12Key.label": {
+        "message": "F12"
+    }, 
+    "quicktext.f2Key.label": {
+        "message": "F2"
+    }, 
+    "quicktext.f4Key.label": {
+        "message": "F4"
+    }, 
+    "quicktext.f5Key.label": {
+        "message": "F5"
+    }, 
+    "quicktext.f8Key.label": {
+        "message": "F8"
+    }, 
+    "quicktext.faxnumber.label": {
+        "message": "Факс"
+    }, 
+    "quicktext.file.label": {
+        "message": "Файл"
+    }, 
+    "quicktext.filename.label": {
+        "message": "Имя файла"
+    }, 
+    "quicktext.filenameAndSize.label": {
+        "message": "Имя файла и размер"
+    }, 
+    "quicktext.firstname.label": {
+        "message": "Имя"
+    }, 
+    "quicktext.from.label": {
+        "message": "От"
+    }, 
+    "quicktext.fullname.label": {
+        "message": "ФИО"
+    }, 
+    "quicktext.general.label": {
+        "message": "Главное"
+    }, 
+    "quicktext.getScript.label": {
+        "message": "Community Scripts"
+    }, 
+    "quicktext.goToHomepage.label": {
+        "message": "На домашнюю страницу"
+    }, 
+    "quicktext.group.label": {
+        "message": "Группа"
+    }, 
+    "quicktext.header.label": {
+        "message": "Header (To, Cc, Bcc)"
+    }, 
+    "quicktext.help.label": {
+        "message": "Помощь"
+    }, 
+    "quicktext.homenumber.label": {
+        "message": "Домашний телефон"
+    }, 
+    "quicktext.image.label": {
+        "message": "Embedded HTML image"
+    }, 
+    "quicktext.import.label": {
+        "message": "Импорт"
+    }, 
+    "quicktext.input.label": {
+        "message": "Input value from user prompt"
+    }, 
+    "quicktext.insertAs.label": {
+        "message": "Вставить как"
+    }, 
+    "quicktext.insertTextFromFileAsHTML.label": {
+        "message": "Вставить файл как HTML"
+    }, 
+    "quicktext.insertTextFromFileAsText.label": {
+        "message": "Вставить файл как текст"
+    }, 
+    "quicktext.insertfile.label": {
+        "message": "Content from file (quicktext variables will be replaced)"
+    }, 
+    "quicktext.jobtitle.label": {
+        "message": "Должность"
+    }, 
+    "quicktext.keyword.label": {
+        "message": "Kлючевое слово"
+    }, 
+    "quicktext.keywordKeySetting.label": {
+        "message": "клавиша, которую использовать для активации ключевого слова"
+    }, 
+    "quicktext.label": {
+        "message": "Quicktext"
+    }, 
+    "quicktext.lastname.label": {
+        "message": "Фамилия"
+    }, 
+    "quicktext.metaKey.label": {
+        "message": "Meta"
+    }, 
+    "quicktext.modifierSetting.label": {
+        "message": "модификатор, который использовать для сочетаний клавиш"
+    }, 
+    "quicktext.nickname.label": {
+        "message": "Псевдоним"
+    }, 
+    "quicktext.none.label": {
+        "message": "Пусто"
+    }, 
+    "quicktext.orgatt.label": {
+        "message": "Original attachment info"
+    }, 
+    "quicktext.orgheader.label": {
+        "message": "Original header info"
+    }, 
+    "quicktext.other.label": {
+        "message": "Прочее"
+    }, 
+    "quicktext.remove.label": {
+        "message": "Удалить"
+    }, 
+    "quicktext.rightClickSetting.label": {
+        "message": "Просмотр Quicktext-меню по правому клику"
+    }, 
+    "quicktext.save.label": {
+        "message": "Сохранить"
+    }, 
+    "quicktext.script.label": {
+        "message": "Скрипт"
+    }, 
+    "quicktext.scripts.label": {
+        "message": "Скрипты"
+    }, 
+    "quicktext.selection.label": {
+        "message": "Selection"
+    }, 
+    "quicktext.settings.label": {
+        "message": "Настройки"
+    }, 
+    "quicktext.settings.title": {
+        "message": "Настройки Quicktext"
+    }, 
+    "quicktext.sharingScripts.label": {
+        "message": "Обмен скриптов"
+    }, 
+    "quicktext.sharingTemplates.label": {
+        "message": "Обмен шаблонов"
+    }, 
+    "quicktext.shortcut.label": {
+        "message": "Сочетание"
+    }, 
+    "quicktext.shortcutTypeAdv.label": {
+        "message": "Использовать расширенный режим для ярлыков"
+    }, 
+    "quicktext.shortname.label": {
+        "message": "Quicktext"
+    }, 
+    "quicktext.spaceKey.label": {
+        "message": "Пробел"
+    }, 
+    "quicktext.subject.label": {
+        "message": "Тема"
+    }, 
+    "quicktext.tabKey.label": {
+        "message": "Tab"
+    }, 
+    "quicktext.template.label": {
+        "message": "Шаблон"
+    }, 
+    "quicktext.templates.label": {
+        "message": "Шаблоны"
+    }, 
+    "quicktext.text.label": {
+        "message": "Текст"
+    }, 
+    "quicktext.title.label": {
+        "message": "Заглавие"
+    }, 
+    "quicktext.to.label": {
+        "message": "Кому"
+    }, 
+    "quicktext.url.label": {
+        "message": "Response from URL"
+    }, 
+    "quicktext.variables.label": {
+        "message": "Переменные"
+    }, 
+    "quicktext.version.label": {
+        "message": "Версия Thunderbird"
+    }, 
+    "quicktext.worknumber.label": {
+        "message": "Рабочий телефон"
+    }, 
+    "remove": {
+        "message": "Вы уверены, что хотите удалить “$P1$”?", 
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }, 
+    "saveMessage": {
+        "message": "Ваши изменения не были сохранены. Вы хотите сохранить их?"
+    }, 
+    "saveMessageTitle": {
+        "message": "Сохранить настройки"
+    }, 
+    "scriptError": {
+        "message": "There was an error in your Quicktext script:"
+    }, 
+    "scriptLine": {
+        "message": "Line"
+    }, 
+    "scriptNotFound": {
+        "message": "Quicktext script “$P1$” not found!", 
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }, 
+    "template": {
+        "message": "Шаблон"
+    }, 
+    "time": {
+        "message": "Время ($P1$)", 
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }
 }
