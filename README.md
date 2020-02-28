@@ -5,3 +5,5 @@ Volunteers will try to keep Quicktext going, but support will be limited. You ma
 **Note**: Emil maintained two versions of Quicktext, a free “Standard” version and a paid “Pro” version with additional features. Since he released both versions under MPL 2.0, the Thunderbird Council decided to base the [official version of Quicktext](https://addons.thunderbird.net/addon/quicktext/) on the “Pro” version. However, the name of the extension remains just “Quicktext”. There is no longer a seperate Quicktext Pro version.
 
 More information and usage descriptions can be found in the [wiki](https://github.com/thundernest/quicktext/wiki) of this repository.
+
+**The latest release and a change log can be found on [addons.thunderbird.net](https://addons.thunderbird.net/en-US/thunderbird/addon/quicktext/versions/)**.
