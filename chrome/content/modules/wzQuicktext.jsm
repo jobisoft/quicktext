@@ -36,10 +36,7 @@ var gQuicktext = {
   mOS:                  "WINNT",
   mCollapseState:       "",
   mSelectionContent:    "" ,
-  mStringBundle: {
-    GetStringFromName : ConversionHelper.GetStringFromName,
-    formatStringFromName : ConversionHelper.formatStringFromName
-  }
+  mStringBundle: ConversionHelper
 ,
   setLocales: function(document, i18nAttributes = ["title", "label", "value"]) {
     // set all i18n locale values
