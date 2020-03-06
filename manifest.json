@@ -16,6 +16,22 @@
   "icons": {
     "32": "chrome/skin/icon.png"
   },
+  "experiment_apis": {
+    "legacyprefs": {
+      "schema": "api/legacyprefs/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "legacyprefs"
+          ]
+        ],
+        "script": "api/legacyprefs/implementation.js"
+      }
+    }
+  },  
   "legacy": {
     "type": "xul",
     "options": {

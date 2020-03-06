@@ -1,0 +1,48 @@
+[
+  {
+    "namespace": "legacyprefs",
+    "functions": [
+      {
+        "name": "get",
+        "type": "function",
+        "description": "Gets a value from the legacy pref system.",
+        "async": true,
+        "parameters": [
+          {
+            "name": "aName",
+            "type": "string",
+            "description": "Name of the preference."
+          },
+          {
+            "name": "aDefault",
+            "description": "Default value of the preference.",
+            "choices": [
+              {
+                "type": "integer"
+              },              
+              {
+                "type": "string"
+              },              
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "clear",
+        "type": "function",
+        "description": "Removes a value from the legacy pref system.",
+        "async": true,
+        "parameters": [
+          {
+            "name": "aName",
+            "type": "string",
+            "description": "Name of the preference."
+          }
+        ]
+      }
+    ]
+  }
+]
