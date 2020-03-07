@@ -14,7 +14,7 @@ var quicktext = {
   mPickedIndex:         null,
   mOS:                  "WINNT"
 ,
-  init: function()
+  init: async function()
   {
     if (!this.mLoaded)
     {
@@ -32,7 +32,7 @@ var quicktext = {
       this.mOS = appInfo.OS;
 
       gQuicktext.addObserver(this);
-      var hasLoadedBefore = !gQuicktext.loadSettings(false);
+      var hasLoadedBefore = !(await gQuicktext.loadSettings(false));
 
       var states = gQuicktext.collapseState;
       if (states != "")

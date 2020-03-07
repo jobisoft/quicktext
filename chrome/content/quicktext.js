@@ -23,7 +23,7 @@ var quicktext = {
   mShortcutModifierDown:        false,
   mKeywords:                    {}
 ,
-  load: function()
+  load: async function()
   {
     if (!this.mLoaded)
     {
@@ -32,7 +32,7 @@ var quicktext = {
       gQuicktext.setLocales(document, ["label"]);
 
       gQuicktext.addObserver(this);
-      if (!gQuicktext.loadSettings(false))
+      if (!(await gQuicktext.loadSettings(false)))
         this.updateGUI();
 
       gQuicktextVar.init(window);

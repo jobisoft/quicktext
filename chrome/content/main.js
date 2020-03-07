@@ -22,5 +22,7 @@ var quicktext = {
 // to call this manually, but only if it is called from messenger.xul
 if (window.location.href == "chrome://messenger/content/messenger.xul") {
   gQuicktext.setLocales(document, ["label"]);
+
+  // async call
   gQuicktext.loadSettings(false);
 }

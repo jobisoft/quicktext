@@ -23,14 +23,13 @@ var gQuicktext = {
   mEditingGroup:        [],
   mEditingTexts:        [],
   mEditingScripts:      [],
-  mPrefService:         null,
-  mPrefBranch:          null,
   mViewPopup:           false,
   mCollapseGroup:       true,
   mDefaultImport:       "",
   mKeywordKey:          "Tab",
   mShortcutModifier:    "alt",
   mShortcutTypeAdv:     false,
+  mCounter:             0,
   mQuicktextDir:        null,
   mObserverList:        [],
   mOS:                  "WINNT",
@@ -57,7 +56,8 @@ var gQuicktext = {
   set viewToolbar(aViewToolbar)
   {
     this.mViewToolbar = aViewToolbar;
-    this.mPrefBranch.setBoolPref("toolbar", aViewToolbar);
+    // async fire-and-forget
+    ConversionHelper.setPref("toolbar", aViewToolbar);
 
     this.notifyObservers("updatetoolbar", "");
 
@@ -68,7 +68,8 @@ var gQuicktext = {
   set viewPopup(aViewPopup)
   {
     this.mViewPopup = aViewPopup;
-    this.mPrefBranch.setBoolPref("popup", aViewPopup);
+    // async fire-and-forget
+    ConversionHelper.setPref("popup", aViewPopup);
 
     return this.mViewPopup;
   }
@@ -77,7 +78,8 @@ var gQuicktext = {
   set collapseGroup(aCollapseGroup)
   {
     this.mCollapseGroup = aCollapseGroup;
-    this.mPrefBranch.setBoolPref("menuCollapse", aCollapseGroup);
+    // async fire-and-forget
+    ConversionHelper.setPref("menuCollapse", aCollapseGroup);
 
     this.notifyObservers("updatesettings", "");
 
@@ -88,7 +90,8 @@ var gQuicktext = {
   set defaultImport(aDefaultImport)
   {
     this.mDefaultImport = aDefaultImport;
-    this.mPrefBranch.setCharPref("defaultImport", aDefaultImport);
+    // async fire-and-forget
+    ConversionHelper.setPref("defaultImport", aDefaultImport);
 
     return this.mDefaultImport;
   }
@@ -97,7 +100,8 @@ var gQuicktext = {
   set keywordKey(aKeywordKey)
   {
     this.mKeywordKey = aKeywordKey;
-    this.mPrefBranch.setCharPref("keywordKey", aKeywordKey);
+    // async fire-and-forget
+    ConversionHelper.setPref("keywordKey", aKeywordKey);
 
     return this.mKeywordKey;
   }
@@ -106,7 +110,8 @@ var gQuicktext = {
   set shortcutModifier(aShortcutModifier)
   {
     this.mShortcutModifier = aShortcutModifier;
-    this.mPrefBranch.setCharPref("shortcutModifier", aShortcutModifier);
+    // async fire-and-forget
+    ConversionHelper.setPref("shortcutModifier", aShortcutModifier);
 
     return this.mShortcutModifier;
   }
@@ -119,7 +124,8 @@ var gQuicktext = {
   set collapseState(aCollapseState)
   {
     this.mCollapseState = aCollapseState;
-    this.mPrefBranch.setCharPref("collapseState", aCollapseState);
+    // async fire-and-forget
+    ConversionHelper.setPref("collapseState", aCollapseState);
 
     return this.mCollapseState;
   }
@@ -135,7 +141,8 @@ var gQuicktext = {
   set shortcutTypeAdv(aShortcutTypeAdv)
   {
     this.mShortcutTypeAdv = aShortcutTypeAdv;
-    this.mPrefBranch.setBoolPref("shortcutTypeAdv", aShortcutTypeAdv);
+    // async fire-and-forget
+    ConversionHelper.setPref("shortcutTypeAdv", aShortcutTypeAdv);
 
     return this.mShortcutTypeAdv;
   }
@@ -148,7 +155,7 @@ var gQuicktext = {
     extps.loadURI(uriToOpen, null);    
   }
 ,
-  loadSettings: function(aReload)
+  loadSettings: async function(aReload)
   {
     if (!aReload && this.mSettingsLoaded)
       return false;
@@ -157,10 +164,6 @@ var gQuicktext = {
 
     var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).QueryInterface(Components.interfaces.nsIXULRuntime);
     this.mOS = appInfo.OS;
-
-    this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
-    this.mPrefBranchOld = this.mPrefService.getBranch("quicktext.");
 
     this.mGroup = [];
     this.mTexts = [];
@@ -171,10 +174,11 @@ var gQuicktext = {
                                .get("ProfD", Components.interfaces.nsIFile);
 
     // check if an alternative path has been given for the config folder
-    if (this.mPrefBranch.getCharPref("settingsFolder"))
+    let settingsFolder = await ConversionHelper.getPref("settingsFolder");
+    if (settingsFolder)
     {
       profileDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-      profileDir.initWithPath(this.mPrefBranch.getCharPref("settingsFolder"));	  
+      profileDir.initWithPath(settingsFolder);	  
     }
   
     this.mQuicktextDir = profileDir;
@@ -205,93 +209,36 @@ var gQuicktext = {
     }
 
     // Get prefs
-    if (this.mPrefBranch.getPrefType("toolbar") == this.mPrefBranch.PREF_BOOL)
-      this.mViewToolbar = this.mPrefBranch.getBoolPref("toolbar");
+    this.mViewToolbar = await ConversionHelper.getPref("toolbar");
+    this.mCollapseGroup = await ConversionHelper.getPref("menuCollapse");
+    this.mKeywordKey = await ConversionHelper.getPref("keywordKey", this.mKeywordKey);
+    this.mViewPopup = await ConversionHelper.getPref("popup");
+    this.mShortcutTypeAdv = await ConversionHelper.getPref("shortcutTypeAdv");
+    this.mShortcutModifier = await ConversionHelper.getPref("shortcutModifier");
+    this.mCollapseState = await ConversionHelper.getPref("collapseState");
+    this.mDefaultImport = await ConversionHelper.getPref("defaultImport");      
 
-    if (this.mPrefBranch.getPrefType("menuCollapse") == this.mPrefBranch.PREF_BOOL)
-      this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
-
-    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
-      //migrate old keywordKey (and reset to default), if differs from default(Tab)
-      let code = "Tab";
-      switch(this.mPrefBranch.getIntPref("keywordKey")) {
-        case 32:
-          code = "Space"; 
-          break;
-        case 13: 
-          code = "Enter"; 
-          break;
-        case 9:
-        default:
-          code = "Tab"; 
-          break;
-      }
-      this.mPrefBranch.deleteBranch("keywordKey");
-      this.mPrefBranch.setCharPref("keywordKey", code);
-    }
-
-    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_STRING)
-      this.mKeywordKey = this.mPrefBranch.getCharPref("keywordKey", this.mKeywordKey);
-
-    if (this.mPrefBranch.getPrefType("popup") == this.mPrefBranch.PREF_BOOL)
-      this.mViewPopup = this.mPrefBranch.getBoolPref("popup");
-    
-    if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL) {
-      this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
-      //migrate old shortcutTypeAdv (and reset to default), if differs from default(false)
-      if (this.mPrefBranchOld.prefHasUserValue("shortcutTypeAdv") && this.mPrefBranchOld.getPrefType("shortcutTypeAdv") == this.mPrefBranchOld.PREF_BOOL && this.mPrefBranchOld.getBoolPref("shortcutTypeAdv") != false) {
-        this.mShortcutTypeAdv = this.mPrefBranchOld.getBoolPref("shortcutTypeAdv");
-        this.mPrefBranchOld.setBoolPref("shortcutTypeAdv", false);
-        this.mPrefBranch.setBoolPref("shortcutTypeAdv", this.mShortcutTypeAdv);
-      }
-    }
-
-    if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING) {
-      this.mShortcutModifier = this.mPrefBranch.getCharPref("shortcutModifier");
-      //migrate: Use (and clear) old data if present
-      if (this.mPrefBranchOld.prefHasUserValue("shortcutModifier") && this.mPrefBranchOld.getPrefType("shortcutModifier") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("shortcutModifier") != "") {
-        this.mShortcutModifier = this.mPrefBranchOld.getCharPref("shortcutModifier");
-        this.mPrefBranchOld.setCharPref("shortcutModifier", "");
-        this.mPrefBranch.setCharPref("shortcutModifier", this.mShortcutModifier);
-      }
-    }
-
-    if (this.mPrefBranch.getPrefType("collapseState") == this.mPrefBranch.PREF_STRING)
-      this.mCollapseState = this.mPrefBranch.getCharPref("collapseState");
-    
-    if (this.mPrefBranch.getPrefType("defaultImport") == this.mPrefBranch.PREF_STRING)
+    if (this.mDefaultImport)
     {
-      this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");      
-      //migrate: Use (and clear) old data if present
-      if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getPrefType("defaultImport") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
-        this.mDefaultImport = this.mPrefBranchOld.getCharPref("defaultImport");
-        this.mPrefBranchOld.setCharPref("defaultImport", "");
-        this.mPrefBranch.setCharPref("defaultImport", this.mDefaultImport);
-      }
-      
-      if (this.mDefaultImport != null)
+      var defaultImport = this.mDefaultImport.split(";");
+      defaultImport.reverse();
+
+      for (var i = 0; i < defaultImport.length; i++)
       {
-        var defaultImport = this.mDefaultImport.split(";");
-        defaultImport.reverse();
-  
-        for (var i = 0; i < defaultImport.length; i++)
-        {
-          try {
-            if (defaultImport[i].match(/^(http|https):\/\//))
-            {
-              this.importFromHTTPFile(defaultImport[i], 1, true, false); 
-            }
-            else
-            {
-              var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-              fp.initWithPath(this.parseFilePath(defaultImport[i]));
-              this.importFromFile(fp, 1, true, false);
-            }
-          } catch (e) { Components.utils.reportError(e); }
-        }
+        try {
+          if (defaultImport[i].match(/^(http|https):\/\//))
+          {
+            this.importFromHTTPFile(defaultImport[i], 1, true, false); 
+          }
+          else
+          {
+            var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+            fp.initWithPath(this.parseFilePath(defaultImport[i]));
+            this.importFromFile(fp, 1, true, false);
+          }
+        } catch (e) { Components.utils.reportError(e); }
       }
     }
-
     this.startEditing();
 
     // Notify that settings has been changed
@@ -1088,31 +1035,6 @@ var gQuicktext = {
   }
 ,
 
-  /*
-   * PREF FUNCTIONS
-   */
-  //unused, only used to store filenames/webaddr, no need for fancy stuff - use getCharPref now
-  getLocalizedUnicharPref: function (aPrefName)
-  {
-    try {
-      return this.mPrefBranch.getComplexValue(aPrefName, Components.interfaces.nsIPrefLocalizedString).data;
-    }
-    catch(e) { Components.utils.reportError(e); }
-    return null;        // quiet warnings
-  }
-,
-  //unused, only used to store filenames/webaddr, no need for fancy stuff - use setCharPref now
-  setUnicharPref: function (aPrefName, aPrefValue)
-  {
-    try {
-      var str = Components.classes["@mozilla.org/supports-string;1"]
-                          .createInstance(Components.interfaces.nsISupportsString);
-      str.data = aPrefValue;
-      this.mPrefBranch.setComplexValue(aPrefName, Components.interfaces.nsISupportsString, str);
-    }
-    catch(e) { Components.utils.reportError(e); }
-  }
-,
   /*
    * OBSERVERS
    */
