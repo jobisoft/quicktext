@@ -16,6 +16,10 @@
   "icons": {
     "32": "chrome/skin/icon.png"
   },
+  "permissions": ["storage", "unlimitedStorage"],
+  "background": {
+    "scripts": ["scripts/preferences.js", "background.js"]
+  },
   "experiment_apis": {
     "legacyprefs": {
       "schema": "api/legacyprefs/schema.json",
