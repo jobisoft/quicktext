@@ -34,8 +34,7 @@ var gQuicktext = {
   mObserverList:        [],
   mOS:                  "WINNT",
   mCollapseState:       "",
-  mSelectionContent:    "" ,
-  mStringBundle: ConversionHelper
+  mSelectionContent:    ""
 ,
   setLocales: function(document, i18nAttributes = ["title", "label", "value"]) {
     // set all i18n locale values
@@ -45,8 +44,8 @@ var gQuicktext = {
         // small convinient hack: if the id ends with a colon, then it is not part of the id
         // but should actually be printed
         let i18nValue = i18nId.endsWith(":") 
-          ? gQuicktext.mStringBundle.GetStringFromName(i18nId.slice(0, -1)) + ":"
-          : gQuicktext.mStringBundle.GetStringFromName(i18nId);
+          ? ConversionHelper.i18n.getMessage(i18nId.slice(0, -1)) + ":"
+          : ConversionHelper.i18n.getMessage(i18nId);
         node.setAttribute(i18nAttribute, i18nValue);
       }      
     }
@@ -716,7 +715,7 @@ var gQuicktext = {
       if (checkFileEncoding) {
         let content = this.readFile(filePicker.file);
         if (content.includes(String.fromCharCode(0xFFFD))) {
-          aWindow.alert(gQuicktext.mStringBundle.GetStringFromName("fileNotUTF8"));
+          aWindow.alert(ConversionHelper.i18n.getMessage("fileNotUTF8"));
           return null;
         }
       }

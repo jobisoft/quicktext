@@ -1,6 +1,7 @@
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { wzQuicktextVar } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm");
 var gQuicktextVar = new wzQuicktextVar();
+var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/modules/ConversionHelper.jsm");
 
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 
@@ -111,7 +112,7 @@ var quicktext = {
         let field = fields[i];
         let fieldtype = field.split("-")[0];
         if (document.getElementById(field)) {
-            document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
+            document.getElementById(field).setAttribute("label", ConversionHelper.i18n.getMessage(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)]));
         }
     }
 
@@ -622,7 +623,7 @@ var quicktext = {
 ,
   insertContentFromFile: async function(aType)
   {
-    if ((file = await gQuicktext.pickFile(window, aType, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, aType, 0, ConversionHelper.i18n.getMessage("insertFile"))) != null)
       await this.insertBody(gQuicktext.readFile(file), aType, true);
   }
 ,

@@ -1,6 +1,9 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ *
+ * Portions Copyright (C) Philipp Kewisch (2009-2019)
+ * and John Bieling (2020) */
 
 "use strict";
 
@@ -72,15 +75,11 @@ var ConversionHelper = {
     }
   },
   
-  GetStringFromName: function(aName) {
-    return this.getWXAPI("i18n", true).getMessage(aName);
+  i18n: { 
+    getMessage: function(aName, aParams) {
+      return ConversionHelper.getWXAPI("i18n", true).getMessage(aName, aParams);
+    }
   },
-  
-  formatStringFromName: function(aName, aParams, aLength) {
-    return this.getWXAPI("i18n", true).getMessage(aName, aParams);
-  },
-
-  
   
   getPref: async function(aName, aFallback = null) {
     let storage = await this.getWXAPI("storage");
