@@ -20,7 +20,7 @@ var quicktext = {
 }
 
 async function main() {
-  await ConversionHelper.webExtensionStartupCompleted();
+  await ConversionHelper.webExtensionStartupCompleted("MAIN");
   
   gQuicktext.setLocales(document, ["label"]);
   await gQuicktext.loadSettings(false);

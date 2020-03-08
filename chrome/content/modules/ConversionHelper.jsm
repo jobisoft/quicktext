@@ -15,12 +15,15 @@ var ConversionHelper = {
   promisses: [],
   
   // Called from legacy code to wait until startup completed
-  webExtensionStartupCompleted: function() {
-    if (this.startupCompleted)
+  webExtensionStartupCompleted: function(msg) {
+    if (this.startupCompleted) {
+      console.log("WX startup already completed. Continuing. [" + msg + "]");
       return;
+    }
     
+	console.log("WX startup not yet completed. Pausing. [" + msg + "]");
     return new Promise(resolve => {
-      this.promisses.push(resolve);
+      this.promisses.push({resolve, msg});
     });
   },
   
@@ -28,8 +31,9 @@ var ConversionHelper = {
   notifyStartupComplete: function() {
     this.startupCompleted = true;
     // Run through all pending promisses and fullfill them
-    for (const resolve of this.promisses){
-      resolve();
+    for (const p of this.promisses){
+      console.log("WX startup now completed. Continuing. [" + p.msg + "]");
+      p.resolve();
     }  
   },
 
