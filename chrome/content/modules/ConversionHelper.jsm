@@ -6,8 +6,6 @@
 
 var EXPORTED_SYMBOLS = ["ConversionHelper"];
 
-var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
-
 var ConversionHelper = {
   
   context: null,
@@ -21,7 +19,7 @@ var ConversionHelper = {
       return;
     }
     
-	console.log("WX startup not yet completed. Pausing. [" + msg + "]");
+    console.log("WX startup not yet completed. Pausing. [" + msg + "]");
     return new Promise(resolve => {
       this.promisses.push({resolve, msg});
     });
@@ -37,10 +35,14 @@ var ConversionHelper = {
     }  
   },
 
+  
+  
+  
   getWXAPI(name, sync=false) {
     let that = this;
     
     // ToDo: Inform the user, he should not call this from within an experiment!
+    //console.log(Cu.getGlobalForObject(this));
     
     function implementation(api) {
       let impl = api.getAPI(that.context)[name];
