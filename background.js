@@ -14,7 +14,8 @@ async function main() {
     "collapseState": ""
     });  
   console.log("keywordKey: " + await preferences.getPref("keywordKey"));
-
+  console.log("Background.js: " + browser.runtime.getManifest().version);
+    
   await browser.conversionHelper.notifyStartupCompleted();
 }
 
