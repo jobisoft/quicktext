@@ -24,17 +24,19 @@
     "legacyprefs": {
       "schema": "api/legacyprefs/schema.json",
       "parent": {
-        "scopes": [
-          "addon_parent"
-        ],
-        "paths": [
-          [
-            "legacyprefs"
-          ]
-        ],
+        "scopes": ["addon_parent"],
+        "paths": [["legacyprefs"]],
         "script": "api/legacyprefs/implementation.js"
       }
-    }
+    },
+    "conversionHelper": {
+      "schema": "api/conversionHelper/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "paths": [["conversionHelper"]],
+        "script": "api/conversionHelper/implementation.js"
+      }
+    }    
   },  
   "legacy": {
     "type": "xul",

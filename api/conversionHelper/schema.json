@@ -1,0 +1,27 @@
+[
+  {
+    "namespace": "conversionHelper",
+    "functions": [
+      {
+        "name": "init",
+        "type": "function",
+        "description": "Setup the conversion helper and declare the location of ConversionHelper.jsm",
+        "async": true,
+        "parameters": [
+          {
+            "name": "aPath",
+            "type": "string",
+            "description": "Either the chrome:// path to the JSM or the relative location of ConversionHelper.jsm from the root of the extension (in case of pure WX)."
+          }
+        ]
+      },
+      {
+        "name": "notifyStartupCompleted",
+        "type": "function",
+        "description": "Notify legacy code that startup of WebExtension has finished.",
+        "async": true,
+        "parameters": []
+      }
+    ]
+  }
+]

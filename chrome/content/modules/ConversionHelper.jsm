@@ -8,12 +8,38 @@ var EXPORTED_SYMBOLS = ["ConversionHelper"];
 
 var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
 
-const ADDON_ID = "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}";
-
 var ConversionHelper = {
+  
+  context: null,
+  startupCompleted: false,
+  promisses: [],
+  
+  // Called from legacy code to wait until startup completed
+  webExtensionStartupCompleted: function() {
+    if (this.startupCompleted)
+      return;
+    
+    return new Promise(resolve => {
+      this.promisses.push(resolve);
+    });
+  },
+  
+  // Called from WX code to set startupCompleted
+  notifyStartupComplete: function() {
+    this.startupCompleted = true;
+    // Run through all pending promisses and fullfill them
+    for (const resolve of this.promisses){
+      resolve();
+    }  
+  },
+
   getWXAPI(name, sync=false) {
+    let that = this;
+    
+    // ToDo: Inform the user, he should not call this from within an experiment!
+    
     function implementation(api) {
-      let impl = api.getAPI(context)[name];
+      let impl = api.getAPI(that.context)[name];
 
       if (name == "storage") {
         impl.local.get = (...args) => impl.local.callMethodInParentProcess("get", args);
@@ -24,9 +50,11 @@ var ConversionHelper = {
       return impl;
     }
 
-    let extension = ExtensionParent.GlobalManager.getExtension(ADDON_ID);
-    // ToDo: Get the true context
-    let context = { extension , callOnClose : function() {} };
+    if (!this.context) {
+      throw new Error("Extension context not set. Please call browser.conversionHelper.init(aPath) first!");
+    }
+    
+    let extension = this.context.extension;
     
     if (sync) {
       let api = extension.apiManager.getAPI(name, extension, "addon_parent");
