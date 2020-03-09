@@ -20,11 +20,8 @@ var quicktext = {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
-      
-      gQuicktext.setLocales(document);
-      document.getElementById("quicktextSettingsWindow").getButton("cancel").label = ConversionHelper.i18n.getMessage("quicktext.close.label");
-      document.getElementById("quicktextSettingsWindow").getButton("extra1").label = ConversionHelper.i18n.getMessage("quicktext.save.label");
-      
+
+      gQuicktext.loadLocales(document);
       // add OS as attribute to outer dialog
       document.getElementById('quicktextSettingsWindow').setAttribute("OS", OS.Constants.Sys.Name);
       console.log("Adding attribute 'OS' = '"+ OS.Constants.Sys.Name +"' to settings dialog element.");

@@ -15,7 +15,9 @@
 
         buttons="extra1, cancel"
         defaultButton="extra1"
-
+        i18n-buttonlabelcancel="quicktext.close.label"
+        i18n-buttonlabelextra1="quicktext.save.label"
+        
         persist="width height screenX screenY sizemode"
         style="padding: 0px 0px 5px 0px;"
         width="600"

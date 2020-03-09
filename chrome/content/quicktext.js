@@ -30,7 +30,7 @@ var quicktext = {
     {
       this.mLoaded = true;
 
-      gQuicktext.setLocales(document, ["label"]);
+      gQuicktext.loadLocales(document);
 
       gQuicktext.addObserver(this);
       if (!(await gQuicktext.loadSettings(false)))

@@ -1,7 +1,9 @@
 async function main() {
   await browser.conversionHelper.init("chrome://quicktext/content/modules/ConversionHelper.jsm");
 
-  await preferences.setDefaults({
+  // can access browser.*
+
+  let defaultPrefs = {
     "counter": 0,
     "settingsFolder": "",
     "defaultImport": "",
@@ -12,7 +14,10 @@ async function main() {
     "shortcutModifier": "alt",
     "shortcutTypeAdv": false,
     "collapseState": ""
-    });
+  };
+    
+  await preferences.setDefaults(defaultPrefs);
+  await preferences.migrateFromLegacy(defaultPrefs, "extensions.quicktext.");
     
   await browser.conversionHelper.notifyStartupCompleted();
 }

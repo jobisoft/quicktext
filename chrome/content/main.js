@@ -19,15 +19,14 @@ var quicktext = {
   }
 }
 
-async function main() {
-  await ConversionHelper.webExtensionStartupCompleted("MAIN");
-  
-  gQuicktext.setLocales(document, ["label"]);
-  await gQuicktext.loadSettings(false);
-}
-
 // For some reason I cannot add an onload to the overlay "main.xul", so I have
 // to call this manually, but only if it is called from messenger.xul
 if (window.location.href == "chrome://messenger/content/messenger.xul") {
   main();
+}
+
+async function main() {
+  await ConversionHelper.webExtensionStartupCompleted("main.xul / main.js");
+  gQuicktext.loadLocales(document);
+  await gQuicktext.loadSettings(false);
 }

@@ -36,7 +36,7 @@ var gQuicktext = {
   mCollapseState:       "",
   mSelectionContent:    ""
 ,
-  setLocales: function(document, i18nAttributes = ["title", "label", "value"]) {
+  loadLocales: function(document, i18nAttributes = ["title", "label", "value"], i18nButtons = ["accept", "cancel", "extra1"]) {
     // set all i18n locale values
     for (let i18nAttribute of i18nAttributes) {
       for (let node of document.querySelectorAll("[i18n-"+i18nAttribute+"]")) {
@@ -49,6 +49,13 @@ var gQuicktext = {
         node.setAttribute(i18nAttribute, i18nValue);
       }      
     }
+    
+    for (let i18nButton of i18nButtons) {
+      for (let node of document.querySelectorAll("[i18n-buttonlabel"+i18nButton+"]")) {
+        let i18nId = node.getAttribute("i18n-buttonlabel"+i18nButton);
+        node.getButton(i18nButton).label = ConversionHelper.i18n.getMessage(i18nId);
+      }      
+    }        
   }
 ,
   get viewToolbar() { return this.mViewToolbar; },
