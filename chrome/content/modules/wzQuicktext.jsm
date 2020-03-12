@@ -13,7 +13,7 @@ const kSepChar1b    = String.fromCharCode(164, 164);
 const kSepChar2     = "||";
 const kIllegalChars = String.fromCharCode(1) +"-"+ String.fromCharCode(8) + String.fromCharCode(11) + String.fromCharCode(12) + String.fromCharCode(14) +"-"+ String.fromCharCode(31) + String.fromCharCode(127) +"-"+ String.fromCharCode(132) + String.fromCharCode(134) +"-"+ String.fromCharCode(159);
 const kFileShortcuts = ['ProfD', 'UsrDocs', 'Home', 'Desk', 'Pers'];
-const kHomepage     = "https://github.com/thundernest/quicktext/wiki/";
+const kHomepage     = "https://github.com/jobisoft/quicktext/wiki/";
 
 var gQuicktext = {
   mSettingsLoaded:      false,
