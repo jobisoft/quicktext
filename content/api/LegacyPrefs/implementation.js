@@ -12,12 +12,12 @@ const PrefTypes = {
   [Services.prefs.PREF_INVALID] : "invalid"
 };
   
-var legacyprefs = class extends ExtensionCommon.ExtensionAPI {
+var LegacyPrefs = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
     
     
     return {
-      legacyprefs: {
+      LegacyPrefs: {
 
         // get may only return something, if a value is set
         get: async function(aName, aDefault) {

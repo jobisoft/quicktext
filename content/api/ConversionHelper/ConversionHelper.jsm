@@ -41,11 +41,8 @@ var ConversionHelper = {
   
   
   
-  getWXAPI(name, sync=false) {
+  getWXAPI(name, sync = false) {
     let that = this;
-    
-    // ToDo: Inform the user, he should not call this from within an experiment!
-    //console.log(Cu.getGlobalForObject(this));
     
     function implementation(api) {
       let impl = api.getAPI(that.context)[name];
@@ -93,3 +90,5 @@ var ConversionHelper = {
     await storage.sync.set({ ["pref.value." + aName] : aValue });
   }  
 }
+
+console.log("JSM");

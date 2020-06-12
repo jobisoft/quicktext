@@ -1,7 +1,5 @@
 async function main() {
-  await browser.conversionHelper.init("chrome://quicktext/content/modules/ConversionHelper.jsm");
-
-  // can access browser.*
+  await browser.ConversionHelper.init("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
 
   let defaultPrefs = {
     "counter": 0,
@@ -19,7 +17,7 @@ async function main() {
   await preferences.setDefaults(defaultPrefs);
   await preferences.migrateFromLegacy(defaultPrefs, "extensions.quicktext.");
     
-  await browser.conversionHelper.notifyStartupCompleted();
+  await browser.ConversionHelper.notifyStartupCompleted();
 }
 
 main();

@@ -14,27 +14,27 @@
   "default_locale": "en-US",
   "description": "__MSG_extensionDescription__",  
   "icons": {
-    "32": "chrome/skin/icon.png"
+    "32": "content/skin/icon.png"
   },
   "permissions": ["storage"],
   "background": {
-    "scripts": ["scripts/preferences.js", "background.js"]
+    "scripts": ["content/scripts/preferences.js", "background.js"]
   },
   "experiment_apis": {
-    "legacyprefs": {
-      "schema": "api/legacyprefs/schema.json",
+    "LegacyPrefs": {
+      "schema": "content/api/LegacyPrefs/schema.json",
       "parent": {
         "scopes": ["addon_parent"],
-        "paths": [["legacyprefs"]],
-        "script": "api/legacyprefs/implementation.js"
+        "paths": [["LegacyPrefs"]],
+        "script": "content/api/LegacyPrefs/implementation.js"
       }
     },
-    "conversionHelper": {
-      "schema": "api/conversionHelper/schema.json",
+    "ConversionHelper": {
+      "schema": "content/api/ConversionHelper/schema.json",
       "parent": {
         "scopes": ["addon_parent"],
-        "paths": [["conversionHelper"]],
-        "script": "api/conversionHelper/implementation.js"
+        "paths": [["ConversionHelper"]],
+        "script": "content/api/ConversionHelper/implementation.js"
       }
     }    
   },  

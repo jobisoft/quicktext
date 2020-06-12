@@ -10,11 +10,11 @@ var preferences = {
   migrateFromLegacy: async function(defaultPrefs, prefBranch) {
     const prefs = Object.keys(defaultPrefs);
     for (const pref of prefs) {
-      let legacyValue = await browser.legacyprefs.get(prefBranch + pref, defaultPrefs[pref]);
+      let legacyValue = await browser.LegacyPrefs.get(prefBranch + pref, defaultPrefs[pref]);
       if (legacyValue !== null) {
         console.log("Migrating legacy preference <" + prefBranch + pref + "> = <" + legacyValue + ">.");
         await browser.storage.sync.set({ ["pref.value." + pref] : legacyValue });
-        await browser.legacyprefs.clear(prefBranch + pref);
+        await browser.LegacyPrefs.clear(prefBranch + pref);
       }
     }
   },

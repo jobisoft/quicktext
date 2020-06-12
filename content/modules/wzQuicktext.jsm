@@ -3,7 +3,7 @@ var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/mod
 var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
 var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/modules/ConversionHelper.jsm");
+var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 

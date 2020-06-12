@@ -1,6 +1,6 @@
 [
   {
-    "namespace": "conversionHelper",
+    "namespace": "ConversionHelper",
     "functions": [
       {
         "name": "init",
@@ -11,7 +11,7 @@
           {
             "name": "aPath",
             "type": "string",
-            "description": "Either the chrome:// path to the JSM or the relative location of ConversionHelper.jsm from the root of the extension (in case of pure WX)."
+            "description": "Either the chrome:// path to the JSM or the relative location of ConversionHelper.jsm from the root of the extension (in case of pure WX). If a JSM is loaded via relative path, it cannot be loaded via chrome path in other parts of the addon!"
           }
         ]
       },
