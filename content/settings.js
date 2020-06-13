@@ -1,7 +1,7 @@
-var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
-var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
-var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
-var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
+let { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
+let { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
+let { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
+let { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
 
 var quicktext = {
   mChangesMade:         false,
@@ -21,11 +21,13 @@ var quicktext = {
     {
       this.mLoaded = true;
 
-      gQuicktext.loadLocales(document);
       // add OS as attribute to outer dialog
       document.getElementById('quicktextSettingsWindow').setAttribute("OS", OS.Constants.Sys.Name);
       console.log("Adding attribute 'OS' = '"+ OS.Constants.Sys.Name +"' to settings dialog element.");
 
+      document.getElementById('quicktextSettingsWindow').getButton("cancel").label = ConversionHelper.i18n.getMessage("quicktext.close.label");
+      document.getElementById('quicktextSettingsWindow').getButton("extra1").label = ConversionHelper.i18n.getMessage("quicktext.save.label");     
+      
       var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).QueryInterface(Components.interfaces.nsIXULRuntime);
       this.mOS = appInfo.OS;
 
@@ -1438,3 +1440,5 @@ var quicktext = {
     }
   }
 }
+window.addEventListener("load", () => { quicktext.init(); }, { once: true });
+window.addEventListener("unload", () => { quicktext.unload(); }, { once: true });

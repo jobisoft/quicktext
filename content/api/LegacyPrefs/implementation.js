@@ -1,21 +1,18 @@
 /* eslint-disable object-shorthand */
 
 var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-
-// You probably already know what this does.
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-
-const PrefTypes = {
-  [Services.prefs.PREF_STRING] : "string",
-  [Services.prefs.PREF_INT] : "number",
-  [Services.prefs.PREF_BOOL] : "boolean",
-  [Services.prefs.PREF_INVALID] : "invalid"
-};
   
 var LegacyPrefs = class extends ExtensionCommon.ExtensionAPI {
-  getAPI(context) {
+  getAPI(context) {    
     
-    
+    const PrefTypes = {
+      [Services.prefs.PREF_STRING] : "string",
+      [Services.prefs.PREF_INT] : "number",
+      [Services.prefs.PREF_BOOL] : "boolean",
+      [Services.prefs.PREF_INVALID] : "invalid"
+    };
+
     return {
       LegacyPrefs: {
 

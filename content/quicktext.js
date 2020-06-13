@@ -1,20 +1,8 @@
-var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
-var { wzQuicktextVar } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm");
-var gQuicktextVar = new wzQuicktextVar();
-var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
-
-var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
-
-var quicktextStateListener = {
-  NotifyComposeBodyReady: function()
-  {
-  	quicktext.insertDefaultTemplate();
-  },
-
-  NotifyComposeFieldsReady: function() {},
-  ComposeProcessDone: function(aResult) {},
-  SaveInFolderDone: function(folderURI) {}
-}
+let { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
+let { wzQuicktextVar } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextVar.jsm");
+let gQuicktextVar = new wzQuicktextVar();
+let { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
+let { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 
 var quicktext = {
   mLoaded:                      false,
@@ -29,8 +17,6 @@ var quicktext = {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
-
-      gQuicktext.loadLocales(document);
 
       gQuicktext.addObserver(this);
       if (!(await gQuicktext.loadSettings(false)))
@@ -57,13 +43,9 @@ var quicktext = {
     }
   }
 ,
-  reload: function()
-  {
-    gQuicktextVar.init(window);
-  }
-,
   unload: function()
   {
+    console.log("quicktext.unload()");
     // Remove the observer
     gQuicktext.removeObserver(this);
 
@@ -81,27 +63,6 @@ var quicktext = {
 
     window.removeEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
   }
-,
-
-  /**
-   * This is called when the var gMsgCompose is init. We now take
-   * the extraArguments value and listen for state changes so
-   * we know when the editor is finished.
-   */
-  windowInit: function()
-  {
-  	gMsgCompose.RegisterStateListener(quicktextStateListener);
-  }
-,
-  /*
-   * This is called when the body of the mail is set up.
-   * So now it is time to insert the default template if
-   * there exists one.
-   */
-	insertDefaultTemplate: function()
-	{
-	  dump("insertDefaultTemplate\n");
-	}
 ,
   updateGUI: function()
   {
@@ -128,10 +89,10 @@ var quicktext = {
       //clear toolbar and store current "variables" and "other" menus (the two rightmost ones)
       var toolbarbuttonVar = null;
       var toolbarbuttonOther = null;
-      var length = toolbar.childNodes.length;
+      var length = toolbar.children.length;
       for(var i = length-1; i >= 0; i--)
       {
-        var element = toolbar.childNodes[i];
+        var element = toolbar.children[i];
         switch(element.getAttribute("id"))
         {
           case 'quicktext-variables':
@@ -217,18 +178,18 @@ var quicktext = {
       let optionalUI = ["button-quicktext", "quicktext-popup"];
       for (let a=0; a < optionalUI.length; a++) { 
         if (document.getElementById(optionalUI[a]) != null && document.getElementById(optionalUI[a]).childNodes[0] != null) {
-          let rootElement = document.getElementById(optionalUI[a]).childNodes[0]; //get the menupop
+          let rootElement = document.getElementById(optionalUI[a]).children[0]; //get the menupop
           
           //clear
-          let length = rootElement.childNodes.length;
+          let length = rootElement.children.length;
           for (let i = length-1; i >= 0; i--)
-            rootElement.removeChild(rootElement.childNodes[i]);
+            rootElement.removeChild(rootElement.children[i]);
 
           //rebuild via copy from the quicktext toolbar - loop over toolbarbuttons inside toolbar
-          for (let i = 0; i < toolbar.childNodes.length; i++)
+          for (let i = 0; i < toolbar.children.length; i++)
           {
             let menu;
-            let node = toolbar.childNodes[i];
+            let node = toolbar.children[i];
             switch (node.nodeName)
             {
               case "toolbarbutton":
@@ -284,7 +245,7 @@ var quicktext = {
 ,
   openSettings: function()
   {
-    var settingsHandle = window.open("chrome://quicktext/content/settings.xul", "quicktextConfig", "chrome,resizable,centerscreen");
+    var settingsHandle = window.open("chrome://quicktext/content/settings.xhtml", "quicktextConfig", "chrome,resizable,centerscreen");
     settingsHandle.focus();
   }
 ,
@@ -795,3 +756,7 @@ var quicktext = {
     }
   }
 }
+
+// custom event, fired by the overlay loader after it has finished loading
+document.addEventListener("DOMOverlayLoaded_{8845E3B3-E8FB-40E2-95E9-EC40294818C4}", () => { quicktext.load(); }, { once: true });
+window.addEventListener("unload", function() { quicktext.unload(); }, false);

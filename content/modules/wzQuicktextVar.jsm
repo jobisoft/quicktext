@@ -1,9 +1,10 @@
 var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
 
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
-var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
-var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
+let { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+let { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
+let { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
+let { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
+let { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
@@ -753,13 +754,11 @@ wzQuicktextVar.prototype = {
     };
 
     this.mWindow.Recipients2CompFields(this.mWindow.gMsgCompose.compFields);
-    var parser = Components.classes["@mozilla.org/messenger/headerparser;1"]
-                           .getService(Components.interfaces.nsIMsgHeaderParser);
     var emailAddresses = {};
     var names = {};
     var fullAddresses = {};
 
-    var numOfAddresses = parser.parseHeadersWithArray(this.mWindow.gMsgCompose.compFields.to, emailAddresses, names, fullAddresses);
+    var numOfAddresses = MailServices.headerParser.parseHeadersWithArray(this.mWindow.gMsgCompose.compFields.to, emailAddresses, names, fullAddresses);
 
     if (numOfAddresses > 0)
     {

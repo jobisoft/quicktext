@@ -1,20 +1,13 @@
 <?xml version="1.0"?>
-<?xml-stylesheet href="chrome://quicktext/skin/quicktext.css" type="text/css"?>
+<?xml-stylesheet href="chrome://quicktext/content/skin/quicktext.css" type="text/css"?>
 
 <overlay id="quicktextOverlay"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
+    xmlns:html="http://www.w3.org/1999/xhtml">
 
   <script type="application/x-javascript" src="chrome://messenger/content/dateFormat.js" />
   <script type="application/x-javascript" src="chrome://quicktext/content/quicktext.js" /> 
-  <script type="application/x-javascript">
-<![CDATA[
-  addEventListener("load", function() { quicktext.load(); }, true);
-  addEventListener("compose-window-reopen", function() { quicktext.reload(); }, true);
-  addEventListener("compose-window-init", function() { quicktext.windowInit(); }, true);
-  addEventListener("unload", function() { quicktext.unload(); }, false);
-]]>
-  </script>
-
+  <script type="application/x-javascript" src="chrome://quicktext/content/scripts/locales.js" /> 
+  
   <commandset id="composeCommands">
     <commandset id="quicktextCommands">
       <command id="cmd_quicktextKey1" disabled="true" />
@@ -32,75 +25,68 @@
 
   <toolbarpalette id="MsgComposeToolbarPalette">
     <toolbarbutton class="toolbarbutton-1" type="menu"
-                   id="button-quicktext" i18n-label="quicktext.shortname.label"
+                   id="button-quicktext" label="__MSG_quicktext.shortname.label__"
                    orient="horizontal">
       <menupopup />
     </toolbarbutton>
   </toolbarpalette>
 
-	<popup id="msgComposeContext">
-		<menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator"/>
-		<menu id="quicktext-popup" i18n-label="quicktext.label" hidden="true" insertafter="spellCheckSuggestionsSeparator"  class="menu-iconic quicktext-icon menuitem-iconic" >
-		  <menupopup />
-		</menu>
-	</popup>
+    <menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator"/>
+    <menu id="quicktext-popup" label="__MSG_quicktext.label__" hidden="true" insertafter="spellCheckSuggestionsSeparator"  class="menu-iconic quicktext-icon menuitem-iconic" >
+      <menupopup />
+    </menu>
 
-  <menupopup id="menu_View_Popup">
-    <menuitem id="quicktext-view" type="checkbox" i18n-label="quicktext.label" oncommand="quicktext.toogleToolbar();"/>
-  </menupopup>
+    <menuitem id="quicktext-view" type="checkbox" label="__MSG_quicktext.label__" oncommand="quicktext.toogleToolbar();" appendto="menu_View_Popup" />
 
-  <menupopup id="taskPopup">
-    <menuitem id="quicktext-settings" i18n-label="quicktext.label" oncommand="quicktext.openSettings();" insertafter="tasksMenuAddressBook" class="menu-iconic quicktext-icon menuitem-iconic" />
-    <menuseparator insertafter="tasksMenuAddressBook" />
-  </menupopup>
+    <menuitem id="quicktext-settings" label="__MSG_quicktext.label__" oncommand="quicktext.openSettings();" insertafter="tasksMenuAddressBook" class="menu-iconic quicktext-icon menuitem-iconic" />
+    <menuseparator  id="quicktext-settings-sep" insertafter="tasksMenuAddressBook" />
 
-  <toolbox id="headers-box">
-    <toolbar id="quicktext-toolbar">
-      <toolbarbutton type="menu" id="quicktext-variables" i18n-label="quicktext.variables.label">
+    <toolbar id="quicktext-toolbar" appendto="headers-box">
+      <toolbarbutton type="menu" id="quicktext-variables" label="__MSG_quicktext.variables.label__">
         <menupopup>
-          <menu i18n-label="quicktext.to.label">
+          <menu label="__MSG_quicktext.to.label__">
             <menupopup>
-              <menuitem i18n-label="quicktext.firstname.label" oncommand="quicktext.insertVariable('TO=firstname');" />
-              <menuitem i18n-label="quicktext.lastname.label" oncommand="quicktext.insertVariable('TO=lastname');" />
-              <menuitem i18n-label="quicktext.fullname.label" oncommand="quicktext.insertVariable('TO=fullname');" />
-              <menuitem i18n-label="quicktext.displayname.label" oncommand="quicktext.insertVariable('TO=displayname');" />
-              <menuitem i18n-label="quicktext.nickname.label" oncommand="quicktext.insertVariable('TO=nickname');" />
-              <menuitem i18n-label="quicktext.email.label" oncommand="quicktext.insertVariable('TO=email');" />
-              <menuitem i18n-label="quicktext.worknumber.label" oncommand="quicktext.insertVariable('TO=workphone');" />
-              <menuitem i18n-label="quicktext.faxnumber.label" oncommand="quicktext.insertVariable('TO=faxnumber');" />
-              <menuitem i18n-label="quicktext.cellularnumber.label" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
-              <menuitem i18n-label="quicktext.jobtitle.label" oncommand="quicktext.insertVariable('TO=jobtitle');" />
-              <menuitem i18n-label="quicktext.custom1.label" oncommand="quicktext.insertVariable('TO=custom1');" />
-              <menuitem i18n-label="quicktext.custom2.label" oncommand="quicktext.insertVariable('TO=custom2');" />
-              <menuitem i18n-label="quicktext.custom3.label" oncommand="quicktext.insertVariable('TO=custom3');" />
-              <menuitem i18n-label="quicktext.custom4.label" oncommand="quicktext.insertVariable('TO=custom4');" />
+              <menuitem label="__MSG_quicktext.firstname.label__" oncommand="quicktext.insertVariable('TO=firstname');" />
+              <menuitem label="__MSG_quicktext.lastname.label__" oncommand="quicktext.insertVariable('TO=lastname');" />
+              <menuitem label="__MSG_quicktext.fullname.label__" oncommand="quicktext.insertVariable('TO=fullname');" />
+              <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('TO=displayname');" />
+              <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('TO=nickname');" />
+              <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('TO=email');" />
+              <menuitem label="__MSG_quicktext.worknumber.label__" oncommand="quicktext.insertVariable('TO=workphone');" />
+              <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('TO=faxnumber');" />
+              <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
+              <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('TO=jobtitle');" />
+              <menuitem label="__MSG_quicktext.custom1.label__" oncommand="quicktext.insertVariable('TO=custom1');" />
+              <menuitem label="__MSG_quicktext.custom2.label__" oncommand="quicktext.insertVariable('TO=custom2');" />
+              <menuitem label="__MSG_quicktext.custom3.label__" oncommand="quicktext.insertVariable('TO=custom3');" />
+              <menuitem label="__MSG_quicktext.custom4.label__" oncommand="quicktext.insertVariable('TO=custom4');" />
             </menupopup>
           </menu>
-          <menu i18n-label="quicktext.from.label">
+          <menu label="__MSG_quicktext.from.label__">
             <menupopup>
-              <menuitem i18n-label="quicktext.firstname.label" oncommand="quicktext.insertVariable('FROM=firstname');" />
-              <menuitem i18n-label="quicktext.lastname.label" oncommand="quicktext.insertVariable('FROM=lastname');" />
-              <menuitem i18n-label="quicktext.fullname.label" oncommand="quicktext.insertVariable('FROM=fullname');" />
-              <menuitem i18n-label="quicktext.displayname.label" oncommand="quicktext.insertVariable('FROM=displayname');" />
-              <menuitem i18n-label="quicktext.nickname.label" oncommand="quicktext.insertVariable('FROM=nickname');" />
-              <menuitem i18n-label="quicktext.email.label" oncommand="quicktext.insertVariable('FROM=email');" />
-              <menuitem i18n-label="quicktext.worknumber.label" oncommand="quicktext.insertVariable('FROM=workphone');" />
-              <menuitem i18n-label="quicktext.faxnumber.label" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
-              <menuitem i18n-label="quicktext.cellularnumber.label" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
-              <menuitem i18n-label="quicktext.jobtitle.label" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
-              <menuitem i18n-label="quicktext.custom1.label" oncommand="quicktext.insertVariable('FROM=custom1');" />
-              <menuitem i18n-label="quicktext.custom2.label" oncommand="quicktext.insertVariable('FROM=custom2');" />
-              <menuitem i18n-label="quicktext.custom3.label" oncommand="quicktext.insertVariable('FROM=custom3');" />
-              <menuitem i18n-label="quicktext.custom4.label" oncommand="quicktext.insertVariable('FROM=custom4');" />
+              <menuitem label="__MSG_quicktext.firstname.label__" oncommand="quicktext.insertVariable('FROM=firstname');" />
+              <menuitem label="__MSG_quicktext.lastname.label__" oncommand="quicktext.insertVariable('FROM=lastname');" />
+              <menuitem label="__MSG_quicktext.fullname.label__" oncommand="quicktext.insertVariable('FROM=fullname');" />
+              <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('FROM=displayname');" />
+              <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('FROM=nickname');" />
+              <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('FROM=email');" />
+              <menuitem label="__MSG_quicktext.worknumber.label__" oncommand="quicktext.insertVariable('FROM=workphone');" />
+              <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
+              <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
+              <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
+              <menuitem label="__MSG_quicktext.custom1.label__" oncommand="quicktext.insertVariable('FROM=custom1');" />
+              <menuitem label="__MSG_quicktext.custom2.label__" oncommand="quicktext.insertVariable('FROM=custom2');" />
+              <menuitem label="__MSG_quicktext.custom3.label__" oncommand="quicktext.insertVariable('FROM=custom3');" />
+              <menuitem label="__MSG_quicktext.custom4.label__" oncommand="quicktext.insertVariable('FROM=custom4');" />
             </menupopup>
           </menu>
-          <menu i18n-label="quicktext.attachments.label">
+          <menu label="__MSG_quicktext.attachments.label__">
             <menupopup>
-              <menuitem i18n-label="quicktext.filename.label" oncommand="quicktext.insertVariable('ATT=name');" />
-              <menuitem i18n-label="quicktext.filenameAndSize.label" oncommand="quicktext.insertVariable('ATT=full');" />
+              <menuitem label="__MSG_quicktext.filename.label__" oncommand="quicktext.insertVariable('ATT=name');" />
+              <menuitem label="__MSG_quicktext.filenameAndSize.label__" oncommand="quicktext.insertVariable('ATT=full');" />
             </menupopup>
           </menu>
-          <menu i18n-label="quicktext.dateTime.label">
+          <menu label="__MSG_quicktext.dateTime.label__">
             <menupopup>
               <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
               <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
@@ -109,22 +95,22 @@
               <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
             </menupopup>
           </menu>
-          <menu i18n-label="quicktext.other.label">
+          <menu label="__MSG_quicktext.other.label__">
             <menupopup>
-              <menuitem i18n-label="quicktext.clipboard.label" oncommand="quicktext.insertVariable('CLIPBOARD');" />
-              <menuitem i18n-label="quicktext.counter.label" oncommand="quicktext.insertVariable('COUNTER');" />
-              <menuitem i18n-label="quicktext.subject.label" oncommand="quicktext.insertVariable('SUBJECT');" />
-              <menuitem i18n-label="quicktext.version.label" oncommand="quicktext.insertVariable('VERSION');" />
+              <menuitem label="__MSG_quicktext.clipboard.label__" oncommand="quicktext.insertVariable('CLIPBOARD');" />
+              <menuitem label="__MSG_quicktext.counter.label__" oncommand="quicktext.insertVariable('COUNTER');" />
+              <menuitem label="__MSG_quicktext.subject.label__" oncommand="quicktext.insertVariable('SUBJECT');" />
+              <menuitem label="__MSG_quicktext.version.label__" oncommand="quicktext.insertVariable('VERSION');" />
             </menupopup>
           </menu>
         </menupopup>
       </toolbarbutton>
-      <toolbarbutton type="menu" id="quicktext-other" i18n-label="quicktext.other.label">
+      <toolbarbutton type="menu" id="quicktext-other" label="__MSG_quicktext.other.label__">
         <menupopup>
-          <menuitem i18n-label="quicktext.insertTextFromFileAsText.label" oncommand="quicktext.insertContentFromFile(0);" />
-          <menuitem i18n-label="quicktext.insertTextFromFileAsHTML.label" oncommand="quicktext.insertContentFromFile(1);" />
+          <menuitem label="__MSG_quicktext.insertTextFromFileAsText.label__" oncommand="quicktext.insertContentFromFile(0);" />
+          <menuitem label="__MSG_quicktext.insertTextFromFileAsHTML.label__" oncommand="quicktext.insertContentFromFile(1);" />
         </menupopup>
       </toolbarbutton>
     </toolbar>
-  </toolbox>
+  
 </overlay>

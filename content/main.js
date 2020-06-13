@@ -1,7 +1,6 @@
-var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
-var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
+let { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 
-var quicktext = {
+let quicktext = {
   onloadoptions: function ()
   {
     window.close();
@@ -14,19 +13,10 @@ var quicktext = {
 ,
   openSettings: function()
   {
-    var settingsHandle = window.open("chrome://quicktext/content/settings.xul", "quicktextConfig", "chrome,resizable,centerscreen");
+    let settingsHandle = window.open("chrome://quicktext/content/settings.xhtml", "quicktextConfig", "chrome,resizable,centerscreen");
     settingsHandle.focus();
   }
 }
 
-// For some reason I cannot add an onload to the overlay "main.xul", so I have
-// to call this manually, but only if it is called from messenger.xul
-if (window.location.href == "chrome://messenger/content/messenger.xul") {
-  main();
-}
-
-async function main() {
-  await ConversionHelper.webExtensionStartupCompleted("main.xul / main.js");
-  gQuicktext.loadLocales(document);
-  await gQuicktext.loadSettings(false);
-}
+// custom event, fired by the overlay loader after it has finished loading
+document.addEventListener("DOMOverlayLoaded_{8845E3B3-E8FB-40E2-95E9-EC40294818C4}", () => { gQuicktext.loadSettings(false); }, { once: true });

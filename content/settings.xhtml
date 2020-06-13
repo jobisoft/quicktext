@@ -1,0 +1,354 @@
+<?xml version="1.0"?>
+<?xml-stylesheet href="chrome://global/skin/" type="text/css"?>
+<?xml-stylesheet href="chrome://messenger/skin/messenger.css" type="text/css"?>
+<?xml-stylesheet href="chrome://quicktext/content/skin/quicktext.css" type="text/css"?>
+
+<dialog id="quicktextSettingsWindow"
+        title="__MSG_quicktext.settings.title__"
+        xmlns:html="http://www.w3.org/1999/xhtml"
+        xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+        
+        buttons="extra1, cancel"
+        defaultButton="extra1"
+        
+        persist="width height screenX screenY sizemode"
+        style="padding: 0px 0px 5px 0px;"
+        width="600"
+        height="400">
+
+  <script type="application/x-javascript" src="chrome://global/content/nsDragAndDrop.js"/>
+  <script type="application/x-javascript" src="chrome://global/content/nsTransferable.js"/>
+  <script type="application/x-javascript" src="chrome://quicktext/content/settings.js" />
+  <script type="application/x-javascript" src="chrome://quicktext/content/scripts/locales.js" /> 
+
+  <keyset id="quicktextSettingsKeys">
+    <key keycode="VK_ESCAPE" xulkey="false" oncommand="quicktext.close(true);"/>
+    <key key="s" oncommand="quicktext.save();" modifiers="control"/>
+  </keyset>
+
+  <toolbox>
+    <toolbar type="menubar">
+      <toolbaritem>
+        <menubar style="border:0px;padding:0px;margin:0px;">
+          <menu label="__MSG_quicktext.file.label__">
+            <menupopup>
+              <menuitem id="toolbar-save" label="__MSG_quicktext.save.label__" oncommand="quicktext.save();" />
+              <menuseparator />
+              <menu label="__MSG_quicktext.import.label__">
+                <menupopup>
+                  <menuitem label="__MSG_quicktext.templates.label__" oncommand="quicktext.importTemplatesFromFile();" />
+                  <menuitem label="__MSG_quicktext.scripts.label__" oncommand="quicktext.importScriptsFromFile();" />
+                </menupopup>
+              </menu>
+              <menu label="__MSG_quicktext.export.label__">
+                <menupopup>
+                  <menuitem label="__MSG_quicktext.templates.label__" oncommand="quicktext.exportTemplatesToFile();" />
+                  <menuitem label="__MSG_quicktext.scripts.label__" oncommand="quicktext.exportScriptsToFile();" />
+                </menupopup>
+              </menu>
+              <menuseparator />
+              <menuitem label="__MSG_quicktext.close.label__" oncommand="quicktext.close(true);" />
+            </menupopup>
+          </menu>
+          <menu label="__MSG_quicktext.help.label__">
+            <menupopup>
+              <menuitem label="__MSG_quicktext.goToHomepage.label__" oncommand="quicktext.openHomepage();" />
+            </menupopup>
+          </menu>
+        </menubar>
+      </toolbaritem>
+    </toolbar>
+  </toolbox>
+
+  <hbox flex="1">
+    <vbox flex="1">
+      <tabbox id="tabbox-main" flex="1" style="margin: 5px 5px 0px 5px;">
+        <tabs>
+          <tab label="__MSG_quicktext.general.label__" />
+          <tab label="__MSG_quicktext.templates.label__" />
+          <tab label="__MSG_quicktext.scripts.label__" />
+        </tabs>
+        <tabpanels flex="1" style="margin: 0px; padding: 0px">
+          <tabpanel id="tab-general">
+            <hbox flex="1">
+              <vbox flex="1">
+                <groupbox>
+                  <hbox class="box-title"><label class="header" value="__MSG_quicktext.settings.label__"/></hbox>
+                  <vbox>
+                    <checkbox label="__MSG_quicktext.rightClickSetting.label__" id="checkbox-viewPopup" oncommand="quicktext.checkForGeneralChanges(0);" />
+                    <checkbox label="__MSG_quicktext.collapseSetting.label__" id="checkbox-collapseGroup" oncommand="quicktext.checkForGeneralChanges(1);" />
+                    <spacer height="5" />
+                    <hbox>
+                      <menulist id="select-shortcutModifier" oncommand="quicktext.checkForGeneralChanges(2); quicktext.shortcutModifierChange(); quicktext.pickText();"  style="width: 120px">
+                        <menupopup>
+                          <menuitem label="__MSG_quicktext.altKey.label__" value="alt" />
+                          <menuitem label="__MSG_quicktext.controlKey.label__" value="control" />
+                          <menuitem label="__MSG_quicktext.metaKey.label__" value="meta" />
+                        </menupopup>
+                      </menulist>
+                      <label value="__MSG_quicktext.modifierSetting.label__" control="select-shortcutModifier" style="margin-top: 6px" />
+                    </hbox>
+                    <checkbox label="__MSG_quicktext.shortcutTypeAdv.label__" id="checkbox-shortcutTypeAdv" oncommand="quicktext.checkForGeneralChanges(3); quicktext.pickText();" />
+                    <spacer height="5" />
+                    <hbox>
+                      <menulist id="select-keywordKey" oncommand="quicktext.checkForGeneralChanges(4);" style="width: 120px">
+                        <menupopup>
+                          <!-- we are using KeyboardEvent.code as values (https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/code) -->
+                          <menuitem label="__MSG_quicktext.tabKey.label__" value="Tab" />
+                          <menuitem label="__MSG_quicktext.spaceKey.label__" value="Space" />
+                          <menuitem label="__MSG_quicktext.enterKey.label__" value="Enter" />
+                          <menuitem label="__MSG_quicktext.f2Key.label__" value="F2" />
+                          <menuitem label="__MSG_quicktext.f4Key.label__" value="F4" />
+                          <menuitem label="__MSG_quicktext.f5Key.label__" value="F5" />
+                          <menuitem label="__MSG_quicktext.f8Key.label__" value="F8" />
+                          <menuitem label="__MSG_quicktext.f11Key.label__" value="F11" />
+                          <menuitem label="__MSG_quicktext.f12Key.label__" value="F12" />
+                        </menupopup>
+                      </menulist>
+                      <label value="__MSG_quicktext.keywordKeySetting.label__" control="select-keywordKey" style="margin-top: 6px" />
+                    </hbox>
+                  </vbox>
+                </groupbox>
+                <groupbox>
+                  <hbox class="box-title"><label class="header" value="__MSG_quicktext.defaultImport.label__"/></hbox>
+                  <textbox id="text-defaultImport" flex="1" oninput="quicktext.checkForGeneralChanges(5);" />
+                </groupbox>
+              </vbox>
+              <vbox flex="1">
+                <groupbox>
+                  <hbox class="box-title"><label class="header" value="__MSG_quicktext.sharingTemplates.label__"/></hbox>
+                  <button label="__MSG_quicktext.export.label__" oncommand="quicktext.exportTemplatesToFile();" />
+                  <button label="__MSG_quicktext.import.label__" oncommand="quicktext.importTemplatesFromFile();" />
+                </groupbox>
+                <groupbox>
+                  <hbox class="box-title"><label class="header" value="__MSG_quicktext.sharingScripts.label__"/></hbox>
+                  <button label="__MSG_quicktext.export.label__" oncommand="quicktext.exportScriptsToFile();" />
+                  <button label="__MSG_quicktext.import.label__" oncommand="quicktext.importScriptsFromFile();" />
+                </groupbox>
+              </vbox>
+            </hbox>
+          </tabpanel>
+          <tabpanel id="tab-templates">
+            <vbox style="width: 200px">
+              <groupbox flex="1">
+                <hbox class="box-title"><label class="header" value="__MSG_quicktext.title.label__"/></hbox>
+                <hbox><button id="group-button-add-group" label="__MSG_quicktext.addGroup.label__" flex="1" oncommand="quicktext.addGroup();" /></hbox>
+                <hbox><button id="group-button-add-text" label="__MSG_quicktext.addTemplate.label__" flex="1" oncommand="quicktext.addText();" /></hbox>
+                <tree id="group-tree"
+                      onselect="quicktext.pickText();"
+                      flex="1"
+                      seltype="single"
+                      selstyle="primary"
+                      style="margin-bottom: 2px;"
+                      hidecolumnpicker="true">
+                  <treecols>
+                    <treecol id="group" primary="true" flex="1" hideheader="true" />
+                    <treecol id="shortcut" style="width: 20px" hideheader="true" />
+                  </treecols>
+                  <treechildren
+                      draggable="true"
+                      ondragstart="event.dataTransfer.setData('quicktextTree', event.target.getAttribute('label'))"
+                  />
+                </tree>
+                <hbox><button id="group-button-remove" label="__MSG_quicktext.remove.label__" flex="1" oncommand="quicktext.removeText();" /></hbox>
+              </groupbox>
+            </vbox>
+            <splitter resizebefore="closest" resizeafter="closest">
+              <grippy/>
+            </splitter>
+            <vbox flex="1">
+              <groupbox flex="1">
+                <hbox class="box-title"><label id="text-caption" class="header" value="__MSG_quicktext.template.label__"/></hbox>
+                <vbox flex="1">
+                  <grid flex="1">
+                    <columns>
+                      <column width="80px"/>
+                      <column flex="1"/>
+                    </columns>
+                    <rows>
+                      <row showfor="text,group">
+                        <vbox pack="center">
+                          <label align="center" value="__MSG_quicktext.title.label__:" control="text-title" />
+                        </vbox>
+                        <textbox id="text-title" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(0);"/>
+                      </row>
+                      <hbox align="right" showfor="text">
+                        <vbox height="20px">
+                          <menu label="__MSG_quicktext.variables.label__" id="text-variables" disabled="true" flex="1" showfor="text" candisable="true">
+                            <menupopup>
+                              <menu label="__MSG_quicktext.to.label__">
+                                <menupopup>
+                                  <menuitem label="__MSG_quicktext.firstname.label__" oncommand="quicktext.insertVariable('TO=firstname');" />
+                                  <menuitem label="__MSG_quicktext.lastname.label__" oncommand="quicktext.insertVariable('TO=lastname');" />
+                                  <menuitem label="__MSG_quicktext.fullname.label__" oncommand="quicktext.insertVariable('TO=fullname');" />
+                                  <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('TO=displayname');" />
+                                  <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('TO=nickname');" />
+                                  <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('TO=email');" />
+                                  <menuitem label="__MSG_quicktext.worknumber.label__" oncommand="quicktext.insertVariable('TO=workphone');" />
+                                  <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('TO=faxnumber');" />
+                                  <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
+                                  <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('TO=jobtitle');" />
+                                  <menuitem label="__MSG_quicktext.custom1.label__" oncommand="quicktext.insertVariable('TO=custom1');" />
+                                  <menuitem label="__MSG_quicktext.custom2.label__" oncommand="quicktext.insertVariable('TO=custom2');" />
+                                  <menuitem label="__MSG_quicktext.custom3.label__" oncommand="quicktext.insertVariable('TO=custom3');" />
+                                  <menuitem label="__MSG_quicktext.custom4.label__" oncommand="quicktext.insertVariable('TO=custom4');" />
+                                </menupopup>
+                              </menu>
+                              <menu label="__MSG_quicktext.from.label__">
+                                <menupopup>
+                                  <menuitem label="__MSG_quicktext.firstname.label__" oncommand="quicktext.insertVariable('FROM=firstname');" />
+                                  <menuitem label="__MSG_quicktext.lastname.label__" oncommand="quicktext.insertVariable('FROM=lastname');" />
+                                  <menuitem label="__MSG_quicktext.fullname.label__" oncommand="quicktext.insertVariable('FROM=fullname');" />
+                                  <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('FROM=displayname');" />
+                                  <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('FROM=nickname');" />
+                                  <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('FROM=email');" />
+                                  <menuitem label="__MSG_quicktext.worknumber.label__" oncommand="quicktext.insertVariable('FROM=workphone');" />
+                                  <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
+                                  <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
+                                  <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
+                                  <menuitem label="__MSG_quicktext.custom1.label__" oncommand="quicktext.insertVariable('FROM=custom1');" />
+                                  <menuitem label="__MSG_quicktext.custom2.label__" oncommand="quicktext.insertVariable('FROM=custom2');" />
+                                  <menuitem label="__MSG_quicktext.custom3.label__" oncommand="quicktext.insertVariable('FROM=custom3');" />
+                                  <menuitem label="__MSG_quicktext.custom4.label__" oncommand="quicktext.insertVariable('FROM=custom4');" />
+                                </menupopup>
+                              </menu>
+                              <menu label="__MSG_quicktext.attachments.label__">
+                                <menupopup>
+                                  <menuitem label="__MSG_quicktext.filename.label__" oncommand="quicktext.insertVariable('ATT=name');" />
+                                  <menuitem label="__MSG_quicktext.filenameAndSize.label__" oncommand="quicktext.insertVariable('ATT=full');" />
+                                </menupopup>
+                              </menu>
+                              <menu label="__MSG_quicktext.dateTime.label__">
+                                <menupopup>
+                                  <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
+                                  <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
+                                  <menuitem id="date-monthname" oncommand="quicktext.insertVariable('DATE=monthname');" />
+                                  <menuitem id="time-noseconds" oncommand="quicktext.insertVariable('TIME');" />
+                                  <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
+                                </menupopup>
+                              </menu>
+                              <menu label="__MSG_quicktext.other.label__">
+                                <menupopup>
+                                  <menuitem label="__MSG_quicktext.clipboard.label__" oncommand="quicktext.insertVariable('CLIPBOARD');" />
+                                  <menuitem label="__MSG_quicktext.counter.label__" oncommand="quicktext.insertVariable('COUNTER');" />
+                                  <menuitem label="__MSG_quicktext.input.label__" oncommand="quicktext.insertVariable('INPUT=name|type|options');" />
+                                  <menuitem label="__MSG_quicktext.selection.label__" oncommand="quicktext.insertVariable('SELECTION');" />
+                                  <menuitem label="__MSG_quicktext.orgatt.label__" oncommand="quicktext.insertVariable('ORGATT=\\n');" />
+                                  <menuitem label="__MSG_quicktext.orgheader.label__" oncommand="quicktext.insertVariable('ORGHEADER=type|\\n');" />
+                                  <menuitem label="__MSG_quicktext.subject.label__" oncommand="quicktext.insertVariable('SUBJECT');" />
+                                  <menuitem label="__MSG_quicktext.url.label__" oncommand="quicktext.insertVariable('URL=url|data');" />
+                                  <menuitem label="__MSG_quicktext.insertfile.label__" oncommand="quicktext.insertFileVariable();" />
+                                  <menuitem label="__MSG_quicktext.image.label__" oncommand="quicktext.insertImageVariable();" />
+                                  <menuitem label="__MSG_quicktext.version.label__" oncommand="quicktext.insertVariable('VERSION');" />
+                                  <menuseparator/>
+                                  <menuitem label="__MSG_quicktext.header.label__" oncommand="quicktext.insertVariable('HEADER=type|value');" />
+                                  <menuitem label="__MSG_quicktext.cursor.label__" oncommand="quicktext.insertVariable('CURSOR');" />
+                                </menupopup>
+                              </menu>
+                              <menu label="__MSG_quicktext.templates.label__" id="quicktext-other-texts" />
+                              <menu label="__MSG_quicktext.scripts.label__" id="variables-scripts" />
+                            </menupopup>
+                          </menu>
+                        </vbox>
+                      </hbox>
+                      <vbox class="textarea-container" flex="1" showfor="text">
+                        <html:textarea id="text" rows="10" disabled="true" candisable="true" wrap="on" oninput="quicktext.checkForTextChanges(1);"/>
+                      </vbox>
+                      <row showfor="text">
+                        <label align="center" value="__MSG_quicktext.insertAs.label__:" control="text-type" style="margin-top: 6px" />
+                        <hbox flex="1">
+                          <menulist id="text-type" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(3);">
+                            <menupopup>
+                              <menuitem label="__MSG_quicktext.text.label__" value="0" />
+                              <menuitem label="__MSG_quicktext.HTML.label__" value="1" />
+                            </menupopup>
+                          </menulist> 
+                          <hbox align="right" flex="1">
+                            <label align="center" value="__MSG_quicktext.shortcut.label__:" control="text-shortcutBasic" style="margin-top: 6px" />
+                            <label id="label-shortcutModifier" align="center" value="" control="text-shortcutBasic" style="margin-top: 6px" />
+
+                            <menulist id="text-shortcutBasic" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(2);">
+                              <menupopup id="popup-shortcutBasic">
+                                <menuitem label="__MSG_quicktext.none.label__" value="" />
+                                <menuitem label="1" value="1" />
+                                <menuitem label="2" value="2" />
+                                <menuitem label="3" value="3" />
+                                <menuitem label="4" value="4" />
+                                <menuitem label="5" value="5" />
+                                <menuitem label="6" value="6" />
+                                <menuitem label="7" value="7" />
+                                <menuitem label="8" value="8" />
+                                <menuitem label="9" value="9" />
+                                <menuitem label="0" value="0" />
+                              </menupopup>
+                            </menulist>
+
+                            <textbox id="text-shortcutAdv" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(2);" width="50"/>
+                          </hbox>
+                        </hbox>
+                      </row>
+                      <row showfor="text">
+                        <label align="center" value="__MSG_quicktext.subject.label__:" control="text-subject" style="margin-top: 6px" />
+                        <textbox id="text-subject" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(5);"/>
+                      </row>
+                      <row showfor="text">
+                        <label align="center" value="__MSG_quicktext.keyword.label__:" control="text-keyword" style="margin-top: 6px" />
+                        <textbox id="text-keyword" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(4);"/>
+                      </row>
+                      <row showfor="text">
+                        <label align="center" value="__MSG_quicktext.attachments.label__:" control="text-attachments" style="margin-top: 6px" />
+                        <hbox>
+                          <textbox id="text-attachments" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(6);"/>
+                          <button id="button-attachments" label="__MSG_quicktext.browse.label__" oncommand="quicktext.browseAttachment();" disabled="true" candisable="true"/>
+                        </hbox>
+                      </row>
+                    </rows>
+                  </grid>
+                </vbox>
+              </groupbox>
+            </vbox>
+          </tabpanel>
+          <tabpanel id="tab-scripts">
+            <vbox style="width: 200px;">
+              <groupbox flex="1">
+                <hbox class="box-title"><label class="header" value="__MSG_quicktext.title.label__"/></hbox>
+                <hbox><button id="script-button-add" label="__MSG_quicktext.addScript.label__" flex="1" oncommand="quicktext.addScript();" /></hbox>
+                <hbox><button label="__MSG_quicktext.getScript.label__" flex="1" oncommand="quicktext.getCommunityScripts();" /></hbox>
+                <richlistbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
+                <hbox><button id="script-button-remove" label="__MSG_quicktext.remove.label__" flex="1" oncommand="quicktext.removeScript();" /></hbox>
+              </groupbox>
+
+            </vbox>
+            <splitter resizebefore="closest" resizeafter="closest">
+              <grippy/>
+            </splitter>
+            <vbox flex="1">
+              <groupbox flex="1">
+                <hbox class="box-title"><label id="script-caption" class="header" value="__MSG_quicktext.script.label__"/></hbox>
+                <vbox flex="1">
+                  <grid flex="1">
+                    <columns>
+                      <column width="80px"/>
+                      <column flex="1"/>
+                    </columns>
+                    <rows>
+                      <row>
+                        <vbox pack="center">
+                          <label align="center" value="__MSG_quicktext.title.label__:" control="script-title" />
+                        </vbox>
+                        <textbox id="script-title" flex="1" oninput="quicktext.checkForScriptChanges(0);"/>
+                      </row>
+                      <vbox class="textarea-container" flex="1">
+                        <html:textarea id="script" style="font-family:Consolas,Courier New,monospace;" rows="10" disabled="true" wrap="off" oninput="quicktext.checkForScriptChanges(1);"/>
+                      </vbox>
+                    </rows>
+                  </grid>
+                </vbox>
+              </groupbox>
+            </vbox>
+          </tabpanel>
+        </tabpanels>
+      </tabbox>
+    </vbox>
+  </hbox>
+</dialog>

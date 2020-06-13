@@ -4,11 +4,11 @@
     "gecko": {
       "id": "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}",
       "strict_min_version": "68.0",
-      "strict_max_version": "68.*"
+      "strict_max_version": "78.*"
     }
   },
   "name": "Quicktext",
-  "version": "2.15",
+  "version": "2.16",
   "author": "John Bieling",
   "homepage_url": "https://github.com/jobisoft/quicktext",
   "default_locale": "en-US",
@@ -29,6 +29,14 @@
         "script": "content/api/LegacyPrefs/implementation.js"
       }
     },
+    "ChromeURL": {
+      "schema": "content/api/ChromeURL/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "paths": [["ChromeURL"]],
+        "script": "content/api/ChromeURL/implementation.js"
+      }
+    },
     "ConversionHelper": {
       "schema": "content/api/ConversionHelper/schema.json",
       "parent": {
@@ -36,13 +44,14 @@
         "paths": [["ConversionHelper"]],
         "script": "content/api/ConversionHelper/implementation.js"
       }
+    },
+    "OverlayManager": {
+        "schema": "content/api/OverlayManager/schema.json",
+        "parent": {
+            "scopes": ["addon_parent"],
+            "paths": [ ["OverlayManager"] ],
+            "script": "content/api/OverlayManager/implementation.js"
+        }
     }    
-  },  
-  "legacy": {
-    "type": "xul",
-    "options": {
-      "page": "chrome://quicktext/content/addonoptions.xul",
-      "open_in_tab": false
-    }
   }
 }

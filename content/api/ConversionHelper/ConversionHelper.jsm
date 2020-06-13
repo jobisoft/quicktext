@@ -90,5 +90,3 @@ var ConversionHelper = {
     await storage.sync.set({ ["pref.value." + aName] : aValue });
   }  
 }
-
-console.log("JSM");

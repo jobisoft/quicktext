@@ -1,6 +1,6 @@
 [
   {
-    "namespace": "overlay",
+    "namespace": "OverlayManager",
     "functions": [
       {
         "name": "init",
@@ -34,25 +34,6 @@
         "description": "Gets the verbosity of the overlay manager.",
         "async": true,
         "parameters": []
-      },
-      {
-        "name": "registerChromeUrls",
-        "type": "function",
-        "description": "Register folders which should be available as chrome:// urls (as defined in the legacy chrome.manifest)",
-        "async": true,
-        "parameters": [
-          {
-            "name": "chromeData",
-            "type": "array",
-            "items": {
-              "type": "array",
-              "items" : {
-                "type": "string"
-              }
-            },
-            "description": "Array of ChromeData Arrays."
-          }
-        ]
       },
       {
         "name": "activate",

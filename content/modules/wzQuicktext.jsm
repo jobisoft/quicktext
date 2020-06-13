@@ -1,9 +1,9 @@
-var { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm");
-var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
-var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
-var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
-var { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
+let { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm");
+let { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
+let { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
+let { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
+let { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+let { ConversionHelper } = ChromeUtils.import("chrome://quicktext/content/api/ConversionHelper/ConversionHelper.jsm");
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 
@@ -35,28 +35,6 @@ var gQuicktext = {
   mOS:                  "WINNT",
   mCollapseState:       "",
   mSelectionContent:    ""
-,
-  loadLocales: function(document, i18nAttributes = ["title", "label", "value"], i18nButtons = ["accept", "cancel", "extra1"]) {
-    // set all i18n locale values
-    for (let i18nAttribute of i18nAttributes) {
-      for (let node of document.querySelectorAll("[i18n-"+i18nAttribute+"]")) {
-        let i18nId = node.getAttribute("i18n-"+i18nAttribute);
-        // small convinient hack: if the id ends with a colon, then it is not part of the id
-        // but should actually be printed
-        let i18nValue = i18nId.endsWith(":") 
-          ? ConversionHelper.i18n.getMessage(i18nId.slice(0, -1)) + ":"
-          : ConversionHelper.i18n.getMessage(i18nId);
-        node.setAttribute(i18nAttribute, i18nValue);
-      }      
-    }
-    
-    for (let i18nButton of i18nButtons) {
-      for (let node of document.querySelectorAll("[i18n-buttonlabel"+i18nButton+"]")) {
-        let i18nId = node.getAttribute("i18n-buttonlabel"+i18nButton);
-        node.getButton(i18nButton).label = ConversionHelper.i18n.getMessage(i18nId);
-      }      
-    }        
-  }
 ,
   get viewToolbar() { return this.mViewToolbar; },
   set viewToolbar(aViewToolbar)
