@@ -754,21 +754,17 @@ wzQuicktextVar.prototype = {
     };
 
     this.mWindow.Recipients2CompFields(this.mWindow.gMsgCompose.compFields);
-    var emailAddresses = {};
-    var names = {};
-    var fullAddresses = {};
+    let emailAddresses = MailServices.headerParser.parseEncodedHeader(this.mWindow.gMsgCompose.compFields.to);
 
-    var numOfAddresses = MailServices.headerParser.parseHeadersWithArray(this.mWindow.gMsgCompose.compFields.to, emailAddresses, names, fullAddresses);
-
-    if (numOfAddresses > 0)
+    if (emailAddresses.length > 0)
     {
-      for (var i = 0; i < numOfAddresses; i++)
+      for (var i = 0; i < emailAddresses.length; i++)
       {
         // TODO: Add code for getting info about all people in a mailing list
 
         var k = this.mData['TO'].data['email'].length;
-        this.mData['TO'].data['email'][k] = emailAddresses.value[i].toLowerCase();
-        this.mData['TO'].data['fullname'][k] = TrimString(names.value[i]);
+        this.mData['TO'].data['email'][k] = emailAddresses[i].email.toLowerCase();
+        this.mData['TO'].data['fullname'][k] = TrimString(emailAddresses[i].name);
         this.mData['TO'].data['firstname'][k] = "";
         this.mData['TO'].data['lastname'][k] = "";
 

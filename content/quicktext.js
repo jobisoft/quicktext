@@ -388,7 +388,6 @@ var quicktext = {
     if (count > 0)
     {
       Recipients2CompFields(gMsgCompose.compFields);
-      var parser = Components.classes["@mozilla.org/messenger/headerparser;1"].getService(Components.interfaces.nsIMsgHeaderParser);
 
       // Go through all recipientHeaders to remove duplicates
       var tmpRecipientHeaders = [];
@@ -401,26 +400,22 @@ var quicktext = {
         tmpRecipientHeaders[header] = [];
         
         // Create an array of emailaddresses for this header that allready added
-        var tmpEmailAddresses = {};
-        var numOfAddresses = parser.parseHeadersWithArray(gMsgCompose.compFields[convertHeaderToParse[header]], tmpEmailAddresses, {}, {});
-        var emailAddresses = [];
-        for (var i = 0; i < numOfAddresses; i++)
-          emailAddresses.push(tmpEmailAddresses.value[i]);
+        let tmpEmailAddresses = MailServices.headerParser.parseEncodedHeader(gMsgCompose.compFields[convertHeaderToParse[header]]);
+        let emailAddresses = [];
+        for (let i = 0; i < tmpEmailAddresses.length; i++)
+          emailAddresses.push(tmpEmailAddresses[i].email);
 
         // Go through all recipient of this header that I want to add
         for (var i = 0; i < recipientHeaders[header].length; i++)
         {
           // Get the mailaddresses of all the addresses
-          var insertedEmailAddresses = {};
-          var insertedFullAddresses = {};
-          var insertedNumOfAddresses = parser.parseHeadersWithArray(recipientHeaders[header][i], insertedEmailAddresses, {}, insertedFullAddresses);
-
-          for (var j = 0; j < insertedNumOfAddresses; j++)
+          let insertedAddresses = MailServices.headerParser.parseEncodedHeader(recipientHeaders[header][i]);
+          for (var j = 0; j < insertedAddresses.length; j++)
           {
-            if (emailAddresses.indexOf(insertedEmailAddresses.value[j]) < 0)
+            if (insertedAddresses[j].email && !emailAddresses.includes(insertedAddresses[j].email))
             {
-              tmpRecipientHeaders[header].push(insertedFullAddresses.value[j]);
-              emailAddresses.push(insertedEmailAddresses.value[j]);
+              tmpRecipientHeaders[header].push(insertedAddresses[j].toString());
+              emailAddresses.push(insertedAddresses[j].email);
               count++;
             }
           }
