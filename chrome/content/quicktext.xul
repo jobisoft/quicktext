@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<?xml-stylesheet href="chrome://quicktext/skin/quicktext.css" type="text/css"?>
+<?xml-stylesheet href="resource://quicktext/skin/quicktext.css" type="text/css"?>
 
 <!DOCTYPE overlay SYSTEM "chrome://quicktext/locale/quicktext.dtd">
 

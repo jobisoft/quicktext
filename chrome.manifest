@@ -1,10 +1,5 @@
-overlay	chrome://messenger/content/messengercompose/messengercompose.xul	      chrome://quicktext/content/quicktext.xul
-style   chrome://messenger/content/customizeToolbar.xul                                  chrome://quicktext/skin/quicktext.css
-overlay	chrome://messenger/content/messenger.xul	                              chrome://quicktext/content/main.xul
-
 content	quicktext	chrome/content/
-
-skin    quicktext classic/1.0 chrome/skin/
+resource quicktext chrome/
 
 locale	quicktext	de  	chrome/locale/de/
 locale	quicktext	pt-BR  	chrome/locale/pt_BR/
@@ -15,3 +10,9 @@ locale	quicktext	hu  	chrome/locale/hu/
 locale	quicktext	ja  	chrome/locale/ja/
 locale	quicktext	ru      chrome/locale/ru/
 locale	quicktext	sv-SE	chrome/locale/sv-SE/
+
+overlay	chrome://messenger/content/messengercompose/messengercompose.xul	      chrome://quicktext/content/quicktext.xul
+style   chrome://messenger/content/customizeToolbar.xul                                  resource://quicktext/skin/quicktext.css
+overlay	chrome://messenger/content/messenger.xul	                              chrome://quicktext/content/main.xul
+
+
