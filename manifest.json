@@ -16,11 +16,19 @@
   "icons": {
     "32": "chrome/skin/icon.png"
   },
-  "legacy": {
-    "type": "xul",
-    "options": {
-      "page": "chrome://quicktext/content/addonoptions.xul",
-      "open_in_tab": false
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "experiment_apis": {
+    "WindowListener": {
+      "schema": "api/WindowListener/schema.json",
+      "parent": {
+        "scopes": ["addon_parent"],
+        "paths": [["WindowListener"]],
+        "script": "api/WindowListener/implementation.js"
+      }
     }
   }
 }

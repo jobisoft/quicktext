@@ -1,24 +1,14 @@
-<?xml version="1.0"?>
+// Import any needed modules.
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
-<?xml-stylesheet href="resource://quicktext/skin/quicktext.css" type="text/css"?>
+// Load an additional JavaScript file.
+Services.scriptloader.loadSubScript("chrome://quicktext/content/quicktext.js", window, "UTF-8");
 
-<!DOCTYPE overlay SYSTEM "chrome://quicktext/locale/quicktext.dtd">
-
-<overlay id="quicktextOverlay"
-         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul" >
-
-  <script type="application/x-javascript" src="chrome://messenger/content/dateFormat.js" />
-  <script type="application/x-javascript" src="chrome://quicktext/content/quicktext.js" /> 
-  <script type="application/x-javascript">
-<![CDATA[
-  addEventListener("load", function() { quicktext.load(); }, true);
-  addEventListener("compose-window-reopen", function() { quicktext.reload(); }, true);
-  addEventListener("compose-window-init", function() { quicktext.windowInit(); }, true);
-  addEventListener("unload", function() { quicktext.unload(); }, false);
-]]>
-  </script>
-
-  <commandset id="composeCommands">
+function onLoad(activatedWhileWindowOpen) {
+  
+  WL.injectCSS("resource://quicktext/skin/quicktext.css");
+  WL.injectElements(`
+<commandset id="composeCommands">
     <commandset id="quicktextCommands">
       <command id="cmd_quicktextKey1" disabled="true" />
       <command id="cmd_quicktextKey2" disabled="true" />
@@ -129,5 +119,15 @@
         </menupopup>
       </toolbarbutton>
     </toolbar>
-  </toolbox>
-</overlay>
+  </toolbox>`,
+  ["chrome://quicktext/locale/quicktext.dtd"]);
+  
+  window.quicktext.load();
+  //addEventListener("compose-window-reopen", function() { quicktext.reload(); }, true);
+  //addEventListener("compose-window-init", function() { quicktext.windowInit(); }, true);
+}
+
+function onUnload(deactivatedWhileWindowOpen) {
+  window.quicktext.unload();
+  delete window.quicktext;
+}
