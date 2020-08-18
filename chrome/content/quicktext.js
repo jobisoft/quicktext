@@ -214,8 +214,8 @@ var quicktext = {
       // Update the toolbar inside the toolbarpalette and the drop-down menu - if used
       let optionalUI = ["button-quicktext", "quicktext-popup"];
       for (let a=0; a < optionalUI.length; a++) { 
-        if (document.getElementById(optionalUI[a]) != null && document.getElementById(optionalUI[a]).childNodes[0] != null) {
-          let rootElement = document.getElementById(optionalUI[a]).children[0]; //get the menupop
+        if (document.getElementById(optionalUI[a] + "-menupopup")) {
+          let rootElement = document.getElementById(optionalUI[a] + "-menupopup");
           
           //clear
           let length = rootElement.children.length;
@@ -225,7 +225,7 @@ var quicktext = {
           //rebuild via copy from the quicktext toolbar - loop over toolbarbuttons inside toolbar
           for (let i = 0; i < toolbar.children.length; i++)
           {
-            let menu;
+            let menu = null;
             let node = toolbar.children[i];
             switch (node.nodeName)
             {
@@ -235,9 +235,10 @@ var quicktext = {
                 {
                   menu = document.createXULElement("menu");
                   menu.setAttribute("label", node.getAttribute("label"));
-    
-                  for (let j = 0; j < node.childNodes.length; j++) {
-                    menu.appendChild(node.childNodes[j].cloneNode(true));
+                  
+                  let childs = node.querySelectorAll(":not(menu) > menupopup");                
+                  for (let child of childs) {
+                    menu.appendChild(child.cloneNode(true));
                   }
                 }
                 else
@@ -254,7 +255,6 @@ var quicktext = {
                 rootElement.appendChild(document.createXULElement("menuseparator"));
                 break;
             }
-            menu = null;
           }
           
         }

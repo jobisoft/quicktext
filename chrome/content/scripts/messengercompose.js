@@ -27,14 +27,14 @@ function onLoad(activatedWhileWindowOpen) {
     <toolbarbutton class="toolbarbutton-1" type="menu"
                    id="button-quicktext" label="&quicktext.shortname.label;"
                    orient="horizontal">
-      <menupopup />
+      <menupopup id="button-quicktext-menupopup"/>
     </toolbarbutton>
   </toolbarpalette>
 
 	<popup id="msgComposeContext">
 		<menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator"/>
 		<menu id="quicktext-popup" label="&quicktext.label;" hidden="true" insertafter="spellCheckSuggestionsSeparator"  class="menu-iconic quicktext-icon menuitem-iconic" >
-		  <menupopup />
+		  <menupopup id="quicktext-popup-menupopup"/>
 		</menu>
 	</popup>
 
