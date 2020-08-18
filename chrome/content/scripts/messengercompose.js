@@ -123,10 +123,10 @@ function onLoad(activatedWhileWindowOpen) {
   ["chrome://quicktext/locale/quicktext.dtd"]);
   
   window.quicktext.load();
-  addEventListener("compose-window-reopen", function() { window.quicktext.reload(); }, true);
 
   // event listener to insert custom / dynamic default template
-  addEventListener("compose-window-init", function() { window.quicktext.windowInit(); }, true);
+  window.addEventListener("compose-window-init", function() { window.quicktext.windowInit(); }, true);
+  window.addEventListener("compose-window-reopen", function() { window.quicktext.reload(); }, true);
 }
 
 function onUnload(deactivatedWhileWindowOpen) {
