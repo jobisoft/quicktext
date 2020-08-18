@@ -645,7 +645,7 @@ wzQuicktextVar.prototype = {
       var value = {};
       if (typeof aVariables[2] != 'undefined')
          value.value = aVariables[2].split(";");
-      if (promptService.select(this.mWindow, gQuicktext.mStringBundle.GetStringFromName("inputTitle"), gQuicktext.mStringBundle.formatStringFromName("inputText", [aVariables[0]], 1), value.value.length, value.value, checkValue))
+      if (promptService.select(this.mWindow, gQuicktext.mStringBundle.GetStringFromName("inputTitle"), gQuicktext.mStringBundle.formatStringFromName("inputText", [aVariables[0]], 1), value.value, checkValue))
         this.mData['INPUT'].data[aVariables[0]] = value.value[checkValue.value];
       else
         this.mData['INPUT'].data[aVariables[0]] = "";
