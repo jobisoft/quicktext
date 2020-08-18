@@ -922,26 +922,8 @@ wzQuicktextVar.prototype = {
     this.mData['VERSION'] = {};
     this.mData['VERSION'].checked = true;
     this.mData['VERSION'].data = {};
-    this.mData['VERSION'].data['number'] = '';
-    this.mData['VERSION'].data['full'] = '';
-
-    try {
-      if (typeof Components.interfaces.nsIXULAppInfo != "undefined")
-      {
-        var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
-        if (appInfo)
-        {
-          this.mData['VERSION'].data['number'] = appInfo.version;
-          this.mData['VERSION'].data['full'] = appInfo.name +' '+ appInfo.version;
-        }
-      }
-      else
-      {
-        this.mData['VERSION'].data['number'] = TrimString(this.mPrefService.getBranch("app.").getCharPref("version"));
-        this.mData['VERSION'].data['full'] = TrimString('Thunderbird '+ this.mPrefService.getBranch("app.").getCharPref("version"));
-      }
-    }
-    catch(e) { Components.utils.reportError(e); }
+	  this.mData['VERSION'].data['number'] = Services.appinfo.version;
+	  this.mData['VERSION'].data['full'] = Services.appinfo.name + ' ' + Services.appinfo.version;
 
     return this.mData['VERSION'].data;
   }
