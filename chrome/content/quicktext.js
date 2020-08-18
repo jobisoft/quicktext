@@ -462,7 +462,7 @@ var quicktext = {
       {
         for (var header in tmpRecipientHeaders)
           for (var i = 0; i < tmpRecipientHeaders[header].length; i++)
-            AddRecipient("addr_"+ convertHeaderToType[header], tmpRecipientHeaders[header][i]);
+            awAddRecipientsArray("addr_"+ convertHeaderToType[header], [tmpRecipientHeaders[header][i]], false);
       }
     }
   }
