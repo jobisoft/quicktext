@@ -1,5 +1,6 @@
 var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
 
+var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 
@@ -73,7 +74,6 @@ function wzQuicktextVar()
   // Add prefs for preferences
   this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
   this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
-  this.mPrefBranchOld = this.mPrefService.getBranch("quicktext.");
 }
 
 wzQuicktextVar.prototype = {
@@ -953,12 +953,7 @@ wzQuicktextVar.prototype = {
 
     this.mData['COUNTER'] = {};
     this.mData['COUNTER'].checked = true;
-    this.mData['COUNTER'].data = 0;
-
-    let oldPrefValue = this.mPrefBranchOld.prefHasUserValue("counter") ? this.mPrefBranchOld.getIntPref("counter") : 0;
-    let newPrefValue = this.mPrefBranch.prefHasUserValue("counter") ? this.mPrefBranch.getIntPref("counter") : 0;
-    this.mData['COUNTER'].data = Math.max(oldPrefValue, newPrefValue);
-
+    this.mData['COUNTER'].data = this.mPrefBranch.prefHasUserValue("counter") ? this.mPrefBranch.getIntPref("counter") : 0;
     this.mData['COUNTER'].data++;
     this.mPrefBranch.setIntPref("counter", this.mData['COUNTER'].data);
 

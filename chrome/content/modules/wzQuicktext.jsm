@@ -144,7 +144,6 @@ var gQuicktext = {
 
     this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
     this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
-    this.mPrefBranchOld = this.mPrefService.getBranch("quicktext.");
 
     this.mGroup = [];
     this.mTexts = [];
@@ -222,22 +221,10 @@ var gQuicktext = {
     
     if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL) {
       this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
-      //migrate old shortcutTypeAdv (and reset to default), if differs from default(false)
-      if (this.mPrefBranchOld.prefHasUserValue("shortcutTypeAdv") && this.mPrefBranchOld.getPrefType("shortcutTypeAdv") == this.mPrefBranchOld.PREF_BOOL && this.mPrefBranchOld.getBoolPref("shortcutTypeAdv") != false) {
-        this.mShortcutTypeAdv = this.mPrefBranchOld.getBoolPref("shortcutTypeAdv");
-        this.mPrefBranchOld.setBoolPref("shortcutTypeAdv", false);
-        this.mPrefBranch.setBoolPref("shortcutTypeAdv", this.mShortcutTypeAdv);
-      }
     }
 
     if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING) {
       this.mShortcutModifier = this.mPrefBranch.getCharPref("shortcutModifier");
-      //migrate: Use (and clear) old data if present
-      if (this.mPrefBranchOld.prefHasUserValue("shortcutModifier") && this.mPrefBranchOld.getPrefType("shortcutModifier") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("shortcutModifier") != "") {
-        this.mShortcutModifier = this.mPrefBranchOld.getCharPref("shortcutModifier");
-        this.mPrefBranchOld.setCharPref("shortcutModifier", "");
-        this.mPrefBranch.setCharPref("shortcutModifier", this.mShortcutModifier);
-      }
     }
 
     if (this.mPrefBranch.getPrefType("collapseState") == this.mPrefBranch.PREF_STRING)
@@ -246,12 +233,6 @@ var gQuicktext = {
     if (this.mPrefBranch.getPrefType("defaultImport") == this.mPrefBranch.PREF_STRING)
     {
       this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");      
-      //migrate: Use (and clear) old data if present
-      if (this.mPrefBranchOld.prefHasUserValue("defaultImport") && this.mPrefBranchOld.getPrefType("defaultImport") == this.mPrefBranchOld.PREF_STRING && this.mPrefBranchOld.getCharPref("defaultImport") != "") {
-        this.mDefaultImport = this.mPrefBranchOld.getCharPref("defaultImport");
-        this.mPrefBranchOld.setCharPref("defaultImport", "");
-        this.mPrefBranch.setCharPref("defaultImport", this.mDefaultImport);
-      }
       
       if (this.mDefaultImport != null)
       {
