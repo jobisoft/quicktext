@@ -1054,31 +1054,6 @@ var gQuicktext = {
 ,
 
   /*
-   * PREF FUNCTIONS
-   */
-  //unused, only used to store filenames/webaddr, no need for fancy stuff - use getCharPref now
-  getLocalizedUnicharPref: function (aPrefName)
-  {
-    try {
-      return this.mPrefBranch.getComplexValue(aPrefName, Components.interfaces.nsIPrefLocalizedString).data;
-    }
-    catch(e) { Components.utils.reportError(e); }
-    return null;        // quiet warnings
-  }
-,
-  //unused, only used to store filenames/webaddr, no need for fancy stuff - use setCharPref now
-  setUnicharPref: function (aPrefName, aPrefValue)
-  {
-    try {
-      var str = Components.classes["@mozilla.org/supports-string;1"]
-                          .createInstance(Components.interfaces.nsISupportsString);
-      str.data = aPrefValue;
-      this.mPrefBranch.setComplexValue(aPrefName, Components.interfaces.nsISupportsString, str);
-    }
-    catch(e) { Components.utils.reportError(e); }
-  }
-,
-  /*
    * OBSERVERS
    */
   addObserver: function(aObserver)
