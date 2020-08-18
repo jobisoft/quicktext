@@ -14,14 +14,14 @@ messenger.WindowListener.registerChromeUrl([
   ["locale",    "quicktext", "sv-SE",  "chrome/locale/sv-SE/"],
 ]);
 
-messenger.WindowListener.registerOptionsPage("chrome://quicktext/content/addonoptions.xul")
+messenger.WindowListener.registerOptionsPage("chrome://quicktext/content/addonoptions.xhtml")
   
 messenger.WindowListener.registerWindow(
-  "chrome://messenger/content/messengercompose/messengercompose.xul",
+  "chrome://messenger/content/messengercompose/messengercompose.xhtml",
   "chrome://quicktext/content/scripts/messengercompose.js");
     
 messenger.WindowListener.registerWindow(
-  "chrome://messenger/content/messenger.xul",
+  "chrome://messenger/content/messenger.xhtml",
   "chrome://quicktext/content/scripts/messenger.js");
   
 messenger.WindowListener.startListening();
