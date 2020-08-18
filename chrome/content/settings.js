@@ -519,7 +519,7 @@ var quicktext = {
     if (groupLength > 0)
     {
       topParent.removeAttribute('hidden');
-      parent = document.createElement("menupopup");
+      parent = document.createXULElement("menupopup");
       parent = topParent.appendChild(parent);
       for(var i = 0; i < groupLength; i++)
       {
@@ -527,15 +527,15 @@ var quicktext = {
         if (textLength > 0)
         {
           var group = gQuicktext.getGroup(i, true);
-          var groupElem = document.createElement("menu");
+          var groupElem = document.createXULElement("menu");
           groupElem.setAttribute('label', group.name);
           groupElem = parent.appendChild(groupElem);
   
-          groupParent = document.createElement("menupopup");
+          groupParent = document.createXULElement("menupopup");
           groupParent = groupElem.appendChild(groupParent);
           for (var j = 0; j < textLength; j++)
           {
-            var textElem = document.createElement("menuitem");
+            var textElem = document.createXULElement("menuitem");
             var text = gQuicktext.getText(i, j, true);
             textElem.setAttribute('label', text.name);
             textElem.setAttribute('group', group.name);
@@ -556,13 +556,13 @@ var quicktext = {
     if (scriptLength > 0)
     {
       topParent.removeAttribute('hidden');
-      parent = document.createElement("menupopup");
+      parent = document.createXULElement("menupopup");
       parent = topParent.appendChild(parent);
 
       for (var i = 0; i < scriptLength; i++)
       {
         var script = gQuicktext.getScript(i, true);
-        var textElem = document.createElement("menuitem");
+        var textElem = document.createXULElement("menuitem");
         textElem.setAttribute('label', script.name);
         textElem.addEventListener("command", function() { quicktext.insertVariable("SCRIPT="+ this.getAttribute("label")); });
         textElem = parent.appendChild(textElem);
@@ -1101,9 +1101,9 @@ var quicktext = {
         }
         else
         {
-          let newItem = document.createElement("richlistitem");
+          let newItem = document.createXULElement("richlistitem");
           newItem.value = i;
-          let newItemLabel = document.createElement("label");
+          let newItemLabel = document.createXULElement("label");
           newItemLabel.value = script.name;
           newItem.appendChild(newItemLabel);
           listElem.appendChild(newItem);

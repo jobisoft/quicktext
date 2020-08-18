@@ -149,7 +149,7 @@ var quicktext = {
         if (textLength)
         {
           //Add first level element, this will be either a menu or a button (if only one text in this group)
-          var toolbarbuttonGroup = toolbar.appendChild(document.createElement("toolbarbutton"));
+          var toolbarbuttonGroup = toolbar.appendChild(document.createXULElement("toolbarbutton"));
 
           if (textLength == 1 && gQuicktext.collapseGroup)
           {
@@ -162,14 +162,14 @@ var quicktext = {
           {
             toolbarbuttonGroup.setAttribute("type", "menu");
             toolbarbuttonGroup.setAttribute("label", gQuicktext.getGroup(i, false).name);
-            var menupopup = toolbarbuttonGroup.appendChild(document.createElement("menupopup"));
+            var menupopup = toolbarbuttonGroup.appendChild(document.createXULElement("menupopup"));
 
             //add second level elements: all found texts of this group
             for (var j = 0; j < textLength; j++)
             {
               var text = gQuicktext.getText(i, j, false);
 
-              var toolbarbutton = document.createElement("menuitem");
+              var toolbarbutton = document.createXULElement("menuitem");
               toolbarbutton.setAttribute("label", text.name);
               toolbarbutton.setAttribute("i", i);
               toolbarbutton.setAttribute("j", j);
@@ -203,7 +203,7 @@ var quicktext = {
       }
 
       //add a flex spacer to push the VAR and OTHER elements to the right 
-      var spacer = document.createElement("spacer");
+      var spacer = document.createXULElement("spacer");
       spacer.setAttribute("flex", "1");
       toolbar.appendChild(spacer);
       toolbar.appendChild(toolbarbuttonVar);
@@ -232,7 +232,7 @@ var quicktext = {
                 // Check if the group is collapse or not
                 if (node.getAttribute("type") == "menu")
                 {
-                  menu = document.createElement("menu");
+                  menu = document.createXULElement("menu");
                   menu.setAttribute("label", node.getAttribute("label"));
     
                   for (let j = 0; j < node.childNodes.length; j++) {
@@ -241,7 +241,7 @@ var quicktext = {
                 }
                 else
                 {
-                  menu = document.createElement("menuitem");
+                  menu = document.createXULElement("menuitem");
                   menu.setAttribute("label", node.getAttribute("label"));
                   menu.setAttribute("i", node.getAttribute("i"));
                   menu.setAttribute("j", node.getAttribute("j"));
@@ -250,7 +250,7 @@ var quicktext = {
                 rootElement.appendChild(menu);
                 break;
               case "spacer":
-                rootElement.appendChild(document.createElement("menuseparator"));
+                rootElement.appendChild(document.createXULElement("menuseparator"));
                 break;
             }
             menu = null;
