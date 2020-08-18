@@ -29,27 +29,10 @@ toolbar[iconsize="small"] #button-quicktext[disabled] {
   -moz-image-region: rect(16px 16px 32px 0px);
 }
 
-groupbox {
-  margin-top: 1em;
-}
-
-groupbox > hbox:first-child {
-  margin-top: -1em;
-  margin-bottom: -5px;
-}
-
-caption {
-  padding: 3px;
-  font-weight: normal;
-}
-
-dialog[OS=WINNT] groupbox > .box-title > .header {
-  font-weight: bold;
-  margin-top: -2px;
-  margin-bottom:1em;
-  margin-inline-start: 3px;
-  padding-right: 3px;
-  padding-left: 3px;
+dialog[OS=WINNT] legend.insideTab {
+  padding-right: 5px;
+  padding-left: 5px;
+  margin-bottom:5px;
   background-color: -moz-Field;
 }
 
