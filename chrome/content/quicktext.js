@@ -3,6 +3,7 @@ var { wzQuicktextVar } = ChromeUtils.import("chrome://quicktext/content/modules/
 var gQuicktextVar = new wzQuicktextVar();
 
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
+var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
 var quicktextStateListener = {
   NotifyComposeBodyReady: function()
@@ -125,10 +126,10 @@ var quicktext = {
       //clear toolbar and store current "variables" and "other" menus (the two rightmost ones)
       var toolbarbuttonVar = null;
       var toolbarbuttonOther = null;
-      var length = toolbar.childNodes.length;
+      var length = toolbar.children.length;
       for(var i = length-1; i >= 0; i--)
       {
-        var element = toolbar.childNodes[i];
+        var element = toolbar.children[i];
         switch(element.getAttribute("id"))
         {
           case 'quicktext-variables':
@@ -214,18 +215,18 @@ var quicktext = {
       let optionalUI = ["button-quicktext", "quicktext-popup"];
       for (let a=0; a < optionalUI.length; a++) { 
         if (document.getElementById(optionalUI[a]) != null && document.getElementById(optionalUI[a]).childNodes[0] != null) {
-          let rootElement = document.getElementById(optionalUI[a]).childNodes[0]; //get the menupop
+          let rootElement = document.getElementById(optionalUI[a]).children[0]; //get the menupop
           
           //clear
-          let length = rootElement.childNodes.length;
+          let length = rootElement.children.length;
           for (let i = length-1; i >= 0; i--)
-            rootElement.removeChild(rootElement.childNodes[i]);
+            rootElement.removeChild(rootElement.children[i]);
 
           //rebuild via copy from the quicktext toolbar - loop over toolbarbuttons inside toolbar
-          for (let i = 0; i < toolbar.childNodes.length; i++)
+          for (let i = 0; i < toolbar.children.length; i++)
           {
             let menu;
-            let node = toolbar.childNodes[i];
+            let node = toolbar.children[i];
             switch (node.nodeName)
             {
               case "toolbarbutton":
