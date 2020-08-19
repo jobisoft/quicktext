@@ -1,0 +1,32 @@
+[
+  {
+    "namespace": "LegacyPrefs",
+    "functions": [
+      {
+        "name": "getUserPref",
+        "type": "function",
+        "async": true,
+        "description": "Gets a user value from the legacy pref system.",
+        "parameters": [
+          {
+            "name": "aName",
+            "type": "string",
+            "description": "Name of the preference."
+          }
+        ]
+      },
+      {
+        "name": "clearUserPref",
+        "type": "function",
+        "description": "Removes a user value from the legacy pref system.",
+        "parameters": [
+          {
+            "name": "aName",
+            "type": "string",
+            "description": "Name of the preference."
+          }
+        ]
+      }
+    ]
+  }
+]
