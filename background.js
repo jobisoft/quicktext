@@ -15,6 +15,18 @@
   }; 
   await preferences.init(defaultPrefs);
   
+  // Legacy pref migration using the LegacyPrefs API.
+  const legacyPrefBranch = "extensions.quicktext.";
+  const prefNames = Object.keys(defaultPrefs);
+  for (let prefName of prefNames) {
+    let legacyValue = await messenger.LegacyPrefs.getUserPref(legacyPrefBranch + prefName);    
+    if (legacyValue !== null) {
+      console.log("Migrating legacy preference <" + legacyPrefBranch + prefName + "> = <" + legacyValue + ">.");
+      preferences.setPref(prefName, legacyValue);
+      messenger.LegacyPrefs.clearUserPref(legacyPrefBranch + prefName);
+    }
+  }
+  
   // load add-on via WindowListener API
   messenger.WindowListener.registerChromeUrl([ 
     ["content",   "quicktext",           "chrome/content/"],
