@@ -4,7 +4,7 @@
  *
  * This file is intended to be used in the WebExtension background page,
  * in popup pages, option pages, content pages as well as in legacy chrome
- * windows.
+ * windows (together with the WindowListener API).
  * The preferences will be loaded asynchronously from the WebExtension
  * storage and stored in a local pref obj, so all further access can be done
  * synchronously.
