@@ -16,8 +16,10 @@
   "icons": {
     "32": "chrome/skin/icon.png"
   },
+  "permissions" : ["storage"],
   "background": {
     "scripts": [
+      "/chrome/content/scripts/preferences.js", 
       "background.js"
     ]
   },

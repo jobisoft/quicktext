@@ -1,6 +1,21 @@
 (async () => { 
-  messenger.WindowListener.registerDefaultPrefs("defaults/preferences/quicktext.js");
-
+  
+  // Define default prefs.
+  let defaultPrefs = {
+      "counter": 0,
+      "settingsFolder": "",
+      "defaultImport": "",
+      "menuCollapse": true,
+      "toolbar": true,
+      "popup": false,
+      "keywordKey": "Tab",
+      "shortcutModifier": "alt",
+      "shortcutTypeAdv": false,
+      "collapseState": ""
+  }; 
+  await preferences.init(defaultPrefs);
+  
+  // load add-on via WindowListener API
   messenger.WindowListener.registerChromeUrl([ 
     ["content",   "quicktext",           "chrome/content/"],
     ["resource",  "quicktext",           "chrome/"],
