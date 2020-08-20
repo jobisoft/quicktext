@@ -43,7 +43,8 @@
   ]);
 
   messenger.WindowListener.registerOptionsPage("chrome://quicktext/content/addonoptions.xhtml")
-    
+  messenger.WindowListener.registerStartupScript("chrome://quicktext/content/scripts/startup.js");
+  
   messenger.WindowListener.registerWindow(
     "chrome://messenger/content/messengercompose/messengercompose.xhtml",
     "chrome://quicktext/content/scripts/messengercompose.js");
