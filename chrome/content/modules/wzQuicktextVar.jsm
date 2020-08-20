@@ -71,10 +71,6 @@ function wzQuicktextVar()
 
   // Need the Main Quicktext component
   this.mQuicktext = gQuicktext;
-
-  // Add prefs for preferences
-  this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-  this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
 }
 
 wzQuicktextVar.prototype = {
@@ -936,9 +932,9 @@ wzQuicktextVar.prototype = {
 
     this.mData['COUNTER'] = {};
     this.mData['COUNTER'].checked = true;
-    this.mData['COUNTER'].data = this.mPrefBranch.prefHasUserValue("counter") ? this.mPrefBranch.getIntPref("counter") : 0;
+    this.mData['COUNTER'].data = this.mQuicktext.preferences.getPref("counter");
     this.mData['COUNTER'].data++;
-    this.mPrefBranch.setIntPref("counter", this.mData['COUNTER'].data);
+    this.mQuicktext.preferences.setPref("counter", this.mData['COUNTER'].data);
 
     return this.mData['COUNTER'].data;
   }

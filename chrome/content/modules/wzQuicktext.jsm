@@ -22,8 +22,6 @@ var gQuicktext = {
   mEditingGroup:        [],
   mEditingTexts:        [],
   mEditingScripts:      [],
-  mPrefService:         null,
-  mPrefBranch:          null,
   mViewPopup:           false,
   mCollapseGroup:       true,
   mDefaultImport:       "",
@@ -41,7 +39,7 @@ var gQuicktext = {
   set viewToolbar(aViewToolbar)
   {
     this.mViewToolbar = aViewToolbar;
-    this.mPrefBranch.setBoolPref("toolbar", aViewToolbar);
+    this.preferences.setPref("toolbar", aViewToolbar);
 
     this.notifyObservers("updatetoolbar", "");
 
@@ -52,7 +50,7 @@ var gQuicktext = {
   set viewPopup(aViewPopup)
   {
     this.mViewPopup = aViewPopup;
-    this.mPrefBranch.setBoolPref("popup", aViewPopup);
+    this.preferences.setPref("popup", aViewPopup);
 
     return this.mViewPopup;
   }
@@ -61,7 +59,7 @@ var gQuicktext = {
   set collapseGroup(aCollapseGroup)
   {
     this.mCollapseGroup = aCollapseGroup;
-    this.mPrefBranch.setBoolPref("menuCollapse", aCollapseGroup);
+    this.preferences.setPref("menuCollapse", aCollapseGroup);
 
     this.notifyObservers("updatesettings", "");
 
@@ -72,7 +70,7 @@ var gQuicktext = {
   set defaultImport(aDefaultImport)
   {
     this.mDefaultImport = aDefaultImport;
-    this.mPrefBranch.setCharPref("defaultImport", aDefaultImport);
+    this.preferences.setPref("defaultImport", aDefaultImport);
 
     return this.mDefaultImport;
   }
@@ -81,7 +79,7 @@ var gQuicktext = {
   set keywordKey(aKeywordKey)
   {
     this.mKeywordKey = aKeywordKey;
-    this.mPrefBranch.setCharPref("keywordKey", aKeywordKey);
+    this.preferences.setPref("keywordKey", aKeywordKey);
 
     return this.mKeywordKey;
   }
@@ -90,7 +88,7 @@ var gQuicktext = {
   set shortcutModifier(aShortcutModifier)
   {
     this.mShortcutModifier = aShortcutModifier;
-    this.mPrefBranch.setCharPref("shortcutModifier", aShortcutModifier);
+    this.preferences.setPref("shortcutModifier", aShortcutModifier);
 
     return this.mShortcutModifier;
   }
@@ -103,7 +101,7 @@ var gQuicktext = {
   set collapseState(aCollapseState)
   {
     this.mCollapseState = aCollapseState;
-    this.mPrefBranch.setCharPref("collapseState", aCollapseState);
+    this.preferences.setPref("collapseState", aCollapseState);
 
     return this.mCollapseState;
   }
@@ -119,7 +117,7 @@ var gQuicktext = {
   set shortcutTypeAdv(aShortcutTypeAdv)
   {
     this.mShortcutTypeAdv = aShortcutTypeAdv;
-    this.mPrefBranch.setBoolPref("shortcutTypeAdv", aShortcutTypeAdv);
+    this.preferences.setPref("shortcutTypeAdv", aShortcutTypeAdv);
 
     return this.mShortcutTypeAdv;
   }
@@ -142,9 +140,6 @@ var gQuicktext = {
     var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).QueryInterface(Components.interfaces.nsIXULRuntime);
     this.mOS = appInfo.OS;
 
-    this.mPrefService = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService);
-    this.mPrefBranch = this.mPrefService.getBranch("extensions.quicktext.");
-
     this.mGroup = [];
     this.mTexts = [];
 
@@ -154,10 +149,10 @@ var gQuicktext = {
                                .get("ProfD", Components.interfaces.nsIFile);
 
     // check if an alternative path has been given for the config folder
-    if (this.mPrefBranch.getCharPref("settingsFolder"))
+    if (this.preferences.getPref("settingsFolder"))
     {
       profileDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-      profileDir.initWithPath(this.mPrefBranch.getCharPref("settingsFolder"));	  
+      profileDir.initWithPath(this.preferences.getPref("settingsFolder"));	  
     }
   
     this.mQuicktextDir = profileDir;
@@ -188,72 +183,34 @@ var gQuicktext = {
     }
 
     // Get prefs
-    if (this.mPrefBranch.getPrefType("toolbar") == this.mPrefBranch.PREF_BOOL)
-      this.mViewToolbar = this.mPrefBranch.getBoolPref("toolbar");
-
-    if (this.mPrefBranch.getPrefType("menuCollapse") == this.mPrefBranch.PREF_BOOL)
-      this.mCollapseGroup = this.mPrefBranch.getBoolPref("menuCollapse");
-
-    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_INT) {
-      //migrate old keywordKey (and reset to default), if differs from default(Tab)
-      let code = "Tab";
-      switch(this.mPrefBranch.getIntPref("keywordKey")) {
-        case 32:
-          code = "Space"; 
-          break;
-        case 13: 
-          code = "Enter"; 
-          break;
-        case 9:
-        default:
-          code = "Tab"; 
-          break;
-      }
-      this.mPrefBranch.deleteBranch("keywordKey");
-      this.mPrefBranch.setCharPref("keywordKey", code);
-    }
-
-    if (this.mPrefBranch.getPrefType("keywordKey") == this.mPrefBranch.PREF_STRING)
-      this.mKeywordKey = this.mPrefBranch.getCharPref("keywordKey", this.mKeywordKey);
-
-    if (this.mPrefBranch.getPrefType("popup") == this.mPrefBranch.PREF_BOOL)
-      this.mViewPopup = this.mPrefBranch.getBoolPref("popup");
+    this.mViewToolbar = this.preferences.getPref("toolbar");
+    this.mCollapseGroup = this.preferences.getPref("menuCollapse");
+    this.mKeywordKey = this.preferences.getPref("keywordKey");
+    this.mViewPopup = this.preferences.getPref("popup");
+    this.mShortcutTypeAdv = this.preferences.getPref("shortcutTypeAdv");
+    this.mShortcutModifier = this.preferences.getPref("shortcutModifier");
+    this.mCollapseState = this.preferences.getPref("collapseState");
+    this.mDefaultImport = this.preferences.getPref("defaultImport");      
     
-    if (this.mPrefBranch.getPrefType("shortcutTypeAdv") == this.mPrefBranch.PREF_BOOL) {
-      this.mShortcutTypeAdv = this.mPrefBranch.getBoolPref("shortcutTypeAdv");
-    }
-
-    if (this.mPrefBranch.getPrefType("shortcutModifier") == this.mPrefBranch.PREF_STRING) {
-      this.mShortcutModifier = this.mPrefBranch.getCharPref("shortcutModifier");
-    }
-
-    if (this.mPrefBranch.getPrefType("collapseState") == this.mPrefBranch.PREF_STRING)
-      this.mCollapseState = this.mPrefBranch.getCharPref("collapseState");
-    
-    if (this.mPrefBranch.getPrefType("defaultImport") == this.mPrefBranch.PREF_STRING)
+    if (this.mDefaultImport)
     {
-      this.mDefaultImport = this.mPrefBranch.getCharPref("defaultImport");      
-      
-      if (this.mDefaultImport != null)
+      var defaultImport = this.mDefaultImport.split(";");
+      defaultImport.reverse();
+
+      for (var i = 0; i < defaultImport.length; i++)
       {
-        var defaultImport = this.mDefaultImport.split(";");
-        defaultImport.reverse();
-  
-        for (var i = 0; i < defaultImport.length; i++)
-        {
-          try {
-            if (defaultImport[i].match(/^(http|https):\/\//))
-            {
-              this.importFromHTTPFile(defaultImport[i], 1, true, false); 
-            }
-            else
-            {
-              var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-              fp.initWithPath(this.parseFilePath(defaultImport[i]));
-              this.importFromFile(fp, 1, true, false);
-            }
-          } catch (e) { Components.utils.reportError(e); }
-        }
+        try {
+          if (defaultImport[i].match(/^(http|https):\/\//))
+          {
+            this.importFromHTTPFile(defaultImport[i], 1, true, false); 
+          }
+          else
+          {
+            var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
+            fp.initWithPath(this.parseFilePath(defaultImport[i]));
+            this.importFromFile(fp, 1, true, false);
+          }
+        } catch (e) { Components.utils.reportError(e); }
       }
     }
 
