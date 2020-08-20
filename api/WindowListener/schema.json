@@ -45,6 +45,7 @@
       {
         "name": "startListening",
         "type": "function",
+        "async": true,
         "parameters": []
       },
       {

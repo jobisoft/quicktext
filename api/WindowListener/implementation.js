@@ -2,6 +2,9 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version: 1.15
+ * - make (undocumented) startup() async
+ *
  * Version: 1.14
  * - support resource urls
  *
@@ -166,7 +169,7 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
             : context.extension.rootURI.resolve(aPath);
         },
 
-        startListening() {
+        async startListening() {
           // async sleep function using Promise
           async function sleep(delay) {
             let timer =  Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
@@ -183,6 +186,32 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           if (!self.isBackgroundContext)
             throw new Error("The WindowListener API may only be called from the background page.");
 
+          // load the registered startup script, if one has been registered
+          // (mail3:pane may not have been fully loaded yet)
+          if (self.pathToStartupScript) {
+            let startupJS = {};
+            startupJS.WL = {}
+            startupJS.WL.extension = self.extension;
+            startupJS.WL.messenger = Array.from(self.extension.views).find(
+              view => view.viewType === "background").xulBrowser.contentWindow
+              .wrappedJSObject.browser;
+            try {
+              if (self.pathToStartupScript) {
+                Services.scriptloader.loadSubScript(self.pathToStartupScript, startupJS, "UTF-8");
+                // delay startup until startup has been finished
+                console.log("Waiting for async startup() in <" + self.pathToStartupScript + "> to finish.");
+                if (startupJS.startup) {
+                  await startupJS.startup();
+                  console.log("startup() in <" + self.pathToStartupScript + "> finished");
+                } else {
+                  console.log("No startup() in <" + self.pathToStartupScript + "> found.");
+                }
+              }
+            } catch (e) {
+              Components.utils.reportError(e)
+            }
+          }
+                  
           let urls = Object.keys(self.registeredWindows);
           if (urls.length > 0) {
             // Before registering the window listener, check which windows are already open
@@ -197,7 +226,7 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
               // windows, so we can do special actions when the main
               // messenger window is opened.
               //chromeURLs: Object.keys(self.registeredWindows),
-              onLoadWindow(window) {
+              async onLoadWindow(window) {
                 // Create add-on scope
                 window[self.uniqueRandomID] = {};
 
@@ -235,23 +264,6 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
                         `<menuitem class="menuitem-iconic" id="${id}" image="${icon}" label="${name}" />`);
                       element_addonPrefs.appendChild(entry);
                       window.document.getElementById(id).addEventListener("command", function() {window.openDialog(self.pathToOptionsPage, "AddonOptions")});
-                    } catch (e) {
-                      Components.utils.reportError(e)
-                    }
-                  }
-
-                  // load the registered startup script, if one has been registered
-                  // (only for the initial main window)
-                  if (self.counts == 0 && self.pathToStartupScript) {
-                    self.counts++;
-                    let startupJS = {};
-                    startupJS.WL = {}
-                    startupJS.WL.extension = self.extension;
-                    startupJS.WL.messenger = Array.from(self.extension.views).find(
-                      view => view.viewType === "background").xulBrowser.contentWindow
-                      .wrappedJSObject.browser;
-                    try {
-                      if (self.pathToStartupScript) Services.scriptloader.loadSubScript(self.pathToStartupScript, startupJS, "UTF-8");
                     } catch (e) {
                       Components.utils.reportError(e)
                     }
