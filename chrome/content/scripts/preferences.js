@@ -41,12 +41,22 @@ var preferences = {
    
   // Get pref value from local pref obj.
   getPref: function(aName, aFallback = null) {
-    if (this._prefs.hasOwnProperty(userPrefPrefix + aName)) {
-      return this._prefs[userPrefPrefix + aName];
-    }
-    return this._prefs.hasOwnProperty(defaultPrefPrefix + aName)
+    // Get defaultPref.
+    let defaultPref = this._prefs.hasOwnProperty(defaultPrefPrefix + aName)
       ? this._prefs[defaultPrefPrefix + aName]
       : aFallback;
+    
+    // Check if userPref type is defaultPref type and return default if no match.
+    if (this._prefs.hasOwnProperty(userPrefPrefix + aName)) {
+      let userPref = this._prefs[userPrefPrefix + aName];
+      if (typeof defaultPref == typeof userPref) {
+        return userPref;
+      }      
+      console.log("Type of defaultPref <" + defaultPref + ":" + typeof defaultPref + "> does not match type of userPref <" + userPref + ":" + typeof userPref + ">. Fallback to defaultPref.")
+    }
+    
+    // Fallback to default value.
+    return defaultPref;
   },
 
   // Set pref value by updating local pref obj and updating storage.
