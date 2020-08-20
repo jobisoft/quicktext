@@ -1,5 +1,3 @@
-/* eslint-disable object-shorthand */
-
 var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
   
