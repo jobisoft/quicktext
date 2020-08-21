@@ -2,6 +2,15 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version: 1.18
+ * - execute shutdown script also during global app shutdown (fixed)
+ *
+ * Version: 1.17
+ * - execute shutdown script also during global app shutdown
+ *
+ * Version: 1.16
+ * - support for persist
+ *
  * Version: 1.15
  * - make (undocumented) startup() async
  *
@@ -57,14 +66,13 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
     this.pathToOptionsPage = null;
     this.chromeHandle = null;
     this.chromeData = null;
+    this.resourceData = null;    
     this.openWindows = [];
 
     const aomStartup = Cc["@mozilla.org/addons/addon-manager-startup;1"].getService(Ci.amIAddonManagerStartup);
     const resProto = Cc["@mozilla.org/network/protocol;1?name=resource"].getService(Ci.nsISubstitutingProtocolHandler);
 
     let self = this;
-
-    this.counts = 0;
 
     return {
       WindowListener: {
@@ -373,6 +381,19 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
               if (debug) console.log(elements);
 
               for (let i = 0; i < elements.length; i++) {
+                // take care of persists
+                const uri = window.document.documentURI;
+                for (const persistentNode of elements[i].querySelectorAll("[persist]")) {
+                  for (const persistentAttribute of persistentNode.getAttribute("persist").trim().split(" ")) {
+                    if (Services.xulStore.hasValue(uri, persistentNode.id, persistentAttribute)) {
+                      persistentNode.setAttribute(
+                        persistentAttribute,
+                        Services.xulStore.getValue(uri, persistentNode.id, persistentAttribute)
+                      );
+                    }
+                  }
+                }
+                
                 if (elements[i].hasAttribute("insertafter") && checkElements(elements[i].getAttribute("insertafter"))) {
                   let insertAfterElement = checkElements(elements[i].getAttribute("insertafter"));
 
@@ -464,10 +485,6 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
 
 
   onShutdown(isAppShutdown) {
-    // temporary installed addons always return isAppShutdown = false
-    if (isAppShutdown)
-      return;
-
     // Unload from all still open windows
     let urls = Object.keys(this.registeredWindows);
     if (urls.length > 0) {
@@ -488,9 +505,8 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           }
         }
 
-        // if we reach this point, it is NOT app shutdown, but only addon shutdown
-        // -> isAddonShutdown = true
-        this._unloadFromWindow(window, true);
+        // if it is app shutdown, it is not just an add-on deactivation
+        this._unloadFromWindow(window, !isAppShutdown);
       }
       // Stop listening for new windows.
       ExtensionSupport.unregisterWindowListener("injectListener_" + this.uniqueRandomID);
