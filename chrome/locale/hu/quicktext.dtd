@@ -1,7 +1,7 @@
 <!ENTITY quicktext.label "Gyorsszöveg">
 <!ENTITY quicktext.shortname.label "Gyorsszöveg">
 
-<!ENTITY quicktext.settings.title "Gyorsszöveg beállítások">
+<!ENTITY quicktext.settings.title "Gyorsszöveg beállításai">
 <!ENTITY quicktext.settings.label "Beállítások">
 <!ENTITY quicktext.file.label "Fájl">
 <!ENTITY quicktext.goToHomepage.label "Ugrás a honlapra">
@@ -81,12 +81,12 @@
 <!ENTITY quicktext.subject.label "Tárgy">
 <!ENTITY quicktext.version.label "Thunderbird verzió">
 <!ENTITY quicktext.image.label "Beágyazott HTML-kép">
-<!ENTITY quicktext.counter.label "Counter">
-<!ENTITY quicktext.input.label "Input value from user prompt">
-<!ENTITY quicktext.orgatt.label "Original attachment info">
-<!ENTITY quicktext.orgheader.label "Original header info">
-<!ENTITY quicktext.url.label "Response from URL">
-<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
+<!ENTITY quicktext.counter.label "Számláló">
+<!ENTITY quicktext.input.label "Bemeneti érték a parancssorból">
+<!ENTITY quicktext.orgatt.label "Eredeti melléklet adatai">
+<!ENTITY quicktext.orgheader.label "Eredeti fejléc adatai">
+<!ENTITY quicktext.url.label "Válasz az URL-címtől">
+<!ENTITY quicktext.insertfile.label "Tartalom a fájlból (gyorsszöveg változók lecseréli)">
 
 <!ENTITY quicktext.attachments.label "Mellékletek">
 <!ENTITY quicktext.filename.label "Fájlnév">
