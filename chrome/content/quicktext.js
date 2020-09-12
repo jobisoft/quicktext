@@ -150,10 +150,11 @@ var quicktext = {
         if (textLength)
         {
           //Add first level element, this will be either a menu or a button (if only one text in this group)
-          var toolbarbuttonGroup = toolbar.appendChild(document.createXULElement("toolbarbutton"));
-
+          var toolbarbuttonGroup;
+          let t = document.createXULElement("button");
           if (textLength == 1 && gQuicktext.collapseGroup)
           {
+            toolbarbuttonGroup = toolbar.appendChild(t);
             toolbarbuttonGroup.setAttribute("label", gQuicktext.getText(i, 0, false).name);
             toolbarbuttonGroup.setAttribute("i", i);
             toolbarbuttonGroup.setAttribute("j", 0);
@@ -161,7 +162,8 @@ var quicktext = {
           }
           else
           {
-            toolbarbuttonGroup.setAttribute("type", "menu");
+            t.setAttribute("type", "menu");
+            toolbarbuttonGroup = toolbar.appendChild(t);
             toolbarbuttonGroup.setAttribute("label", gQuicktext.getGroup(i, false).name);
             var menupopup = toolbarbuttonGroup.appendChild(document.createXULElement("menupopup"));
 
