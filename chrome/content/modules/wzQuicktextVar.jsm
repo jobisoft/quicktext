@@ -344,7 +344,7 @@ wzQuicktextVar.prototype = {
 ,  
   get_selection: function(aVariables)
   {
-    return TrimString(this.process_selection(aVariables));
+    return this.process_selection(aVariables);
   }
 ,
   get_from: function(aVariables)
