@@ -45,3 +45,10 @@ textarea {
   margin: 0px;
   resize: none;
 }
+
+#quicktext-toolbar button {
+  border:       0px;
+  margin-left:  2px;
+  margin-right: 2px;
+  min-width:    auto;
+}
