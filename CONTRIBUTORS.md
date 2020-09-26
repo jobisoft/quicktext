@@ -15,6 +15,7 @@
 * bgeiring
 * drakulis
 * Peñalara Software S.L.
+* Samuel Plentz
 
 ## Translators
 * Alexey Sinitsyn (ru)
