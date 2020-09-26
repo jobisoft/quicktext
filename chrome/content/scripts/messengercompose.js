@@ -8,29 +8,6 @@ function onLoad(activatedWhileWindowOpen) {
   
   WL.injectCSS("resource://quicktext/skin/quicktext.css");
   WL.injectElements(`
-<commandset id="composeCommands">
-    <commandset id="quicktextCommands">
-      <command id="cmd_quicktextKey1" disabled="true" />
-      <command id="cmd_quicktextKey2" disabled="true" />
-      <command id="cmd_quicktextKey3" disabled="true" />
-      <command id="cmd_quicktextKey4" disabled="true" />
-      <command id="cmd_quicktextKey5" disabled="true" />
-      <command id="cmd_quicktextKey6" disabled="true" />
-      <command id="cmd_quicktextKey7" disabled="true" />
-      <command id="cmd_quicktextKey8" disabled="true" />
-      <command id="cmd_quicktextKey9" disabled="true" />
-      <command id="cmd_quicktextKey10" disabled="true" />
-    </commandset>
-  </commandset>
-
-  <toolbarpalette id="MsgComposeToolbarPalette">
-    <toolbarbutton class="toolbarbutton-1" type="menu"
-                   id="button-quicktext" label="&quicktext.shortname.label;"
-                   orient="horizontal">
-      <menupopup id="button-quicktext-menupopup"/>
-    </toolbarbutton>
-  </toolbarpalette>
-
 	<popup id="msgComposeContext">
 		<menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator"/>
 		<menu id="quicktext-popup" label="&quicktext.label;" hidden="true" insertafter="spellCheckSuggestionsSeparator"  class="menu-iconic quicktext-icon menuitem-iconic" >
@@ -49,7 +26,7 @@ function onLoad(activatedWhileWindowOpen) {
 
   <toolbox id="headers-box">
     <toolbar id="quicktext-toolbar">
-      <toolbarbutton type="menu" id="quicktext-variables" label="&quicktext.variables.label;">
+      <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;">
         <menupopup>
           <menu label="&quicktext.to.label;">
             <menupopup>
@@ -111,13 +88,13 @@ function onLoad(activatedWhileWindowOpen) {
             </menupopup>
           </menu>
         </menupopup>
-      </toolbarbutton>
-      <toolbarbutton type="menu" id="quicktext-other" label="&quicktext.other.label;">
+      </button>
+      <button type="menu" id="quicktext-other" label="&quicktext.other.label;">
         <menupopup>
           <menuitem label="&quicktext.insertTextFromFileAsText.label;" oncommand="quicktext.insertContentFromFile(0);" />
           <menuitem label="&quicktext.insertTextFromFileAsHTML.label;" oncommand="quicktext.insertContentFromFile(1);" />
         </menupopup>
-      </toolbarbutton>
+      </button>
     </toolbar>
   </toolbox>`,
   ["chrome://quicktext/locale/quicktext.dtd"]);
