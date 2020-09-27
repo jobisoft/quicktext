@@ -156,7 +156,7 @@ wzQuicktextVar.prototype = {
       // if the method "get_[tagname]" exists and there is enough arguments we call it
       if (typeof this["get_"+ tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
 	      
-	// these tags need different behaviour if added in "text" or "html" mode
+        // these tags need different behaviour if added in "text" or "html" mode
         if (tags[i].tagName.toLowerCase() == "image" ||
 	    tags[i].tagName.toLowerCase() == "clipboard" ||
 	    tags[i].tagName.toLowerCase() == "selection") {
