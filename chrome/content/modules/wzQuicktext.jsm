@@ -191,7 +191,13 @@ var gQuicktext = {
     this.mShortcutModifier = this.preferences.getPref("shortcutModifier");
     this.mCollapseState = this.preferences.getPref("collapseState");
     this.mDefaultImport = this.preferences.getPref("defaultImport");      
-    
+
+    // reset the value of mShortcutModifier to "alt", if it has not a valid value - see issue #177
+    if (this.mShortcutModifier != "alt" && this.mShortcutModifier != "control" && this.mShortcutModifier != "meta") 
+    {
+      this.mShortcutModifier = "alt";
+    }
+
     if (this.mDefaultImport)
     {
       var defaultImport = this.mDefaultImport.split(";");
