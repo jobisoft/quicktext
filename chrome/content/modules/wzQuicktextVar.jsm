@@ -703,10 +703,10 @@ wzQuicktextVar.prototype = {
         if (aType == 0) {
           // request clipboard content as plain text
           trans.addDataFlavor("text/unicode");
-	} else {
+        } else {
           // request clipboard content as html
           trans.addDataFlavor("text/html");
-	}
+        }
         clip.getData(trans,clip.kGlobalClipboard);
 
         var clipboard = {};
