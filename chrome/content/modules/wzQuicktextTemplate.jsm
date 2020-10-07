@@ -55,6 +55,11 @@ wzQuicktextTemplate.prototype = {
     this.mHeaders.splice(aIndex, 0);
   }
 ,
+  removeHeaders: function ()
+  {
+    this.mHeaders = [];
+  }
+,
   getHeaderLength: function()
   {
     return this.mHeaders.length;

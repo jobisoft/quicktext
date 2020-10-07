@@ -343,8 +343,8 @@ wzQuicktextVar.prototype = {
 ,
   get_header: function(aVariables)
   {
-    // We do not do anything here but to return an empty string, 
-    // to remove the header tags from the body.
+    gQuicktext.mCurrentTemplate.addHeader(aVariables[0], aVariables[1]);
+    // return an empty string, to remove the header tags from the body.
     return "";
   }
 ,
