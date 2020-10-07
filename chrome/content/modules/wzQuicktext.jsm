@@ -32,7 +32,8 @@ var gQuicktext = {
   mObserverList:        [],
   mOS:                  "WINNT",
   mCollapseState:       "",
-  mSelectionContent:    "" ,
+  mSelectionContent:    "",
+  mCurrentTemplate:     "";
   mStringBundle: Services.strings.createBundle("chrome://quicktext/locale/quicktext.properties")	
 ,
   get viewToolbar() { return this.mViewToolbar; },
@@ -774,17 +775,20 @@ var gQuicktext = {
             if (text.attachments != "")
               buffer += "\t\t\t\t<attachments><![CDATA["+ this.removeIllegalChars(text.attachments) +"]]></attachments>\n";
             
-            var headerLength = 0;
-            if (headerLength = text.getHeaderLength() > 0)
-            {
-              buffer += "\t\t\t\t<headers>\n";
-              for (var k = 0; k < headerLength; k++)
-              {
-                var header = text.getHeader(k);
-                buffer += "\t\t\t\t\t<header>\n\t\t\t\t\t\t<type><![CDATA["+ header.type +"]]></type>\n\t\t\t\t\t\t<value><![CDATA["+ header.value +"]]></value>\n\t\t\t\t\t</header>\n";
-              }
-              buffer += "\t\t\t\t</headers>\n";
-            }
+            // There seems to be no use to write dynamically gathered header informations from the last use of a template to the file
+            
+            // var headerLength = 0;
+            // if (headerLength = text.getHeaderLength() > 0)
+            // {
+            //   buffer += "\t\t\t\t<headers>\n";
+            //   for (var k = 0; k < headerLength; k++)
+            //   {
+            //     var header = text.getHeader(k);
+            //     buffer += "\t\t\t\t\t<header>\n\t\t\t\t\t\t<type><![CDATA["+ header.type +"]]></type>\n\t\t\t\t\t\t<value><![CDATA["+ header.value +"]]></value>\n\t\t\t\t\t</header>\n";
+            //   }
+            //   buffer += "\t\t\t\t</headers>\n";
+            // }
+            
             buffer += "\t\t\t</text>\n";
           }
           buffer += "\t\t</texts>\n\t</menu>\n";
@@ -883,13 +887,15 @@ var gQuicktext = {
                   tmp.subject = this.getTagValue(subElems[j], "subject");
                   tmp.attachments = this.getTagValue(subElems[j], "attachments");
 
-                  var headersTag = subElems[j].getElementsByTagName("headers");
-                  if (headersTag.length > 0)
-                  {
-                    var headers = headersTag[0].getElementsByTagName("header");
-                    for (var k = 0; k < headers.length; k++)
-                      tmp.addHeader(this.getTagValue(headers[k], "type"), this.getTagValue(headers[k], "value"));
-                  }
+                  // There seems to be no use to read dynamically gathered header informations from the last use of a template from the file
+
+                  // var headersTag = subElems[j].getElementsByTagName("headers");
+                  // if (headersTag.length > 0)
+                  // {
+                  //   var headers = headersTag[0].getElementsByTagName("header");
+                  //   for (var k = 0; k < headers.length; k++)
+                  //     tmp.addHeader(this.getTagValue(headers[k], "type"), this.getTagValue(headers[k], "value"));
+                  // }
 
                   subTexts.push(tmp);
                 }
