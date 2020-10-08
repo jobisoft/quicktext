@@ -164,7 +164,7 @@ wzQuicktextVar.prototype = {
           value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables, aType);
         } else {
           value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
-	}
+        }
       }
       
       aStr = this.replaceText(tags[i].tag, value, aStr);
