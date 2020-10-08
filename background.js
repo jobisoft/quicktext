@@ -1,4 +1,5 @@
 (async () => { 
+  await messenger.WindowListener.waitForMasterPassword();
   
   // Define default prefs.
   let defaultPrefs = {

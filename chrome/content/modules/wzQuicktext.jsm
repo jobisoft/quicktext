@@ -34,7 +34,7 @@ var gQuicktext = {
   mCollapseState:        "",
   mSelectionContent:     "",
   mSelectionContentHtml: "",
-  mCurrentTemplate:      "";
+  mCurrentTemplate:      "",
   mStringBundle: Services.strings.createBundle("chrome://quicktext/locale/quicktext.properties")	
 ,
   get viewToolbar() { return this.mViewToolbar; },

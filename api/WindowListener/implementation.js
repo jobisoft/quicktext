@@ -2,6 +2,16 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version: 1.25
+ * - adding waitForMasterPassword
+ *
+ * Version: 1.24
+ * - automatically localize i18n locale strings in injectElements()
+ *
+ * Version: 1.22
+ * - to reduce confusions, only check built-in URLs as add-on URLs cannot
+ *   be resolved if a temp installed add-on has bin zipped
+ *
  * Version: 1.21
  * - print debug messages only if add-ons are installed temporarily from
  *   the add-on debug page
@@ -71,6 +81,19 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
     if (this.debug) console.error("WindowListener API: " + msg);
   }
   
+  // async sleep function using Promise
+  async sleep(delay) {
+    let timer =  Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
+    return new Promise(function(resolve, reject) {
+      let event = {
+        notify: function(timer) {
+          resolve();
+        }
+      }
+      timer.initWithCallback(event, delay, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
+    });
+  }
+          
   getAPI(context) {
     // track if this is the background/main context
     this.isBackgroundContext = (context.viewType == "background");
@@ -98,8 +121,17 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
     return {
       WindowListener: {
 
+        async waitForMasterPassword() {
+          // Wait until master password has been entered (if needed)
+          while (!Services.logins.isLoggedIn) {
+            console.log("Waiting for master password.");
+            await self.sleep(1000);
+          }          
+          console.log("Master password has been entered.");
+        },
+
         aDocumentExistsAt(uriString) {
-          self.log("Checking if document at <" + uriString + "> used in registration actually exits.");
+          self.log("Checking if document at <" + uriString + "> used in registration actually exists.");
           try {
             let uriObject = Services.io.newURI(uriString);
             let content = Cu.readUTF8URI(uriObject);
@@ -114,22 +146,10 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           self.pathToOptionsPage = optionsUrl.startsWith("chrome://")
             ? optionsUrl
             : context.extension.rootURI.resolve(optionsUrl);
-
-          if (self.debug && !this.aDocumentExistsAt(self.pathToOptionsPage)) {
-            self.error("Attempt to register non-existent options page: " + self.pathToOptionsPage
-              + ((optionsUrl != self.pathToOptionsPage) ? "\n(user provided options page was: " + optionsUrl + ")" : ""));
-            self.pathToOptionsPage = null;
-          }          
         },
 
         registerDefaultPrefs(defaultUrl) {
           let url = context.extension.rootURI.resolve(defaultUrl);
-
-          if (self.debug && !this.aDocumentExistsAt(url)) {
-            self.error("Attempt to register non-existent default prefs script: " + url
-              + ((url != defaultUrl) ? "\n(user provided script path was: " + defaultUrl + ")" : ""));
-            return;
-          }
 
           let prefsObj = {};
           prefsObj.Services = ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
@@ -205,12 +225,6 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
               ? jsFile
               : context.extension.rootURI.resolve(jsFile)
 
-            if (self.debug && !this.aDocumentExistsAt(path)) {
-              self.error("Attempt to register a non-existent injector script: " + path
-                + "\nfor window " + windowHref
-                + ((path != jsFile) ? "\n(user provided script path was: " + jsFile + " )" : ""));
-              return;
-            }
             self.registeredWindows[windowHref] = path;
           } else {
             self.error("Window <" +windowHref + "> has already been registered");
@@ -224,12 +238,6 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           self.pathToStartupScript = aPath.startsWith("chrome://")
             ? aPath
             : context.extension.rootURI.resolve(aPath);
-
-          if (self.debug && !this.aDocumentExistsAt(self.pathToStartupScript)) {
-            self.error("Attempt to register non-existent startup script: " + self.pathToStartupScript
-              + ((aPath != self.pathToStartupScript) ? "\n(user provided script path was: " + aPath + ")" : ""));
-            self.pathToStartupScript = null;
-          }          
         },
 
         registerShutdownScript(aPath) {
@@ -239,28 +247,9 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           self.pathToShutdownScript = aPath.startsWith("chrome://")
             ? aPath
             : context.extension.rootURI.resolve(aPath);
-
-          if (self.debug && !this.aDocumentExistsAt(self.pathToShutdownScript)) {
-            self.error("Attempt to register non-existent shutdown script: " + self.pathToShutdownScript
-              + ((aPath != self.pathToShutdownScript) ? "(user provided script path was: " + aPath + ")" : ""));
-            self.pathToShutdownScript = null;
-          }          
         },
 
         async startListening() {
-          // async sleep function using Promise
-          async function sleep(delay) {
-            let timer =  Components.classes["@mozilla.org/timer;1"].createInstance(Components.interfaces.nsITimer);
-            return new Promise(function(resolve, reject) {
-              let event = {
-                notify: function(timer) {
-                  resolve();
-                }
-              }
-              timer.initWithCallback(event, delay, Components.interfaces.nsITimer.TYPE_ONE_SHOT);
-            });
-          };
-
           if (!self.isBackgroundContext)
             throw new Error("The WindowListener API may only be called from the background page.");
 
@@ -361,7 +350,7 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
                             // On my system it takes 70ms.
                             let loaded = false;
                             for (let i=0; i < 100 && !loaded; i++) {
-                              await sleep(100);
+                              await self.sleep(100);
                               let targetWindow = mutation.target.contentWindow.wrappedJSObject;
                               if (targetWindow && targetWindow.location.href == mutation.target.getAttribute("src") && targetWindow.document.readyState == "complete") {
                                 loaded = true;
@@ -415,7 +404,8 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
       if (window.hasOwnProperty(this.uniqueRandomID) && this.registeredWindows.hasOwnProperty(window.location.href)) {
         try {
           let uniqueRandomID = this.uniqueRandomID;
-
+          let extension = this.extension;
+          
           // Add reference to window to add-on scope
           window[this.uniqueRandomID].window = window;
           window[this.uniqueRandomID].document = window.document;
@@ -461,6 +451,10 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
               return null;
             }
 
+            function localize(entity) {
+              let msg = entity.slice("__MSG_".length,-2);
+              return extension.localeData.localizeMessage(msg)
+            }
 
             function injectChildren(elements, container) {
               if (debug) console.log(elements);
@@ -535,7 +529,8 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
             }
 
             if (debug) console.log ("Injecting into root document:");
-            injectChildren(Array.from(window.MozXULElement.parseXULToFragment(xulString, dtdFiles).children), window.document.documentElement);
+            let localicedXulString = xulString.replace(/__MSG_(.*?)__/g, localize);
+            injectChildren(Array.from(window.MozXULElement.parseXULToFragment(localicedXulString, dtdFiles).children), window.document.documentElement);
 
             for (let bar of toolbarsToResolve) {
               let currentset = Services.xulStore.getValue(
