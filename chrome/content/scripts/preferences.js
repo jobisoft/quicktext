@@ -10,6 +10,9 @@
  * synchronously.
  * If preferences are changed elsewhere, the local pref obj will be updated.
  * 
+ * Version: 1.1
+ * - Bugfix: use messenger.storage instead of browser.storage
+ *
  * Version: 1.0
  *
  * Author: John Bieling (john@thunderbird.net)
@@ -120,7 +123,7 @@ var preferences = {
       }      
       // Push new defaults into storage.local.
       for (let key of Object.keys(defaults)) {
-        browser.storage.local.set({ [defaultPrefPrefix + key] : defaults[key] });
+        messenger.storage.local.set({ [defaultPrefPrefix + key] : defaults[key] });
         this._prefs[ defaultPrefPrefix + key] = defaults[key];
       }
       
