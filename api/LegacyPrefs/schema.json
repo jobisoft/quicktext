@@ -14,6 +14,25 @@
             "description": "Name of the preference."
           }
         ]
+      },      {
+        "name": "getPref",
+        "type": "function",
+        "async": true,
+        "description": "Gets a value from the legacy pref system.",
+        "parameters": [
+          {
+            "name": "aName",
+            "type": "string",
+            "description": "Name of the preference."
+          },
+          {
+            "name": "aFallback",
+            "type": "string",
+            "description": "Value to be returned, if the requested preference does not exist.",
+            "optional": true,
+            "default": null
+          }
+        ]
       },
       {
         "name": "clearUserPref",
