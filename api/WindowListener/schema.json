@@ -49,6 +49,11 @@
         "parameters": []
       },
       {
+        "name": "callAddonOptions",
+        "type": "function",
+        "parameters": []
+      },
+      {
         "name": "startListening",
         "type": "function",
         "async": true,
