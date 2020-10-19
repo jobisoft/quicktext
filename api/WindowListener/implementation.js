@@ -2,6 +2,9 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version: 1.26
+ * - pass WL object to legacy preference window
+ *
  * Version: 1.25
  * - adding waitForMasterPassword
  *
@@ -330,7 +333,12 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
                       let entry = window.MozXULElement.parseXULToFragment(
                         `<menuitem class="menuitem-iconic" id="${id}" image="${icon}" label="${name}" />`);
                       element_addonPrefs.appendChild(entry);
-                      window.document.getElementById(id).addEventListener("command", function() {window.openDialog(self.pathToOptionsPage, "AddonOptions")});
+                      let WL = {}
+                      WL.extension = self.extension;
+                      WL.messenger = Array.from(self.extension.views).find(
+                        view => view.viewType === "background").xulBrowser.contentWindow
+                        .wrappedJSObject.browser;
+                      window.document.getElementById(id).addEventListener("command", function() {window.openDialog(self.pathToOptionsPage, "AddonOptions", null, WL)});
                     } catch (e) {
                       Components.utils.reportError(e)
                     }
