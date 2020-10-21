@@ -127,10 +127,10 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
         async waitForMasterPassword() {
           // Wait until master password has been entered (if needed)
           while (!Services.logins.isLoggedIn) {
-            console.log("Waiting for master password.");
+            self.log("Waiting for master password.");
             await self.sleep(1000);
           }          
-          console.log("Master password has been entered.");
+          self.log("Master password has been entered.");
         },
 
         aDocumentExistsAt(uriString) {
