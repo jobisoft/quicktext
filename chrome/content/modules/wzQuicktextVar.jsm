@@ -707,11 +707,11 @@ wzQuicktextVar.prototype = {
     return this.mData['CLIPBOARD'].data;
   }
 ,
-  getcarddata_from: function(aData, aEmail, aEscapedVCard)
+  getcarddata_from: function(aData, aIdentity)
   {
     let passStandardCheck = false;
     try {
-      let card = cardbookRepository.cardbookUtils.getCardFromEmail(aEmail);
+      let card = cardbookRepository.cardbookUtils.getCardFromEmail(aIdentity.email.toLowerCase());
       if (card)
       {
         aData['FROM'].data['firstname'] = TrimString(card.firstname);
@@ -733,12 +733,12 @@ wzQuicktextVar.prototype = {
 
     if (!passStandardCheck)
     {
-      let card = this.getCardForEmail(aEmail.toLowerCase());
-      if (card == null && aEscapedVCard != null)
+      let card = this.getCardForEmail(aIdentity.email.toLowerCase());
+      if (card == null && aIdentity.escapedVCard != null)
       {
         const manager = Components.classes["@mozilla.org/abmanager;1"]
           .getService(Components.interfaces.nsIAbManager);
-        card = manager.escapedVCardToAbCard(aEscapedVCard);
+        card = manager.escapedVCardToAbCard(aIdentity.escapedVCard);
       }
       if (card != null)
       {
@@ -769,7 +769,7 @@ wzQuicktextVar.prototype = {
       'lastname': ''
     };
 
-    this.mData = this.getcarddata_from(this.mData, identity.email.toLowerCase(), identity.escapedVCard);
+    this.mData = this.getcarddata_from(this.mData, identity);
 
     return this.mData['FROM'].data;
   }
