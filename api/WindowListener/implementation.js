@@ -2,6 +2,9 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version: 1.27
+ * - add openOptionsDialog()
+ *
  * Version: 1.26
  * - pass WL object to legacy preference window
  *
@@ -252,8 +255,9 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
             : context.extension.rootURI.resolve(aPath);
         },
 
-        callAddonOptions() {
-          self.window.openDialog(self.pathToOptionsPage, "AddonOptions");
+        openOptionsDialog(windowId) {
+          let window = context.extension.windowManager.get(windowId, context).window
+          window.openDialog(self.pathToOptionsPage, "AddonOptions");
         },
 
         async startListening() {
@@ -343,7 +347,6 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
                         view => view.viewType === "background").xulBrowser.contentWindow
                         .wrappedJSObject.browser;
                       window.document.getElementById(id).addEventListener("command", function() {window.openDialog(self.pathToOptionsPage, "AddonOptions", null, WL)});
-                      self.window = window;
                     } catch (e) {
                       Components.utils.reportError(e)
                     }

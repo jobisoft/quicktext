@@ -49,9 +49,15 @@
         "parameters": []
       },
       {
-        "name": "callAddonOptions",
+        "name": "openOptionsDialog",
         "type": "function",
-        "parameters": []
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer",
+            "description": "Id of the window the dialog should be opened from."
+          }
+        ]
       },
       {
         "name": "startListening",

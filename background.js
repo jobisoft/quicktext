@@ -79,8 +79,8 @@ async function waitForLoad() {
     "chrome://messenger/content/messenger.xhtml",
     "chrome://quicktext/content/scripts/messenger.js");
 
-  browser.composeAction.onClicked.addListener(function() { messenger.WindowListener.callAddonOptions(); });
-  browser.browserAction.onClicked.addListener(function() { messenger.WindowListener.callAddonOptions(); });
+  browser.composeAction.onClicked.addListener(tab => { messenger.WindowListener.openOptionsDialog(tab.windowId); });
+  browser.browserAction.onClicked.addListener(tab => { messenger.WindowListener.openOptionsDialog(tab.windowId); });
 
   messenger.WindowListener.startListening();
 })();
