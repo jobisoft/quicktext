@@ -157,12 +157,18 @@ wzQuicktextVar.prototype = {
           break;
       }
 
-      if (tags[i].tagName.toLowerCase() == "image" && aType != 1) {
-        // image tag may only be added in html mode
-        value = "";
-      } else if (typeof this["get_"+ tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
-        // if the method "get_[tagname]" exists and there is enough arguments we call it
-        value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
+      // if the method "get_[tagname]" exists and there is enough arguments we call it
+      if (typeof this["get_"+ tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
+	      
+        // these tags need different behaviour if added in "text" or "html" mode
+        if (tags[i].tagName.toLowerCase() == "image" ||
+	    tags[i].tagName.toLowerCase() == "clipboard" ||
+	    tags[i].tagName.toLowerCase() == "selection") {
+        
+          value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables, aType);
+        } else {
+          value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
+        }
       }
 
       aStr = this.replaceText(tags[i].tag, value, aStr);
@@ -285,9 +291,14 @@ wzQuicktextVar.prototype = {
     return this.process_file(aVariables);
   }
 ,
-  get_image: function(aVariables)
+  get_image: function(aVariables, aType)
   {
-    return this.process_image_content(aVariables);
+    if (aType = 1) {
+      // image tag may only be added in html mode
+      return this.process_image_content(aVariables);
+    } else {
+      return "";
+    }
   }
 ,
   get_text: function(aVariables)
@@ -341,14 +352,14 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  get_clipboard: function(aVariables)
+  get_clipboard: function(aVariables, aType)
   {
-    return TrimString(this.process_clipboard(aVariables));
+    return TrimString(this.process_clipboard(aVariables, aType));
   }
 ,  
-  get_selection: function(aVariables)
+  get_selection: function(aVariables, aType)
   {
-    return this.process_selection(aVariables);
+    return this.process_selection(aVariables, aType);
   }
 ,
   get_from: function(aVariables)
@@ -666,12 +677,18 @@ wzQuicktextVar.prototype = {
     return this.mData['INPUT'].data;
   }
 ,
-  process_selection: function(aVariables)
+  process_selection: function(aVariables, aType)
   {
-    return this.mQuicktext.mSelectionContent;
+    if (aType == 0) {
+      // return selected text as plain text
+      return this.mQuicktext.mSelectionContent;
+    } else {
+      // return selected text as html
+      return this.mQuicktext.mSelectionContentHtml;
+    }
   }
 ,
-  process_clipboard: function(aVariables)
+  process_clipboard: function(aVariables, aType)
   {
     if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
       return this.mData['CLIPBOARD'].data;
@@ -687,12 +704,24 @@ wzQuicktextVar.prototype = {
       var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
       if (trans)
       {
-        trans.addDataFlavor("text/unicode");
+        if (aType == 0) {
+          // request clipboard content as plain text
+          trans.addDataFlavor("text/unicode");
+        } else {
+          // request clipboard content as html
+          trans.addDataFlavor("text/html");
+        }
         clip.getData(trans,clip.kGlobalClipboard);
 
         var clipboard = {};
         try {
-          trans.getTransferData("text/unicode", clipboard);
+          if (aType == 0) {
+            // request clipboard content as plain text
+            trans.getTransferData("text/unicode", clipboard);
+          } else {
+            // request clipboard content as html
+            trans.getTransferData("text/html", clipboard);
+          }
           if (clipboard)
           {
             clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
