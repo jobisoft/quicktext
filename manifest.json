@@ -14,8 +14,26 @@
   "default_locale": "en-US",
   "description": "__MSG_extensionDescription__",  
   "icons": {
+    "16": "chrome/skin/icon16.png",
+    "24": "chrome/skin/icon24.png",
     "32": "chrome/skin/icon.png"
   },
+  "compose_action": {
+    "default_title": "Quicktext",
+    "default_icon": {
+      "16": "chrome/skin/icon16.png",
+      "24": "chrome/skin/icon24.png",
+      "32": "chrome/skin/icon.png"
+    }
+  }, 
+  "browser_action": {
+    "default_title": "Quicktext",
+    "default_icon": {
+      "16": "chrome/skin/icon16.png",
+      "24": "chrome/skin/icon24.png",
+      "32": "chrome/skin/icon.png"
+    }
+  }, 
   "permissions" : ["storage"],
   "background": {
     "scripts": [

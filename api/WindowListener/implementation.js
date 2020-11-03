@@ -252,6 +252,10 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
             : context.extension.rootURI.resolve(aPath);
         },
 
+        callAddonOptions() {
+          self.window.openDialog(self.pathToOptionsPage, "AddonOptions");
+        },
+
         async startListening() {
           if (!self.isBackgroundContext)
             throw new Error("The WindowListener API may only be called from the background page.");
@@ -339,6 +343,7 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
                         view => view.viewType === "background").xulBrowser.contentWindow
                         .wrappedJSObject.browser;
                       window.document.getElementById(id).addEventListener("command", function() {window.openDialog(self.pathToOptionsPage, "AddonOptions", null, WL)});
+                      self.window = window;
                     } catch (e) {
                       Components.utils.reportError(e)
                     }
