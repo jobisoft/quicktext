@@ -231,6 +231,7 @@ var quicktext = {
             let node = toolbar.children[i];
             switch (node.nodeName)
             {
+              case "button":
               case "toolbarbutton":
                 // Check if the group is collapse or not
                 if (node.getAttribute("type") == "menu")
