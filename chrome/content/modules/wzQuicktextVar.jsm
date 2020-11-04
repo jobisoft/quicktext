@@ -777,7 +777,6 @@ wzQuicktextVar.prototype = {
   getcarddata_to: function(aData, aIndex)
   {
     let passStandardCheck = false;
-    console.log("test0 getcarddata_to passStandardCheck : " + passStandardCheck.toSource());
     try {
       let card = cardbookRepository.cardbookUtils.getCardFromEmail(aData['TO'].data['email'][aIndex]);
       if (card)
