@@ -152,6 +152,12 @@ var quicktext = {
           //Add first level element, this will be either a menu or a button (if only one text in this group)
           var toolbarbuttonGroup;
           let t = document.createXULElement("button");
+
+          // add a tabindex of -1 (not reachable via sequential keyboard navigation)
+          // also added a tabindex to the buttons "variables" and "other" in "chrome/content/scripts/messengercompose.js"
+          // see: https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/tabindex
+          t.setAttribute("tabindex", "-1");
+
           if (textLength == 1 && gQuicktext.collapseGroup)
           {
             toolbarbuttonGroup = toolbar.appendChild(t);
