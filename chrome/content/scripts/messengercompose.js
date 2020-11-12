@@ -26,7 +26,7 @@ function onLoad(activatedWhileWindowOpen) {
 
   <toolbox id="headers-box">
     <toolbar id="quicktext-toolbar">
-      <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;">
+      <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;" tabindex="-1">
         <menupopup>
           <menu label="&quicktext.to.label;">
             <menupopup>
@@ -89,7 +89,7 @@ function onLoad(activatedWhileWindowOpen) {
           </menu>
         </menupopup>
       </button>
-      <button type="menu" id="quicktext-other" label="&quicktext.other.label;">
+      <button type="menu" id="quicktext-other" label="&quicktext.other.label;" tabindex="-1">
         <menupopup>
           <menuitem label="&quicktext.insertTextFromFileAsText.label;" oncommand="quicktext.insertContentFromFile(0);" />
           <menuitem label="&quicktext.insertTextFromFileAsHTML.label;" oncommand="quicktext.insertContentFromFile(1);" />
