@@ -3,12 +3,12 @@
   "applications": {
     "gecko": {
       "id": "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}",
-      "strict_min_version": "78.0",
+      "strict_min_version": "78.6.1",
       "strict_max_version": "78.*"
     }
   },
   "name": "Quicktext",
-  "version": "3.6b1",
+  "version": "3.6b2",
   "author": "John Bieling",
   "homepage_url": "https://github.com/jobisoft/quicktext",
   "default_locale": "en-US",
@@ -20,6 +20,7 @@
   },
   "compose_action": {
     "default_title": "Quicktext",
+    "default_label": "",    
     "default_icon": {
       "16": "chrome/skin/icon16.png",
       "24": "chrome/skin/icon24.png",
@@ -28,6 +29,7 @@
   }, 
   "browser_action": {
     "default_title": "Quicktext",
+    "default_label": "",    
     "default_icon": {
       "16": "chrome/skin/icon16.png",
       "24": "chrome/skin/icon24.png",
