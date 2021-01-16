@@ -1418,6 +1418,11 @@ var quicktext = {
     gQuicktext.openHomepage();
   }
 ,
+  resetCounter: function()
+  {
+    gQuicktext.preferences.setPref("counter", 0);
+  }
+,
   shortcutModifierChange: function()
   {
     var state = (this.mOS.substr(0, 3).toLowerCase() == "mac" || (this.mOS.substr(0, 3).toLowerCase() == "win" && document.getElementById('select-shortcutModifier').value == "alt"));
