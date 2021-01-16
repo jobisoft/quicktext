@@ -704,32 +704,47 @@ wzQuicktextVar.prototype = {
       var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
       if (trans)
       {
-        if (aType == 0) {
-          // request clipboard content as plain text
-          trans.addDataFlavor("text/unicode");
-        } else {
-          // request clipboard content as html
+        // HTML templates: request the clipboard content as html first
+        var clipboardHTMLfilled = 0;
+        if (aType == 1)
+        {
           trans.addDataFlavor("text/html");
+          clip.getData(trans, clip.kGlobalClipboard);
+          var clipboardHTML = {};
+          try {
+            trans.getTransferData("text/html", clipboardHTML);
+            if (clipboardHTML)
+            {
+              clipboardHTML = clipboardHTML.value.QueryInterface(Components.interfaces.nsISupportsString);
+              if (clipboardHTML)
+              {
+                this.mData['CLIPBOARD'].data = clipboardHTML.data;
+                clipboardHTMLfilled = 1;
+              }
+            }
+          }
+          catch (e) { Components.utils.reportError(e); }
         }
-        clip.getData(trans,clip.kGlobalClipboard);
 
-        var clipboard = {};
-        try {
-          if (aType == 0) {
-            // request clipboard content as plain text
+
+        // HTML templates: request clipboard content as plain text, if requesting as html failed
+        // Text templates: request clipboard content as plain text only
+        if(clipboardHTMLfilled == 0)
+        {
+          trans.addDataFlavor("text/unicode");
+          clip.getData(trans, clip.kGlobalClipboard);
+          var clipboard = {};
+          try {
             trans.getTransferData("text/unicode", clipboard);
-          } else {
-            // request clipboard content as html
-            trans.getTransferData("text/html", clipboard);
-          }
-          if (clipboard)
-          {
-            clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
             if (clipboard)
-              this.mData['CLIPBOARD'].data = clipboard.data;
+            {
+              clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
+              if (clipboard)
+                this.mData['CLIPBOARD'].data = clipboard.data;
+            }
           }
+          catch (e) { Components.utils.reportError(e); }
         }
-        catch (e) { Components.utils.reportError(e); }
       }
     }
 
