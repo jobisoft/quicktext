@@ -275,7 +275,7 @@ var quicktext = {
     let items = document.getElementsByClassName("customEventListenerForDynamicMenu");
     for (let i=0; i < items.length; i++)
     {
-      items[i].addEventListener("command", function() { quicktext.insertTemplate(this.getAttribute("i"), this.getAttribute("j")); }, true);
+      items[i].addEventListener("command", function() { quicktext.insertTemplate(this.getAttribute("i"), this.getAttribute("j"), true, true); }, true);
     }
 
     
@@ -325,7 +325,7 @@ var quicktext = {
     await this.insertBody("[["+ aVar +"]] ", 0, true);
   }
 ,
-  insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction = true)
+  insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction = true, aFocusBody = false)
   {
     //store selected content
     var editor = GetCurrentEditor();
@@ -374,8 +374,13 @@ var quicktext = {
       // has to be inserted below "insertBody" as "insertBody" gathers the header data from the header tags
       this.insertHeaders(text);
 
-      // If we insert any headers we maybe needs to return the placement of the focus
-      setTimeout(function () {quicktext.moveFocus();}, 1);
+      if(aFocusBody){
+        // the variable aFocusBody is only used from Quicktext-toolbar to focus the message body after using the toolbar
+        setTimeout(function () { quicktext.focusMessageBody(); }, 1);
+      } else {
+        // if we insert any headers we maybe needs to return the placement of the focus
+        setTimeout(function () { quicktext.moveFocus(); }, 1);
+      }
     }
   }
 ,
