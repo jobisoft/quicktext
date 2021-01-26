@@ -48,6 +48,7 @@
     ["locale",    "quicktext", "ja",     "chrome/locale/ja/"],
     ["locale",    "quicktext", "ru",     "chrome/locale/ru/"],
     ["locale",    "quicktext", "sv-SE",  "chrome/locale/sv-SE/"],
+    ["locale",    "quicktext", "cs",     "chrome/locale/cs/"],
   ]);
 
   messenger.WindowListener.registerOptionsPage("chrome://quicktext/content/addonoptions.xhtml")
