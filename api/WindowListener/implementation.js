@@ -2,6 +2,9 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version: 1.37
+ * - fix for 68
+ *
  * Version: 1.36
  * - fix for beta 87
  *
@@ -146,6 +149,8 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           `<menuitem id="${id}" label="${name}" />`);
     
     event.target.appendChild(entry);
+    let noPrefsElem = event.target.querySelector('[disabled="true"]');
+    noPrefsElem.setAttribute("collapsed", "true");
     event.target.ownerGlobal.document.getElementById(id).addEventListener("command", this);
   }   
 
