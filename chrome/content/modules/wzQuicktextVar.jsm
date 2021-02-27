@@ -780,8 +780,8 @@ wzQuicktextVar.prototype = {
       let card = this.getCardForEmail(aIdentity.email.toLowerCase());
       if (card == null && aIdentity.escapedVCard != null)
       {
-        const manager = Components.classes["@mozilla.org/abmanager;1"]
-          .getService(Components.interfaces.nsIAbManager);
+        const manager = Cc["@mozilla.org/addressbook/msgvcardservice;1"]
+          .getService(Ci.nsIMsgVCardService)
         card = manager.escapedVCardToAbCard(aIdentity.escapedVCard);
       }
       if (card != null)
