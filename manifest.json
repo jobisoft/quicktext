@@ -8,7 +8,7 @@
     }
   },
   "name": "Quicktext",
-  "version": "3.6b2",
+  "version": "3.6b3",
   "author": "John Bieling",
   "homepage_url": "https://github.com/jobisoft/quicktext",
   "default_locale": "en-US",
