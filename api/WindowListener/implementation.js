@@ -2,7 +2,7 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
- * Version: 1.37
+ * Version: 1.39
  * - fix for 68
  *
  * Version: 1.36
@@ -150,7 +150,9 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
     
     event.target.appendChild(entry);
     let noPrefsElem = event.target.querySelector('[disabled="true"]');
-    noPrefsElem.setAttribute("collapsed", "true");
+    // using collapse could be undone by core, so we use display none
+    // noPrefsElem.setAttribute("collapsed", "true");
+    noPrefsElem.style.display = "none";
     event.target.ownerGlobal.document.getElementById(id).addEventListener("command", this);
   }   
 
@@ -805,8 +807,8 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
             }
 
             if (debug) console.log ("Injecting into root document:");
-            let localicedXulString = xulString.replace(/__MSG_(.*?)__/g, localize);
-            injectChildren(Array.from(window.MozXULElement.parseXULToFragment(localicedXulString, dtdFiles).children), window.document.documentElement);
+            let localizedXulString = xulString.replace(/__MSG_(.*?)__/g, localize);
+            injectChildren(Array.from(window.MozXULElement.parseXULToFragment(localizedXulString, dtdFiles).children), window.document.documentElement);
 
             for (let bar of toolbarsToResolve) {
               let currentset = Services.xulStore.getValue(
@@ -896,6 +898,14 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
           if (this.getThunderbirdMajorVersion() < 78) {
             let element_addonPrefs = window.document.getElementById(this.menu_addonPrefs_id);
             element_addonPrefs.removeEventListener("popupshowing", this);
+            // Remove our entry.
+            let entry = window.document.getElementById(this.menu_addonPrefs_id + "_" + this.uniqueRandomID);
+            if (entry) entry.remove();
+            // Do we have to unhide the noPrefsElement?
+            if (element_addonPrefs.children.length == 1) {
+                let noPrefsElem = element_addonPrefs.querySelector('[disabled="true"]');
+                noPrefsElem.style.display = "inline";
+            }              
           } else {
             // Remove event listener for addon manager view changes
             let managerWindow = this.getAddonManagerFromWindow(window);
