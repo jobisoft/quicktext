@@ -24,14 +24,14 @@ var quicktext = {
   mShortcutModifierDown:        false,
   mKeywords:                    {}
 ,
-  load: function()
+  load: async function()
   {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
 
       gQuicktext.addObserver(this);
-      if (!gQuicktext.loadSettings(false))
+      if (!(await gQuicktext.loadSettings(false)))
         this.updateGUI();
 
       gQuicktextVar.init(window);
@@ -359,8 +359,8 @@ var quicktext = {
       //   }
       // }
       
-      this.insertSubject(text.subject);
-      this.insertAttachments(text.attachments);
+      await this.insertSubject(text.subject);
+      await this.insertAttachments(text.attachments);
 
       if (text.text != "" && text.text.indexOf('[[CURSOR]]') > -1)
       {
@@ -372,7 +372,7 @@ var quicktext = {
       await this.insertBody(text.text, text.type, aHandleTransaction);
 
       // has to be inserted below "insertBody" as "insertBody" gathers the header data from the header tags
-      this.insertHeaders(text);
+      await this.insertHeaders(text);
 
       if(aFocusBody){
         // the variable aFocusBody is only used from Quicktext-toolbar to focus the message body after using the toolbar
@@ -384,7 +384,7 @@ var quicktext = {
     }
   }
 ,
-  insertAttachments: function(aStr)
+  insertAttachments: async function(aStr)
   {
     if (aStr != "")
     {
@@ -408,7 +408,7 @@ var quicktext = {
     }
   }
 ,
-  insertHeaders: function(aText)
+  insertHeaders: async function(aText)
   {
     var headerLength = aText.getHeaderLength();
     if (headerLength == 0)
@@ -440,7 +440,7 @@ var quicktext = {
       var type = header.type.toLowerCase();
       if (typeof recipientHeaders[type] != "undefined")
       {
-        recipientHeaders[type].push(gQuicktextVar.parse(header.value));
+        recipientHeaders[type].push(await gQuicktextVar.parse(header.value));
         count++;
       }
     }
@@ -509,11 +509,11 @@ var quicktext = {
     }
   }
 ,
-  insertSubject: function(aStr)
+  insertSubject: async function(aStr)
   {
     if (aStr != "")
     {
-      aStr = gQuicktextVar.parse(aStr);
+      aStr = await gQuicktextVar.parse(aStr);
 
       if (aStr != "" && !aStr.match(/^\s+$/) && document.getElementById('msgSubject'))
         document.getElementById('msgSubject').value = aStr;
@@ -524,7 +524,7 @@ var quicktext = {
   {
     if (aStr != "")
     {
-      aStr = gQuicktextVar.parse(aStr, aType);
+      aStr = await gQuicktextVar.parse(aStr, aType);
 
       if (aStr != "")
       {

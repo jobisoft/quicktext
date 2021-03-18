@@ -41,8 +41,8 @@ var gQuicktext = {
   set viewToolbar(aViewToolbar)
   {
     this.mViewToolbar = aViewToolbar;
-    this.preferences.setPref("toolbar", aViewToolbar);
 
+    this.notifyTools.notifyBackground({command:"setPref", pref: "toolbar", value: aViewToolbar});
     this.notifyObservers("updatetoolbar", "");
 
     return this.mViewToolbar;
@@ -52,7 +52,7 @@ var gQuicktext = {
   set viewPopup(aViewPopup)
   {
     this.mViewPopup = aViewPopup;
-    this.preferences.setPref("popup", aViewPopup);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "popup", value: aViewPopup});
 
     return this.mViewPopup;
   }
@@ -61,7 +61,7 @@ var gQuicktext = {
   set collapseGroup(aCollapseGroup)
   {
     this.mCollapseGroup = aCollapseGroup;
-    this.preferences.setPref("menuCollapse", aCollapseGroup);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "menuCollapse", value: aCollapseGroup});
 
     this.notifyObservers("updatesettings", "");
 
@@ -72,7 +72,7 @@ var gQuicktext = {
   set defaultImport(aDefaultImport)
   {
     this.mDefaultImport = aDefaultImport;
-    this.preferences.setPref("defaultImport", aDefaultImport);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "defaultImport", value: aDefaultImport});
 
     return this.mDefaultImport;
   }
@@ -81,7 +81,7 @@ var gQuicktext = {
   set keywordKey(aKeywordKey)
   {
     this.mKeywordKey = aKeywordKey;
-    this.preferences.setPref("keywordKey", aKeywordKey);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "keywordKey", value: aKeywordKey});
 
     return this.mKeywordKey;
   }
@@ -90,7 +90,7 @@ var gQuicktext = {
   set shortcutModifier(aShortcutModifier)
   {
     this.mShortcutModifier = aShortcutModifier;
-    this.preferences.setPref("shortcutModifier", aShortcutModifier);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "shortcutModifier", value: aShortcutModifier});
 
     return this.mShortcutModifier;
   }
@@ -103,7 +103,7 @@ var gQuicktext = {
   set collapseState(aCollapseState)
   {
     this.mCollapseState = aCollapseState;
-    this.preferences.setPref("collapseState", aCollapseState);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "collapseState", value: aCollapseState});
 
     return this.mCollapseState;
   }
@@ -119,7 +119,7 @@ var gQuicktext = {
   set shortcutTypeAdv(aShortcutTypeAdv)
   {
     this.mShortcutTypeAdv = aShortcutTypeAdv;
-    this.preferences.setPref("shortcutTypeAdv", aShortcutTypeAdv);
+    this.notifyTools.notifyBackground({command:"setPref", pref: "shortcutTypeAdv", value: aShortcutTypeAdv});
 
     return this.mShortcutTypeAdv;
   }
@@ -132,7 +132,7 @@ var gQuicktext = {
     extps.loadURI(uriToOpen, null);    
   }
 ,
-  loadSettings: function(aReload)
+  loadSettings: async function(aReload)
   {
     if (!aReload && this.mSettingsLoaded)
       return false;
@@ -151,10 +151,11 @@ var gQuicktext = {
                                .get("ProfD", Components.interfaces.nsIFile);
 
     // check if an alternative path has been given for the config folder
-    if (this.preferences.getPref("settingsFolder"))
+    let settingsFolder = await this.notifyTools.notifyBackground({command:"getPref", pref: "settingsFolder"});
+    if (settingsFolder)
     {
       profileDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-      profileDir.initWithPath(this.preferences.getPref("settingsFolder"));	  
+      profileDir.initWithPath(settingsFolder);
     }
   
     this.mQuicktextDir = profileDir;
@@ -185,14 +186,14 @@ var gQuicktext = {
     }
 
     // Get prefs
-    this.mViewToolbar = this.preferences.getPref("toolbar");
-    this.mCollapseGroup = this.preferences.getPref("menuCollapse");
-    this.mKeywordKey = this.preferences.getPref("keywordKey");
-    this.mViewPopup = this.preferences.getPref("popup");
-    this.mShortcutTypeAdv = this.preferences.getPref("shortcutTypeAdv");
-    this.mShortcutModifier = this.preferences.getPref("shortcutModifier");
-    this.mCollapseState = this.preferences.getPref("collapseState");
-    this.mDefaultImport = this.preferences.getPref("defaultImport");      
+    this.mViewToolbar = await this.notifyTools.notifyBackground({command:"getPref", pref: "toolbar"});
+    this.mCollapseGroup = await this.notifyTools.notifyBackground({command:"getPref", pref: "menuCollapse"});
+    this.mKeywordKey = await this.notifyTools.notifyBackground({command:"getPref", pref: "keywordKey"});
+    this.mViewPopup = await this.notifyTools.notifyBackground({command:"getPref", pref: "popup"});
+    this.mShortcutTypeAdv = await this.notifyTools.notifyBackground({command:"getPref", pref: "shortcutTypeAdv"});
+    this.mShortcutModifier = await this.notifyTools.notifyBackground({command:"getPref", pref: "shortcutModifier"});
+    this.mCollapseState = await this.notifyTools.notifyBackground({command:"getPref", pref: "collapseState"});
+    this.mDefaultImport = await this.notifyTools.notifyBackground({command:"getPref", pref: "defaultImport"});      
 
     // reset the value of mShortcutModifier to "alt", if it has not a valid value - see issue #177
     if (this.mShortcutModifier != "alt" && this.mShortcutModifier != "control" && this.mShortcutModifier != "meta") 
@@ -1059,5 +1060,5 @@ function TrimString(aStr)
   return aStr.replace(/(^\s+)|(\s+$)/g, '')
 }
 
-Services.scriptloader.loadSubScript("chrome://quicktext/content/scripts/preferences.js", gQuicktext, "UTF-8");
+Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", gQuicktext, "UTF-8");
 

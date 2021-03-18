@@ -99,7 +99,7 @@ wzQuicktextVar.prototype = {
     this.mData = tmpData;
   }
 ,
-  parse: function(aStr, aType)
+  parse: async function(aStr, aType)
   {
     // Reparse the text until there is no difference in the text
     // or that we parse 100 times (so we don't make an infinitive loop)
@@ -109,13 +109,13 @@ wzQuicktextVar.prototype = {
     do {
       count++;
       oldStr = aStr;
-      aStr = this.parseText(aStr, aType);
+      aStr = await this.parseText(aStr, aType);
     } while (aStr != oldStr && count < 20);
 
     return aStr;
   }
 ,
-  parseText: function(aStr, aType)
+  parseText: async function(aStr, aType)
   {
     var tags = this.getTags(aStr);
 
@@ -165,9 +165,9 @@ wzQuicktextVar.prototype = {
 	    tags[i].tagName.toLowerCase() == "clipboard" ||
 	    tags[i].tagName.toLowerCase() == "selection") {
         
-          value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables, aType);
+          value = await this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables, aType);
         } else {
-          value = this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
+          value = await this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
         }
       }
 
@@ -396,9 +396,9 @@ wzQuicktextVar.prototype = {
       return "";
   }
 ,
-  get_url: function(aVariables)
+  get_url: async function(aVariables)
   {
-    return this.process_url(aVariables);
+    return await this.process_url(aVariables);
   }
 ,
   get_version: function(aVariables)
@@ -413,9 +413,9 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  get_counter: function(aVariables)
+  get_counter: async function(aVariables)
   {
-    return this.process_counter(aVariables);
+    return await this.process_counter(aVariables);
   }
 ,
   get_subject: function(aVariables)
@@ -926,7 +926,7 @@ wzQuicktextVar.prototype = {
     return this.mData['TO'].data;
   }
 ,
-  process_url: function(aVariables)
+  process_url: async function(aVariables)
   {
     if (aVariables.length == 0)
       return "";
@@ -953,7 +953,7 @@ wzQuicktextVar.prototype = {
             case 'att':
             case 'orgheader':
             case 'orgatt':
-              data = this["process_"+ tag]();
+              data = await this["process_"+ tag]();
               if (typeof data != 'undefined')
               {
                 for (var i in data)
@@ -965,7 +965,7 @@ wzQuicktextVar.prototype = {
             case 'version':
             case 'date':
             case 'time':
-              data = this["process_"+ tag]();
+              data = await this["process_"+ tag]();
               if (typeof data != 'undefined')
               {
                 for (var i in data)
@@ -976,7 +976,7 @@ wzQuicktextVar.prototype = {
             case 'clipboard':
             case 'selection':
             case 'counter':
-              data = this["process_"+ tag]();
+              data = await this["process_"+ tag]();
               if (typeof data != 'undefined')
                 post.push(tag +'='+ data);
               break;
@@ -1043,16 +1043,16 @@ wzQuicktextVar.prototype = {
     return this.mData['VERSION'].data;
   }
 ,
-  process_counter: function(aVariables)
+  process_counter: async function(aVariables)
   {
     if (this.mData['COUNTER'] && this.mData['COUNTER'].checked)
       return this.mData['COUNTER'].data;
 
     this.mData['COUNTER'] = {};
     this.mData['COUNTER'].checked = true;
-    this.mData['COUNTER'].data = this.mQuicktext.preferences.getPref("counter");
+    this.mData['COUNTER'].data = await this.mQuicktext.notifyTools.notifyBackground({command:"getPref", pref: "counter"});
     this.mData['COUNTER'].data++;
-    this.mQuicktext.preferences.setPref("counter", this.mData['COUNTER'].data);
+    await this.mQuicktext.notifyTools.notifyBackground({command:"setPref", pref: "counter", value: this.mData['COUNTER'].data});
 
     return this.mData['COUNTER'].data;
   }
