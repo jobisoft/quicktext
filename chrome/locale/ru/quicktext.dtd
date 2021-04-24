@@ -15,9 +15,9 @@
 
 <!ENTITY quicktext.rightClickSetting.label "Просмотр Quicktext-меню по правому клику">
 <!ENTITY quicktext.collapseSetting.label "Свернуть группу, если она содержит только один шаблон">
-<!ENTITY quicktext.modifierSetting.label "модификатор, который использовать для сочетаний клавиш">
+<!ENTITY quicktext.modifierSetting.label "модификатор для сочетаний клавиш">
 <!ENTITY quicktext.shortcutTypeAdv.label "Использовать расширенный режим для ярлыков">
-<!ENTITY quicktext.keywordKeySetting.label "клавиша, которую использовать для активации ключевого слова">
+<!ENTITY quicktext.keywordKeySetting.label "клавиша для активации ключевого слова">
 
 <!ENTITY quicktext.altKey.label "Alt">
 <!ENTITY quicktext.controlKey.label "Ctrl">
@@ -34,16 +34,16 @@
 
 <!ENTITY quicktext.defaultImport.label "Импорт при запуске">
 
-<!ENTITY quicktext.sharingTemplates.label "Обмен шаблонов">
-<!ENTITY quicktext.sharingScripts.label "Обмен скриптов">
+<!ENTITY quicktext.sharingTemplates.label "Обмен шаблонами">
+<!ENTITY quicktext.sharingScripts.label "Обмен скриптами">
 <!ENTITY quicktext.export.label "Экспорт">
 <!ENTITY quicktext.import.label "Импорт">
 
-<!ENTITY quicktext.title.label "Заглавие">
+<!ENTITY quicktext.title.label "Название">
 <!ENTITY quicktext.addGroup.label "Добавить группу">
 <!ENTITY quicktext.addTemplate.label "Добавить шаблон">
 <!ENTITY quicktext.addScript.label "Добавить скрипт">
-<!ENTITY quicktext.getScript.label "Community Scripts">
+<!ENTITY quicktext.getScript.label "Скрипты сообщества">
 <!ENTITY quicktext.remove.label "Удалить">
 <!ENTITY quicktext.shortcut.label "Сочетание">
 
@@ -76,17 +76,17 @@
 <!ENTITY quicktext.other.label "Прочее">
 <!ENTITY quicktext.clipboard.label "Буфер обмена">
 <!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
-<!ENTITY quicktext.selection.label "Selection">
+<!ENTITY quicktext.selection.label "Выделение">
 <!ENTITY quicktext.cursor.label "Позиция курсора">
 <!ENTITY quicktext.subject.label "Тема">
 <!ENTITY quicktext.version.label "Версия Thunderbird">
-<!ENTITY quicktext.image.label "Embedded HTML image">
-<!ENTITY quicktext.counter.label "Counter">
-<!ENTITY quicktext.input.label "Input value from user prompt">
-<!ENTITY quicktext.orgatt.label "Original attachment info">
-<!ENTITY quicktext.orgheader.label "Original header info">
-<!ENTITY quicktext.url.label "Response from URL">
-<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
+<!ENTITY quicktext.image.label "Внедрённое HTML изображение">
+<!ENTITY quicktext.counter.label "Счётчик">
+<!ENTITY quicktext.input.label "Входящее значение из приглашения пользователя">
+<!ENTITY quicktext.orgatt.label "Информация оригинального вложения">
+<!ENTITY quicktext.orgheader.label "Информация оригинального заголовка">
+<!ENTITY quicktext.url.label "Ответ из URL">
+<!ENTITY quicktext.insertfile.label "Содержимое из файла (переменные quicktext будут заменены)">
 
 <!ENTITY quicktext.attachments.label "Вложения">
 <!ENTITY quicktext.filename.label "Имя файла">
