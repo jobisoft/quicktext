@@ -4,7 +4,7 @@
 <!ENTITY quicktext.settings.title "Quicktext-Einstellungen">
 <!ENTITY quicktext.settings.label "Einstellungen">
 <!ENTITY quicktext.file.label "Datei">
-<!ENTITY quicktext.goToHomepage.label "Zur Webseite">
+<!ENTITY quicktext.goToHomepage.label "Zur Website">
 <!ENTITY quicktext.help.label "Hilfe">
 <!ENTITY quicktext.close.label "Schließen">
 <!ENTITY quicktext.save.label "Speichern">
@@ -43,7 +43,7 @@
 <!ENTITY quicktext.addGroup.label "Gruppe hinzufügen">
 <!ENTITY quicktext.addTemplate.label "Vorlage hinzufügen">
 <!ENTITY quicktext.addScript.label "Skript hinzufügen">
-<!ENTITY quicktext.getScript.label "Skripte der Gemeinschaft">
+<!ENTITY quicktext.getScript.label "Gemeinsame Skripte">
 <!ENTITY quicktext.remove.label "Entfernen">
 <!ENTITY quicktext.shortcut.label "Tastenkürzel">
 
@@ -77,7 +77,7 @@
 <!ENTITY quicktext.clipboard.label "Zwischenablage">
 <!ENTITY quicktext.header.label "Kopfzeile (To, Cc, Bcc) hinzufügen">
 <!ENTITY quicktext.selection.label "Auswahl">
-<!ENTITY quicktext.cursor.label "Mauszeiger positionieren">
+<!ENTITY quicktext.cursor.label "Eingabemarke positionieren">
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
 <!ENTITY quicktext.image.label "Eingebettetes HTML-Bild">
