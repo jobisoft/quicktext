@@ -76,7 +76,7 @@
 <!ENTITY quicktext.other.label "Andere">
 <!ENTITY quicktext.clipboard.label "Zwischenablage">
 <!ENTITY quicktext.header.label "Kopfzeile (To, Cc, Bcc) hinzufügen">
-<!ENTITY quicktext.selection.label "Auswahl">
+<!ENTITY quicktext.selection.label "Markierter Text">
 <!ENTITY quicktext.cursor.label "Eingabemarke positionieren">
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
