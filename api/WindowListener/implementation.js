@@ -2,7 +2,7 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
- * Version: 1.53
+ * Version: 1.54
  *
  * Author: John Bieling (john@thunderbird.net)
  *
@@ -216,7 +216,7 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
     }
   }
 
-  setupAddonManager(managerWindow) {
+  setupAddonManager(managerWindow, forceLoad = false) {
     if (!managerWindow) {
       return;
     }
@@ -231,7 +231,7 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
       managerWindow[this.uniqueRandomID] = {};
       managerWindow[this.uniqueRandomID].hasAddonManagerEventListeners = true;
     }
-    this.handleEvent(managerWindow);
+    if (forceLoad) this.handleEvent(managerWindow);
   }
 
   getMessenger(context) {
@@ -332,35 +332,37 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
       onTabPersist(aTab) {},
       onTabRestored(aTab) {},
       onTabSwitched(aNewTab, aOldTab) {
-        self.setupAddonManager(self.getAddonManagerFromTab(aNewTab));
+        //self.setupAddonManager(self.getAddonManagerFromTab(aNewTab));
       },
       async onTabOpened(aTab) {
-        if (!aTab.pageLoaded) {
-          // await a location change if browser is not loaded yet
-          await new Promise((resolve) => {
-            let reporterListener = {
-              QueryInterface: ChromeUtils.generateQI([
-                "nsIWebProgressListener",
-                "nsISupportsWeakReference",
-              ]),
-              onStateChange() {},
-              onProgressChange() {},
-              onLocationChange(
-                /* in nsIWebProgress*/ aWebProgress,
-                /* in nsIRequest*/ aRequest,
-                /* in nsIURI*/ aLocation
-              ) {
-                aTab.browser.removeProgressListener(reporterListener);
-                resolve();
-              },
-              onStatusChange() {},
-              onSecurityChange() {},
-              onContentBlockingEvent() {},
-            };
-            aTab.browser.addProgressListener(reporterListener);
-          });
+        if (aTab.browser) {
+          if (!aTab.pageLoaded) {
+            // await a location change if browser is not loaded yet
+            await new Promise((resolve) => {
+              let reporterListener = {
+                QueryInterface: ChromeUtils.generateQI([
+                  "nsIWebProgressListener",
+                  "nsISupportsWeakReference",
+                ]),
+                onStateChange() {},
+                onProgressChange() {},
+                onLocationChange(
+                  /* in nsIWebProgress*/ aWebProgress,
+                  /* in nsIRequest*/ aRequest,
+                  /* in nsIURI*/ aLocation
+                ) {
+                  aTab.browser.removeProgressListener(reporterListener);
+                  resolve();
+                },
+                onStatusChange() {},
+                onSecurityChange() {},
+                onContentBlockingEvent() {},
+              };
+              aTab.browser.addProgressListener(reporterListener);
+            });
+          }
+          self.setupAddonManager(self.getAddonManagerFromTab(aTab));
         }
-        self.setupAddonManager(self.getAddonManagerFromTab(aTab));
       },
     };
 
@@ -592,7 +594,8 @@ var WindowListener = class extends ExtensionCommon.ExtensionAPI {
                       } else {
                         // Setup the options button/menu in the add-on manager, if it is already open.
                         self.setupAddonManager(
-                          self.getAddonManagerFromWindow(window)
+                          self.getAddonManagerFromWindow(window),
+                          true
                         );
                         // Add a tabmonitor, to be able to setup the options button/menu in the add-on manager.
                         self
