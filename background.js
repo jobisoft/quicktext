@@ -35,7 +35,7 @@
     }
   }
   
-  messenger.WindowListener.onNotifyBackground.addListener(async (info) => {
+  messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
         preferences.setPref(info.pref, info.value);
