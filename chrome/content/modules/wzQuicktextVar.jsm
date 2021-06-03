@@ -490,7 +490,7 @@ wzQuicktextVar.prototype = {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
         let content = this.mQuicktext.readFile(fp);
-        if (aVariables.length > 1 && aVariables[1].includes("strip_comments")) {
+        if (aVariables.length > 1 && aVariables[1].includes("strip_html_comments")) {
           return content.replace(/<!--[\s\S]*?(?:-->)/g, '');
         }
         return content;
