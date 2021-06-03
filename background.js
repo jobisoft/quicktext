@@ -41,6 +41,12 @@
     preferences.setPref("defaultImport", defaultImportOverride);
   }
 
+  // Allow to override settingsFolder from user_prefs
+  let settingsFolderOverride = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}settingsFolderOverride`);    
+  if (settingsFolderOverride !== null) {
+    preferences.setPref("settingsFolder", settingsFolderOverride);
+  }
+
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
