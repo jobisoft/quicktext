@@ -1,57 +1,27 @@
 ## Objective
 
-Use this API to migrate your preferences from the legacy pref branch to the local storage of your MailExtension.
+Use this API to access Thunderbird's system preferences or to migrate your own preferences from the Thunderbird preference system to the local storage of your MailExtension.
 
 ## Usage
 
-Define an object which contains the names of all the preferences you want to migrate and loop through it. To reduce redundancy, you could actually use the same object which is used to define the default values of your add-on options. 
+This API provides the following methods:
 
-A background script could look like the following:
+### async getPref(aName, [aFallback])
 
-```
-let defaultPrefs = {
-  "counter": 0,
-  "settingsFolder": "",
-  "defaultImport": "",
-  "menuCollapse": true,
-  "toolbar": true,
-  "popup": false,
-  "keywordKey": "Tab",
-  "shortcutModifier": "alt",
-  "shortcutTypeAdv": false,
-  "collapseState": ""
-}; 
-  
-(async function(){
+Returns the value for the ``aName`` preference. If it is not defined or has no default value assigned, ``aFallback`` will be returned (which defaults to ``null``).
 
-  // Store the default values in local storage as well, so they
-  // are accessible from everywhere. This is optional and is
-  // not related to the LegacyPrefs API.
-  await preferences.init(defaultPrefs);
-  
-  // Migrate legacy prefs using the LegacyPrefs API.
-  const legacyPrefBranch = "extensions.quicktext.";
-  const prefNames = Object.keys(defaultPrefs);
+### async getUserPref(aName)
 
-  for (let prefName of prefNames) {
-    let legacyValue = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}${prefName}`);    
-    if (legacyValue !== null) {
-      console.log(`Migrating legacy preference <${legacyPrefBranch}${prefName}> = <${legacyValue}>.`);
-      
-      // Store the migrated value in local storage.
-      // Check out the MDN documentation at
-      // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/storage
-      // or use preference.js part of this repository:
-      // https://github.com/thundernest/addon-developer-support/tree/master/scripts/preferences
-      preferences.setPref(prefName, legacyValue);
-      
-      // Clear the legacy value.
-      messenger.LegacyPrefs.clearUserPref(`${legacyPrefBranch}${prefName}`);
-    }
-  }
+Returns the user defined value for the ``aName`` preference. This will ignore any defined default value and will only return an explicitly set value, which differs from the default. Otherwise it will return ``null``.
 
-})()
+### clearUserPref(aName)
 
-```
+Clears the user defined value for preference ``aName``. Subsequent calls to ``getUserPref(aName)`` will return ``null``.
 
-A detailed usage description of the used `preferences.js` script can be found in [/scripts/preferences/](https://github.com/thundernest/addon-developer-support/tree/master/scripts/preferences).
+### async setPref(aName, aValue)
+
+Set the ``aName`` preference to the given value. Will return false and log an error to the console, if the type of ``aValue`` does not match the type of the preference.
+
+---
+
+A detailed example using the LegacyPref API to migrate add-on preferences to the local storage can be found in [/scripts/preferences/](https://github.com/thundernest/addon-developer-support/tree/master/scripts/preferences).
