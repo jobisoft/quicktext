@@ -1,10 +1,10 @@
 <!ENTITY quicktext.label "Quicktext">
 <!ENTITY quicktext.shortname.label "Quicktext">
 
-<!ENTITY quicktext.settings.title "Quicktext Einstellungen">
+<!ENTITY quicktext.settings.title "Quicktext-Einstellungen">
 <!ENTITY quicktext.settings.label "Einstellungen">
 <!ENTITY quicktext.file.label "Datei">
-<!ENTITY quicktext.goToHomepage.label "Zur Homepage">
+<!ENTITY quicktext.goToHomepage.label "Zur Website">
 <!ENTITY quicktext.help.label "Hilfe">
 <!ENTITY quicktext.close.label "Schließen">
 <!ENTITY quicktext.save.label "Speichern">
@@ -32,7 +32,7 @@
 <!ENTITY quicktext.f11Key.label "F11">
 <!ENTITY quicktext.f12Key.label "F12">
 
-<!ENTITY quicktext.defaultImport.label "Standardmäßig importieren">
+<!ENTITY quicktext.defaultImport.label "Beim Start importieren">
 
 <!ENTITY quicktext.sharingTemplates.label "Vorlagen">
 <!ENTITY quicktext.sharingScripts.label "Skripte">
@@ -43,7 +43,7 @@
 <!ENTITY quicktext.addGroup.label "Gruppe hinzufügen">
 <!ENTITY quicktext.addTemplate.label "Vorlage hinzufügen">
 <!ENTITY quicktext.addScript.label "Skript hinzufügen">
-<!ENTITY quicktext.getScript.label "Community Skripte">
+<!ENTITY quicktext.getScript.label "Gemeinsame Skripte">
 <!ENTITY quicktext.remove.label "Entfernen">
 <!ENTITY quicktext.shortcut.label "Tastenkürzel">
 
@@ -75,16 +75,16 @@
 
 <!ENTITY quicktext.other.label "Andere">
 <!ENTITY quicktext.clipboard.label "Zwischenablage">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc) hinzufügen">
-<!ENTITY quicktext.selection.label "Selektion">
-<!ENTITY quicktext.cursor.label "Cursor positionieren">
+<!ENTITY quicktext.header.label "Kopfzeile (To, Cc, Bcc) hinzufügen">
+<!ENTITY quicktext.selection.label "Markierter Text">
+<!ENTITY quicktext.cursor.label "Eingabemarke positionieren">
 <!ENTITY quicktext.subject.label "Betreff">
 <!ENTITY quicktext.version.label "Thunderbird-Version">
 <!ENTITY quicktext.image.label "Eingebettetes HTML-Bild">
 <!ENTITY quicktext.counter.label "Zähler">
 <!ENTITY quicktext.input.label "Eingabewert von einer Eingabeaufforderung">
-<!ENTITY quicktext.orgatt.label "Ursprüngliche Anhangsinformationen">
-<!ENTITY quicktext.orgheader.label "Ursprüngliche Header-Informationen">
+<!ENTITY quicktext.orgatt.label "Ursprüngliche Anhanginformationen">
+<!ENTITY quicktext.orgheader.label "Ursprüngliche Kopfzeileninformationen">
 <!ENTITY quicktext.url.label "Rückgabewert einer URL-Anfrage">
 <!ENTITY quicktext.insertfile.label "Inhalt einer Datei (Quicktext-Variablen werden ersetzt)">
 
