@@ -151,11 +151,11 @@ var gQuicktext = {
                                .get("ProfD", Components.interfaces.nsIFile);
 
     // check if an alternative path has been given for the config folder
-    let settingsFolder = await this.notifyTools.notifyBackground({command:"getPref", pref: "settingsFolder"});
-    if (settingsFolder)
+    let templateFolder = await this.notifyTools.notifyBackground({command:"getPref", pref: "templateFolder"});
+    if (templateFolder)
     {
       profileDir = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-      profileDir.initWithPath(settingsFolder);
+      profileDir.initWithPath(templateFolder);
     }
   
     this.mQuicktextDir = profileDir;

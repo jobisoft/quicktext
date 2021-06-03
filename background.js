@@ -3,7 +3,7 @@
   // Define default prefs.
   let defaultPrefs = {
       "counter": 0,
-      "settingsFolder": "",
+      "templateFolder": "",
       "defaultImport": "",
       "menuCollapse": true,
       "toolbar": true,
@@ -41,10 +41,10 @@
     preferences.setPref("defaultImport", defaultImportOverride);
   }
 
-  // Allow to override settingsFolder from user_prefs
-  let settingsFolderOverride = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}settingsFolderOverride`);    
-  if (settingsFolderOverride !== null) {
-    preferences.setPref("settingsFolder", settingsFolderOverride);
+  // Allow to override templateFolder from user_prefs
+  let templateFolderOverride = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}templateFolderOverride`);    
+  if (templateFolderOverride !== null) {
+    preferences.setPref("templateFolder", templateFolderOverride);
   }
 
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
