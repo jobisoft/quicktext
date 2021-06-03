@@ -34,7 +34,13 @@
       messenger.LegacyPrefs.clearUserPref(`${legacyPrefBranch}${prefName}`);
     }
   }
-  
+
+  // Allow to set defaultImport from user_prefs
+  let defaultImportOverride = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}defaultImportOverride`);    
+  if (defaultImportOverride !== null) {
+    preferences.setPref("defaultImport", defaultImportOverride);
+  }
+
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
