@@ -161,10 +161,11 @@ wzQuicktextVar.prototype = {
       if (typeof this["get_"+ tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
 	      
         // these tags need different behaviour if added in "text" or "html" mode
-        if (tags[i].tagName.toLowerCase() == "image" ||
-	    tags[i].tagName.toLowerCase() == "clipboard" ||
-	    tags[i].tagName.toLowerCase() == "selection") {
-        
+        if (
+          tags[i].tagName.toLowerCase() == "image" ||
+          tags[i].tagName.toLowerCase() == "clipboard" ||
+          tags[i].tagName.toLowerCase() == "selection")
+        {
           value = await this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables, aType);
         } else {
           value = await this["get_"+ tags[i].tagName.toLowerCase()](tags[i].variables);
@@ -293,7 +294,7 @@ wzQuicktextVar.prototype = {
 ,
   get_image: function(aVariables, aType)
   {
-    if (aType = 1) {
+    if (aType == 1) {
       // image tag may only be added in html mode
       return this.process_image_content(aVariables);
     } else {
@@ -481,14 +482,18 @@ wzQuicktextVar.prototype = {
 
   process_file: function(aVariables)
   {
-    if (aVariables.length == 1 && aVariables[0] != "")
+    if (aVariables.length > 0 && aVariables[0] != "")
     {
       // Tries to open the file and returning the content
       var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
       try {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
-        return this.mQuicktext.readFile(fp);
+        let content = this.mQuicktext.readFile(fp);
+        if (aVariables.length > 1 && aVariables[1].includes("strip_comments")) {
+          return content.replace(/<!--[\s\S]*?(?:-->)/g, '');
+        }
+        return content;
       } catch(e) { Components.utils.reportError(e); }
     }
 
