@@ -185,152 +185,175 @@
               <fieldset flex="1">
                 <vbox flex="1">
                   <hbox><legend class="insideTab" id="text-caption">&quicktext.template.label;</legend></hbox>
-                  <vbox flex="1">
-                    <grid flex="1">
-                      <columns>
-                        <column width="80px"/>
-                        <column flex="1"/>
-                      </columns>
-                      <rows>
-                        <row showfor="text,group">
-                          <vbox pack="center">
-                            <label align="center" value="&quicktext.title.label;:" control="text-title" />
-                          </vbox>
-                          <hbox class="input-container"><html:input id="text-title" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(0);"/></hbox>
-                        </row>
-                        <hbox align="right" showfor="text">
-                          <vbox height="20px">
-                            <menu label="&quicktext.variables.label;" id="text-variables" disabled="true" flex="1" showfor="text" candisable="true">
-                              <menupopup>
-                                <menu label="&quicktext.to.label;">
+                  <html:table>
+                    <html:tr showfor="text,group">
+                      <html:td width="80">
+                        <vbox pack="center">
+                          <label align="center" value="&quicktext.title.label;:" control="text-title" />
+                        </vbox>
+                      </html:td>
+                      <html:td>
+                        <hbox class="input-container"><html:input id="text-title" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(0);"/></hbox>
+                      </html:td>
+                    </html:tr>
+
+                    <html:tr showfor="text">
+                      <html:td width="80">
+                        <hbox align="right" >
+                              <vbox height="20px">
+                                <menu label="&quicktext.variables.label;" id="text-variables" disabled="true" flex="1" showfor="text" candisable="true">
                                   <menupopup>
-                                    <menuitem label="&quicktext.firstname.label;" oncommand="quicktext.insertVariable('TO=firstname');" />
-                                    <menuitem label="&quicktext.lastname.label;" oncommand="quicktext.insertVariable('TO=lastname');" />
-                                    <menuitem label="&quicktext.fullname.label;" oncommand="quicktext.insertVariable('TO=fullname');" />
-                                    <menuitem label="&quicktext.displayname.label;" oncommand="quicktext.insertVariable('TO=displayname');" />
-                                    <menuitem label="&quicktext.nickname.label;" oncommand="quicktext.insertVariable('TO=nickname');" />
-                                    <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('TO=email');" />
-                                    <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('TO=workphone');" />
-                                    <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('TO=faxnumber');" />
-                                    <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
-                                    <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('TO=jobtitle');" />
-                                    <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('TO=custom1');" />
-                                    <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('TO=custom2');" />
-                                    <menuitem label="&quicktext.custom3.label;" oncommand="quicktext.insertVariable('TO=custom3');" />
-                                    <menuitem label="&quicktext.custom4.label;" oncommand="quicktext.insertVariable('TO=custom4');" />
+                                    <menu label="&quicktext.to.label;">
+                                      <menupopup>
+                                        <menuitem label="&quicktext.firstname.label;" oncommand="quicktext.insertVariable('TO=firstname');" />
+                                        <menuitem label="&quicktext.lastname.label;" oncommand="quicktext.insertVariable('TO=lastname');" />
+                                        <menuitem label="&quicktext.fullname.label;" oncommand="quicktext.insertVariable('TO=fullname');" />
+                                        <menuitem label="&quicktext.displayname.label;" oncommand="quicktext.insertVariable('TO=displayname');" />
+                                        <menuitem label="&quicktext.nickname.label;" oncommand="quicktext.insertVariable('TO=nickname');" />
+                                        <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('TO=email');" />
+                                        <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('TO=workphone');" />
+                                        <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('TO=faxnumber');" />
+                                        <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
+                                        <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('TO=jobtitle');" />
+                                        <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('TO=custom1');" />
+                                        <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('TO=custom2');" />
+                                        <menuitem label="&quicktext.custom3.label;" oncommand="quicktext.insertVariable('TO=custom3');" />
+                                        <menuitem label="&quicktext.custom4.label;" oncommand="quicktext.insertVariable('TO=custom4');" />
+                                      </menupopup>
+                                    </menu>
+                                    <menu label="&quicktext.from.label;">
+                                      <menupopup>
+                                        <menuitem label="&quicktext.firstname.label;" oncommand="quicktext.insertVariable('FROM=firstname');" />
+                                        <menuitem label="&quicktext.lastname.label;" oncommand="quicktext.insertVariable('FROM=lastname');" />
+                                        <menuitem label="&quicktext.fullname.label;" oncommand="quicktext.insertVariable('FROM=fullname');" />
+                                        <menuitem label="&quicktext.displayname.label;" oncommand="quicktext.insertVariable('FROM=displayname');" />
+                                        <menuitem label="&quicktext.nickname.label;" oncommand="quicktext.insertVariable('FROM=nickname');" />
+                                        <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('FROM=email');" />
+                                        <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('FROM=workphone');" />
+                                        <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
+                                        <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
+                                        <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
+                                        <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('FROM=custom1');" />
+                                        <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('FROM=custom2');" />
+                                        <menuitem label="&quicktext.custom3.label;" oncommand="quicktext.insertVariable('FROM=custom3');" />
+                                        <menuitem label="&quicktext.custom4.label;" oncommand="quicktext.insertVariable('FROM=custom4');" />
+                                      </menupopup>
+                                    </menu>
+                                    <menu label="&quicktext.attachments.label;">
+                                      <menupopup>
+                                        <menuitem label="&quicktext.filename.label;" oncommand="quicktext.insertVariable('ATT=name');" />
+                                        <menuitem label="&quicktext.filenameAndSize.label;" oncommand="quicktext.insertVariable('ATT=full');" />
+                                      </menupopup>
+                                    </menu>
+                                    <menu label="&quicktext.dateTime.label;">
+                                      <menupopup>
+                                        <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
+                                        <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
+                                        <menuitem id="date-monthname" oncommand="quicktext.insertVariable('DATE=monthname');" />
+                                        <menuitem id="time-noseconds" oncommand="quicktext.insertVariable('TIME');" />
+                                        <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
+                                      </menupopup>
+                                    </menu>
+                                    <menu label="&quicktext.other.label;">
+                                      <menupopup>
+                                        <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
+                                        <menuitem label="&quicktext.counter.label;" oncommand="quicktext.insertVariable('COUNTER');" />
+                                        <menuitem label="&quicktext.input.label;" oncommand="quicktext.insertVariable('INPUT=name|type|options');" />
+                                        <menuitem label="&quicktext.selection.label;" oncommand="quicktext.insertVariable('SELECTION');" />
+                                        <menuitem label="&quicktext.orgatt.label;" oncommand="quicktext.insertVariable('ORGATT=\\n');" />
+                                        <menuitem label="&quicktext.orgheader.label;" oncommand="quicktext.insertVariable('ORGHEADER=type|\\n');" />
+                                        <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />
+                                        <menuitem label="&quicktext.url.label;" oncommand="quicktext.insertVariable('URL=url|data');" />
+                                        <menuitem label="&quicktext.insertfile.label;" oncommand="quicktext.insertFileVariable();" />
+                                        <menuitem label="&quicktext.image.label;" oncommand="quicktext.insertImageVariable();" />
+                                        <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
+                                        <menuseparator/>
+                                        <menuitem label="&quicktext.header.label;" oncommand="quicktext.insertVariable('HEADER=type|value');" />
+                                        <menuitem label="&quicktext.cursor.label;" oncommand="quicktext.insertVariable('CURSOR');" />
+                                      </menupopup>
+                                    </menu>
+                                    <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />
+                                    <menu label="&quicktext.scripts.label;" id="variables-scripts" />
                                   </menupopup>
                                 </menu>
-                                <menu label="&quicktext.from.label;">
-                                  <menupopup>
-                                    <menuitem label="&quicktext.firstname.label;" oncommand="quicktext.insertVariable('FROM=firstname');" />
-                                    <menuitem label="&quicktext.lastname.label;" oncommand="quicktext.insertVariable('FROM=lastname');" />
-                                    <menuitem label="&quicktext.fullname.label;" oncommand="quicktext.insertVariable('FROM=fullname');" />
-                                    <menuitem label="&quicktext.displayname.label;" oncommand="quicktext.insertVariable('FROM=displayname');" />
-                                    <menuitem label="&quicktext.nickname.label;" oncommand="quicktext.insertVariable('FROM=nickname');" />
-                                    <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('FROM=email');" />
-                                    <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('FROM=workphone');" />
-                                    <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
-                                    <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
-                                    <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
-                                    <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('FROM=custom1');" />
-                                    <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('FROM=custom2');" />
-                                    <menuitem label="&quicktext.custom3.label;" oncommand="quicktext.insertVariable('FROM=custom3');" />
-                                    <menuitem label="&quicktext.custom4.label;" oncommand="quicktext.insertVariable('FROM=custom4');" />
-                                  </menupopup>
-                                </menu>
-                                <menu label="&quicktext.attachments.label;">
-                                  <menupopup>
-                                    <menuitem label="&quicktext.filename.label;" oncommand="quicktext.insertVariable('ATT=name');" />
-                                    <menuitem label="&quicktext.filenameAndSize.label;" oncommand="quicktext.insertVariable('ATT=full');" />
-                                  </menupopup>
-                                </menu>
-                                <menu label="&quicktext.dateTime.label;">
-                                  <menupopup>
-                                    <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
-                                    <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
-                                    <menuitem id="date-monthname" oncommand="quicktext.insertVariable('DATE=monthname');" />
-                                    <menuitem id="time-noseconds" oncommand="quicktext.insertVariable('TIME');" />
-                                    <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
-                                  </menupopup>
-                                </menu>
-                                <menu label="&quicktext.other.label;">
-                                  <menupopup>
-                                    <menuitem label="&quicktext.clipboard.label;" oncommand="quicktext.insertVariable('CLIPBOARD');" />
-                                    <menuitem label="&quicktext.counter.label;" oncommand="quicktext.insertVariable('COUNTER');" />
-                                    <menuitem label="&quicktext.input.label;" oncommand="quicktext.insertVariable('INPUT=name|type|options');" />
-                                    <menuitem label="&quicktext.selection.label;" oncommand="quicktext.insertVariable('SELECTION');" />
-                                    <menuitem label="&quicktext.orgatt.label;" oncommand="quicktext.insertVariable('ORGATT=\\n');" />
-                                    <menuitem label="&quicktext.orgheader.label;" oncommand="quicktext.insertVariable('ORGHEADER=type|\\n');" />
-                                    <menuitem label="&quicktext.subject.label;" oncommand="quicktext.insertVariable('SUBJECT');" />
-                                    <menuitem label="&quicktext.url.label;" oncommand="quicktext.insertVariable('URL=url|data');" />
-                                    <menuitem label="&quicktext.insertfile.label;" oncommand="quicktext.insertFileVariable();" />
-                                    <menuitem label="&quicktext.image.label;" oncommand="quicktext.insertImageVariable();" />
-                                    <menuitem label="&quicktext.version.label;" oncommand="quicktext.insertVariable('VERSION');" />
-                                    <menuseparator/>
-                                    <menuitem label="&quicktext.header.label;" oncommand="quicktext.insertVariable('HEADER=type|value');" />
-                                    <menuitem label="&quicktext.cursor.label;" oncommand="quicktext.insertVariable('CURSOR');" />
-                                  </menupopup>
-                                </menu>
-                                <menu label="&quicktext.templates.label;" id="quicktext-other-texts" />
-                                <menu label="&quicktext.scripts.label;" id="variables-scripts" />
-                              </menupopup>
-                            </menu>
-                          </vbox>
+                              </vbox>
                         </hbox>
-                        <vbox class="textarea-container" flex="1" showfor="text">
+                      </html:td>
+                      <html:td>
+                        <vbox class="textarea-container" flex="1">
                           <html:textarea id="text" rows="10" disabled="true" candisable="true" wrap="on" oninput="quicktext.checkForTextChanges(1);"/>
                         </vbox>
-                        <row showfor="text">
-                          <label align="center" value="&quicktext.insertAs.label;:" control="text-type" style="margin-top: 6px" />
-                          <hbox flex="1">
-                            <menulist id="text-type" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(3);">
-                              <menupopup>
-                                <menuitem label="&quicktext.text.label;" value="0" />
-                                <menuitem label="&quicktext.HTML.label;" value="1" />
-                              </menupopup>
-                            </menulist> 
-                            <hbox align="right" flex="1">
-                              <label align="center" value="&quicktext.shortcut.label;:" control="text-shortcutBasic" style="margin-top: 6px" />
-                              <label id="label-shortcutModifier" align="center" value="" control="text-shortcutBasic" style="margin-top: 6px" />
+                      </html:td>
+                    </html:tr>
 
-                              <menulist id="text-shortcutBasic" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(2);">
-                                <menupopup id="popup-shortcutBasic">
-                                  <menuitem label="&quicktext.none.label;" value="" />
-                                  <menuitem label="1" value="1" />
-                                  <menuitem label="2" value="2" />
-                                  <menuitem label="3" value="3" />
-                                  <menuitem label="4" value="4" />
-                                  <menuitem label="5" value="5" />
-                                  <menuitem label="6" value="6" />
-                                  <menuitem label="7" value="7" />
-                                  <menuitem label="8" value="8" />
-                                  <menuitem label="9" value="9" />
-                                  <menuitem label="0" value="0" />
-                                </menupopup>
-                              </menulist>
+                    <html:tr showfor="text">
+                      <html:td width="80">
+                        <label align="center" value="&quicktext.insertAs.label;:" control="text-type" style="margin-top: 6px" />
+                      </html:td>
+                      <html:td>
+                        <hbox flex="1">
+                                <menulist id="text-type" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(3);">
+                                  <menupopup>
+                                    <menuitem label="&quicktext.text.label;" value="0" />
+                                    <menuitem label="&quicktext.HTML.label;" value="1" />
+                                  </menupopup>
+                                </menulist> 
+                                <hbox align="right" flex="1">
+                                  <label align="center" value="&quicktext.shortcut.label;:" control="text-shortcutBasic" style="margin-top: 6px" />
+                                  <label id="label-shortcutModifier" align="center" value="" control="text-shortcutBasic" style="margin-top: 6px" />
 
-                              <html:input id="text-shortcutAdv" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(2);" width="50"/>
-                            </hbox>
-                          </hbox>
-                        </row>
-                        <row showfor="text">
-                          <label align="center" value="&quicktext.subject.label;:" control="text-subject" style="margin-top: 6px" />
-                          <hbox class="input-container"><html:input id="text-subject" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(5);"/></hbox>
-                        </row>
-                        <row showfor="text">
-                          <label align="center" value="&quicktext.keyword.label;:" control="text-keyword" style="margin-top: 6px" />
-                          <html:input id="text-keyword" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(4);"/>
-                        </row>
-                        <row showfor="text">
-                          <label align="center" value="&quicktext.attachments.label;:" control="text-attachments" style="margin-top: 6px" />
-                          <hbox>
-                            <html:input id="text-attachments" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(6);"/>
-                            <button id="button-attachments" label="&quicktext.browse.label;" oncommand="quicktext.browseAttachment();" disabled="true" candisable="true"/>
-                          </hbox>
-                        </row>
-                      </rows>
-                    </grid>
-                  </vbox>
+                                  <menulist id="text-shortcutBasic" disabled="true" candisable="true" oncommand="quicktext.checkForTextChanges(2);">
+                                    <menupopup id="popup-shortcutBasic">
+                                      <menuitem label="&quicktext.none.label;" value="" />
+                                      <menuitem label="1" value="1" />
+                                      <menuitem label="2" value="2" />
+                                      <menuitem label="3" value="3" />
+                                      <menuitem label="4" value="4" />
+                                      <menuitem label="5" value="5" />
+                                      <menuitem label="6" value="6" />
+                                      <menuitem label="7" value="7" />
+                                      <menuitem label="8" value="8" />
+                                      <menuitem label="9" value="9" />
+                                      <menuitem label="0" value="0" />
+                                    </menupopup>
+                                  </menulist>
+
+                                  <html:input id="text-shortcutAdv" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(2);" width="50"/>
+                                </hbox>
+                        </hbox>
+                      </html:td>
+                    </html:tr>
+
+                    <html:tr showfor="text">
+                      <html:td width="80">
+                        <label align="center" value="&quicktext.subject.label;:" control="text-subject" style="margin-top: 6px" />
+                      </html:td>
+                      <html:td>
+                        <hbox class="input-container"><html:input id="text-subject" disabled="true" candisable="true" oninput="quicktext.checkForTextChanges(5);"/></hbox>
+                      </html:td>
+                    </html:tr>
+
+                    <html:tr showfor="text">
+                      <html:td width="80">
+                        <label align="center" value="&quicktext.keyword.label;:" control="text-keyword" style="margin-top: 6px" />
+                      </html:td>
+                      <html:td>
+                        <html:input id="text-keyword" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(4);"/>
+                      </html:td>
+                    </html:tr>
+
+                    <html:tr showfor="text">
+                      <html:td width="80">
+                        <label align="center" value="&quicktext.attachments.label;:" control="text-attachments" style="margin-top: 6px" />
+                      </html:td>
+                      <html:td>
+                        <hbox>
+                          <html:input id="text-attachments" disabled="true" flex="1" candisable="true" oninput="quicktext.checkForTextChanges(6);"/>
+                          <button id="button-attachments" label="&quicktext.browse.label;" oncommand="quicktext.browseAttachment();" disabled="true" candisable="true"/>
+                        </hbox>
+                      </html:td>
+                    </html:tr>                
+                  </html:table>
                 </vbox>
               </fieldset>
             </vbox>
