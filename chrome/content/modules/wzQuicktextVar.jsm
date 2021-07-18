@@ -807,7 +807,7 @@ wzQuicktextVar.prototype = {
     if (this.mData['FROM'] && this.mData['FROM'].checked)
       return this.mData['FROM'].data;
 
-    const identity = this.mWindow.getCurrentIdentity();
+    const identity = this.mWindow.gCurrentIdentity;
 
     this.mData['FROM'] = {};
     this.mData['FROM'].checked = true;
