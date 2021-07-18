@@ -1203,81 +1203,24 @@ wzQuicktextVar.prototype = {
   }
 ,
   getCardForEmail: function(aAddress) {
-    // The Thunderbird way
-    if ("@mozilla.org/abmanager;1" in Components.classes)
+    let directories = MailServices.ab.directories;
+    for (let addrbook of directories)
     {
-      let enumerator = Components.classes["@mozilla.org/abmanager;1"]
-        .getService(Components.interfaces.nsIAbManager)
-        .directories;
-
-      let cardForEmailAddress;
-      let addrbook;
-      while (!cardForEmailAddress && enumerator.hasMoreElements())
-      {
-        addrbook = enumerator.getNext().QueryInterface(Components.interfaces.nsIAbDirectory);
-        try
-        {
-          card = addrbook.cardForEmailAddress(aAddress);
-          if (card)
-            return card;
-        } catch (ex) {}
-      }
-
-      return null;
+        let card = addrbook.cardForEmailAddress(aAddress);
+        if (card) {
+          return card;
+        }
     }
-
-    // Fallback to old way for Postbox. This does actually not work. databases will be empty but there is no errors
-    var databases = [];
-    var directories = [];
-    var rdfService = Components.classes["@mozilla.org/rdf/rdf-service;1"].getService(Components.interfaces.nsIRDFService);
-    var directory = rdfService.GetResource("moz-abdirectory://").QueryInterface(Components.interfaces.nsIAbDirectory);
-    var addressBook = Components.classes["@mozilla.org/addressbook;1"].getService(Components.interfaces.nsIAddressBook);
-
-    var cn = directory.childNodes;
-    while (cn.hasMoreElements())
-    {
-      var abook = cn.getNext();
-      if (abook instanceof Components.interfaces.nsIAbDirectory)
-      {
-        // abook.URI only exists in 3.0 so fallback so it works on other versions also
-        var uri = (abook.URI) ? abook.URI : abook.directoryProperties.URI;
-
-        try {
-          databases.push(addressBook.getAbDatabaseFromURI(uri));
-          directories.push(abook);
-        } catch(e) { Components.utils.reportError(e); }
-      }
-    }
-
-    Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage("DATABASES: "+ databases.length);
-
-    for (var databaseIndex = 0; databaseIndex < databases.length; databaseIndex++)
-    {
-      var card = databases[databaseIndex].getCardFromAttribute(directories[databaseIndex], "LowercasePrimaryEmail", aAddress, true);
-      Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService).logStringMessage("card: "+ card);
-      if (card)
-        return card;
-    }
-
     return null;
   }
 ,
   getPropertiesFromCard: function(card)
   {
     var retval = {}
-    // New stuff in Thunderbird 3.0
-    if (card.properties) {
-      var props = card.properties;
-      while (props.hasMoreElements())
-      {
-        var prop = props.getNext().QueryInterface(Components.interfaces.nsIProperty);
-        retval[prop.name.toLowerCase()] = prop.value;
-      }
-    } else {
-      for (var name in card) {
-        if (typeof card[name] != 'function')
-          retval[name.toLowerCase()] = card[name];
-      }
+    var props = card.properties;
+    for (let prop of props)
+    {
+      retval[prop.name.toLowerCase()] = prop.value;
     }
     return retval;
   }
