@@ -378,25 +378,22 @@
               <fieldset flex="1">
                 <vbox flex="1">
                   <hbox><legend class="insideTab" id="script-caption">&quicktext.script.label;</legend></hbox>
-                  <vbox flex="1">
-                    <grid flex="1">
-                      <columns>
-                        <column width="80px"/>
-                        <column flex="1"/>
-                      </columns>
-                      <rows>
-                        <row>
+                    <html:table>
+                      <html:tr>
+                        <html:td width="80">
                           <vbox pack="center">
                             <label align="center" value="&quicktext.title.label;:" control="script-title" />
                           </vbox>
+                        </html:td>
+                        <html:td>
                           <hbox class="input-container"><html:input id="script-title" oninput="quicktext.checkForScriptChanges(0);"/></hbox>
-                        </row>
-                        <vbox class="textarea-container" flex="1">
-                          <html:textarea id="script" style="font-family:Consolas,Courier New,monospace;" rows="10" disabled="true" wrap="off" oninput="quicktext.checkForScriptChanges(1);"/>
-                        </vbox>
-                      </rows>
-                    </grid>
-                  </vbox>
+                        </html:td>
+                      </html:tr>
+                    </html:table>
+
+                    <vbox class="textarea-container" style="display:flex; flex-direction: column;" flex="1">
+                      <html:textarea id="script" style="font-family:Consolas,Courier New,monospace; flex:1" disabled="true" wrap="off" oninput="quicktext.checkForScriptChanges(1);"/>
+                    </vbox>
                 </vbox>
               </fieldset>
             </vbox>
