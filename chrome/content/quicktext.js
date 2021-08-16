@@ -388,7 +388,7 @@ var quicktext = {
   {
     if (aStr != "")
     {
-      aStr = gQuicktextVar.parse(aStr);
+      aStr = await gQuicktextVar.parse(aStr);
       var files = aStr.split(";");
 
       for (var i = 0; i < files.length; i++)
