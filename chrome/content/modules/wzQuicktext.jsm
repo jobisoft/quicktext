@@ -819,6 +819,7 @@ var gQuicktext = {
   {
     var req = new XMLHttpRequest();
     req.open('GET', aURI, true);
+    req.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
     req.mQuicktext = this;
     req.mType = aType;
     req.mBefore = aBefore;
