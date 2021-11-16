@@ -584,7 +584,7 @@ wzQuicktextVar.prototype = {
           s.mQuicktext = this;
           s.mVariables = aVariables;
           s.mWindow = this.mWindow;
-          returnValue = await Components.utils.evalInSandbox("scriptObject = {}; scriptObject.mQuicktext = mQuicktext; scriptObject.mVariables = mVariables; scriptObject.mWindow = mWindow; scriptObject.run = async function() {\n" + script.script +"\n }; scriptObject.run();", s);
+          returnValue = await Components.utils.evalInSandbox("scriptObject = {}; scriptObject.mQuicktext = mQuicktext; scriptObject.mVariables = mVariables; scriptObject.mWindow = mWindow; scriptObject.run = async function() {\n" + script.script +"\n; return ''; }; scriptObject.run();", s);
         } catch (e) {
           if (this.mWindow)
           {
