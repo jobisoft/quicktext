@@ -4,6 +4,7 @@
 <!ENTITY quicktext.settings.title "Nastavení Quicktext">
 <!ENTITY quicktext.settings.label "Nastavení">
 <!ENTITY quicktext.file.label "Soubor">
+<!ENTITY quicktext.resetcounter.label "Vynulovat počítadlo">
 <!ENTITY quicktext.goToHomepage.label "Přejít na webové stránky">
 <!ENTITY quicktext.help.label "Nápověda">
 <!ENTITY quicktext.close.label "Zavřít">

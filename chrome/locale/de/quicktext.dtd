@@ -3,6 +3,7 @@
 
 <!ENTITY quicktext.settings.title "Quicktext-Einstellungen">
 <!ENTITY quicktext.settings.label "Einstellungen">
+<!ENTITY quicktext.resetcounter.label "Zähler zurücksetzen">
 <!ENTITY quicktext.file.label "Datei">
 <!ENTITY quicktext.goToHomepage.label "Zur Website">
 <!ENTITY quicktext.help.label "Hilfe">

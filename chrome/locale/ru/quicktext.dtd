@@ -3,6 +3,7 @@
 
 <!ENTITY quicktext.settings.title "Настройки Quicktext">
 <!ENTITY quicktext.settings.label "Настройки">
+<!ENTITY quicktext.resetcounter.label "Сбросить счетчик">
 <!ENTITY quicktext.file.label "Файл">
 <!ENTITY quicktext.goToHomepage.label "На домашнюю страницу">
 <!ENTITY quicktext.help.label "Помощь">

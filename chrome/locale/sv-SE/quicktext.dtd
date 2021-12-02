@@ -3,6 +3,7 @@
 
 <!ENTITY quicktext.settings.title "Quicktext Inställningar">
 <!ENTITY quicktext.settings.label "Inställningar">
+<!ENTITY quicktext.resetcounter.label "Återställ räknaren">
 <!ENTITY quicktext.file.label "Arkiv">
 <!ENTITY quicktext.goToHomepage.label "Gå till hemsidan">
 <!ENTITY quicktext.help.label "Hjälp">
