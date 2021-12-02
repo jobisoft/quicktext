@@ -3,6 +3,7 @@
 
 <!ENTITY quicktext.settings.title "Quicktext の設定">
 <!ENTITY quicktext.settings.label "設定">
+<!ENTITY quicktext.resetcounter.label "カウンターをリセット">
 <!ENTITY quicktext.file.label "ファイル">
 <!ENTITY quicktext.goToHomepage.label "ホームページへ移動">
 <!ENTITY quicktext.help.label "ヘルプ">

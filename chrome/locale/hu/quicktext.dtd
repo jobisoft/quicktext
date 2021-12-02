@@ -3,6 +3,7 @@
 
 <!ENTITY quicktext.settings.title "Gyorsszöveg beállításai">
 <!ENTITY quicktext.settings.label "Beállítások">
+<!ENTITY quicktext.resetcounter.label "Számláló visszaállítása">
 <!ENTITY quicktext.file.label "Fájl">
 <!ENTITY quicktext.goToHomepage.label "Ugrás a honlapra">
 <!ENTITY quicktext.help.label "Súgó">
