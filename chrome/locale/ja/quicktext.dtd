@@ -3,16 +3,26 @@
 
 <!ENTITY quicktext.settings.title "Quicktext の設定">
 <!ENTITY quicktext.settings.label "設定">
+<!ENTITY quicktext.accesskey.settings "定">
 <!ENTITY quicktext.resetcounter.label "カウンターをリセット">
+<!ENTITY quicktext.accesskey.resetCounter "タ">
 <!ENTITY quicktext.file.label "ファイル">
+<!ENTITY quicktext.accesskey.file "イ">
 <!ENTITY quicktext.goToHomepage.label "ホームページへ移動">
+<!ENTITY quicktext.accesskey.goToHomepage "h">
 <!ENTITY quicktext.help.label "ヘルプ">
+<!ENTITY quicktext.accesskey.help "ヘ">
 <!ENTITY quicktext.close.label "閉じる">
+<!ENTITY quicktext.accesskey.close "閉">
 <!ENTITY quicktext.save.label "保存">
+<!ENTITY quicktext.accesskey.save "存">
 
 <!ENTITY quicktext.general.label "全般">
+<!ENTITY quicktext.accesskey.general "全">
 <!ENTITY quicktext.templates.label "テンプレート">
+<!ENTITY quicktext.accesskey.templates "テ">
 <!ENTITY quicktext.scripts.label "スクリプト">
+<!ENTITY quicktext.accesskey.scripts "ス">
 
 <!ENTITY quicktext.rightClickSetting.label "コンテキストメニューに Quicktext を表示">
 <!ENTITY quicktext.collapseSetting.label "グループにテンプレートが1つしか含まれていない時は、グループとして表示しない">
@@ -38,14 +48,25 @@
 <!ENTITY quicktext.sharingTemplates.label "共有テンプレート">
 <!ENTITY quicktext.sharingScripts.label "共有スクリプト">
 <!ENTITY quicktext.export.label "エクスポート">
+<!ENTITY quicktext.accesskey.export "エ">
+<!ENTITY quicktext.accesskeyTemplate.export "ク">
+<!ENTITY quicktext.accesskeyScripts.export "ス">
 <!ENTITY quicktext.import.label "インポート">
+<!ENTITY quicktext.accesskey.import "ン">
+<!ENTITY quicktext.accesskeyTemplate.import "ポ">
+<!ENTITY quicktext.accesskeyScripts.import "ト">
 
 <!ENTITY quicktext.title.label "タイトル">
 <!ENTITY quicktext.addGroup.label "グループを追加">
+<!ENTITY quicktext.accesskey.addGroup "グ">
 <!ENTITY quicktext.addTemplate.label "テンプレートを追加">
+<!ENTITY quicktext.accesskey.addTemplate "テ">
 <!ENTITY quicktext.addScript.label "スクリプトを追加">
+<!ENTITY quicktext.accesskey.addScript "ス">
 <!ENTITY quicktext.getScript.label "Community Scripts">
+<!ENTITY quicktext.accesskey.communityScripts "s">
 <!ENTITY quicktext.remove.label "削除">
+<!ENTITY quicktext.accesskey.remove "削">
 <!ENTITY quicktext.shortcut.label "ショートカット">
 
 <!ENTITY quicktext.group.label "グループ">

@@ -3,16 +3,26 @@
 
 <!ENTITY quicktext.settings.title "Gyorsszöveg beállításai">
 <!ENTITY quicktext.settings.label "Beállítások">
+<!ENTITY quicktext.accesskey.settings "b">
 <!ENTITY quicktext.resetcounter.label "Számláló visszaállítása">
+<!ENTITY quicktext.accesskey.resetCounter "i">
 <!ENTITY quicktext.file.label "Fájl">
+<!ENTITY quicktext.accesskey.file "f">
 <!ENTITY quicktext.goToHomepage.label "Ugrás a honlapra">
+<!ENTITY quicktext.accesskey.goToHomepage "h">
 <!ENTITY quicktext.help.label "Súgó">
+<!ENTITY quicktext.accesskey.help "g">
 <!ENTITY quicktext.close.label "Bezárás">
+<!ENTITY quicktext.accesskey.close "z">
 <!ENTITY quicktext.save.label "Mentés">
+<!ENTITY quicktext.accesskey.save "c">
 
 <!ENTITY quicktext.general.label "Általános">
+<!ENTITY quicktext.accesskey.general "n">
 <!ENTITY quicktext.templates.label "Sablonok">
+<!ENTITY quicktext.accesskey.templates "o">
 <!ENTITY quicktext.scripts.label "Parancsfájlok">
+<!ENTITY quicktext.accesskey.scripts "p">
 
 <!ENTITY quicktext.rightClickSetting.label "Jobb kattintással a gyorsszöveg menü megnyitása">
 <!ENTITY quicktext.collapseSetting.label "Csoport összecsukása amikor egy sablont tartalmaz">
@@ -38,14 +48,25 @@
 <!ENTITY quicktext.sharingTemplates.label "Sablonok megosztása">
 <!ENTITY quicktext.sharingScripts.label "Parancsfájlok megosztása">
 <!ENTITY quicktext.export.label "Exportálása">
+<!ENTITY quicktext.accesskey.export "t">
+<!ENTITY quicktext.accesskeyTemplate.export "e">
+<!ENTITY quicktext.accesskeyScripts.export "x">
 <!ENTITY quicktext.import.label "Importálása">
+<!ENTITY quicktext.accesskey.import "r">
+<!ENTITY quicktext.accesskeyTemplate.import "i">
+<!ENTITY quicktext.accesskeyScripts.import "m">
 
 <!ENTITY quicktext.title.label "Cím">
 <!ENTITY quicktext.addGroup.label "Csoport hozzáadása">
+<!ENTITY quicktext.accesskey.addGroup "p">
 <!ENTITY quicktext.addTemplate.label "Sablon hozzáadása">
+<!ENTITY quicktext.accesskey.addTemplate "l">
 <!ENTITY quicktext.addScript.label "Parancsfájl hozzáadása">
+<!ENTITY quicktext.accesskey.addScript "t">
 <!ENTITY quicktext.getScript.label "Közösségi parancsfájlok">
+<!ENTITY quicktext.accesskey.communityScripts "s">
 <!ENTITY quicktext.remove.label "Eltávolítás">
+<!ENTITY quicktext.accesskey.remove "v">
 <!ENTITY quicktext.shortcut.label "Gyorsbillentyű">
 
 <!ENTITY quicktext.group.label "Csoport">

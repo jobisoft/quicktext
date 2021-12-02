@@ -39,34 +39,34 @@
     <toolbar type="menubar">
       <toolbaritem>
         <menubar style="border:0px;padding:0px;margin:0px;">
-          <menu label="&quicktext.file.label;">
+          <menu label="&quicktext.file.label;" accesskey="&quicktext.accesskey.file;">
             <menupopup>
-              <menuitem id="toolbar-save" label="&quicktext.save.label;" oncommand="quicktext.save();" />
+              <menuitem id="toolbar-save" label="&quicktext.save.label;" oncommand="quicktext.save();" accesskey="&quicktext.accesskey.save;"/>
               <menuseparator />
-              <menu label="&quicktext.import.label;">
+              <menu label="&quicktext.import.label;" accesskey="&quicktext.accesskey.import;">
                 <menupopup>
-                  <menuitem label="&quicktext.templates.label;" oncommand="quicktext.importTemplatesFromFile();" />
-                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.importScriptsFromFile();" />
+                  <menuitem label="&quicktext.templates.label;" oncommand="quicktext.importTemplatesFromFile();" accesskey="&quicktext.accesskeyTemplate.import;"/>
+                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.importScriptsFromFile();" accesskey="&quicktext.accesskeyScripts.import;"/>
                 </menupopup>
               </menu>
-              <menu label="&quicktext.export.label;">
+              <menu label="&quicktext.export.label;" accesskey="&quicktext.accesskey.export;">
                 <menupopup>
-                  <menuitem label="&quicktext.templates.label;" oncommand="quicktext.exportTemplatesToFile();" />
-                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.exportScriptsToFile();" />
+                  <menuitem label="&quicktext.templates.label;" oncommand="quicktext.exportTemplatesToFile();" accesskey="&quicktext.accesskeyTemplate.export;"/>
+                  <menuitem label="&quicktext.scripts.label;" oncommand="quicktext.exportScriptsToFile();" accesskey="&quicktext.accesskeyScripts.export;"/>
                 </menupopup>
               </menu>
               <menuseparator />
-              <menuitem label="&quicktext.close.label;" oncommand="quicktext.close(true);" />
+              <menuitem label="&quicktext.close.label;" accesskey="&quicktext.accesskey.close;" oncommand="quicktext.close(true);" />
             </menupopup>
           </menu>
-          <menu label="&quicktext.help.label;">
+          <menu label="&quicktext.help.label;" accesskey="&quicktext.accesskey.help;">
             <menupopup>
-              <menuitem label="&quicktext.goToHomepage.label;" oncommand="quicktext.openHomepage();" />
+              <menuitem label="&quicktext.goToHomepage.label;" accesskey="&quicktext.accesskey.goToHomepage;" oncommand="quicktext.openHomepage();" />
             </menupopup>
           </menu>
-          <menu label="&quicktext.settings.label;">          
+          <menu label="&quicktext.settings.label;" accesskey="&quicktext.accesskey.settings;">
             <menupopup>
-              <menuitem label="&quicktext.resetcounter.label;" oncommand="quicktext.resetCounter();" />
+              <menuitem label="&quicktext.resetcounter.label;" oncommand="quicktext.resetCounter();" accesskey="&quicktext.accesskey.resetCounter;"/>
             </menupopup>
           </menu>
         </menubar>
@@ -78,9 +78,9 @@
     <vbox flex="1">
       <tabbox id="tabbox-main" flex="1" style="margin: 5px 5px 0px 5px;">
         <tabs>
-          <tab label="&quicktext.general.label;" />
-          <tab label="&quicktext.templates.label;" />
-          <tab label="&quicktext.scripts.label;" />
+          <tab label="&quicktext.general.label;" accesskey="&quicktext.accesskey.general;"/>
+          <tab label="&quicktext.templates.label;" accesskey="&quicktext.accesskey.templates;"/>
+          <tab label="&quicktext.scripts.label;" accesskey="&quicktext.accesskey.scripts;"/>
         </tabs>
         <tabpanels flex="1" style="margin: 0px; padding: 0px">
           <tabpanel id="tab-general">
@@ -136,15 +136,15 @@
                 <fieldset>
                   <vbox flex="1">
                     <hbox><legend class="insideTab">&quicktext.sharingTemplates.label;</legend></hbox>
-                    <button label="&quicktext.export.label;" oncommand="quicktext.exportTemplatesToFile();" />
-                    <button label="&quicktext.import.label;" oncommand="quicktext.importTemplatesFromFile();" />
+                    <button label="&quicktext.export.label;" oncommand="quicktext.exportTemplatesToFile();" accesskey="&quicktext.accesskeyTemplate.export;"/>
+                    <button label="&quicktext.import.label;" oncommand="quicktext.importTemplatesFromFile();" accesskey="&quicktext.accesskeyTemplate.import;"/>
                   </vbox>
                 </fieldset>
                 <fieldset>
                   <vbox flex="1">
                     <hbox><legend class="insideTab">&quicktext.sharingScripts.label;</legend></hbox>
-                    <button label="&quicktext.export.label;" oncommand="quicktext.exportScriptsToFile();" />
-                    <button label="&quicktext.import.label;" oncommand="quicktext.importScriptsFromFile();" />
+                    <button label="&quicktext.export.label;" oncommand="quicktext.exportScriptsToFile();" accesskey="&quicktext.accesskeyScripts.export;"/>
+                    <button label="&quicktext.import.label;" oncommand="quicktext.importScriptsFromFile();" accesskey="&quicktext.accesskeyScripts.import;"/>
                   </vbox>
                 </fieldset>
               </vbox>
@@ -155,8 +155,8 @@
               <fieldset flex="1">
                 <vbox flex="1">
                   <hbox><legend class="insideTab">&quicktext.title.label;</legend></hbox>
-                  <hbox><button id="group-button-add-group" label="&quicktext.addGroup.label;" flex="1" oncommand="quicktext.addGroup();" /></hbox>
-                  <hbox><button id="group-button-add-text" label="&quicktext.addTemplate.label;" flex="1" oncommand="quicktext.addText();" /></hbox>
+                  <hbox><button id="group-button-add-group" label="&quicktext.addGroup.label;" flex="1" oncommand="quicktext.addGroup();" accesskey="&quicktext.accesskey.addGroup;"/></hbox>
+                  <hbox><button id="group-button-add-text" label="&quicktext.addTemplate.label;" flex="1" oncommand="quicktext.addText();" accesskey="&quicktext.accesskey.addTemplate;"/></hbox>
                   <tree id="group-tree"
                         onselect="quicktext.pickText();"
                         flex="1"
@@ -173,7 +173,7 @@
                         ondragstart="event.dataTransfer.setData('quicktextTree', event.target.getAttribute('label'))"
                     />
                   </tree>
-                  <hbox><button id="group-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeText();" /></hbox>
+                  <hbox><button id="group-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeText();" accesskey="&quicktext.accesskey.remove;"/></hbox>
                 </vbox>
               </fieldset>
             </vbox>
@@ -361,10 +361,10 @@
               <fieldset flex="1">
                 <vbox flex="1">
                   <hbox><legend class="insideTab">&quicktext.title.label;</legend></hbox>
-                  <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" /></hbox>
-                  <hbox><button label="&quicktext.getScript.label;" flex="1" oncommand="quicktext.getCommunityScripts();" /></hbox>
+                  <hbox><button id="script-button-add" label="&quicktext.addScript.label;" flex="1" oncommand="quicktext.addScript();" accesskey="&quicktext.accesskey.addScript;"/></hbox>
+                  <hbox><button label="&quicktext.getScript.label;" flex="1" oncommand="quicktext.getCommunityScripts();" accesskey="&quicktext.accesskey.communityScripts;"/></hbox>
                   <richlistbox id="script-list" flex="1" onselect="quicktext.pickScript();"/>
-                  <hbox><button id="script-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeScript();" /></hbox>
+                  <hbox><button id="script-button-remove" label="&quicktext.remove.label;" flex="1" oncommand="quicktext.removeScript();" accesskey="&quicktext.accesskey.remove;"/></hbox>
                 </vbox>
               </fieldset>
 
