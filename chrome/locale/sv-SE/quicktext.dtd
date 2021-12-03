@@ -3,16 +3,26 @@
 
 <!ENTITY quicktext.settings.title "Quicktext Inställningar">
 <!ENTITY quicktext.settings.label "Inställningar">
+<!ENTITY quicktext.accesskey.settings "n">
 <!ENTITY quicktext.resetcounter.label "Återställ räknaren">
+<!ENTITY quicktext.accesskey.resetCounter "l">
 <!ENTITY quicktext.file.label "Arkiv">
+<!ENTITY quicktext.accesskey.file "k">
 <!ENTITY quicktext.goToHomepage.label "Gå till hemsidan">
+<!ENTITY quicktext.accesskey.goToHomepage "h">
 <!ENTITY quicktext.help.label "Hjälp">
+<!ENTITY quicktext.accesskey.help "p">
 <!ENTITY quicktext.close.label "Stäng">
+<!ENTITY quicktext.accesskey.close "ä">
 <!ENTITY quicktext.save.label "Spara">
+<!ENTITY quicktext.accesskey.save "a">
 
 <!ENTITY quicktext.general.label "Allmänt">
+<!ENTITY quicktext.accesskey.general "w">
 <!ENTITY quicktext.templates.label "Mallar">
+<!ENTITY quicktext.accesskey.templates "q">
 <!ENTITY quicktext.scripts.label "Skript">
+<!ENTITY quicktext.accesskey.scripts "s">
 
 <!ENTITY quicktext.rightClickSetting.label "Visa Quicktext-menyn vid högerklick">
 <!ENTITY quicktext.collapseSetting.label "Collapse group when it only contains one template">
@@ -38,14 +48,25 @@
 <!ENTITY quicktext.sharingTemplates.label "Dela mallar">
 <!ENTITY quicktext.sharingScripts.label "Dela skript">
 <!ENTITY quicktext.export.label "Export">
+<!ENTITY quicktext.accesskey.export "o">
+<!ENTITY quicktext.accesskeyTemplate.export "e">
+<!ENTITY quicktext.accesskeyScripts.export "x">
 <!ENTITY quicktext.import.label "Import">
+<!ENTITY quicktext.accesskey.import "r">
+<!ENTITY quicktext.accesskeyTemplate.import "i">
+<!ENTITY quicktext.accesskeyScripts.import "m">
 
 <!ENTITY quicktext.title.label "Titel">
 <!ENTITY quicktext.addGroup.label "Lägg till grupp">
+<!ENTITY quicktext.accesskey.addGroup "g">
 <!ENTITY quicktext.addTemplate.label "Lägg till mall">
+<!ENTITY quicktext.accesskey.addTemplate "l">
 <!ENTITY quicktext.addScript.label "Lägg till skript">
+<!ENTITY quicktext.accesskey.addScript "t">
 <!ENTITY quicktext.getScript.label "Community Scripts">
+<!ENTITY quicktext.accesskey.communityScripts "s">
 <!ENTITY quicktext.remove.label "Ta bort">
+<!ENTITY quicktext.accesskey.remove "v">
 <!ENTITY quicktext.shortcut.label "Kortkommando">
 
 <!ENTITY quicktext.group.label "Grupp">

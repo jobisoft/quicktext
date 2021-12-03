@@ -3,16 +3,26 @@
 
 <!ENTITY quicktext.settings.title "Quicktext Settings">
 <!ENTITY quicktext.settings.label "Settings">
+<!ENTITY quicktext.accesskey.settings "n">
 <!ENTITY quicktext.resetcounter.label "Reset counter">
+<!ENTITY quicktext.accesskey.resetCounter "u">
 <!ENTITY quicktext.file.label "File">
+<!ENTITY quicktext.accesskey.file "f">
 <!ENTITY quicktext.goToHomepage.label "Go to homepage">
+<!ENTITY quicktext.accesskey.goToHomepage "h">
 <!ENTITY quicktext.help.label "Help">
+<!ENTITY quicktext.accesskey.help "p">
 <!ENTITY quicktext.close.label "Close">
+<!ENTITY quicktext.accesskey.close "c">
 <!ENTITY quicktext.save.label "Save">
+<!ENTITY quicktext.accesskey.save "s">
 
 <!ENTITY quicktext.general.label "General">
+<!ENTITY quicktext.accesskey.general "g">
 <!ENTITY quicktext.templates.label "Templates">
+<!ENTITY quicktext.accesskey.templates "t">
 <!ENTITY quicktext.scripts.label "Scripts">
+<!ENTITY quicktext.accesskey.scripts "s">
 
 <!ENTITY quicktext.rightClickSetting.label "View Quicktext-menu on right-click">
 <!ENTITY quicktext.collapseSetting.label "Collapse group when it only contains one template">
@@ -38,14 +48,25 @@
 <!ENTITY quicktext.sharingTemplates.label "Sharing templates">
 <!ENTITY quicktext.sharingScripts.label "Sharing scripts">
 <!ENTITY quicktext.export.label "Export">
+<!ENTITY quicktext.accesskey.export "o">
+<!ENTITY quicktext.accesskeyTemplate.export "e">
+<!ENTITY quicktext.accesskeyScripts.export "x">
 <!ENTITY quicktext.import.label "Import">
+<!ENTITY quicktext.accesskey.import "r">
+<!ENTITY quicktext.accesskeyTemplate.import "i">
+<!ENTITY quicktext.accesskeyScripts.import "m">
 
 <!ENTITY quicktext.title.label "Title">
 <!ENTITY quicktext.addGroup.label "Add group">
+<!ENTITY quicktext.accesskey.addGroup "p">
 <!ENTITY quicktext.addTemplate.label "Add template">
+<!ENTITY quicktext.accesskey.addTemplate "l">
 <!ENTITY quicktext.addScript.label "Add script">
+<!ENTITY quicktext.accesskey.addScript "t">
 <!ENTITY quicktext.getScript.label "Community scripts">
+<!ENTITY quicktext.accesskey.communityScripts "s">
 <!ENTITY quicktext.remove.label "Remove">
+<!ENTITY quicktext.accesskey.remove "v">
 <!ENTITY quicktext.shortcut.label "Shortcut">
 
 <!ENTITY quicktext.group.label "Group">

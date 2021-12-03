@@ -3,16 +3,26 @@
 
 <!ENTITY quicktext.settings.title "Nastavení Quicktext">
 <!ENTITY quicktext.settings.label "Nastavení">
-<!ENTITY quicktext.file.label "Soubor">
+<!ENTITY quicktext.accesskey.settings "n">
 <!ENTITY quicktext.resetcounter.label "Vynulovat počítadlo">
+<!ENTITY quicktext.accesskey.resetCounter "u">
+<!ENTITY quicktext.file.label "Soubor">
+<!ENTITY quicktext.accesskey.file "b">
 <!ENTITY quicktext.goToHomepage.label "Přejít na webové stránky">
+<!ENTITY quicktext.accesskey.goToHomepage "w">
 <!ENTITY quicktext.help.label "Nápověda">
+<!ENTITY quicktext.accesskey.help "p">
 <!ENTITY quicktext.close.label "Zavřít">
+<!ENTITY quicktext.accesskey.close "z">
 <!ENTITY quicktext.save.label "Uložit">
+<!ENTITY quicktext.accesskey.save "s">
 
 <!ENTITY quicktext.general.label "Obecné">
+<!ENTITY quicktext.accesskey.general "g">
 <!ENTITY quicktext.templates.label "Šablony">
+<!ENTITY quicktext.accesskey.templates "y">
 <!ENTITY quicktext.scripts.label "Skripty">
+<!ENTITY quicktext.accesskey.scripts "s">
 
 <!ENTITY quicktext.rightClickSetting.label "Zobrazovat Quicktext v nabídce pod pravým tlačítkem myši">
 <!ENTITY quicktext.collapseSetting.label "Skrývat názvy skupin, pokud obsahují jen jednu šablonu">
@@ -38,14 +48,25 @@
 <!ENTITY quicktext.sharingTemplates.label "Sdílení šablon">
 <!ENTITY quicktext.sharingScripts.label "Sdílení skriptů">
 <!ENTITY quicktext.export.label "Exportovat">
+<!ENTITY quicktext.accesskey.export "o">
+<!ENTITY quicktext.accesskeyTemplate.export "e">
+<!ENTITY quicktext.accesskeyScripts.export "x">
 <!ENTITY quicktext.import.label "Importovat">
+<!ENTITY quicktext.accesskey.import "r">
+<!ENTITY quicktext.accesskeyTemplate.import "i">
+<!ENTITY quicktext.accesskeyScripts.import "m">
 
 <!ENTITY quicktext.title.label "Název">
 <!ENTITY quicktext.addGroup.label "Přidat skupinu">
+<!ENTITY quicktext.accesskey.addGroup "p">
 <!ENTITY quicktext.addTemplate.label "Přidat šablonu">
+<!ENTITY quicktext.accesskey.addTemplate "l">
 <!ENTITY quicktext.addScript.label "Přidat skript">
+<!ENTITY quicktext.accesskey.addScript "t">
 <!ENTITY quicktext.getScript.label "Komunitní skripty">
+<!ENTITY quicktext.accesskey.communityScripts "s">
 <!ENTITY quicktext.remove.label "Odstranit">
+<!ENTITY quicktext.accesskey.remove "v">
 <!ENTITY quicktext.shortcut.label "Zkratka">
 
 <!ENTITY quicktext.group.label "Skupina">

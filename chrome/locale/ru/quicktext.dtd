@@ -3,16 +3,26 @@
 
 <!ENTITY quicktext.settings.title "Настройки Quicktext">
 <!ENTITY quicktext.settings.label "Настройки">
+<!ENTITY quicktext.accesskey.settings "Н">
 <!ENTITY quicktext.resetcounter.label "Сбросить счетчик">
+<!ENTITY quicktext.accesskey.resetCounter "С">
 <!ENTITY quicktext.file.label "Файл">
+<!ENTITY quicktext.accesskey.file "Ф">
 <!ENTITY quicktext.goToHomepage.label "На домашнюю страницу">
+<!ENTITY quicktext.accesskey.goToHomepage "д">
 <!ENTITY quicktext.help.label "Помощь">
+<!ENTITY quicktext.accesskey.help "П">
 <!ENTITY quicktext.close.label "Закрыть">
+<!ENTITY quicktext.accesskey.close "З">
 <!ENTITY quicktext.save.label "Сохранить">
+<!ENTITY quicktext.accesskey.save "р">
 
 <!ENTITY quicktext.general.label "Главное">
+<!ENTITY quicktext.accesskey.general "Г">
 <!ENTITY quicktext.templates.label "Шаблоны">
+<!ENTITY quicktext.accesskey.templates "Ш">
 <!ENTITY quicktext.scripts.label "Скрипты">
+<!ENTITY quicktext.accesskey.scripts "к">
 
 <!ENTITY quicktext.rightClickSetting.label "Просмотр Quicktext-меню по правому клику">
 <!ENTITY quicktext.collapseSetting.label "Свернуть группу, если она содержит только один шаблон">
@@ -38,14 +48,25 @@
 <!ENTITY quicktext.sharingTemplates.label "Обмен шаблонами">
 <!ENTITY quicktext.sharingScripts.label "Обмен скриптами">
 <!ENTITY quicktext.export.label "Экспорт">
+<!ENTITY quicktext.accesskey.export "Э">
+<!ENTITY quicktext.accesskeyTemplate.export "к">
+<!ENTITY quicktext.accesskeyScripts.export "о">
 <!ENTITY quicktext.import.label "Импорт">
+<!ENTITY quicktext.accesskey.import "И">
+<!ENTITY quicktext.accesskeyTemplate.import "м">
+<!ENTITY quicktext.accesskeyScripts.import "т">
 
 <!ENTITY quicktext.title.label "Название">
 <!ENTITY quicktext.addGroup.label "Добавить группу">
+<!ENTITY quicktext.accesskey.addGroup "Д">
 <!ENTITY quicktext.addTemplate.label "Добавить шаблон">
+<!ENTITY quicktext.accesskey.addTemplate "б">
 <!ENTITY quicktext.addScript.label "Добавить скрипт">
+<!ENTITY quicktext.accesskey.addScript "б">
 <!ENTITY quicktext.getScript.label "Скрипты сообщества">
+<!ENTITY quicktext.accesskey.communityScripts "щ">
 <!ENTITY quicktext.remove.label "Удалить">
+<!ENTITY quicktext.accesskey.remove "У">
 <!ENTITY quicktext.shortcut.label "Сочетание">
 
 <!ENTITY quicktext.group.label "Группа">
