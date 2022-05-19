@@ -24,8 +24,7 @@ function onLoad(activatedWhileWindowOpen) {
     <menuseparator insertafter="tasksMenuAddressBook" />
   </menupopup>
 
-  <toolbox id="headers-box">
-    <toolbar id="quicktext-toolbar">
+  <toolbar id="quicktext-toolbar" insertbefore="messageEditor">
       <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;" tabindex="-1">
         <menupopup>
           <menu label="&quicktext.to.label;">
@@ -95,8 +94,7 @@ function onLoad(activatedWhileWindowOpen) {
           <menuitem label="&quicktext.insertTextFromFileAsHTML.label;" oncommand="quicktext.insertContentFromFile(1);" />
         </menupopup>
       </button>
-    </toolbar>
-  </toolbox>`,
+    </toolbar>`,
   ["chrome://quicktext/locale/quicktext.dtd"]);
   
   window.quicktext.load();

@@ -52,3 +52,7 @@ textarea {
   margin-right: 2px;
   min-width:    auto;
 }
+
+#quicktext-toolbar {
+  border-bottom: 1px solid var(--splitter-color);
+}
