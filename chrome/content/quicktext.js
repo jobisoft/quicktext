@@ -415,10 +415,10 @@ var quicktext = {
       return;
 
     var convertHeaderToType           = [];
-    convertHeaderToType["to"]         = "To";
-    convertHeaderToType["cc"]         = "Cc";
-    convertHeaderToType["bcc"]        = "Bcc";
-    convertHeaderToType["reply-to"]   = "Reply";
+    convertHeaderToType["to"]         = "to";
+    convertHeaderToType["cc"]         = "cc";
+    convertHeaderToType["bcc"]        = "bcc";
+    convertHeaderToType["reply-to"]   = "reply";
 
     var convertHeaderToParse          = [];
     convertHeaderToParse["to"]        = "to";
@@ -485,13 +485,8 @@ var quicktext = {
       if (count > 0)
       {
         for (var header in tmpRecipientHeaders)
-	{
           for (var i = 0; i < tmpRecipientHeaders[header].length; i++)
-	  {
-            let addressRow = document.getElementById("addressRow" + convertHeaderToType[header]);
-            addressRowAddRecipientsArray(addressRow, [tmpRecipientHeaders[header][i]], false);
-	  }
-	}
+            awAddRecipientsArray("addr_"+ convertHeaderToType[header], [tmpRecipientHeaders[header][i]], false);
       }
     }
   }
