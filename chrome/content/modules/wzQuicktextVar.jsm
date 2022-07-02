@@ -5,6 +5,14 @@ var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
+XPCOMUtils.defineLazyModuleGetters(this, {
+  newUID: "resource:///modules/AddrBookUtils.jsm",
+  AddrBookCard: "resource:///modules/AddrBookCard.jsm",
+  BANISHED_PROPERTIES: "resource:///modules/VCardUtils.jsm",
+  VCardProperties: "resource:///modules/VCardUtils.jsm",
+  VCardUtils: "resource:///modules/VCardUtils.jsm",
+});
+
 try {
   var { cardbookRepository } = ChromeUtils.import("chrome://cardbook/content/cardbookRepository.js");
 } catch(e) {}
@@ -756,7 +764,23 @@ wzQuicktextVar.prototype = {
     return this.mData['CLIPBOARD'].data;
   }
 ,
-  getcarddata_from: function(aData, aIdentity)
+/**
+ * Gets the VCardProperties of the given card either directly or by reconstructing
+ * from a set of flat standard properties.
+ *
+ * @param {nsIAbCard/AddrBookCard} card
+ * @returns {VCardProperties}
+ */
+ vCardPropertiesFromCard: function (card) {
+  if (card.supportsVCard) {
+    return card.vCardProperties;
+  }
+  return VCardProperties.fromPropertyMap(
+    new Map(Array.from(card.properties, p => [p.name, p.value]))
+  );
+}
+,
+getcarddata_from: function(aData, aIdentity)
   {
     let passStandardCheck = false;
     try {
@@ -791,10 +815,18 @@ wzQuicktextVar.prototype = {
       }
       if (card != null)
       {
+        // Get directly stored props first.
         var props = this.getPropertiesFromCard(card);
-        for (var p in props)
+        for (var p in props) {
           this.mData['FROM'].data[p] = props[p];
-
+        }
+        
+        // Get the vCard props.
+        let vCardProperties = this.vCardPropertiesFromCard(card);
+        for (let [name, value] of vCardProperties.toPropertyMap()) {
+          this.mData['FROM'].data[name] = value;
+        }
+        
         aData['FROM'].data['fullname'] = TrimString(aData['FROM'].data['firstname'] +" "+ aData['FROM'].data['lastname']);
       }
     }
