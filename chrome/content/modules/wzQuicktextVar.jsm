@@ -316,9 +316,9 @@ wzQuicktextVar.prototype = {
     return this.process_text(aVariables);
   }
 ,
-  get_script: function(aVariables)
+  get_script: async function(aVariables)
   {
-    return this.process_script(aVariables);
+    return await this.process_script(aVariables);
   }
 ,
   get_att: function(aVariables)
@@ -564,7 +564,7 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  process_script: function(aVariables)
+  process_script: async function(aVariables)
   {
     if (aVariables.length == 0)
       return "";
@@ -593,7 +593,7 @@ wzQuicktextVar.prototype = {
           s.mQuicktext = this;
           s.mVariables = aVariables;
           s.mWindow = this.mWindow;
-          returnValue = Components.utils.evalInSandbox("scriptObject = {}; scriptObject.mQuicktext = mQuicktext; scriptObject.mVariables = mVariables; scriptObject.mWindow = mWindow; scriptObject.run = function() {\n" + script.script +"\nreturn ''; }; scriptObject.run();", s);
+          returnValue = await Components.utils.evalInSandbox("scriptObject = {}; scriptObject.mQuicktext = mQuicktext; scriptObject.mVariables = mVariables; scriptObject.mWindow = mWindow; scriptObject.run = async function() {\n" + script.script +"\n; return ''; }; scriptObject.run();", s);
         } catch (e) {
           if (this.mWindow)
           {
