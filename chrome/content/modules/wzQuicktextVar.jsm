@@ -5,6 +5,7 @@ var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
+var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
 XPCOMUtils.defineLazyModuleGetters(this, {
   newUID: "resource:///modules/AddrBookUtils.jsm",
   AddrBookCard: "resource:///modules/AddrBookCard.jsm",
@@ -892,14 +893,30 @@ getcarddata_from: function(aData, aIdentity)
       var card = this.getCardForEmail(aData['TO'].data['email'][aIndex]);
       if (card != null)
       {
+
+        // Get directly stored props first.
         var props = this.getPropertiesFromCard(card);
         for (var p in props)
         {
-          if (typeof aData['TO'].data[p] == 'undefined')
+          if (typeof aData['TO'].data[p] == 'undefined') {
             aData['TO'].data[p] = []
-          if (props[p] != "" || typeof aData['TO'].data[p][aIndex] == 'undefined' || aData['TO'].data[p][aIndex] == "")
+          }
+          if (props[p] != "" || typeof aData['TO'].data[p][aIndex] == 'undefined' || aData['TO'].data[p][aIndex] == "") {
             aData['TO'].data[p][aIndex] = TrimString(props[p]);
+          }
         }
+        
+        // Get the vCard props.
+        let vCardProperties = this.vCardPropertiesFromCard(card);
+        for (let [name, value] of vCardProperties.toPropertyMap()) {
+          if (typeof aData['TO'].data[name] == 'undefined') {
+            aData['TO'].data[name] = []
+          }
+          if (value != "" || typeof aData['TO'].data[name][aIndex] == 'undefined' || aData['TO'].data[name][aIndex] == "") {
+            aData['TO'].data[name][aIndex] = TrimString(value);
+          }
+        }
+
       }
     }
     return aData;
