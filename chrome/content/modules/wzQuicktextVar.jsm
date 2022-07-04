@@ -14,10 +14,6 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   VCardUtils: "resource:///modules/VCardUtils.jsm",
 });
 
-try {
-  var { cardbookRepository } = ChromeUtils.import("chrome://cardbook/content/cardbookRepository.js");
-} catch(e) {}
-
 const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
@@ -785,6 +781,7 @@ getcarddata_from: function(aData, aIdentity)
   {
     let passStandardCheck = false;
     try {
+      let cardbookRepository = ChromeUtils.import("chrome://cardbook/content/cardbookRepository.js").cardbookRepository;
       let card = cardbookRepository.cardbookUtils.getCardFromEmail(aIdentity.email.toLowerCase());
       if (card)
       {
@@ -862,6 +859,7 @@ getcarddata_from: function(aData, aIdentity)
   {
     let passStandardCheck = false;
     try {
+      let cardbookRepository = ChromeUtils.import("chrome://cardbook/content/cardbookRepository.js").cardbookRepository;
       let card = cardbookRepository.cardbookUtils.getCardFromEmail(aData['TO'].data['email'][aIndex]);
       if (card)
       {
