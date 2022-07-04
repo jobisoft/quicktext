@@ -825,7 +825,9 @@ getcarddata_from: function(aData, aIdentity)
         // Get the vCard props.
         let vCardProperties = this.vCardPropertiesFromCard(card);
         for (let [name, value] of vCardProperties.toPropertyMap()) {
-          this.mData['FROM'].data[name] = value;
+          // For backward compatibility, use lowercase props.
+          let lowerCaseName = name.toLowerCase();
+          this.mData['FROM'].data[lowerCaseName] = value;
         }
         
         aData['FROM'].data['fullname'] = TrimString(aData['FROM'].data['firstname'] +" "+ aData['FROM'].data['lastname']);
@@ -909,11 +911,13 @@ getcarddata_from: function(aData, aIdentity)
         // Get the vCard props.
         let vCardProperties = this.vCardPropertiesFromCard(card);
         for (let [name, value] of vCardProperties.toPropertyMap()) {
-          if (typeof aData['TO'].data[name] == 'undefined') {
-            aData['TO'].data[name] = []
+          // For backward compatibility, use lowercase props.
+          let lowerCaseName = name.toLowerCase();
+          if (typeof aData['TO'].data[lowerCaseName] == 'undefined') {
+            aData['TO'].data[lowerCaseName] = []
           }
-          if (value != "" || typeof aData['TO'].data[name][aIndex] == 'undefined' || aData['TO'].data[name][aIndex] == "") {
-            aData['TO'].data[name][aIndex] = TrimString(value);
+          if (value != "" || typeof aData['TO'].data[lowerCaseName][aIndex] == 'undefined' || aData['TO'].data[lowerCaseName][aIndex] == "") {
+            aData['TO'].data[lowerCaseName][aIndex] = TrimString(value);
           }
         }
 
