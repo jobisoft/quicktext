@@ -752,7 +752,7 @@ var gQuicktext = {
     {
       // Only export scripts which have not been auto imported.
       if (this.mScripts[i].type == 0) {
-        buffer += "\t<script>\n\t\t<name><![CDATA["+ this.removeIllegalChars(this.mScripts[i].name) +"]]></name>\n\t\t<body><![CDATA["+ this.removeIllegalChars(this.mScripts[i].script) +"]]></body>\n\t</script>\n";
+        buffer += "\t<script>\n\t\t<name><![CDATA["+ this.removeIllegalCharsCDATA(this.mScripts[i].name) +"]]></name>\n\t\t<body><![CDATA["+ this.removeIllegalCharsCDATA(this.mScripts[i].script) +"]]></body>\n\t</script>\n";
       }
     }
     buffer += "</quicktext>";
@@ -773,15 +773,15 @@ var gQuicktext = {
           for (var j = 0; j < this.mTexts[i].length; j++)
           {
             var text = this.mTexts[i][j];
-            buffer += "\t\t\t<text shortcut=\""+ this.removeIllegalChars(text.shortcut) +"\" type=\""+ this.removeIllegalChars(text.type) +"\">\n\t\t\t\t<name><![CDATA["+ this.removeIllegalChars(text.name) +"]]></name>\n";
+            buffer += "\t\t\t<text shortcut=\""+ this.removeIllegalChars(text.shortcut) +"\" type=\""+ this.removeIllegalChars(text.type) +"\">\n\t\t\t\t<name><![CDATA["+ this.removeIllegalCharsCDATA(text.name) +"]]></name>\n";
             if (text.keyword != "")
-              buffer += "\t\t\t\t<keyword><![CDATA["+ this.removeIllegalChars(text.keyword) +"]]></keyword>\n";
+              buffer += "\t\t\t\t<keyword><![CDATA["+ this.removeIllegalCharsCDATA(text.keyword) +"]]></keyword>\n";
             if (text.subject != "")
-              buffer += "\t\t\t\t<subject><![CDATA["+ this.removeIllegalChars(text.subject) +"]]></subject>\n";
+              buffer += "\t\t\t\t<subject><![CDATA["+ this.removeIllegalCharsCDATA(text.subject) +"]]></subject>\n";
             if (text.text != "")
-              buffer += "\t\t\t\t<body><![CDATA["+ this.removeIllegalChars(text.text) +"]]></body>\n";
+              buffer += "\t\t\t\t<body><![CDATA["+ this.removeIllegalCharsCDATA(text.text) +"]]></body>\n";
             if (text.attachments != "")
-              buffer += "\t\t\t\t<attachments><![CDATA["+ this.removeIllegalChars(text.attachments) +"]]></attachments>\n";
+              buffer += "\t\t\t\t<attachments><![CDATA["+ this.removeIllegalCharsCDATA(text.attachments) +"]]></attachments>\n";
             
             // There seems to be no use to write dynamically gathered header informations from the last use of a template to the file
             
@@ -1014,7 +1014,16 @@ var gQuicktext = {
   {
     var tagElem = aElem.getElementsByTagName(aTag);
     if (tagElem.length > 0)
-      return tagElem[0].firstChild.nodeValue;
+    {
+      // can't be used anymore as sometimes there are several CDATA entries - see removeIllegalCharsCDATA
+      // return tagElem[0].firstChild.nodeValue;
+
+      var result = '';
+      for (const child of tagElem[0].childNodes) {
+        result = result + child.nodeValue;
+      }
+      return result;
+    }
 
     return "";
   }
@@ -1024,7 +1033,13 @@ var gQuicktext = {
     return aStr.replace(new RegExp("["+ kIllegalChars +"]", 'g'), '');
   }
 ,
-
+  removeIllegalCharsCDATA: function(aStr)
+  {
+    // https://stackoverflow.com/questions/223652/is-there-a-way-to-escape-a-cdata-end-token-in-xml
+    // replace ']]>' by ']]]]><![CDATA[>', need a regex replace to replace every occurence
+    return aStr.replace(new RegExp("["+ kIllegalChars +"]", 'g'), '').replace(/\]\]>/g, ']]]]><![CDATA[>');
+  }
+,
   /*
    * OBSERVERS
    */
