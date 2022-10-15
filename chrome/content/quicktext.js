@@ -719,7 +719,7 @@ var quicktext = {
       "Enter" : ["NumpadEnter"]
     }
 
-    if (e.code == gQuicktext.keywordKey || alternatives[gQuicktext.keywordKey].includes(e.code))
+    if (e.code == gQuicktext.keywordKey || alternatives[gQuicktext.keywordKey]?.includes(e.code))
     {
       var editor = GetCurrentEditor();
       var selection = editor.selection;
