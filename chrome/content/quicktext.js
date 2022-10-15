@@ -715,7 +715,11 @@ var quicktext = {
 ,
   editorKeyPress: async function(e)
   {
-    if (e.code == gQuicktext.keywordKey)
+    const alternatives = {
+      "Enter" : ["NumpadEnter"]
+    }
+
+    if (e.code == gQuicktext.keywordKey || alternatives[gQuicktext.keywordKey].includes(e.code))
     {
       var editor = GetCurrentEditor();
       var selection = editor.selection;
