@@ -1,6 +1,6 @@
 [
   {
-    "namespace": "WindowListener",    
+    "namespace": "WindowListener",
     "functions": [
       {
         "name": "registerDefaultPrefs",
@@ -34,7 +34,7 @@
             "type": "array",
             "items": {
               "type": "array",
-              "items" : {
+              "items": {
                 "type": "string"
               }
             },
