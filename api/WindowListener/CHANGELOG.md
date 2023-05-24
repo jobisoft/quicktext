@@ -1,3 +1,7 @@
+Version: 1.60
+-------------
+- explicitly set hasAddonManagerEventListeners flag to false on uninstall
+  
 Version: 1.59
 -------------
 - store hasAddonManagerEventListeners flag in add-on scope instead on the global
