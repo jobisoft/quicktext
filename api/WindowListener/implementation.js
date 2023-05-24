@@ -2,7 +2,7 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
- * Version: 1.58
+ * Version: 1.59
  *
  * Author: John Bieling (john@thunderbird.net)
  *
@@ -1278,16 +1278,22 @@ var WindowListener_115 = class extends ExtensionCommon.ExtensionAPI {
     if (!this.pathToOptionsPage) {
       return;
     }
-    if (!(
+    if (
       managerWindow &&
-      managerWindow.hasAddonManagerEventListeners
-    )) {
-      managerWindow.document.addEventListener("ViewChanged", this);
-      managerWindow.document.addEventListener("update", this);
-      managerWindow.document.addEventListener("view-loaded", this);
-      managerWindow.hasAddonManagerEventListeners = true;
+      managerWindow[this.uniqueRandomID] &&
+      managerWindow[this.uniqueRandomID].hasAddonManagerEventListeners
+    ) {
+      return;
     }
-    if (forceLoad) this.handleEvent(managerWindow);
+
+    managerWindow.document.addEventListener("ViewChanged", this);
+    managerWindow.document.addEventListener("update", this);
+    managerWindow.document.addEventListener("view-loaded", this);
+    managerWindow[this.uniqueRandomID] = {};
+    managerWindow[this.uniqueRandomID].hasAddonManagerEventListeners = true;
+    if (forceLoad) {
+      this.handleEvent(managerWindow);
+    }
   }
 
   getMessenger(context) {
@@ -2051,7 +2057,8 @@ var WindowListener_115 = class extends ExtensionCommon.ExtensionAPI {
           let managerWindow = this.getAddonManagerFromWindow(window);
           if (
             managerWindow &&
-            managerWindow.hasAddonManagerEventListeners
+            managerWindow[this.uniqueRandomID] && 
+            managerWindow[this.uniqueRandomID].hasAddonManagerEventListeners
           ) {
             managerWindow.document.removeEventListener("ViewChanged", this);
             managerWindow.document.removeEventListener("view-loaded", this);
@@ -2074,6 +2081,7 @@ var WindowListener_115 = class extends ExtensionCommon.ExtensionAPI {
                 break;
               }
             }
+            delete managerWindow[this.uniqueRandomID];
           }
 
           // Remove tabmonitor

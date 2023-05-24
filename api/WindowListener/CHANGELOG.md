@@ -1,9 +1,14 @@
+Version: 1.59
+-------------
+- store hasAddonManagerEventListeners flag in add-on scope instead on the global
+  window again, and clear it upon add-on removal
+  
 Version: 1.58
 -------------
 - hard fork WindowListener v1.57 implementation and continue to serve it for
   Thunderbird 111 and older
 - WindowListener v1.58 supports injection into nested browsers of the new
-  mailTab front end of Thunderbird Superbova and allows "about:message" and 
+  mailTab front end of Thunderbird Supernova and allows "about:message" and 
   "about:3pane" to be valid injection targets. More information can be found here:
   https://developer.thunderbird.net/thunderbird-development/codebase-overview/mail-front-end
 
