@@ -1,7 +1,6 @@
 var { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm");
 var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
 var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
-var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
 var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
@@ -139,8 +138,7 @@ var gQuicktext = {
 
     this.mSettingsLoaded = true;
 
-    var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).QueryInterface(Components.interfaces.nsIXULRuntime);
-    this.mOS = appInfo.OS;
+    this.mOS = Services.appinfo.OS;
 
     this.mGroup = [];
     this.mTexts = [];
@@ -643,8 +641,7 @@ var gQuicktext = {
   {
     //MDN states, instead of checking if dir exists, just create it and
     //catch error on exist (but it does not even throw)
-    await OS.File.makeDir(aFile.parent.path);
-    await OS.File.writeAtomic(aFile.path, aData, {tmpPath: aFile.path + ".tmp"});
+    await IOUtils.writeUTF8(aFile.path, aData);
   }
 ,
   pickFile: async function(aWindow, aType, aMode, aTitle)

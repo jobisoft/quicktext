@@ -1,6 +1,5 @@
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
-var { OS } = ChromeUtils.import("resource://gre/modules/osfile.jsm");
 
 var quicktext = {
   mChangesMade:         false,
@@ -21,11 +20,10 @@ var quicktext = {
       this.mLoaded = true;
 
       // add OS as attribute to outer dialog
-      document.getElementById('quicktextSettingsWindow').setAttribute("OS", OS.Constants.Sys.Name);
-      console.log("Adding attribute 'OS' = '"+ OS.Constants.Sys.Name +"' to settings dialog element.");
+      document.getElementById('quicktextSettingsWindow').setAttribute("OS", Services.appinfo.OS);
+      console.log("Adding attribute 'OS' = '"+ Services.appinfo.OS +"' to settings dialog element.");
 
-      var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo).QueryInterface(Components.interfaces.nsIXULRuntime);
-      this.mOS = appInfo.OS;
+      this.mOS = Services.appinfo.OS;
 
       gQuicktext.addObserver(this);
       var hasLoadedBefore = !(await gQuicktext.loadSettings(false));
