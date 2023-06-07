@@ -328,6 +328,8 @@ wzQuicktextVar.prototype = {
       {
         if (aVariables[0] == "full")
           value.push(data[i][0] +" ("+ this.niceFileSize(data[i][1]) +")");
+        else if (aVariables[0] == "modified")
+          value.push(data[i][2])
         else
           value.push(data[i][0]);
       }
@@ -637,7 +639,7 @@ wzQuicktextVar.prototype = {
         try {
           var file = fileHandler.getFileFromURLSpec(attachment.url);
           if (file.exists())
-            this.mData['ATT'].data.push([attachment.name, file.fileSize]);
+            this.mData['ATT'].data.push([attachment.name, file.fileSize, file.lastModifiedTime]);
         }
         catch(e)
         {
