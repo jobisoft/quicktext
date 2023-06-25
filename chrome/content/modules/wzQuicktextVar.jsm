@@ -662,7 +662,7 @@ wzQuicktextVar.prototype = {
       return this.mData['INPUT'].data;
 
     // There are two types of input select and text.
-    var promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"].getService(Components.interfaces.nsIPromptService);
+    var promptService = Services.prompt;
     if (aVariables[1] == 'select')
     {
       var checkValue = {};

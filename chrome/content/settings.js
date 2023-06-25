@@ -78,8 +78,7 @@ var quicktext = {
 
     if (this.mChangesMade)
     {
-      promptService = Components.classes["@mozilla.org/embedcomp/prompt-service;1"]
-                                .getService(Components.interfaces.nsIPromptService);
+      promptService = Services.prompt;
       if (promptService)
       {
         result = promptService.confirmEx(window,
