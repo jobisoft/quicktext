@@ -460,7 +460,7 @@ var quicktext = {
         tmpRecipientHeaders[header] = [];
         
         // Create an array of emailaddresses for this header that allready added
-        let tmpEmailAddresses = MailServices.headerParser.parseEncodedHeader(gMsgCompose.compFields[convertHeaderToParse[header]]);
+        let tmpEmailAddresses = MailServices.headerParser.parseEncodedHeaderW(gMsgCompose.compFields[convertHeaderToParse[header]]);
         let emailAddresses = [];
         for (let i = 0; i < tmpEmailAddresses.length; i++)
           emailAddresses.push(tmpEmailAddresses[i].email);
@@ -469,7 +469,7 @@ var quicktext = {
         for (var i = 0; i < recipientHeaders[header].length; i++)
         {
           // Get the mailaddresses of all the addresses
-          let insertedAddresses = MailServices.headerParser.parseEncodedHeader(recipientHeaders[header][i]);
+          let insertedAddresses = MailServices.headerParser.parseEncodedHeaderW(recipientHeaders[header][i]);
           for (var j = 0; j < insertedAddresses.length; j++)
           {
             if (insertedAddresses[j].email && !emailAddresses.includes(insertedAddresses[j].email))

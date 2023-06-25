@@ -941,7 +941,7 @@ getcarddata_from: function(aData, aIdentity)
     };
 
     this.mWindow.Recipients2CompFields(this.mWindow.gMsgCompose.compFields);
-    let emailAddresses = MailServices.headerParser.parseEncodedHeader(this.mWindow.gMsgCompose.compFields.to);
+    let emailAddresses = MailServices.headerParser.parseEncodedHeaderW(this.mWindow.gMsgCompose.compFields.to);
 
     if (emailAddresses.length > 0)
     {
