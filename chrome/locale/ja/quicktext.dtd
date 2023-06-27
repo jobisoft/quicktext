@@ -24,11 +24,11 @@
 <!ENTITY quicktext.scripts.label "スクリプト">
 <!ENTITY quicktext.accesskey.scripts "s">
 
-<!ENTITY quicktext.rightClickSetting.label "コンテキストメニューに Quicktext を表示">
+<!ENTITY quicktext.rightClickSetting.label "コンテキストメニューに Quicktext を表示する">
 <!ENTITY quicktext.collapseSetting.label "グループにテンプレートが1つしか含まれていない時は、グループとして表示しない">
-<!ENTITY quicktext.modifierSetting.label "をキーボードショートカットの修飾キーとして使用します">
+<!ENTITY quicktext.modifierSetting.label "をキーボードショートカットの修飾キーとして使用する">
 <!ENTITY quicktext.shortcutTypeAdv.label "アドバンスモードでショートカットを使用">
-<!ENTITY quicktext.keywordKeySetting.label "をキーワードの起動に使用するキーとして使用します">
+<!ENTITY quicktext.keywordKeySetting.label "をキーワードの起動に使用するキーとして使用する">
 
 <!ENTITY quicktext.altKey.label "Alt">
 <!ENTITY quicktext.controlKey.label "Ctrl">
@@ -63,7 +63,7 @@
 <!ENTITY quicktext.accesskey.addTemplate "l">
 <!ENTITY quicktext.addScript.label "スクリプトを追加">
 <!ENTITY quicktext.accesskey.addScript "a">
-<!ENTITY quicktext.getScript.label "Community Scripts">
+<!ENTITY quicktext.getScript.label "コミュニティスクリプト">
 <!ENTITY quicktext.accesskey.communityScripts "c">
 <!ENTITY quicktext.remove.label "削除">
 <!ENTITY quicktext.accesskey.remove "d">
@@ -97,18 +97,18 @@
 
 <!ENTITY quicktext.other.label "その他">
 <!ENTITY quicktext.clipboard.label "クリップボード">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
-<!ENTITY quicktext.selection.label "Selection">
+<!ENTITY quicktext.header.label "ヘッダー (To, Cc, Bcc)">
+<!ENTITY quicktext.selection.label "選択">
 <!ENTITY quicktext.cursor.label "カーソルの位置">
 <!ENTITY quicktext.subject.label "件名">
 <!ENTITY quicktext.version.label "Thunderbird のバージョン">
-<!ENTITY quicktext.image.label "Embedded HTML image">
-<!ENTITY quicktext.counter.label "Counter">
-<!ENTITY quicktext.input.label "Input value from user prompt">
-<!ENTITY quicktext.orgatt.label "Original attachment info">
-<!ENTITY quicktext.orgheader.label "Original header info">
-<!ENTITY quicktext.url.label "Response from URL">
-<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
+<!ENTITY quicktext.image.label "埋め込みHTML画像">
+<!ENTITY quicktext.counter.label "カウンター">
+<!ENTITY quicktext.input.label "ユーザープロンプトからの入力値">
+<!ENTITY quicktext.orgatt.label "オリジナル添付ファイル情報">
+<!ENTITY quicktext.orgheader.label "オリジナルヘッダー情報">
+<!ENTITY quicktext.url.label "URLからの応答">
+<!ENTITY quicktext.insertfile.label "ファイルの内容（quicktext変数が置き換えられます）">
 
 <!ENTITY quicktext.attachments.label "添付ファイル">
 <!ENTITY quicktext.filename.label "ファイルの名前">
