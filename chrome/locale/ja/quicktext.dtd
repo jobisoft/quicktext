@@ -28,7 +28,7 @@
 <!ENTITY quicktext.collapseSetting.label "グループにテンプレートが1つしか含まれていない時は、グループとして表示しない">
 <!ENTITY quicktext.modifierSetting.label "をキーボードショートカットの修飾キーとして使用する">
 <!ENTITY quicktext.shortcutTypeAdv.label "アドバンスモードでショートカットを使用">
-<!ENTITY quicktext.keywordKeySetting.label "をキーワードの起動に使用するキーとして使用する">
+<!ENTITY quicktext.keywordKeySetting.label "をキーワードの起動に使用する">
 
 <!ENTITY quicktext.altKey.label "Alt">
 <!ENTITY quicktext.controlKey.label "Ctrl">
