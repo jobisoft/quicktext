@@ -17,23 +17,17 @@
             "type": "any",
             "description": "Value of the preference."
           }
+        ],
+        "extraParameters": [
+          {
+            "name": "branch",
+            "description": "The branch to observe.",
+            "type": "string"
+          }
         ]
       }
     ],
     "functions": [
-      {
-        "name": "setObservingBranch",
-        "type": "function",
-        "async": true,
-        "description": "Set the branch which onChanged should be sensitive for.",
-        "parameters": [
-          {
-            "name": "aBranch",
-            "type": "string",
-            "description": "Name of the branch to observe."
-          }
-        ]
-      },
       {
         "name": "getUserPref",
         "type": "function",
@@ -60,7 +54,7 @@
           },
           {
             "name": "aFallback",
-            "type": "string",
+            "type": "any",
             "description": "Value to be returned, if the requested preference does not exist.",
             "optional": true,
             "default": null

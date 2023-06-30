@@ -2,22 +2,31 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
- * Version: 1.7
- * add onChanged event
+ * Version 1.10
+ * - adjusted to Thunderbird Supernova (Services is now in globalThis)
  *
- * Version: 1.6
- * add setDefaultPref()
+ * Version 1.9
+ * - fixed fallback issue reported by Axel Grude
  *
- * Version: 1.5
- * replace set/getCharPref by set/getStringPref to fix encoding issue
+ * Version 1.8
+ * - reworked onChanged event to allow registering multiple branches
  *
- * Version: 1.4
+ * Version 1.7
+ * - add onChanged event
+ *
+ * Version 1.6
+ * - add setDefaultPref()
+ *
+ * Version 1.5
+ * - replace set/getCharPref by set/getStringPref to fix encoding issue
+ *
+ * Version 1.4
  * - setPref() function returns true if the value could be set, otherwise false
  *
- * Version: 1.3
+ * Version 1.3
  * - add setPref() function
  *
- * Version: 1.2
+ * Version 1.2
  * - add getPref() function
  *
  * Author: John Bieling (john@thunderbird.net)
@@ -30,111 +39,123 @@
 var { ExtensionCommon } = ChromeUtils.import(
   "resource://gre/modules/ExtensionCommon.jsm"
 );
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var { ExtensionUtils } = ChromeUtils.import(
+  "resource://gre/modules/ExtensionUtils.jsm"
+);
+var { ExtensionError } = ExtensionUtils;
+
+var Services = globalThis.Services || 
+  ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
+
 
 var LegacyPrefs = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
-    let self = this;
 
-    this.getLegacyPref = async function (
-      aName,
-      aFallback = null,
-      userPrefOnly = true
-    ) {
-      let prefType = Services.prefs.getPrefType(aName);
-      if (prefType == Services.prefs.PREF_INVALID) {
-        return aFallback;
+    class LegacyPrefsManager {
+      constructor() {
+        this.observedBranches = new Map();
+        this.QueryInterface = ChromeUtils.generateQI([
+          "nsIObserver",
+          "nsISupportsWeakReference",
+        ])
       }
 
-      let value = aFallback;
-      if (!userPrefOnly || Services.prefs.prefHasUserValue(aName)) {
-        switch (prefType) {
-          case Services.prefs.PREF_STRING:
-            value = Services.prefs.getStringPref(aName, aFallback);
-            break;
-
-          case Services.prefs.PREF_INT:
-            value = Services.prefs.getIntPref(aName, aFallback);
-            break;
-
-          case Services.prefs.PREF_BOOL:
-            value = Services.prefs.getBoolPref(aName, aFallback);
-            break;
-
-          default:
-            console.error(
-              `Legacy preference <${aName}> has an unknown type of <${prefType}>.`
-            );
-        }
+      addObservedBranch(branch, fire) {
+        return this.observedBranches.set(branch, fire);
       }
-      return value;
-    };
 
-    this.observerTracker = null;
-    this.observing = false;
-    this.observedBranch = null;
-    this.observer = {
+      hasObservedBranch(branch) {
+        return this.observedBranches.has(branch);
+      }
+
+      removeObservedBranch(branch) {
+        return this.observedBranches.delete(branch);
+      }
+
       async observe(aSubject, aTopic, aData) {
         if (aTopic == "nsPref:changed") {
-          let name = aData.substr(self.observedBranch.length);
-          let value = await self.getLegacyPref(aData);
-          self.observerTracker(name, value);
+          let branch = [...this.observedBranches.keys()]
+            .reduce(
+              (p, c) => aData.startsWith(c) && (!p || c.length > p.length) ? c : p,
+              null
+            );
+          if (branch) {
+            let name = aData.substr(branch.length);
+            let value = await this.getLegacyPref(aData);
+            let fire = this.observedBranches.get(branch);
+            fire(name, value);
+          }
         }
-      },
-      QueryInterface: ChromeUtils.generateQI([
-        "nsIObserver",
-        "nsISupportsWeakReference",
-      ]),
-    };
+      }
+
+      async getLegacyPref(
+        aName,
+        aFallback = null,
+        userPrefOnly = true
+      ) {
+        let prefType = Services.prefs.getPrefType(aName);
+        if (prefType == Services.prefs.PREF_INVALID) {
+          return aFallback;
+        }
+
+        let value = aFallback;
+        if (!userPrefOnly || Services.prefs.prefHasUserValue(aName)) {
+          switch (prefType) {
+            case Services.prefs.PREF_STRING:
+              value = Services.prefs.getStringPref(aName, aFallback);
+              break;
+
+            case Services.prefs.PREF_INT:
+              value = Services.prefs.getIntPref(aName, aFallback);
+              break;
+
+            case Services.prefs.PREF_BOOL:
+              value = Services.prefs.getBoolPref(aName, aFallback);
+              break;
+
+            default:
+              console.error(
+                `Legacy preference <${aName}> has an unknown type of <${prefType}>.`
+              );
+          }
+        }
+        return value;
+      }
+    }
+
+    let legacyPrefsManager = new LegacyPrefsManager();
 
     return {
       LegacyPrefs: {
         onChanged: new ExtensionCommon.EventManager({
           context,
           name: "LegacyPrefs.onChanged",
-          register: (fire) => {
-            if (self.observing)
-              throw new Error("Only one onChanged observer allowed.");
-
-            if (!self.observedBranch)
-              throw new Error(
-                "Please call setObservingBranch() before using the onChanged event"
-              );
-
-            self.observing = true;
-            self.observerTracker = fire.sync;
+          register: (fire, branch) => {
+            if (legacyPrefsManager.hasObservedBranch(branch)) {
+              throw new ExtensionError(`Cannot add more than one listener for branch "${branch}".`)
+            }
+            legacyPrefsManager.addObservedBranch(branch, fire.sync);
             Services.prefs
               .getBranch(null)
-              .addObserver(self.observedBranch, self.observer);
+              .addObserver(branch, legacyPrefsManager);
             return () => {
               Services.prefs
                 .getBranch(null)
-                .removeObserver(this.observedBranch, this.observer);
-              self.observerTracker = null;
-              self.observing = false;
+                .removeObserver(branch, legacyPrefsManager);
+              legacyPrefsManager.removeObservedBranch(branch);
             };
           },
         }).api(),
 
-        setObservingBranch: function (observeBranch) {
-          // This implementation only supports one observer
-          if (self.observing)
-            throw new Error(
-              "Already observing, cannot change observed branch."
-            );
-          if (!observeBranch) throw new Error("Invalid branch value.");
-          self.observedBranch = observeBranch;
-        },
-
         // only returns something, if a user pref value is set
         getUserPref: async function (aName) {
-          return await self.getLegacyPref(aName);
+          return await legacyPrefsManager.getLegacyPref(aName);
         },
 
         // returns the default value, if no user defined value exists,
         // and returns the fallback value, if the preference does not exist
         getPref: async function (aName, aFallback = null) {
-          return await self.getLegacyPref(aName, aFallback, false);
+          return await legacyPrefsManager.getLegacyPref(aName, aFallback, false);
         },
 
         clearUserPref: function (aName) {

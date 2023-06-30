@@ -1,4 +1,4 @@
-// Set this to the ID of your add-on.
+// Set this to the ID of your add-on, or call notifyTools.setAddonID().
 const ADDON_ID = "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}";
 
 /*
@@ -8,7 +8,17 @@ const ADDON_ID = "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}";
  * For usage descriptions, please check:
  * https://github.com/thundernest/addon-developer-support/tree/master/scripts/notifyTools
  *
- * Version: 1.3
+ * Version 1.6
+ * - adjusted to Thunderbird Supernova (Services is now in globalThis)
+ *
+ * Version 1.5
+ * - deprecate enable(), disable() and registerListener()
+ * - add setAddOnId()
+ *
+ * Version 1.4
+ * - auto enable/disable
+ *
+ * Version 1.3
  * - registered listeners for notifyExperiment can return a value
  * - remove WindowListener from name of observer
  *
@@ -19,21 +29,30 @@ const ADDON_ID = "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}";
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var Services = globalThis.Services || 
+  ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
 
 var notifyTools = {
   registeredCallbacks: {},
   registeredCallbacksNextId: 1,
+  addOnId: ADDON_ID,
+
+  setAddOnId: function (addOnId) {
+    this.addOnId = addOnId;
+  },
 
   onNotifyExperimentObserver: {
     observe: async function (aSubject, aTopic, aData) {
-      if (ADDON_ID == "") {
+      if (notifyTools.addOnId == "") {
         throw new Error("notifyTools: ADDON_ID is empty!");
       }
-      if (aData != ADDON_ID) {
+      if (aData != notifyTools.addOnId) {
         return;
       }
       let payload = aSubject.wrappedJSObject;
+
+      // Make sure payload has a resolve function, which we use to resolve the
+      // observer notification.
       if (payload.resolve) {
         let observerTrackerPromises = [];
         // Push listener into promise array, so they can run in parallel
@@ -61,17 +80,26 @@ var notifyTools = {
           payload.resolve(results[0]);
         }
       } else {
-        // Just call the listener.
+        // Older version of NotifyTools, which is not sending a resolve function, deprecated.
+        console.log("Please update the notifyTools API to at least v1.5");
         for (let registeredCallback of Object.values(
           notifyTools.registeredCallbacks
         )) {
           registeredCallback(payload.data);
         }
-      }    
+      }
     },
   },
 
-  registerListener: function (listener) {
+  addListener: function (listener) {
+    if (Object.values(this.registeredCallbacks).length == 0) {
+      Services.obs.addObserver(
+        this.onNotifyExperimentObserver,
+        "NotifyExperimentObserver",
+        false
+      );
+    }
+
     let id = this.registeredCallbacksNextId++;
     this.registeredCallbacks[id] = listener;
     return id;
@@ -79,50 +107,61 @@ var notifyTools = {
 
   removeListener: function (id) {
     delete this.registeredCallbacks[id];
+    if (Object.values(this.registeredCallbacks).length == 0) {
+      Services.obs.removeObserver(
+        this.onNotifyExperimentObserver,
+        "NotifyExperimentObserver"
+      );
+    }
+  },
+
+  removeAllListeners: function () {
+    if (Object.values(this.registeredCallbacks).length != 0) {
+      Services.obs.removeObserver(
+        this.onNotifyExperimentObserver,
+        "NotifyExperimentObserver"
+      );
+    }
+    this.registeredCallbacks = {};
   },
 
   notifyBackground: function (data) {
-    if (ADDON_ID == "") {
+    if (this.addOnId == "") {
       throw new Error("notifyTools: ADDON_ID is empty!");
     }
     return new Promise((resolve) => {
       Services.obs.notifyObservers(
         { data, resolve },
         "NotifyBackgroundObserver",
-        ADDON_ID
+        this.addOnId
       );
     });
   },
-  
-  enable: function() {
-    Services.obs.addObserver(
-      this.onNotifyExperimentObserver,
-      "NotifyExperimentObserver",
-      false
-    );
+
+
+  // Deprecated.
+
+  enable: function () {
+    console.log("Manually calling notifyTools.enable() is no longer needed.");
   },
 
-  disable: function() {
-    Services.obs.removeObserver(
-      this.onNotifyExperimentObserver,
-      "NotifyExperimentObserver"
-    );
+  disable: function () {
+    console.log("notifyTools.disable() has been deprecated, use notifyTools.removeAllListeners() instead.");
+    this.removeAllListeners();
   },
+
+  registerListener: function (listener) {
+    console.log("notifyTools.registerListener() has been deprecated, use notifyTools.addListener() instead.");
+    this.addListener(listener);
+  },
+
 };
-
 
 if (typeof window != "undefined" && window) {
   window.addEventListener(
-    "load",
+    "unload",
     function (event) {
-      notifyTools.enable();
-      window.addEventListener(
-        "unload",
-        function (event) {
-          notifyTools.disable();
-        },
-        false
-      );
+      notifyTools.removeAllListeners();
     },
     false
   );
