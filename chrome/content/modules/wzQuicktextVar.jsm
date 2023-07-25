@@ -743,11 +743,11 @@ wzQuicktextVar.prototype = {
         // Text templates: request clipboard content as plain text only
         if(clipboardHTMLfilled == 0)
         {
-          trans.addDataFlavor("text/unicode");
+          trans.addDataFlavor("text/plain");
           clip.getData(trans, clip.kGlobalClipboard);
           var clipboard = {};
           try {
-            trans.getTransferData("text/unicode", clipboard);
+            trans.getTransferData("text/plain", clipboard);
             if (clipboard)
             {
               clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
