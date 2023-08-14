@@ -1,27 +1,26 @@
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
+var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
 
 var quicktext = {
-  mChangesMade:         false,
-  mTextChangesMade:     [],
-  mScriptChangesMade:   [],
-  mGeneralChangesMade:  [],
-  mLoaded:              false,
-  mTreeArray:           [],
-  mCollapseState:       [],
-  mScriptIndex:         null,
-  mPickedIndex:         null,
-  mOS:                  "WINNT"
-,
-  init: async function()
-  {
-    if (!this.mLoaded)
-    {
+  mChangesMade: false,
+  mTextChangesMade: [],
+  mScriptChangesMade: [],
+  mGeneralChangesMade: [],
+  mLoaded: false,
+  mTreeArray: [],
+  mCollapseState: [],
+  mScriptIndex: null,
+  mPickedIndex: null,
+  mOS: "WINNT"
+  ,
+  init: async function () {
+    if (!this.mLoaded) {
       this.mLoaded = true;
 
       // add OS as attribute to outer dialog
       document.getElementById('quicktextSettingsWindow').setAttribute("OS", Services.appinfo.OS);
-      console.log("Adding attribute 'OS' = '"+ Services.appinfo.OS +"' to settings dialog element.");
+      console.log("Adding attribute 'OS' = '" + Services.appinfo.OS + "' to settings dialog element.");
 
       this.mOS = Services.appinfo.OS;
 
@@ -29,22 +28,19 @@ var quicktext = {
       var hasLoadedBefore = !(await gQuicktext.loadSettings(false));
 
       var states = gQuicktext.collapseState;
-      if (states != "")
-      {
+      if (states != "") {
         states = states.split(/;/);
         for (var i = 0; i < states.length; i++)
           this.mCollapseState[i] = (states[i] == "1");
       }
 
       var groupLength = gQuicktext.getGroupLength(true);
-      if (states.length < groupLength)
-      {
+      if (states.length < groupLength) {
         for (var i = states.length; i < groupLength; i++)
           this.mCollapseState[i] = true;
       }
 
-      if (hasLoadedBefore)
-      {
+      if (hasLoadedBefore) {
         gQuicktext.startEditing();
         this.updateGUI();
       }
@@ -52,15 +48,14 @@ var quicktext = {
       // window.resizeTo(gQuicktext.getSettingsWindowSize(0), gQuicktext.getSettingsWindowSize(1));
       document.getElementById('tabbox-main').selectedIndex = 1;
 
-      document.getElementById('text-keyword').addEventListener("keypress", function(e) { quicktext.noSpaceForKeyword(e); }, false);
+      document.getElementById('text-keyword').addEventListener("keypress", function (e) { quicktext.noSpaceForKeyword(e); }, false);
 
       this.disableSave();
-      document.documentElement.getButton("extra1").addEventListener("command", function(e) { quicktext.save(); }, false);
+      document.documentElement.getButton("extra1").addEventListener("command", function (e) { quicktext.save(); }, false);
     }
   }
-,
-  unload: function()
-  {
+  ,
+  unload: function () {
     gQuicktext.removeObserver(this);
 
     var states = [];
@@ -68,29 +63,25 @@ var quicktext = {
       states[i] = (this.mCollapseState[i]) ? "1" : "";
     gQuicktext.collapseState = states.join(";");
 
-    document.getElementById('text-keyword').removeEventListener("keypress", function(e) { quicktext.noSpaceForKeyword(e); }, false);
+    document.getElementById('text-keyword').removeEventListener("keypress", function (e) { quicktext.noSpaceForKeyword(e); }, false);
   }
-,
-  close: function(aClose)
-  {
+  ,
+  close: function (aClose) {
     this.saveText();
     this.saveScript();
 
-    if (this.mChangesMade)
-    {
+    if (this.mChangesMade) {
       promptService = Services.prompt;
-      if (promptService)
-      {
+      if (promptService) {
         result = promptService.confirmEx(window,
-                                         gQuicktext.mStringBundle.GetStringFromName("saveMessageTitle"),
-                                         gQuicktext.mStringBundle.GetStringFromName("saveMessage"),
-                                         (promptService.BUTTON_TITLE_SAVE * promptService.BUTTON_POS_0) +
-                                         (promptService.BUTTON_TITLE_CANCEL * promptService.BUTTON_POS_1) +
-                                         (promptService.BUTTON_TITLE_DONT_SAVE * promptService.BUTTON_POS_2),
-                                         null, null, null,
-                                         null, {value:0});
-        switch (result)
-        {
+          gQuicktext.mStringBundle.GetStringFromName("saveMessageTitle"),
+          gQuicktext.mStringBundle.GetStringFromName("saveMessage"),
+          (promptService.BUTTON_TITLE_SAVE * promptService.BUTTON_POS_0) +
+          (promptService.BUTTON_TITLE_CANCEL * promptService.BUTTON_POS_1) +
+          (promptService.BUTTON_TITLE_DONT_SAVE * promptService.BUTTON_POS_2),
+          null, null, null,
+          null, { value: 0 });
+        switch (result) {
           // Cancel
           case 1:
             return false;
@@ -110,9 +101,8 @@ var quicktext = {
 
     return true;
   }
-,
-  save: function()
-  {
+  ,
+  save: function () {
     this.saveText();
     this.saveScript();
 
@@ -136,23 +126,19 @@ var quicktext = {
     this.mScriptChangesMade = [];
     this.mGeneralChangesMade = [];
     this.disableSave();
-    this.updateGUI();    
+    this.updateGUI();
   }
-,
-  shortcutTypeAdv: function()
-  {
+  ,
+  shortcutTypeAdv: function () {
     if (this.mOS.substr(0, 3).toLowerCase() == "mac" || (this.mOS.substr(0, 3).toLowerCase() == "win" && document.getElementById('select-shortcutModifier').value == "alt"))
       return false;
 
     return document.getElementById('checkbox-shortcutTypeAdv').checked;
   }
-,
-  saveText: function()
-  {
-    if (this.mPickedIndex != null)
-    {
-      if (this.mPickedIndex[1] > -1)
-      {
+  ,
+  saveText: function () {
+    if (this.mPickedIndex != null) {
+      if (this.mPickedIndex[1] > -1) {
         var title = document.getElementById('text-title').value;
         if (title.replace(/[\s]/g, '') == "")
           title = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
@@ -170,8 +156,7 @@ var quicktext = {
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'subject', document.getElementById('text-subject').value);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'attachments', document.getElementById('text-attachments').value);
       }
-      else
-      {
+      else {
         var title = document.getElementById('text-title').value;
         if (title.replace(/[\s]/g, '') == "")
           title = gQuicktext.mStringBundle.GetStringFromName("newGroup");
@@ -180,12 +165,10 @@ var quicktext = {
       }
     }
   }
-,
-  saveTextCell: function (aGroupIndex, aTextIndex, aColumn, aValue)
-  {
+  ,
+  saveTextCell: function (aGroupIndex, aTextIndex, aColumn, aValue) {
     var text = gQuicktext.getText(aGroupIndex, aTextIndex, true);
-    if (typeof text[aColumn] != "undefined" && text[aColumn] != aValue)
-    {
+    if (typeof text[aColumn] != "undefined" && text[aColumn] != aValue) {
       text[aColumn] = aValue;
 
       this.changesMade();
@@ -193,12 +176,10 @@ var quicktext = {
     }
     return false;
   }
-,
-  saveGroupCell: function (aGroupIndex, aColumn, aValue)
-  {
+  ,
+  saveGroupCell: function (aGroupIndex, aColumn, aValue) {
     var group = gQuicktext.getGroup(aGroupIndex, true);
-    if (typeof group[aColumn] != "undefined" && group[aColumn] != aValue)
-    {
+    if (typeof group[aColumn] != "undefined" && group[aColumn] != aValue) {
       group[aColumn] = aValue;
 
       this.changesMade();
@@ -206,11 +187,9 @@ var quicktext = {
     }
     return false;
   }
-,
-  saveScript: function()
-  {
-    if (this.mScriptIndex != null)
-    {
+  ,
+  saveScript: function () {
+    if (this.mScriptIndex != null) {
       var title = document.getElementById('script-title').value;
       if (title.replace(/[\s]/g, '') == "")
         title = gQuicktext.mStringBundle.GetStringFromName("newScript");
@@ -219,35 +198,30 @@ var quicktext = {
       this.saveScriptCell(this.mScriptIndex, 'script', document.getElementById('script').value);
     }
   }
-,
-  saveScriptCell: function (aIndex, aColumn, aValue)
-  {
+  ,
+  saveScriptCell: function (aIndex, aColumn, aValue) {
     var script = gQuicktext.getScript(aIndex, true);
-    if (typeof script[aColumn] != "undefined" && script[aColumn] != aValue)
-    {
+    if (typeof script[aColumn] != "undefined" && script[aColumn] != aValue) {
       script[aColumn] = aValue;
-      
+
 
       this.changesMade();
       return true;
     }
     return false;
   }
-,
-  noSpaceForKeyword: function(e)
-  {
-    if (e.charCode == KeyEvent.DOM_VK_SPACE)
-    {
+  ,
+  noSpaceForKeyword: function (e) {
+    if (e.charCode == KeyEvent.DOM_VK_SPACE) {
       e.stopPropagation();
       e.preventDefault();
     }
   }
-,
-  checkForGeneralChanges: function(aIndex)
-  {
-    var ids =   ['checkbox-viewPopup', 'checkbox-collapseGroup', 'select-shortcutModifier', 'checkbox-shortcutTypeAdv', 'select-keywordKey', 'text-defaultImport'];
-    var type =  ['checked', 'checked', 'value', 'checked', 'value', 'value'];
-    var keys =  ['viewPopup', 'collapseGroup', 'shortcutModifier', 'shortcutTypeAdv', 'keywordKey', 'defaultImport'];
+  ,
+  checkForGeneralChanges: function (aIndex) {
+    var ids = ['checkbox-viewPopup', 'checkbox-collapseGroup', 'select-shortcutModifier', 'checkbox-shortcutTypeAdv', 'select-keywordKey', 'text-defaultImport'];
+    var type = ['checked', 'checked', 'value', 'checked', 'value', 'value'];
+    var keys = ['viewPopup', 'collapseGroup', 'shortcutModifier', 'shortcutTypeAdv', 'keywordKey', 'defaultImport'];
 
     if (typeof ids[aIndex] == 'undefined')
       return;
@@ -259,9 +233,8 @@ var quicktext = {
     else
       this.noGeneralChangeMade(aIndex);
   }
-,
-  checkForTextChanges: function(aIndex)
-  {
+  ,
+  checkForTextChanges: function (aIndex) {
     if (!this.mPickedIndex)
       return;
 
@@ -272,8 +245,7 @@ var quicktext = {
       ids[2] = 'text-shortcutAdv';
 
     var value = document.getElementById(ids[aIndex]).value;
-    switch (aIndex)
-    {
+    switch (aIndex) {
       case 0:
         if (value.replace(/[\s]/g, '') == "")
           if (this.mPickedIndex[1] > -1)
@@ -282,8 +254,7 @@ var quicktext = {
             value = gQuicktext.mStringBundle.GetStringFromName("newGroup");
         break;
       case 2:
-        if (this.shortcutTypeAdv())
-        {
+        if (this.shortcutTypeAdv()) {
           value = value.replace(/[^\d]/g, '');
           document.getElementById(ids[aIndex]).value = value;
         }
@@ -293,39 +264,33 @@ var quicktext = {
         break;
     }
 
-    if (this.mPickedIndex[1] > -1)
-    {
+    if (this.mPickedIndex[1] > -1) {
       if (gQuicktext.getText(this.mPickedIndex[0], this.mPickedIndex[1], true)[keys[aIndex]] != value)
         this.textChangeMade(aIndex);
       else
         this.noTextChangeMade(aIndex);
     }
-    else
-    {
+    else {
       if (gQuicktext.getGroup(this.mPickedIndex[0], true)[keys[aIndex]] != value)
         this.textChangeMade(aIndex);
       else
         this.noTextChangeMade(aIndex);
     }
 
-    if (aIndex == 0 || aIndex == 2)
-    {
+    if (aIndex == 0 || aIndex == 2) {
       var selectedIndex = document.getElementById('group-tree').view.selection.currentIndex;
-      if (aIndex == 0)
-      {
+      if (aIndex == 0) {
         this.mTreeArray[selectedIndex][6] = value;
       }
-      else
-      {
+      else {
         this.mTreeArray[selectedIndex][7] = value;
       }
       document.getElementById('group-tree').invalidateRow(selectedIndex);
       this.updateVariableGUI();
     }
   }
-,
-  checkForScriptChanges: function(aIndex)
-  {
+  ,
+  checkForScriptChanges: function (aIndex) {
     if (this.mScriptIndex == null)
       return;
 
@@ -333,8 +298,7 @@ var quicktext = {
     var keys = ['name', 'script'];
 
     var value = document.getElementById(ids[aIndex]).value;
-    switch (aIndex)
-    {
+    switch (aIndex) {
       case 0:
         if (value.replace(/[\s]/g, '') == "")
           value = gQuicktext.mStringBundle.GetStringFromName("newScript");
@@ -346,122 +310,106 @@ var quicktext = {
     else
       this.noScriptChangeMade(aIndex);
 
-    if (aIndex == 0)
-    {
+    if (aIndex == 0) {
       this.updateVariableGUI();
       var listItem = document.getElementById('script-list').getItemAtIndex(this.mScriptIndex);
       listItem.firstChild.value = value;
     }
   }
-,
-  changesMade: function()
-  {
+  ,
+  changesMade: function () {
     this.mChangesMade = true;
     this.enableSave();
   }
-,
-  anyChangesMade: function()
-  {
+  ,
+  anyChangesMade: function () {
     if (this.textChangesMade() || this.scriptChangesMade() || this.generalChangesMade())
       return true;
 
     return false;
   }
-,
-  generalChangesMade: function()
-  {
-    for (var i = 0; i < this.mGeneralChangesMade.length; i++)
-    {
+  ,
+  generalChangesMade: function () {
+    for (var i = 0; i < this.mGeneralChangesMade.length; i++) {
       if (typeof this.mGeneralChangesMade[i] != "undefined" && this.mGeneralChangesMade[i] == true)
         return true;
     }
 
     return false;
   }
-,
-  generalChangeMade: function(aIndex)
-  {
+  ,
+  generalChangeMade: function (aIndex) {
     this.enableSave();
 
     this.mGeneralChangesMade[aIndex] = true;
   }
-,
-  noGeneralChangeMade: function(aIndex)
-  {
+  ,
+  noGeneralChangeMade: function (aIndex) {
     this.mGeneralChangesMade[aIndex] = false;
 
     if (!this.mChangesMade && !this.anyChangesMade())
       this.disableSave();
   }
-,
-  textChangesMade: function()
-  {
-    for (var i = 0; i < this.mTextChangesMade.length; i++)
-    {
+  ,
+  textChangesMade: function () {
+    for (var i = 0; i < this.mTextChangesMade.length; i++) {
       if (typeof this.mTextChangesMade[i] != "undefined" && this.mTextChangesMade[i] == true)
         return true;
     }
 
     return false;
   }
-,
-  textChangeMade: function(aIndex)
-  {
+  ,
+  textChangeMade: function (aIndex) {
     this.enableSave();
 
     this.mTextChangesMade[aIndex] = true;
   }
-,
-  noTextChangeMade: function(aIndex)
-  {
+  ,
+  noTextChangeMade: function (aIndex) {
     this.mTextChangesMade[aIndex] = false;
 
     if (!this.mChangesMade && !this.anyChangesMade())
       this.disableSave();
   }
-,
-  scriptChangesMade: function()
-  {
-    for (var i = 0; i < this.mScriptChangesMade.length; i++)
-    {
+  ,
+  scriptChangesMade: function () {
+    for (var i = 0; i < this.mScriptChangesMade.length; i++) {
       if (typeof this.mScriptChangesMade[i] != "undefined" && this.mScriptChangesMade[i] == true)
         return true;
     }
 
     return false;
   }
-,
-  scriptChangeMade: function(aIndex)
-  {
+  ,
+  scriptChangeMade: function (aIndex) {
     this.enableSave();
 
     this.mScriptChangesMade[aIndex] = true;
   }
-,
-  noScriptChangeMade: function(aIndex)
-  {
+  ,
+  noScriptChangeMade: function (aIndex) {
     this.mScriptChangesMade[aIndex] = false;
 
     if (!this.mChangesMade && !this.anyChangesMade())
       this.disableSave();
   }
-,
+  ,
 
   /*
    * GUI CHANGES
    */
-  updateGUI: function()
-  {
+  updateGUI: function () {
 
     // Set the date/time in the variablemenu
     var timeStamp = new Date();
     let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
-    for (let i=0; i < fields.length; i++) {
-        let field = fields[i];
-        let fieldtype = field.split("-")[0];
-        if (document.getElementById(field)) {
-            document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
-        }
+    for (let i = 0; i < fields.length; i++) {
+      let field = fields[i];
+      let fieldtype = field.split("-")[0];
+      if (document.getElementById(field)) {
+        document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
+      }
     }
 
     // Update info in the generalsettings tab
@@ -471,8 +419,7 @@ var quicktext = {
       document.getElementById("checkbox-collapseGroup").checked = gQuicktext.collapseGroup;
     if (document.getElementById("select-shortcutModifier"))
       document.getElementById("select-shortcutModifier").value = gQuicktext.shortcutModifier;
-    if (document.getElementById("checkbox-shortcutTypeAdv"))
-    {
+    if (document.getElementById("checkbox-shortcutTypeAdv")) {
       var elem = document.getElementById("checkbox-shortcutTypeAdv");
       elem.checked = gQuicktext.shortcutTypeAdv;
 
@@ -481,7 +428,7 @@ var quicktext = {
     if (document.getElementById("text-defaultImport"))
       document.getElementById("text-defaultImport").value = gQuicktext.defaultImport;
     if (document.getElementById("select-keywordKey"))
-      document.getElementById("select-keywordKey").value = gQuicktext.keywordKey;    
+      document.getElementById("select-keywordKey").value = gQuicktext.keywordKey;
 
     // Update the variable menu 
     this.updateVariableGUI();
@@ -495,39 +442,34 @@ var quicktext = {
     // Update the remove and add buttons
     this.updateButtonStates();
   }
-,
-  updateVariableGUI: function()
-  {
+  ,
+  updateVariableGUI: function () {
     // Set all other text in the variablemenu
     var topParent = document.getElementById('quicktext-other-texts');
-    for (var i = topParent.childNodes.length-1; i >= 0 ; i--)
+    for (var i = topParent.childNodes.length - 1; i >= 0; i--)
       topParent.removeChild(topParent.childNodes[i]);
 
     var groupLength = gQuicktext.getGroupLength(true);
-    if (groupLength > 0)
-    {
+    if (groupLength > 0) {
       topParent.removeAttribute('hidden');
       parent = document.createXULElement("menupopup");
       parent = topParent.appendChild(parent);
-      for(var i = 0; i < groupLength; i++)
-      {
+      for (var i = 0; i < groupLength; i++) {
         var textLength = gQuicktext.getTextLength(i, true);
-        if (textLength > 0)
-        {
+        if (textLength > 0) {
           var group = gQuicktext.getGroup(i, true);
           var groupElem = document.createXULElement("menu");
           groupElem.setAttribute('label', group.name);
           groupElem = parent.appendChild(groupElem);
-  
+
           groupParent = document.createXULElement("menupopup");
           groupParent = groupElem.appendChild(groupParent);
-          for (var j = 0; j < textLength; j++)
-          {
+          for (var j = 0; j < textLength; j++) {
             var textElem = document.createXULElement("menuitem");
             var text = gQuicktext.getText(i, j, true);
             textElem.setAttribute('label', text.name);
             textElem.setAttribute('group', group.name);
-            textElem.addEventListener("command", function() { quicktext.insertVariable("TEXT="+ this.getAttribute("group") +"|"+ this.getAttribute("label")); });
+            textElem.addEventListener("command", function () { quicktext.insertVariable("TEXT=" + this.getAttribute("group") + "|" + this.getAttribute("label")); });
             textElem = groupParent.appendChild(textElem);
           }
         }
@@ -537,41 +479,36 @@ var quicktext = {
       topParent.setAttribute('hidden', true);
 
     var topParent = document.getElementById('variables-scripts');
-    for (var i = topParent.childNodes.length-1; i >= 0 ; i--)
+    for (var i = topParent.childNodes.length - 1; i >= 0; i--)
       topParent.removeChild(topParent.childNodes[i]);
 
     var scriptLength = gQuicktext.getScriptLength(true);
-    if (scriptLength > 0)
-    {
+    if (scriptLength > 0) {
       topParent.removeAttribute('hidden');
       parent = document.createXULElement("menupopup");
       parent = topParent.appendChild(parent);
 
-      for (var i = 0; i < scriptLength; i++)
-      {
+      for (var i = 0; i < scriptLength; i++) {
         var script = gQuicktext.getScript(i, true);
         var textElem = document.createXULElement("menuitem");
         textElem.setAttribute('label', script.name);
-        textElem.addEventListener("command", function() { quicktext.insertVariable("SCRIPT="+ this.getAttribute("label")); });
+        textElem.addEventListener("command", function () { quicktext.insertVariable("SCRIPT=" + this.getAttribute("label")); });
         textElem = parent.appendChild(textElem);
       }
     }
     else
       topParent.setAttribute('hidden', true);
   }
-,
-  disableShortcuts: function(aShortcut)
-  {
+  ,
+  disableShortcuts: function (aShortcut) {
     var grouplist = document.getElementById('popup-shortcutBasic');
     for (var i = 0; i <= 10; i++)
       grouplist.childNodes[i].removeAttribute("disabled");
 
     var groupLength = gQuicktext.getGroupLength(true);
-    for (var i = 0; i < groupLength; i++)
-    {
+    for (var i = 0; i < groupLength; i++) {
       var textLength = gQuicktext.getTextLength(i, true);
-      for (var j = 0; j < textLength; j++)
-      {
+      for (var j = 0; j < textLength; j++) {
         var shortcut = gQuicktext.getText(i, j, true).shortcut;
         var selectedIndex = (shortcut == "0") ? 10 : shortcut;
         if (shortcut != "" && shortcut != aShortcut && grouplist.childNodes[selectedIndex])
@@ -579,26 +516,23 @@ var quicktext = {
       }
     }
   }
-,
+  ,
 
-  disableSave: function()
-  {
+  disableSave: function () {
     document.documentElement.getButton("extra1").setAttribute("disabled", true);
     document.getElementById("toolbar-save").setAttribute("disabled", true);
   }
-,
+  ,
 
-  enableSave: function()
-  {
+  enableSave: function () {
     document.documentElement.getButton("extra1").removeAttribute("disabled");
     document.getElementById("toolbar-save").removeAttribute("disabled");
   }
-,
+  ,
   /*
    * INSERT VARIABLES
    */
-  insertVariable: function(aStr)
-  {
+  insertVariable: function (aStr) {
     var textbox = document.getElementById("text-subject");
     if (!textbox.getAttribute("focused"))
       var textbox = document.getElementById("text");
@@ -607,43 +541,38 @@ var quicktext = {
     var selEnd = textbox.selectionEnd;
     var selLength = textbox.textLength;
 
-    var s1 = (textbox.value).substring(0,selStart);
+    var s1 = (textbox.value).substring(0, selStart);
     var s2 = (textbox.value).substring(selEnd, selLength)
     textbox.value = s1 + "[[" + aStr + "]]" + s2;
 
     var selNewStart = selStart + 4 + aStr.length;
     textbox.setSelectionRange(selNewStart, selNewStart);
-    this.enableSave();    
+    this.enableSave();
   }
-,
-  insertFileVariable: async function()
-  {
+  ,
+  insertFileVariable: async function () {
     if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
-      this.enableSave();
+    this.enableSave();
   }
-,
-  insertImageVariable: async function()
-  {
+  ,
+  insertImageVariable: async function () {
     if ((file = await gQuicktext.pickFile(window, 4, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
       this.insertVariable('IMAGE=' + file.path);
-      this.enableSave();
+    this.enableSave();
   }
-,
+  ,
 
   /*
    * IMPORT/EXPORT FUNCTIONS
    */
-  exportTemplatesToFile: async function()
-  {
+  exportTemplatesToFile: async function () {
     if ((file = await gQuicktext.pickFile(window, 3, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportTemplatesToFile(file);
   }
-,
-  importTemplatesFromFile: async function()
-  {
-    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
-    {
+  ,
+  importTemplatesFromFile: async function () {
+    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null) {
       this.saveText();
       this.saveScript();
 
@@ -652,21 +581,18 @@ var quicktext = {
 
       this.changesMade();
       this.makeTreeArray();
-      document.getElementById('group-tree').rowCountChanged(length-1, this.mTreeArray.length-length);
+      document.getElementById('group-tree').rowCountChanged(length - 1, this.mTreeArray.length - length);
       this.updateButtonStates();
     }
   }
-,
-  exportScriptsToFile: async function()
-  {
+  ,
+  exportScriptsToFile: async function () {
     if ((file = await gQuicktext.pickFile(window, 3, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
       gQuicktext.exportScriptsToFile(file);
   }
-,
-  importScriptsFromFile: async function()
-  {
-    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null)
-    {
+  ,
+  importScriptsFromFile: async function () {
+    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null) {
       this.saveText();
       this.saveScript();
 
@@ -677,27 +603,23 @@ var quicktext = {
       this.updateButtonStates();
     }
   }
-,
-  browseAttachment: async function()
-  {
-    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("attachmentFile"))) != null)
-    {
+  ,
+  browseAttachment: async function () {
+    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("attachmentFile"))) != null) {
       var filePath = file.path;
       var attachments = document.getElementById('text-attachments').value;
       if (attachments != "")
-        document.getElementById('text-attachments').value = attachments +";"+ filePath;
+        document.getElementById('text-attachments').value = attachments + ";" + filePath;
       else
         document.getElementById('text-attachments').value = filePath;
       this.checkForTextChanges(6);
     }
   }
-,
-  pickScript: function()
-  {
+  ,
+  pickScript: function () {
     var index = document.getElementById('script-list').value;
 
-    if (index == null)
-    {
+    if (index == null) {
       document.getElementById('script-title').value = "";
       document.getElementById('script').value = "";
       this.mScriptIndex = null;
@@ -708,10 +630,8 @@ var quicktext = {
     document.getElementById('script').hidden = false;
 
 
-    if (this.mScriptIndex != index)
-    {
-      if (this.scriptChangesMade())
-      {
+    if (this.mScriptIndex != index) {
+      if (this.scriptChangesMade()) {
         this.changesMade();
         this.mScriptChangesMade = [];
       }
@@ -722,25 +642,23 @@ var quicktext = {
 
     var script = gQuicktext.getScript(index, true);
     let disabled = (script.type == 1);
-    
+
     document.getElementById('script-title').value = script.name;
     document.getElementById('script').value = script.script;
 
     document.getElementById('script-title').disabled = disabled;
     document.getElementById('script').disabled = disabled;
-    
+
     if (disabled)
-      document.getElementById('script-button-remove').setAttribute("disabled", true);    
+      document.getElementById('script-button-remove').setAttribute("disabled", true);
     else
       document.getElementById('script-button-remove').removeAttribute("disabled");
   }
-,
-  pickText: function()
-  {
+  ,
+  pickText: function () {
     var index = document.getElementById('group-tree').view.selection.currentIndex;
 
-    if (!this.mTreeArray[index])
-    {
+    if (!this.mTreeArray[index]) {
       document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("group");
       document.getElementById('text-title').value = "";
       this.showElement("group", true);
@@ -751,8 +669,7 @@ var quicktext = {
     groupIndex = this.mTreeArray[index][0];
     textIndex = this.mTreeArray[index][1];
 
-    if (this.mPickedIndex && this.textChangesMade())
-    {
+    if (this.mPickedIndex && this.textChangesMade()) {
       this.changesMade();
       this.mTextChangesMade = [];
       this.saveText();
@@ -760,8 +677,7 @@ var quicktext = {
 
     this.mPickedIndex = [groupIndex, textIndex];
 
-    if (textIndex > -1)
-    {
+    if (textIndex > -1) {
       var text = gQuicktext.getText(groupIndex, textIndex, true);
       document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("template");
 
@@ -771,19 +687,17 @@ var quicktext = {
       document.getElementById('text-subject').value = text.subject;
       document.getElementById('text-attachments').value = text.attachments;
 
-      document.getElementById('label-shortcutModifier').value = gQuicktext.mStringBundle.GetStringFromName(document.getElementById('select-shortcutModifier').value +"Key") +"+";
+      document.getElementById('label-shortcutModifier').value = gQuicktext.mStringBundle.GetStringFromName(document.getElementById('select-shortcutModifier').value + "Key") + "+";
 
 
-      if (this.shortcutTypeAdv())
-      {
+      if (this.shortcutTypeAdv()) {
         var elem = document.getElementById('text-shortcutAdv');
         elem.value = text.shortcut;
 
         elem.hidden = false;
         document.getElementById('text-shortcutBasic').hidden = true;
       }
-      else
-      {
+      else {
         var shortcut = text.shortcut;
         var elem = document.getElementById('text-shortcutBasic');
 
@@ -802,8 +716,7 @@ var quicktext = {
       if (!(type > 0)) type = 0;
       document.getElementById('text-type').selectedIndex = type;
     }
-    else
-    {
+    else {
       document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("group");
 
       document.getElementById("text-title").value = gQuicktext.getGroup(groupIndex, true).name;
@@ -814,14 +727,12 @@ var quicktext = {
     }
 
     var disabled = false;
-    if (gQuicktext.getGroup(groupIndex, true).type > 0)
-    {
+    if (gQuicktext.getGroup(groupIndex, true).type > 0) {
       document.getElementById("group-button-remove").setAttribute("disabled", true);
       document.getElementById("group-button-add-text").setAttribute("disabled", true);
       disabled = true;
     }
-    else
-    {
+    else {
       document.getElementById("group-button-remove").removeAttribute("disabled");
       document.getElementById("group-button-add-text").removeAttribute("disabled");
     }
@@ -831,12 +742,10 @@ var quicktext = {
     else
       this.showElement("text", disabled);
   }
-,
-  showElement: function(aType, aDisabled)
-  {
+  ,
+  showElement: function (aType, aDisabled) {
     var elements = document.getElementsByAttribute("candisable", "true");
-    for (var i = 0; i < elements.length; i++)
-    {
+    for (var i = 0; i < elements.length; i++) {
       if (aDisabled)
         elements[i].setAttribute("disabled", true);
       else
@@ -844,12 +753,10 @@ var quicktext = {
     }
 
     var elements = document.getElementsByAttribute("showfor", "*");
-    for (var i = 0; i < elements.length; i++)
-    {
+    for (var i = 0; i < elements.length; i++) {
       var types = elements[i].getAttribute("showfor").split(",");
       var found = false;
-      for (var type = 0; type < types.length; type++)
-      {
+      for (var type = 0; type < types.length; type++) {
         if (types[type] == aType)
           found = true;
       }
@@ -858,15 +765,14 @@ var quicktext = {
         elements[i].hidden = false;
       else
         elements[i].hidden = true;
-    } 
+    }
   }
-,
+  ,
 
   /*
    * Add/Remove groups/templates
    */
-  addGroup: function()
-  {
+  addGroup: function () {
     var title = gQuicktext.mStringBundle.GetStringFromName("newGroup");
     this.saveText();
 
@@ -875,8 +781,8 @@ var quicktext = {
 
     this.makeTreeArray();
     var treeObject = document.getElementById('group-tree');
-    treeObject.rowCountChanged(this.mTreeArray.length-1, 1);
-    treeObject.invalidateRow(this.mTreeArray.length-1);
+    treeObject.rowCountChanged(this.mTreeArray.length - 1, 1);
+    treeObject.invalidateRow(this.mTreeArray.length - 1);
 
     selectedIndex = this.mTreeArray.length - 1;
     this.selectTreeRow(selectedIndex);
@@ -888,9 +794,8 @@ var quicktext = {
     titleElem.focus();
     titleElem.setSelectionRange(0, title.length);
   }
-,
-  addText: function()
-  {
+  ,
+  addText: function () {
     var title = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
     this.saveText();
 
@@ -899,8 +804,7 @@ var quicktext = {
       groupIndex = this.mPickedIndex[0];
 
     var groupLength = gQuicktext.getGroupLength(true);
-    if (groupIndex == -1)
-    {
+    if (groupIndex == -1) {
       if (groupLength == 0)
         return;
       else
@@ -911,15 +815,14 @@ var quicktext = {
 
     this.makeTreeArray();
     var selectedIndex = -1;
-    for (var i = 0; i <= groupIndex; i++)
-    {
+    for (var i = 0; i <= groupIndex; i++) {
       selectedIndex++;
       if (this.mCollapseState[i])
         selectedIndex += gQuicktext.getTextLength(i, true);
     }
 
     var treeObject = document.getElementById('group-tree');
-    treeObject.rowCountChanged(selectedIndex-1, 1);
+    treeObject.rowCountChanged(selectedIndex - 1, 1);
     treeObject.invalidateRow(selectedIndex);
     this.selectTreeRow(selectedIndex);
 
@@ -930,13 +833,11 @@ var quicktext = {
     titleElem.focus();
     titleElem.setSelectionRange(0, title.length);
   }
-,
-  removeText: function()
-  {
+  ,
+  removeText: function () {
     this.saveText();
 
-    if (this.mPickedIndex)
-    {
+    if (this.mPickedIndex) {
       var groupIndex = this.mPickedIndex[0];
       var textIndex = this.mPickedIndex[1];
 
@@ -944,32 +845,29 @@ var quicktext = {
       if (textIndex > -1)
         title = gQuicktext.getText(groupIndex, textIndex, true).name;
 
-      if (confirm (gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1)))
-      {
+      if (confirm(gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1))) {
         this.mPickedIndex = null;
 
         var textLength = gQuicktext.getTextLength(groupIndex, true);
 
         var selectedIndex = document.getElementById('group-tree').view.selection.currentIndex;
         var moveSelectionUp = false;
-        if (this.mTreeArray[selectedIndex+1] && this.mTreeArray[selectedIndex+1][2] < this.mTreeArray[selectedIndex][2])
+        if (this.mTreeArray[selectedIndex + 1] && this.mTreeArray[selectedIndex + 1][2] < this.mTreeArray[selectedIndex][2])
           moveSelectionUp = true;
 
         var treeObject = document.getElementById('group-tree');
-        if (textIndex == -1)
-        {
+        if (textIndex == -1) {
           gQuicktext.removeGroup(groupIndex, true);
 
           if (this.mCollapseState[groupIndex])
-            treeObject.rowCountChanged(selectedIndex, -(textLength+1));
+            treeObject.rowCountChanged(selectedIndex, -(textLength + 1));
           else
             treeObject.rowCountChanged(selectedIndex, -1);
 
           this.makeTreeArray();
           treeObject.invalidate();
         }
-        else
-        {
+        else {
           gQuicktext.removeText(groupIndex, textIndex, true);
 
           treeObject.rowCountChanged(selectedIndex, -1);
@@ -982,15 +880,13 @@ var quicktext = {
         this.changesMade();
 
         var selectedRow = false;
-        if (moveSelectionUp)
-        {
+        if (moveSelectionUp) {
           selectedRow = true;
-          this.selectTreeRow(selectedIndex-1);
+          this.selectTreeRow(selectedIndex - 1);
         }
 
-        var rowCount = this.mTreeArray.length -1;
-        if (selectedIndex > rowCount || selectedIndex == -1)
-        {
+        var rowCount = this.mTreeArray.length - 1;
+        if (selectedIndex > rowCount || selectedIndex == -1) {
           selectedRow = true;
           this.selectTreeRow(rowCount);
         }
@@ -1000,17 +896,15 @@ var quicktext = {
       }
     }
   }
-,
-  getCommunityScripts: function()
-  {
+  ,
+  getCommunityScripts: function () {
     let ioservice = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
     let uriToOpen = ioservice.newURI("https://github.com/jobisoft/quicktext/wiki/Community-scripts", null, null);
     let extps = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"].getService(Components.interfaces.nsIExternalProtocolService);
-    extps.loadURI(uriToOpen, null);   
+    extps.loadURI(uriToOpen, null);
   }
-,
-  addScript: function()
-  {
+  ,
+  addScript: function () {
     this.saveScript();
 
     var title = gQuicktext.mStringBundle.GetStringFromName("newScript");
@@ -1020,7 +914,7 @@ var quicktext = {
     this.updateButtonStates();
 
     var listElem = document.getElementById('script-list');
-    selectedIndex = listElem.getRowCount()-1;
+    selectedIndex = listElem.getRowCount() - 1;
     listElem.selectedIndex = selectedIndex;
 
     this.changesMade();
@@ -1029,29 +923,24 @@ var quicktext = {
     titleElem.focus();
     titleElem.setSelectionRange(0, title.length);
   }
-,
-  removeScript: function()
-  {
+  ,
+  removeScript: function () {
     this.saveScript();
 
     var scriptIndex = document.getElementById('script-list').value;
-    if (scriptIndex != null)
-    {
+    if (scriptIndex != null) {
       var title = gQuicktext.getScript(scriptIndex, true).name;
-      if (confirm (gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1)))
-      {
+      if (confirm(gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1))) {
         gQuicktext.removeScript(scriptIndex, true);
         this.changesMade();
 
-        if (gQuicktext.getScriptLength(true) > 0)
-        {
-          var selectedIndex = document.getElementById('script-list').selectedIndex -1;
+        if (gQuicktext.getScriptLength(true) > 0) {
+          var selectedIndex = document.getElementById('script-list').selectedIndex - 1;
           if (selectedIndex < 0)
             selectedIndex = 0;
           this.mScriptIndex = selectedIndex;
         }
-        else
-        {
+        else {
           this.mScriptIndex = null;
           selectedIndex = -1;
         }
@@ -1064,10 +953,9 @@ var quicktext = {
       }
     }
   }
-,
+  ,
 
-  updateScriptGUI: function()
-  {
+  updateScriptGUI: function () {
     // Update the listmenu in the scripttab and the variable-menu
     var scriptLength = gQuicktext.getScriptLength(true);
 
@@ -1075,19 +963,15 @@ var quicktext = {
     var selectedIndex = listElem.selectedIndex;
     var oldLength = listElem.getRowCount();
 
-    if (scriptLength > 0)
-    {
-      for (var i = 0; i < scriptLength; i++)
-      {
+    if (scriptLength > 0) {
+      for (var i = 0; i < scriptLength; i++) {
         var script = gQuicktext.getScript(i, true);
-        if (i < oldLength)
-        {
+        if (i < oldLength) {
           var listItem = listElem.getItemAtIndex(i);
           listItem.firstChild.value = script.name;
           listItem.value = i;
         }
-        else
-        {
+        else {
           let newItem = document.createXULElement("richlistitem");
           newItem.value = i;
           let newItemLabel = document.createXULElement("label");
@@ -1098,8 +982,7 @@ var quicktext = {
       }
     }
 
-    if (oldLength > scriptLength)
-    {
+    if (oldLength > scriptLength) {
       for (var i = scriptLength; i < oldLength; i++)
         listElem.getItemAtIndex(scriptLength).remove();
     }
@@ -1113,27 +996,24 @@ var quicktext = {
 
     this.pickScript();
   }
-,
+  ,
   /*
    * Update the treeview
    */
-  makeTreeArray: function()
-  {
+  makeTreeArray: function () {
     this.mTreeArray = [];
     var k = 0;
 
     var groupLength = gQuicktext.getGroupLength(true);
 
-    if (this.mCollapseState.length < groupLength)
-    {
+    if (this.mCollapseState.length < groupLength) {
       for (var i = this.mCollapseState.length; i < groupLength; i++)
         this.mCollapseState[i] = true;
     }
     else if (this.mCollapseState.length > groupLength)
       this.mCollapseState.splice(groupLength, this.mCollapseState.length - groupLength);
 
-    for (var i = 0; i < groupLength; i++)
-    {
+    for (var i = 0; i < groupLength; i++) {
       var groupIndex = k;
       var textLength = gQuicktext.getTextLength(i, true);
 
@@ -1143,8 +1023,7 @@ var quicktext = {
       if (!this.mCollapseState[i])
         continue;
 
-      for (var j = 0; j < textLength; j++)
-      {
+      for (var j = 0; j < textLength; j++) {
         var text = gQuicktext.getText(i, j, true);
         var shortcut = text.shortcut;
         this.mTreeArray[k] = [i, j, 1, groupIndex, false, 0, text.name, shortcut];
@@ -1152,84 +1031,69 @@ var quicktext = {
       }
     }
   }
-,
-  updateTreeGUI: function()
-  {
+  ,
+  updateTreeGUI: function () {
     // maybe
   }
-,
-  buildTreeGUI: function()
-  {
+  ,
+  buildTreeGUI: function () {
     this.makeTreeArray();
 
     var treeview = {
       rowCount: this.mTreeArray.length,
       lastIndex: null,
 
-      isContainer: function(aRow)
-      {
+      isContainer: function (aRow) {
         return (quicktext.mTreeArray[aRow][1] == -1);
       },
-      isContainerOpen: function(aRow)
-      {
+      isContainerOpen: function (aRow) {
         return quicktext.mCollapseState[quicktext.mTreeArray[aRow][0]];
       },
-      isContainerEmpty: function(aRow)
-      {
+      isContainerEmpty: function (aRow) {
         return (quicktext.mTreeArray[aRow][5] == 0);
       },
-      isSeparator: function(aRow)
-      {
+      isSeparator: function (aRow) {
         return false;
       },
-      isSorted: function(aRow)
-      {
+      isSorted: function (aRow) {
         return false;
       },
-      isEditable: function(aRow)
-      {
+      isEditable: function (aRow) {
         return false;
       },
-      hasNextSibling: function(aRow, aAfter)
-      {
-        return (quicktext.mTreeArray[aAfter+1]
-                && quicktext.mTreeArray[aRow][2] == quicktext.mTreeArray[aAfter+1][2]
-                && quicktext.mTreeArray[aRow][3] == quicktext.mTreeArray[aAfter+1][3]);
+      hasNextSibling: function (aRow, aAfter) {
+        return (quicktext.mTreeArray[aAfter + 1]
+          && quicktext.mTreeArray[aRow][2] == quicktext.mTreeArray[aAfter + 1][2]
+          && quicktext.mTreeArray[aRow][3] == quicktext.mTreeArray[aAfter + 1][3]);
       },
-      getLevel: function(aRow)
-      {
+      getLevel: function (aRow) {
         return quicktext.mTreeArray[aRow][2];
       },
-      getImageSrc: function(aRow, aCol) { return null; },
-      getParentIndex: function(aRow)
-      {
+      getImageSrc: function (aRow, aCol) { return null; },
+      getParentIndex: function (aRow) {
         return quicktext.mTreeArray[aRow][3];
       },
-      getRowProperties: function(aRow, aProps) { },
-      getCellProperties: function(aRow, aCol, aProps) { },
-      getColumnProperties: function(aColid, aCol, aProps) { },
-      getProgressMode: function(aRow, aCol) { },
-      getCellValue: function(aRow, aCol) { return null; },
-      canDropBeforeAfter: function(aRow, aBefore)
-      {
+      getRowProperties: function (aRow, aProps) { },
+      getCellProperties: function (aRow, aCol, aProps) { },
+      getColumnProperties: function (aColid, aCol, aProps) { },
+      getProgressMode: function (aRow, aCol) { },
+      getCellValue: function (aRow, aCol) { return null; },
+      canDropBeforeAfter: function (aRow, aBefore) {
         if (aBefore)
           return this.canDrop(aRow, -1);
 
         return this.canDrop(aRow, 1);
       },
-      canDropOn: function(aRow)
-      {
+      canDropOn: function (aRow) {
         return this.canDrop(aRow, 0);
       },
-      canDrop: function(aRow, aOrient)
-      {
+      canDrop: function (aRow, aOrient) {
         var index = document.getElementById('group-tree').view.selection.currentIndex;
         if (index == aRow)
           return false;
 
         // Can only drop templates on groups
-        if (aOrient == 0)
-        {
+        if (aOrient == 0) {
           if (quicktext.mTreeArray[index][2] > 0 && quicktext.mTreeArray[aRow][2] == 0)
             return true;
           else
@@ -1237,38 +1101,33 @@ var quicktext = {
         }
 
         // Take care if we drag a group
-        if (quicktext.mTreeArray[index][2] == 0)
-        {
+        if (quicktext.mTreeArray[index][2] == 0) {
           if (aOrient < 0 && quicktext.mTreeArray[aRow][2] == 0)
             return true;
-          if (aOrient > 0 && quicktext.mTreeArray.length-1 == aRow)
+          if (aOrient > 0 && quicktext.mTreeArray.length - 1 == aRow)
             return true;
         }
         // Take care if we drag a template
-        else
-        {
+        else {
           if (quicktext.mTreeArray[aRow][2] > 0)
             return true;
         }
 
         return false;
       },
-      drop: function(aRow, aOrient)
-      {
+      drop: function (aRow, aOrient) {
         quicktext.saveText();
         quicktext.mPickedIndex = null;
         var selectIndex = -1;
         var index = document.getElementById('group-tree').view.selection.currentIndex;
 
         // Droping a group
-        if (quicktext.mTreeArray[index][2] == 0)
-        {
+        if (quicktext.mTreeArray[index][2] == 0) {
           var textLength = gQuicktext.getTextLength(quicktext.mTreeArray[index][0], true);
           if (!quicktext.mCollapseState[quicktext.mTreeArray[index][0]])
             textLength = 0;
 
-          if (aOrient > 0)
-          {
+          if (aOrient > 0) {
             gQuicktext.moveGroup(quicktext.mTreeArray[index][0], gQuicktext.getGroupLength(true), true);
 
             var state = quicktext.mCollapseState.splice(quicktext.mTreeArray[index][0], 1);
@@ -1277,8 +1136,7 @@ var quicktext = {
 
             selectIndex = quicktext.mTreeArray.length - textLength - 1;
           }
-          else
-          {
+          else {
             gQuicktext.moveGroup(quicktext.mTreeArray[index][0], quicktext.mTreeArray[aRow][0], true);
 
             var state = quicktext.mCollapseState.splice(quicktext.mTreeArray[index][0], 1);
@@ -1289,17 +1147,15 @@ var quicktext = {
           }
         }
         // Droping a template
-        else
-        {
-          switch (aOrient)
-          {
+        else {
+          switch (aOrient) {
             case 0:
               var textLength = gQuicktext.getTextLength(quicktext.mTreeArray[aRow][0], true);
               gQuicktext.moveText(quicktext.mTreeArray[index][0], quicktext.mTreeArray[index][1], quicktext.mTreeArray[aRow][0], textLength, true);
               selectIndex = (quicktext.mTreeArray[index][0] == quicktext.mTreeArray[aRow][0] || aRow > index) ? aRow + textLength : aRow + textLength + 1;
               break;
             case 1:
-              gQuicktext.moveText(quicktext.mTreeArray[index][0], quicktext.mTreeArray[index][1], quicktext.mTreeArray[aRow][0], quicktext.mTreeArray[aRow][1]+1, true);
+              gQuicktext.moveText(quicktext.mTreeArray[index][0], quicktext.mTreeArray[index][1], quicktext.mTreeArray[aRow][0], quicktext.mTreeArray[aRow][1] + 1, true);
               selectIndex = (aRow > index) ? aRow : aRow + 1;
               break;
             default:
@@ -1314,22 +1170,18 @@ var quicktext = {
         document.getElementById('group-tree').view.selection.select(selectIndex);
         quicktext.changesMade();
       },
-      getCellText: function(aRow, aCol)
-      {
+      getCellText: function (aRow, aCol) {
         colName = (aCol.id) ? aCol.id : aCol;
-        if (colName == "group")
-        {
+        if (colName == "group") {
           return quicktext.mTreeArray[aRow][6];
         }
-        else if (colName == "shortcut" && quicktext.mTreeArray[aRow][1] > -1)
-        {
+        else if (colName == "shortcut" && quicktext.mTreeArray[aRow][1] > -1) {
           return quicktext.mTreeArray[aRow][7];
         }
 
         return "";
       },
-      toggleOpenState: function(aRow)
-      {
+      toggleOpenState: function (aRow) {
         var state = quicktext.mCollapseState[quicktext.mTreeArray[aRow][0]];
         quicktext.mCollapseState[quicktext.mTreeArray[aRow][0]] = !state;
 
@@ -1345,9 +1197,8 @@ var quicktext = {
         treeObject.invalidate();
         document.getElementById('group-tree').view.selection.select(aRow);
       },
-      setTree: function(aTreebox)
-      {
-        this.treebox=aTreebox;
+      setTree: function (aTreebox) {
+        this.treebox = aTreebox;
       }
     }
 
@@ -1362,32 +1213,26 @@ var quicktext = {
 
     this.pickText();
   }
-,
-  selectTreeRow: function(aRow)
-  {
+  ,
+  selectTreeRow: function (aRow) {
     document.getElementById('group-tree').view.selection.select(aRow);
     document.getElementById('group-tree').ensureRowIsVisible(aRow);
   }
-,
-  updateButtonStates: function()
-  {
+  ,
+  updateButtonStates: function () {
     // Update the add-buttons
-    if (this.mTreeArray.length)
-    {
+    if (this.mTreeArray.length) {
       var index = document.getElementById('group-tree').view.selection.currentIndex;
-      if (this.mTreeArray[index] && gQuicktext.getGroup(this.mTreeArray[index][0], true).type > 0)
-      {
+      if (this.mTreeArray[index] && gQuicktext.getGroup(this.mTreeArray[index][0], true).type > 0) {
         document.getElementById("group-button-remove").setAttribute("disabled", true);
         document.getElementById("group-button-add-text").setAttribute("disabled", true);
       }
-      else
-      {
+      else {
         document.getElementById("group-button-remove").removeAttribute("disabled");
         document.getElementById("group-button-add-text").removeAttribute("disabled");
       }
     }
-    else
-    {
+    else {
       document.getElementById('group-button-add-text').setAttribute("disabled", true);
       document.getElementById('group-button-remove').setAttribute("disabled", true);
     }
@@ -1399,32 +1244,34 @@ var quicktext = {
     else
       document.getElementById('script-button-remove').setAttribute("disabled", true);
   }
-,
-  openHomepage: function()
-  {
+  ,
+  openHomepage: function () {
     gQuicktext.openHomepage();
   }
-,
-  resetCounter: function()
-  {
-    notifyTools.notifyBackground({command:"setPref", pref: "counter", value: 0});
+  ,
+  resetCounter: function () {
+    notifyTools.notifyBackground({ command: "setPref", pref: "counter", value: 0 });
   }
-,
-  shortcutModifierChange: function()
-  {
+  ,
+  shortcutModifierChange: function () {
     var state = (this.mOS.substr(0, 3).toLowerCase() == "mac" || (this.mOS.substr(0, 3).toLowerCase() == "win" && document.getElementById('select-shortcutModifier').value == "alt"));
     document.getElementById('checkbox-shortcutTypeAdv').disabled = state;
   }
-,
+  ,
 
   /*
    * OBSERVERS
    */
-  observe: function(aSubject, aTopic, aData)
-  {
-    if (aTopic == "updatesettings")
-    {
+  observe: function (aSubject, aTopic, aData) {
+    if (aTopic == "updatesettings") {
       // this.updateGUI();
     }
   }
 }
+
+async function load() {
+  let extension = ExtensionParent.GlobalManager.getExtension("{8845E3B3-E8FB-40E2-95E9-EC40294818C4}");
+  window.i18n.updateDocument({ extension });
+}
+
+window.addEventListener("load", load);
