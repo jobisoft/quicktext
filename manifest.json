@@ -3,12 +3,12 @@
   "applications": {
     "gecko": {
       "id": "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}",
-      "strict_min_version": "100.0",
+      "strict_min_version": "102.0",
       "strict_max_version": "115.*"
     }
   },
   "name": "Quicktext",
-  "version": "5.6",
+  "version": "5.7",
   "author": "John Bieling",
   "homepage_url": "https://github.com/jobisoft/quicktext",
   "default_locale": "en-US",
