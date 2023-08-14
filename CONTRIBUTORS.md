@@ -20,3 +20,4 @@
 ## Translators
 * Alexey Sinitsyn (ru)
 * Óvári (hu)
+* Ryota Murai (ja)
