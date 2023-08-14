@@ -318,7 +318,10 @@
     "quicktext.resetcounter.label": {
         "message": "Zähler zurücksetzen"
     },
-    "quicktext.rightClickSetting.label": {
+    "quicktext.showToolbar.label": {
+        "message": "Show Quicktext toolbar"
+    },
+    "quicktext.showContextMenu.label": {
         "message": "Quicktext-Menü bei Rechtsklick anzeigen"
     },
     "quicktext.save.label": {

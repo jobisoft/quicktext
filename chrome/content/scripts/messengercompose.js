@@ -10,16 +10,6 @@ function onLoad(activatedWhileWindowOpen) {
   
   WL.injectCSS("resource://quicktext/skin/quicktext.css");
   WL.injectElements(`
-	<popup id="msgComposeContext">
-		<menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator"/>
-		<menu id="quicktext-popup" label="&quicktext.label;" hidden="true" insertafter="spellCheckSuggestionsSeparator"  class="menu-iconic quicktext-icon menuitem-iconic" >
-		  <menupopup id="quicktext-popup-menupopup"/>
-		</menu>
-	</popup>
-
-  <menupopup id="menu_View_Popup">
-    <menuitem id="quicktext-view" type="checkbox" label="&quicktext.label;" oncommand="quicktext.toogleToolbar();"/>
-  </menupopup>
 
   <toolbar id="quicktext-toolbar" insertbefore="messageEditor">
       <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;" tabindex="-1">

@@ -318,7 +318,10 @@
     "quicktext.resetcounter.label": {
         "message": "Vynulovat počítadlo"
     },
-    "quicktext.rightClickSetting.label": {
+    "quicktext.showToolbar.label": {
+        "message": "Show Quicktext toolbar"
+    },
+    "quicktext.showContextMenu.label": {
         "message": "Zobrazovat Quicktext v nabídce pod pravým tlačítkem myši"
     },
     "quicktext.save.label": {

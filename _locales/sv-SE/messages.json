@@ -318,7 +318,10 @@
     "quicktext.resetcounter.label": {
         "message": "Återställ räknaren"
     },
-    "quicktext.rightClickSetting.label": {
+    "quicktext.showToolbar.label": {
+        "message": "Show Quicktext toolbar"
+    },
+    "quicktext.showContextMenu.label": {
         "message": "Visa Quicktext-menyn vid högerklick"
     },
     "quicktext.save.label": {
