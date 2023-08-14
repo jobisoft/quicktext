@@ -15,6 +15,18 @@
   }; 
   await preferences.init(defaultPrefs);
 
+  // Allow to set defaultImport from managed storage.
+  let { defaultImportOverride } = await browser.storage.managed.get({ "defaultImportOverride": "" });
+  if (defaultImportOverride) {
+    preferences.setPref("defaultImport", defaultImportOverride);
+  }
+  
+  // Allow to override templateFolder from managed storage.
+  let { templateFolderOverride } = await browser.storage.managed.get({ "templateFolderOverride": "" });
+  if (templateFolderOverride) {
+    preferences.setPref("templateFolder", templateFolderOverride);
+  }
+  
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
