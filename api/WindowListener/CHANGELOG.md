@@ -1,3 +1,11 @@
+Version: 1.62
+-------------
+- fix bug in fullyLoaded()
+
+Version: 1.61
+-------------
+- adjusted to Thunderbird Supernova (Services is now in globalThis)
+
 Version: 1.60
 -------------
 - explicitly set hasAddonManagerEventListeners flag to false on uninstall

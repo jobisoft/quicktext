@@ -1,6 +1,6 @@
 [
   {
-    "namespace": "NotifyTools",    
+    "namespace": "NotifyTools",
     "events": [
       {
         "name": "onNotifyBackground",

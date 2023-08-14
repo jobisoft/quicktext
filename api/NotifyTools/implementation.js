@@ -2,6 +2,20 @@
  * This file is provided by the addon-developer-support repository at
  * https://github.com/thundernest/addon-developer-support
  *
+ * Version 1.5
+ * - adjusted to Thunderbird Supernova (Services is now in globalThis)
+ *
+ * Version 1.4
+ *  - updated implementation to not assign this anymore
+ * 
+ * Version 1.3
+ *  - moved registering the observer into startup
+ *
+ * Version 1.1
+ *  - added startup event, to make sure API is ready as soon as the add-on is starting
+ *    NOTE: This requires to add the startup event to the manifest, see:
+ *    https://github.com/thundernest/addon-developer-support/tree/master/auxiliary-apis/NotifyTools#usage
+ *
  * Author: John Bieling (john@thunderbird.net)
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -9,28 +23,63 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-// Get various parts of the WebExtension framework that we need.
-var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
-var { ExtensionSupport } = ChromeUtils.import("resource:///modules/ExtensionSupport.jsm");
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+"use strict";
 
-var NotifyTools = class extends ExtensionCommon.ExtensionAPI {
-  getAPI(context) {
-    var self = this;
+(function (exports) {
 
-    this.onNotifyBackgroundObserver = {
-      observe: async function (aSubject, aTopic, aData) {
+  // Get various parts of the WebExtension framework that we need.
+  var { ExtensionCommon } = ChromeUtils.import("resource://gre/modules/ExtensionCommon.jsm");
+  var Services = globalThis.Services || 
+    ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
+
+  var observerTracker = new Set();
+
+  class NotifyTools extends ExtensionCommon.ExtensionAPI {
+    getAPI(context) {
+      return {
+        NotifyTools: {
+
+          notifyExperiment(data) {
+            return new Promise(resolve => {
+              Services.obs.notifyObservers(
+                { data, resolve },
+                "NotifyExperimentObserver",
+                context.extension.id
+              );
+            });
+          },
+
+          onNotifyBackground: new ExtensionCommon.EventManager({
+            context,
+            name: "NotifyTools.onNotifyBackground",
+            register: (fire) => {
+              observerTracker.add(fire.sync);
+              return () => {
+                observerTracker.delete(fire.sync);
+              };
+            },
+          }).api(),
+
+        }
+      };
+    }
+
+    // Force API to run at startup, otherwise event listeners might not be added at the requested time. Also needs
+    // "events": ["startup"] in the experiment manifest
+    onStartup() {
+      this.onNotifyBackgroundObserver = async (aSubject, aTopic, aData) => {
         if (
-          Object.keys(self.observerTracker).length > 0 &&
-          aData == self.extension.id
+          observerTracker.size > 0 &&
+          aData == this.extension.id
         ) {
           let payload = aSubject.wrappedJSObject;
-          // This is called from the BL observer.js and therefore it should have a resolve
-          // payload, but better check.
+
+          // Make sure payload has a resolve function, which we use to resolve the
+          // observer notification.
           if (payload.resolve) {
             let observerTrackerPromises = [];
             // Push listener into promise array, so they can run in parallel
-            for (let listener of Object.values(self.observerTracker)) {
+            for (let listener of observerTracker.values()) {
               observerTrackerPromises.push(listener(payload.data));
             }
             // We still have to await all of them but wait time is just the time needed
@@ -52,65 +101,39 @@ var NotifyTools = class extends ExtensionCommon.ExtensionAPI {
               payload.resolve(results[0]);
             }
           } else {
-            // Just call the listener.
-            for (let listener of Object.values(self.observerTracker)) {
+            // Older version of NotifyTools, which is not sending a resolve function, deprecated.
+            console.log("Please update the notifyTools API and the notifyTools script to at least v1.5");
+            for (let listener of observerTracker.values()) {
               listener(payload.data);
             }
           }
         }
-      },
-    };
+      };
 
-    this.observerTracker = {};
-    this.observerTrackerNext = 1;
-    // Add observer for notifyTools.js
-    Services.obs.addObserver(
-      this.onNotifyBackgroundObserver,
-      "NotifyBackgroundObserver",
-      false
-    );
-    
-    return {
-      NotifyTools: {
-
-        notifyExperiment(data) {
-          return new Promise(resolve => {
-            Services.obs.notifyObservers(
-              { data, resolve },
-              "NotifyExperimentObserver",
-              self.extension.id
-            );
-          });
-        },
-
-        onNotifyBackground: new ExtensionCommon.EventManager({
-          context,
-          name: "NotifyTools.onNotifyBackground",
-          register: (fire) => {
-            let trackerId = self.observerTrackerNext++;
-            self.observerTracker[trackerId] = fire.sync;
-            return () => {
-              delete self.observerTracker[trackerId];
-            };
-          },
-        }).api(),
-
-      }
-    };
-  }
-
-  onShutdown(isAppShutdown) {
-    if (isAppShutdown) {
-      return; // the application gets unloaded anyway
+      // Add observer for notifyTools.js
+      Services.obs.addObserver(
+        this.onNotifyBackgroundObserver,
+        "NotifyBackgroundObserver",
+        false
+      );
     }
-    
-    // Remove observer for notifyTools.js
-    Services.obs.removeObserver(
-      this.onNotifyBackgroundObserver,
-      "NotifyBackgroundObserver"
-    );
 
-    // Flush all caches
-    Services.obs.notifyObservers(null, "startupcache-invalidate");
-  }
-};
+    onShutdown(isAppShutdown) {
+      if (isAppShutdown) {
+        return; // the application gets unloaded anyway
+      }
+
+      // Remove observer for notifyTools.js
+      Services.obs.removeObserver(
+        this.onNotifyBackgroundObserver,
+        "NotifyBackgroundObserver"
+      );
+
+      // Flush all caches
+      Services.obs.notifyObservers(null, "startupcache-invalidate");
+    }
+  };
+
+  exports.NotifyTools = NotifyTools;
+
+})(this)

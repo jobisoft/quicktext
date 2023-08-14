@@ -2,7 +2,9 @@
 
 var EXPORTED_SYMBOLS = ["quicktextUtils"]
 
-var { Services } = ChromeUtils.import("resource://gre/modules/Services.jsm");
+var Services = globalThis.Services || ChromeUtils.import(
+  "resource://gre/modules/Services.jsm"
+).Services;
 
 var quicktextUtils = {
   get dateTimeFormat() {
