@@ -39,7 +39,7 @@
   "permissions" : ["storage"],
   "background": {
     "scripts": [
-      "/chrome/content/scripts/preferences.js", 
+      "/scripts/preferences.js", 
       "background.js"
     ]
   },
