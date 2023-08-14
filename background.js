@@ -47,12 +47,13 @@
   });
 
   // load add-on via WindowListener API
-  messenger.WindowListener.registerChromeUrl([
+  await messenger.WindowListener.registerChromeUrl([
     ["content", "quicktext", "chrome/content/"],
     ["resource", "quicktext", "chrome/"],
   ]);
 
-  messenger.WindowListener.registerOptionsPage("chrome://quicktext/content/addonoptions.xhtml")
+  browser.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
+  browser.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
 
   messenger.WindowListener.registerWindow(
     "chrome://messenger/content/messengercompose/messengercompose.xhtml",
@@ -62,8 +63,6 @@
     "chrome://messenger/content/messenger.xhtml",
     "chrome://quicktext/content/scripts/messenger.js");
 
-  browser.composeAction.onClicked.addListener(tab => { messenger.WindowListener.openOptionsDialog(tab.windowId); });
-  browser.browserAction.onClicked.addListener(tab => { messenger.WindowListener.openOptionsDialog(tab.windowId); });
 
   messenger.WindowListener.startListening();
 })();
