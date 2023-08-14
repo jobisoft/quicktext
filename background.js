@@ -15,18 +15,26 @@
   };
   await preferences.init(defaultPrefs);
 
-  // Allow to set defaultImport from managed storage.
-  let { defaultImportOverride } = await browser.storage.managed.get({ "defaultImportOverride": "" });
-  if (defaultImportOverride) {
-    preferences.setPref("defaultImport", defaultImportOverride);
+  try {
+    // Allow to set defaultImport from managed storage.
+    let { defaultImportOverride } = await browser.storage.managed.get({ "defaultImportOverride": "" });
+    if (defaultImportOverride) {
+      preferences.setPref("defaultImport", defaultImportOverride);
+    }
+  } catch (ex) {
+    // No managed storage manifest found, ignore.
   }
-  
-  // Allow to override templateFolder from managed storage.
-  let { templateFolderOverride } = await browser.storage.managed.get({ "templateFolderOverride": "" });
-  if (templateFolderOverride) {
-    preferences.setPref("templateFolder", templateFolderOverride);
+
+  try {
+    // Allow to override templateFolder from managed storage.
+    let { templateFolderOverride } = await browser.storage.managed.get({ "templateFolderOverride": "" });
+    if (templateFolderOverride) {
+      preferences.setPref("templateFolder", templateFolderOverride);
+    }
+  } catch (ex) {
+    // No managed storage manifest found, ignore.
   }
-  
+
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
