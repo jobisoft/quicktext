@@ -21,11 +21,6 @@ function onLoad(activatedWhileWindowOpen) {
     <menuitem id="quicktext-view" type="checkbox" label="&quicktext.label;" oncommand="quicktext.toogleToolbar();"/>
   </menupopup>
 
-  <menupopup id="taskPopup">
-    <menuitem id="quicktext-settings" label="&quicktext.label;" oncommand="quicktext.openSettings();" insertafter="tasksMenuAddressBook" class="menu-iconic quicktext-icon menuitem-iconic" />
-    <menuseparator insertafter="tasksMenuAddressBook" />
-  </menupopup>
-
   <toolbar id="quicktext-toolbar" insertbefore="messageEditor">
       <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;" tabindex="-1">
         <menupopup>

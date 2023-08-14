@@ -35,8 +35,11 @@
       "24": "chrome/skin/icon24.png",
       "32": "chrome/skin/icon.png"
     }
-  }, 
-  "permissions" : ["storage"],
+  },
+  "permissions": [
+    "storage",
+    "menus"
+  ],
   "background": {
     "scripts": [
       "/scripts/preferences.js",

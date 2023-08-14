@@ -58,11 +58,11 @@
   messenger.WindowListener.registerWindow(
     "chrome://messenger/content/messengercompose/messengercompose.xhtml",
     "chrome://quicktext/content/scripts/messengercompose.js");
-
-  messenger.WindowListener.registerWindow(
-    "chrome://messenger/content/messenger.xhtml",
-    "chrome://quicktext/content/scripts/messenger.js");
-
-
   messenger.WindowListener.startListening();
+
+  await messenger.menus.create({
+    title: browser.i18n.getMessage("quicktext.label"),
+    contexts: ["tools_menu"],
+    onclick: (info, tab) => messenger.Quicktext.openSettings(tab.windowId)
+  })
 })();
