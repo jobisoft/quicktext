@@ -12,7 +12,7 @@
   "author": "John Bieling",
   "homepage_url": "https://github.com/jobisoft/quicktext",
   "default_locale": "en-US",
-  "description": "__MSG_extensionDescription__",  
+  "description": "__MSG_extensionDescription__",
   "icons": {
     "16": "chrome/skin/icon16.png",
     "24": "chrome/skin/icon24.png",
@@ -20,16 +20,16 @@
   },
   "compose_action": {
     "default_title": "Quicktext",
-    "default_label": "",    
+    "default_label": "",
     "default_icon": {
       "16": "chrome/skin/icon16.png",
       "24": "chrome/skin/icon24.png",
       "32": "chrome/skin/icon.png"
     }
-  }, 
+  },
   "browser_action": {
     "default_title": "Quicktext",
-    "default_label": "",    
+    "default_label": "",
     "default_icon": {
       "16": "chrome/skin/icon16.png",
       "24": "chrome/skin/icon24.png",
@@ -39,7 +39,7 @@
   "permissions" : ["storage"],
   "background": {
     "scripts": [
-      "/scripts/preferences.js", 
+      "/scripts/preferences.js",
       "background.js"
     ]
   },
@@ -47,16 +47,28 @@
     "WindowListener": {
       "schema": "api/WindowListener/schema.json",
       "parent": {
-        "scopes": ["addon_parent"],
-        "paths": [["WindowListener"]],
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "WindowListener"
+          ]
+        ],
         "script": "api/WindowListener/implementation.js"
       }
     },
     "NotifyTools": {
       "schema": "api/NotifyTools/schema.json",
       "parent": {
-        "scopes": ["addon_parent"],
-        "paths": [["NotifyTools"]],
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "NotifyTools"
+          ]
+        ],
         "script": "api/NotifyTools/implementation.js"
       }
     }
