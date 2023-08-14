@@ -19,6 +19,9 @@
     "exportFile": {
         "message": "Vyberte pro exportování (UTF-8)"
     },
+    "extensionDescription": {
+        "message": "Přidá panel nástrojů do okna pro úpravy e-mailu, takže přidání standardního textu je rychlé a snadné. Je také možné použít proměnné jako [[TO=firstname]]."
+    },
     "fileNotUTF8": {
         "message": "Vybraný soubor zřejmě není kódovaný v UTF-8 a nebude správně načten. Vyberte prosím jiný soubor."
     },
