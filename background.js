@@ -62,16 +62,6 @@
   messenger.WindowListener.registerChromeUrl([ 
     ["content",   "quicktext",           "chrome/content/"],
     ["resource",  "quicktext",           "chrome/"],
-    ["locale",    "quicktext", "de",     "chrome/locale/de/"],
-    ["locale",    "quicktext", "pt-BR",  "chrome/locale/pt_BR/"],
-    ["locale",    "quicktext", "en-US",  "chrome/locale/en-US/"],
-    ["locale",    "quicktext", "es",     "chrome/locale/es/"],
-    ["locale",    "quicktext", "fr",     "chrome/locale/fr/"],
-    ["locale",    "quicktext", "hu",     "chrome/locale/hu/"],
-    ["locale",    "quicktext", "ja",     "chrome/locale/ja/"],
-    ["locale",    "quicktext", "ru",     "chrome/locale/ru/"],
-    ["locale",    "quicktext", "sv-SE",  "chrome/locale/sv-SE/"],
-    ["locale",    "quicktext", "cs",     "chrome/locale/cs/"],
   ]);
 
   messenger.WindowListener.registerOptionsPage("chrome://quicktext/content/addonoptions.xhtml")

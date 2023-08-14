@@ -1,5 +1,432 @@
 {
-  "extensionDescription": {
-    "message": "Adds a toolbar with unlimited number of text to quickly insert. It is also possible to use variables like [[TO=firstname]]. With settings for everything."
-  }
+    "altKey": {
+        "message": "Alt"
+    },
+    "attachmentFile": {
+        "message": "Välj fil att lägga till i bifogade filer"
+    },
+    "controlKey": {
+        "message": "Ctrl"
+    },
+    "date": {
+        "message": "Datum ($P1$)",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "exportFile": {
+        "message": "Välj fil att exportera till (UTF-8)"
+    },
+    "extensionDescription": {
+        "message": "Adds a toolbar with unlimited number of text to quickly insert. It is also possible to use variables like [[TO=firstname]]. With settings for everything."
+    },
+    "fileNotUTF8": {
+        "message": "The selected file does not seem to be UTF-8 encoded and will not loaded correctly. Please select a different file."
+    },
+    "group": {
+        "message": "Grupp"
+    },
+    "importFile": {
+        "message": "Välj fil att importera (UTF-8)"
+    },
+    "inputText": {
+        "message": "Ange värdet på $P1$",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "inputTitle": {
+        "message": "Variabel värde"
+    },
+    "insertFile": {
+        "message": "Välj fil att infoga (UTF-8)"
+    },
+    "insertImage": {
+        "message": "Choose image file to insert"
+    },
+    "metaKey": {
+        "message": "Meta"
+    },
+    "newGroup": {
+        "message": "Ny grupp"
+    },
+    "newScript": {
+        "message": "Nytt skript"
+    },
+    "newTemplate": {
+        "message": "Ny mall"
+    },
+    "quicktext.HTML.label": {
+        "message": "HTML"
+    },
+    "quicktext.accesskey.addGroup": {
+        "message": "g"
+    },
+    "quicktext.accesskey.addScript": {
+        "message": "t"
+    },
+    "quicktext.accesskey.addTemplate": {
+        "message": "l"
+    },
+    "quicktext.accesskey.close": {
+        "message": "ä"
+    },
+    "quicktext.accesskey.communityScripts": {
+        "message": "s"
+    },
+    "quicktext.accesskey.export": {
+        "message": "o"
+    },
+    "quicktext.accesskey.file": {
+        "message": "k"
+    },
+    "quicktext.accesskey.general": {
+        "message": "w"
+    },
+    "quicktext.accesskey.goToHomepage": {
+        "message": "h"
+    },
+    "quicktext.accesskey.help": {
+        "message": "p"
+    },
+    "quicktext.accesskey.import": {
+        "message": "r"
+    },
+    "quicktext.accesskey.remove": {
+        "message": "v"
+    },
+    "quicktext.accesskey.resetCounter": {
+        "message": "l"
+    },
+    "quicktext.accesskey.save": {
+        "message": "a"
+    },
+    "quicktext.accesskey.scripts": {
+        "message": "s"
+    },
+    "quicktext.accesskey.settings": {
+        "message": "n"
+    },
+    "quicktext.accesskey.templates": {
+        "message": "q"
+    },
+    "quicktext.accesskeyScripts.export": {
+        "message": "x"
+    },
+    "quicktext.accesskeyScripts.import": {
+        "message": "m"
+    },
+    "quicktext.accesskeyTemplate.export": {
+        "message": "e"
+    },
+    "quicktext.accesskeyTemplate.import": {
+        "message": "i"
+    },
+    "quicktext.addGroup.label": {
+        "message": "Lägg till grupp"
+    },
+    "quicktext.addScript.label": {
+        "message": "Lägg till skript"
+    },
+    "quicktext.addTemplate.label": {
+        "message": "Lägg till mall"
+    },
+    "quicktext.altKey.label": {
+        "message": "Alt"
+    },
+    "quicktext.attachments.label": {
+        "message": "Bifogade filer"
+    },
+    "quicktext.browse.label": {
+        "message": "Bläddra"
+    },
+    "quicktext.cellularnumber.label": {
+        "message": "Mobilnummer"
+    },
+    "quicktext.clipboard.label": {
+        "message": "Urklipp"
+    },
+    "quicktext.close.label": {
+        "message": "Stäng"
+    },
+    "quicktext.collapseSetting.label": {
+        "message": "Collapse group when it only contains one template"
+    },
+    "quicktext.controlKey.label": {
+        "message": "Ctrl"
+    },
+    "quicktext.counter.label": {
+        "message": "Counter"
+    },
+    "quicktext.cursor.label": {
+        "message": "Markörposition"
+    },
+    "quicktext.custom1.label": {
+        "message": "Övrigt 1"
+    },
+    "quicktext.custom2.label": {
+        "message": "Övrigt 2"
+    },
+    "quicktext.custom3.label": {
+        "message": "Övrigt 3"
+    },
+    "quicktext.custom4.label": {
+        "message": "Övrigt 4"
+    },
+    "quicktext.dateTime.label": {
+        "message": "Datum/Tid"
+    },
+    "quicktext.defaultImport.label": {
+        "message": "Importeras vid uppstart"
+    },
+    "quicktext.displayname.label": {
+        "message": "Kortnamn"
+    },
+    "quicktext.email.label": {
+        "message": "E-post"
+    },
+    "quicktext.enterKey.label": {
+        "message": "Enter"
+    },
+    "quicktext.export.label": {
+        "message": "Export"
+    },
+    "quicktext.f11Key.label": {
+        "message": "F11"
+    },
+    "quicktext.f12Key.label": {
+        "message": "F12"
+    },
+    "quicktext.f2Key.label": {
+        "message": "F2"
+    },
+    "quicktext.f4Key.label": {
+        "message": "F4"
+    },
+    "quicktext.f5Key.label": {
+        "message": "F5"
+    },
+    "quicktext.f8Key.label": {
+        "message": "F8"
+    },
+    "quicktext.faxnumber.label": {
+        "message": "Faxnummer"
+    },
+    "quicktext.file.label": {
+        "message": "Arkiv"
+    },
+    "quicktext.filename.label": {
+        "message": "Filnamn"
+    },
+    "quicktext.filenameAndSize.label": {
+        "message": "Filnamn and storlek"
+    },
+    "quicktext.firstname.label": {
+        "message": "Förnamn"
+    },
+    "quicktext.from.label": {
+        "message": "Från"
+    },
+    "quicktext.fullname.label": {
+        "message": "Fullständiga namnet"
+    },
+    "quicktext.general.label": {
+        "message": "Allmänt"
+    },
+    "quicktext.getScript.label": {
+        "message": "Community Scripts"
+    },
+    "quicktext.goToHomepage.label": {
+        "message": "Gå till hemsidan"
+    },
+    "quicktext.group.label": {
+        "message": "Grupp"
+    },
+    "quicktext.header.label": {
+        "message": "Header (To, Cc, Bcc)"
+    },
+    "quicktext.help.label": {
+        "message": "Hjälp"
+    },
+    "quicktext.homenumber.label": {
+        "message": "Hemnummer"
+    },
+    "quicktext.image.label": {
+        "message": "Embedded HTML image"
+    },
+    "quicktext.import.label": {
+        "message": "Import"
+    },
+    "quicktext.input.label": {
+        "message": "Input value from user prompt"
+    },
+    "quicktext.insertAs.label": {
+        "message": "Infoga som"
+    },
+    "quicktext.insertTextFromFileAsHTML.label": {
+        "message": "Infoga fil som HTML"
+    },
+    "quicktext.insertTextFromFileAsText.label": {
+        "message": "Infoga fil som text"
+    },
+    "quicktext.insertfile.label": {
+        "message": "Content from file (quicktext variables will be replaced)"
+    },
+    "quicktext.jobtitle.label": {
+        "message": "Arbetstitel"
+    },
+    "quicktext.keyword.label": {
+        "message": "Nyckelord"
+    },
+    "quicktext.keywordKeySetting.label": {
+        "message": "är den tangent jag vill använda för att aktivera nyckelord"
+    },
+    "quicktext.label": {
+        "message": "Quicktext"
+    },
+    "quicktext.lastname.label": {
+        "message": "Efternamn"
+    },
+    "quicktext.metaKey.label": {
+        "message": "Meta"
+    },
+    "quicktext.modifierSetting.label": {
+        "message": "är den tangent jag vill använda för kortkommandon"
+    },
+    "quicktext.nickname.label": {
+        "message": "Smeknamn"
+    },
+    "quicktext.none.label": {
+        "message": "Inget"
+    },
+    "quicktext.orgatt.label": {
+        "message": "Original attachment info"
+    },
+    "quicktext.orgheader.label": {
+        "message": "Original header info"
+    },
+    "quicktext.other.label": {
+        "message": "Övrigt"
+    },
+    "quicktext.remove.label": {
+        "message": "Ta bort"
+    },
+    "quicktext.resetcounter.label": {
+        "message": "Återställ räknaren"
+    },
+    "quicktext.rightClickSetting.label": {
+        "message": "Visa Quicktext-menyn vid högerklick"
+    },
+    "quicktext.save.label": {
+        "message": "Spara"
+    },
+    "quicktext.script.label": {
+        "message": "Skript"
+    },
+    "quicktext.scripts.label": {
+        "message": "Skript"
+    },
+    "quicktext.selection.label": {
+        "message": "Selection"
+    },
+    "quicktext.settings.label": {
+        "message": "Inställningar"
+    },
+    "quicktext.settings.title": {
+        "message": "Quicktext Inställningar"
+    },
+    "quicktext.sharingScripts.label": {
+        "message": "Dela skript"
+    },
+    "quicktext.sharingTemplates.label": {
+        "message": "Dela mallar"
+    },
+    "quicktext.shortcut.label": {
+        "message": "Kortkommando"
+    },
+    "quicktext.shortcutTypeAdv.label": {
+        "message": "Använd avancerat läge för kortkommandon"
+    },
+    "quicktext.shortname.label": {
+        "message": "Quicktext"
+    },
+    "quicktext.spaceKey.label": {
+        "message": "Mellanslag"
+    },
+    "quicktext.subject.label": {
+        "message": "Ämne"
+    },
+    "quicktext.tabKey.label": {
+        "message": "Tab"
+    },
+    "quicktext.template.label": {
+        "message": "Mall"
+    },
+    "quicktext.templates.label": {
+        "message": "Mallar"
+    },
+    "quicktext.text.label": {
+        "message": "Text"
+    },
+    "quicktext.title.label": {
+        "message": "Titel"
+    },
+    "quicktext.to.label": {
+        "message": "Till"
+    },
+    "quicktext.url.label": {
+        "message": "Response from URL"
+    },
+    "quicktext.variables.label": {
+        "message": "Variabler"
+    },
+    "quicktext.version.label": {
+        "message": "Thunderbird version"
+    },
+    "quicktext.worknumber.label": {
+        "message": "Jobbnummer"
+    },
+    "remove": {
+        "message": "Är du säker på att du vill tabort ”$P1$”?",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "saveMessage": {
+        "message": "Du har inte sparat de ändringar du gjort. Vill du spara dem?"
+    },
+    "saveMessageTitle": {
+        "message": "Spara inställningar"
+    },
+    "scriptError": {
+        "message": "There was an error in your Quicktext script:"
+    },
+    "scriptLine": {
+        "message": "Line"
+    },
+    "scriptNotFound": {
+        "message": "Quicktext script “$P1$” not found!",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "template": {
+        "message": "Mall"
+    },
+    "time": {
+        "message": "Tid ($P1$)",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }
 }

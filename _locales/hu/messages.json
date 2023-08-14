@@ -1,8 +1,435 @@
 {
-  "extensionDescription": {
-    "message": "Eszköztár, parancsfájlok és sablonok korlátlan lehetoségekkel, beleértve a [[TO=firstname]] változókat, a gyors szövegbeillesztéshez"
-  },
-  "extensionName": {
-    "message": "Gyorsszöveg"
-  }
+    "altKey": {
+        "message": "Alt"
+    },
+    "attachmentFile": {
+        "message": "Fájl kiválasztása mellékletek hozzáadása"
+    },
+    "controlKey": {
+        "message": "Ctrl"
+    },
+    "date": {
+        "message": "Dátum ($P1$)",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "exportFile": {
+        "message": "Fájl kiválasztás exportálása (UTF-8)"
+    },
+    "extensionDescription": {
+        "message": "Eszköztár, parancsfájlok és sablonok korlátlan lehetoségekkel, beleértve a [[TO=firstname]] változókat, a gyors szövegbeillesztéshez"
+    },
+    "extensionName": {
+        "message": "Gyorsszöveg"
+    },
+    "fileNotUTF8": {
+        "message": "Nem töltődik be a fájl megfelelően, mert úgy tűnik, hogy a kijelölt fájl nem UTF-8 kódolású. Jelöljön ki egy másik fájlt."
+    },
+    "group": {
+        "message": "Csoport"
+    },
+    "importFile": {
+        "message": "Fájl kiválasztás importálása (UTF-8)"
+    },
+    "inputText": {
+        "message": "A(z) $P1$ érték bevitele",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "inputTitle": {
+        "message": "Változó érték"
+    },
+    "insertFile": {
+        "message": "Fájl kiválasztás beszúrása (UTF-8)"
+    },
+    "insertImage": {
+        "message": "Beillesztendő képfájl kiválasztása"
+    },
+    "metaKey": {
+        "message": "Meta"
+    },
+    "newGroup": {
+        "message": "Új csoport"
+    },
+    "newScript": {
+        "message": "Új parancsfájl"
+    },
+    "newTemplate": {
+        "message": "Új sablon"
+    },
+    "quicktext.HTML.label": {
+        "message": "HTML"
+    },
+    "quicktext.accesskey.addGroup": {
+        "message": "p"
+    },
+    "quicktext.accesskey.addScript": {
+        "message": "t"
+    },
+    "quicktext.accesskey.addTemplate": {
+        "message": "l"
+    },
+    "quicktext.accesskey.close": {
+        "message": "z"
+    },
+    "quicktext.accesskey.communityScripts": {
+        "message": "s"
+    },
+    "quicktext.accesskey.export": {
+        "message": "t"
+    },
+    "quicktext.accesskey.file": {
+        "message": "f"
+    },
+    "quicktext.accesskey.general": {
+        "message": "n"
+    },
+    "quicktext.accesskey.goToHomepage": {
+        "message": "h"
+    },
+    "quicktext.accesskey.help": {
+        "message": "g"
+    },
+    "quicktext.accesskey.import": {
+        "message": "r"
+    },
+    "quicktext.accesskey.remove": {
+        "message": "v"
+    },
+    "quicktext.accesskey.resetCounter": {
+        "message": "i"
+    },
+    "quicktext.accesskey.save": {
+        "message": "c"
+    },
+    "quicktext.accesskey.scripts": {
+        "message": "p"
+    },
+    "quicktext.accesskey.settings": {
+        "message": "b"
+    },
+    "quicktext.accesskey.templates": {
+        "message": "o"
+    },
+    "quicktext.accesskeyScripts.export": {
+        "message": "x"
+    },
+    "quicktext.accesskeyScripts.import": {
+        "message": "m"
+    },
+    "quicktext.accesskeyTemplate.export": {
+        "message": "e"
+    },
+    "quicktext.accesskeyTemplate.import": {
+        "message": "i"
+    },
+    "quicktext.addGroup.label": {
+        "message": "Csoport hozzáadása"
+    },
+    "quicktext.addScript.label": {
+        "message": "Parancsfájl hozzáadása"
+    },
+    "quicktext.addTemplate.label": {
+        "message": "Sablon hozzáadása"
+    },
+    "quicktext.altKey.label": {
+        "message": "Alt"
+    },
+    "quicktext.attachments.label": {
+        "message": "Mellékletek"
+    },
+    "quicktext.browse.label": {
+        "message": "Tallózás…"
+    },
+    "quicktext.cellularnumber.label": {
+        "message": "Mobiltelefonszám"
+    },
+    "quicktext.clipboard.label": {
+        "message": "Vágólap"
+    },
+    "quicktext.close.label": {
+        "message": "Bezárás"
+    },
+    "quicktext.collapseSetting.label": {
+        "message": "Csoport összecsukása amikor egy sablont tartalmaz"
+    },
+    "quicktext.controlKey.label": {
+        "message": "Ctrl"
+    },
+    "quicktext.counter.label": {
+        "message": "Számláló"
+    },
+    "quicktext.cursor.label": {
+        "message": "Kurzor helyezkedő"
+    },
+    "quicktext.custom1.label": {
+        "message": "1. egyéni"
+    },
+    "quicktext.custom2.label": {
+        "message": "2. egyéni"
+    },
+    "quicktext.custom3.label": {
+        "message": "3. egyéni"
+    },
+    "quicktext.custom4.label": {
+        "message": "4. egyéni"
+    },
+    "quicktext.dateTime.label": {
+        "message": "Dátum/idő"
+    },
+    "quicktext.defaultImport.label": {
+        "message": "Importálás indításkor"
+    },
+    "quicktext.displayname.label": {
+        "message": "Megjelenítendő név"
+    },
+    "quicktext.email.label": {
+        "message": "E-mail"
+    },
+    "quicktext.enterKey.label": {
+        "message": "Enter"
+    },
+    "quicktext.export.label": {
+        "message": "Exportálása"
+    },
+    "quicktext.f11Key.label": {
+        "message": "F11"
+    },
+    "quicktext.f12Key.label": {
+        "message": "F12"
+    },
+    "quicktext.f2Key.label": {
+        "message": "F2"
+    },
+    "quicktext.f4Key.label": {
+        "message": "F4"
+    },
+    "quicktext.f5Key.label": {
+        "message": "F5"
+    },
+    "quicktext.f8Key.label": {
+        "message": "F8"
+    },
+    "quicktext.faxnumber.label": {
+        "message": "Fax szám"
+    },
+    "quicktext.file.label": {
+        "message": "Fájl"
+    },
+    "quicktext.filename.label": {
+        "message": "Fájlnév"
+    },
+    "quicktext.filenameAndSize.label": {
+        "message": "Fájlnév és fájlméret"
+    },
+    "quicktext.firstname.label": {
+        "message": "Keresztnév"
+    },
+    "quicktext.from.label": {
+        "message": "Feladó"
+    },
+    "quicktext.fullname.label": {
+        "message": "Teljes név"
+    },
+    "quicktext.general.label": {
+        "message": "Általános"
+    },
+    "quicktext.getScript.label": {
+        "message": "Közösségi parancsfájlok"
+    },
+    "quicktext.goToHomepage.label": {
+        "message": "Ugrás a honlapra"
+    },
+    "quicktext.group.label": {
+        "message": "Csoport"
+    },
+    "quicktext.header.label": {
+        "message": "Fejléc (Címzett [To], Másolat [Cc], Rejtett másolat [Bcc])"
+    },
+    "quicktext.help.label": {
+        "message": "Súgó"
+    },
+    "quicktext.homenumber.label": {
+        "message": "Otthoni szám"
+    },
+    "quicktext.image.label": {
+        "message": "Beágyazott HTML-kép"
+    },
+    "quicktext.import.label": {
+        "message": "Importálása"
+    },
+    "quicktext.input.label": {
+        "message": "Bemeneti érték a parancssorból"
+    },
+    "quicktext.insertAs.label": {
+        "message": "Irányított beszúrása…"
+    },
+    "quicktext.insertTextFromFileAsHTML.label": {
+        "message": "Fájl beszúrása mint HTML formátum"
+    },
+    "quicktext.insertTextFromFileAsText.label": {
+        "message": "Fájl beszúrása mint szöveg formátum"
+    },
+    "quicktext.insertfile.label": {
+        "message": "Tartalom a fájlból (gyorsszöveg változók lecseréli)"
+    },
+    "quicktext.jobtitle.label": {
+        "message": "Munka megnevezése"
+    },
+    "quicktext.keyword.label": {
+        "message": "Kulcsszó"
+    },
+    "quicktext.keywordKeySetting.label": {
+        "message": "billentyű a kulcsszó aktiválásához"
+    },
+    "quicktext.label": {
+        "message": "Gyorsszöveg"
+    },
+    "quicktext.lastname.label": {
+        "message": "Vezetéknév"
+    },
+    "quicktext.metaKey.label": {
+        "message": "Meta"
+    },
+    "quicktext.modifierSetting.label": {
+        "message": "billentyű módosít a billentyűparancsot"
+    },
+    "quicktext.nickname.label": {
+        "message": "Becenév"
+    },
+    "quicktext.none.label": {
+        "message": "Nincs"
+    },
+    "quicktext.orgatt.label": {
+        "message": "Eredeti melléklet adatai"
+    },
+    "quicktext.orgheader.label": {
+        "message": "Eredeti fejléc adatai"
+    },
+    "quicktext.other.label": {
+        "message": "Más"
+    },
+    "quicktext.remove.label": {
+        "message": "Eltávolítás"
+    },
+    "quicktext.resetcounter.label": {
+        "message": "Számláló visszaállítása"
+    },
+    "quicktext.rightClickSetting.label": {
+        "message": "Jobb kattintással a gyorsszöveg menü megnyitása"
+    },
+    "quicktext.save.label": {
+        "message": "Mentés"
+    },
+    "quicktext.script.label": {
+        "message": "Parancsfájl"
+    },
+    "quicktext.scripts.label": {
+        "message": "Parancsfájlok"
+    },
+    "quicktext.selection.label": {
+        "message": "Kijelölés"
+    },
+    "quicktext.settings.label": {
+        "message": "Beállítások"
+    },
+    "quicktext.settings.title": {
+        "message": "Gyorsszöveg beállításai"
+    },
+    "quicktext.sharingScripts.label": {
+        "message": "Parancsfájlok megosztása"
+    },
+    "quicktext.sharingTemplates.label": {
+        "message": "Sablonok megosztása"
+    },
+    "quicktext.shortcut.label": {
+        "message": "Gyorsbillentyű"
+    },
+    "quicktext.shortcutTypeAdv.label": {
+        "message": "Használja a speciális módot a gyorsbillentyűkhöz"
+    },
+    "quicktext.shortname.label": {
+        "message": "Gyorsszöveg"
+    },
+    "quicktext.spaceKey.label": {
+        "message": "Szóköz"
+    },
+    "quicktext.subject.label": {
+        "message": "Tárgy"
+    },
+    "quicktext.tabKey.label": {
+        "message": "Fül"
+    },
+    "quicktext.template.label": {
+        "message": "Sablon"
+    },
+    "quicktext.templates.label": {
+        "message": "Sablonok"
+    },
+    "quicktext.text.label": {
+        "message": "Szöveg"
+    },
+    "quicktext.title.label": {
+        "message": "Cím"
+    },
+    "quicktext.to.label": {
+        "message": "Címzett"
+    },
+    "quicktext.url.label": {
+        "message": "Válasz az URL-címtől"
+    },
+    "quicktext.variables.label": {
+        "message": "Változók"
+    },
+    "quicktext.version.label": {
+        "message": "Thunderbird verzió"
+    },
+    "quicktext.worknumber.label": {
+        "message": "Munkahelyi szám"
+    },
+    "remove": {
+        "message": "Biztos benne, hogy el akarja távolítani a(z) „$P1$”-t?",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "saveMessage": {
+        "message": "A módosításokat nincs elmentve. Szeretné menteni azokat?"
+    },
+    "saveMessageTitle": {
+        "message": "Beállítások mentése"
+    },
+    "scriptError": {
+        "message": "Hiba történt a gyorsszöveg parancsfájlban:"
+    },
+    "scriptLine": {
+        "message": "Sor"
+    },
+    "scriptNotFound": {
+        "message": "Gyorsszöveg „$P1$”-parancsfájl nem található!",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "template": {
+        "message": "Sablon"
+    },
+    "time": {
+        "message": "Idő ($P1$)",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }
 }

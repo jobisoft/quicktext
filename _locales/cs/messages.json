@@ -3,13 +3,13 @@
         "message": "Alt"
     },
     "attachmentFile": {
-        "message": "Choisir le fichier à ajouter aux pièces jointes"
+        "message": "Vyberte soubor, který se má přidat do příloh"
     },
     "controlKey": {
         "message": "Ctrl"
     },
     "date": {
-        "message": "Date ($P1$)",
+        "message": "Datum ($P1$)",
         "placeholders": {
             "P1": {
                 "content": "$1"
@@ -17,22 +17,19 @@
         }
     },
     "exportFile": {
-        "message": "Choisir le fichier de destination (UTF-8)"
-    },
-    "extensionDescription": {
-        "message": "Ajoute une barre d’outils à la fenêtre Email Edit afin que les modules de texte puissent être ajoutés facilement et rapidement. Il est également possible d'utiliser des variables telles que [[TO=firstname]]."
+        "message": "Vyberte pro exportování (UTF-8)"
     },
     "fileNotUTF8": {
-        "message": "The selected file does not seem to be UTF-8 encoded and will not loaded correctly. Please select a different file."
+        "message": "Vybraný soubor zřejmě není kódovaný v UTF-8 a nebude správně načten. Vyberte prosím jiný soubor."
     },
     "group": {
-        "message": "Groupe"
+        "message": "Skupina"
     },
     "importFile": {
-        "message": "Choisir le fichier à importer (UTF-8)"
+        "message": "Vybarte soubor k importování (UTF-8)"
     },
     "inputText": {
-        "message": "Entrez la valeur de $P1$",
+        "message": "Zadejte hodnotu $P1$",
         "placeholders": {
             "P1": {
                 "content": "$1"
@@ -40,25 +37,25 @@
         }
     },
     "inputTitle": {
-        "message": "Valeur de la variable"
+        "message": "Hodnota proměnné"
     },
     "insertFile": {
-        "message": "Choisir le fichier à insérer (UTF-8)"
+        "message": "Vyberte soubor k vložení (UTF-8)"
     },
     "insertImage": {
-        "message": "Choose image file to insert"
+        "message": "Vyberte soubor obrázku ke vložení"
     },
     "metaKey": {
         "message": "Meta"
     },
     "newGroup": {
-        "message": "Nouveau groupe"
+        "message": "Nová skupina"
     },
     "newScript": {
-        "message": "Nouveau script"
+        "message": "Nový skript"
     },
     "newTemplate": {
-        "message": "Nouveau modèle"
+        "message": "Nová šablona"
     },
     "quicktext.HTML.label": {
         "message": "HTML"
@@ -73,7 +70,7 @@
         "message": "l"
     },
     "quicktext.accesskey.close": {
-        "message": "c"
+        "message": "z"
     },
     "quicktext.accesskey.communityScripts": {
         "message": "s"
@@ -82,7 +79,7 @@
         "message": "o"
     },
     "quicktext.accesskey.file": {
-        "message": "f"
+        "message": "b"
     },
     "quicktext.accesskey.general": {
         "message": "g"
@@ -91,7 +88,7 @@
         "message": "w"
     },
     "quicktext.accesskey.help": {
-        "message": "d"
+        "message": "p"
     },
     "quicktext.accesskey.import": {
         "message": "r"
@@ -112,7 +109,7 @@
         "message": "n"
     },
     "quicktext.accesskey.templates": {
-        "message": "t"
+        "message": "y"
     },
     "quicktext.accesskeyScripts.export": {
         "message": "x"
@@ -127,73 +124,73 @@
         "message": "i"
     },
     "quicktext.addGroup.label": {
-        "message": "Ajouter un groupe"
+        "message": "Přidat skupinu"
     },
     "quicktext.addScript.label": {
-        "message": "Ajouter un script"
+        "message": "Přidat skript"
     },
     "quicktext.addTemplate.label": {
-        "message": "Ajouter un modèle"
+        "message": "Přidat šablonu"
     },
     "quicktext.altKey.label": {
         "message": "Alt"
     },
     "quicktext.attachments.label": {
-        "message": "Pièces jointes"
+        "message": "Přílohy"
     },
     "quicktext.browse.label": {
-        "message": "Parcourir"
+        "message": "Procházet"
     },
     "quicktext.cellularnumber.label": {
-        "message": "Portable"
+        "message": "Mobilní telefon"
     },
     "quicktext.clipboard.label": {
-        "message": "Presse-papiers"
+        "message": "Schránka"
     },
     "quicktext.close.label": {
-        "message": "Fermer"
+        "message": "Zavřít"
     },
     "quicktext.collapseSetting.label": {
-        "message": "Masquer le groupe lorsqu'il ne contient qu'un seul modèle"
+        "message": "Skrývat názvy skupin, pokud obsahují jen jednu šablonu"
     },
     "quicktext.controlKey.label": {
         "message": "Ctrl"
     },
     "quicktext.counter.label": {
-        "message": "Counter"
+        "message": "Počítadlo"
     },
     "quicktext.cursor.label": {
-        "message": "Position du curseur"
+        "message": "Nastavit pozici kurzoru"
     },
     "quicktext.custom1.label": {
-        "message": "Personnalisé-1"
+        "message": "Vlastní 1"
     },
     "quicktext.custom2.label": {
-        "message": "Personnalisé-2"
+        "message": "Vlastní 2"
     },
     "quicktext.custom3.label": {
-        "message": "Personnalisé-3"
+        "message": "Vlastní 3"
     },
     "quicktext.custom4.label": {
-        "message": "Personnalisé-4"
+        "message": "Vlastní 4"
     },
     "quicktext.dateTime.label": {
-        "message": "Date/Heure"
+        "message": "Datum/čas"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importé au démarrage"
+        "message": "Importovat po spuštění"
     },
     "quicktext.displayname.label": {
-        "message": "Nom à afficher"
+        "message": "Zobrazované jméno"
     },
     "quicktext.email.label": {
-        "message": "Courriel"
+        "message": "E-mail"
     },
     "quicktext.enterKey.label": {
-        "message": "Entrée"
+        "message": "Enter"
     },
     "quicktext.export.label": {
-        "message": "Exporter"
+        "message": "Exportovat"
     },
     "quicktext.f11Key.label": {
         "message": "F11"
@@ -217,181 +214,181 @@
         "message": "Fax"
     },
     "quicktext.file.label": {
-        "message": "Fichier"
+        "message": "Soubor"
     },
     "quicktext.filename.label": {
-        "message": "Nom du fichier"
+        "message": "Název souboru"
     },
     "quicktext.filenameAndSize.label": {
-        "message": "Nom et taille du fichier"
+        "message": "Název souboru a velikost"
     },
     "quicktext.firstname.label": {
-        "message": "Prénom"
+        "message": "Jméno"
     },
     "quicktext.from.label": {
-        "message": "De"
+        "message": "Od"
     },
     "quicktext.fullname.label": {
-        "message": "Nom complet"
+        "message": "Celé jméno"
     },
     "quicktext.general.label": {
-        "message": "Générales"
+        "message": "Obecné"
     },
     "quicktext.getScript.label": {
-        "message": "Community Scripts"
+        "message": "Komunitní skripty"
     },
     "quicktext.goToHomepage.label": {
-        "message": "Visiter le site Web"
+        "message": "Přejít na webové stránky"
     },
     "quicktext.group.label": {
-        "message": "Groupe"
+        "message": "Skupina"
     },
     "quicktext.header.label": {
-        "message": "Header (To, Cc, Bcc)"
+        "message": "Přidat záhlaví (komu, kopie, skrytá kopie)"
     },
     "quicktext.help.label": {
-        "message": "Aide"
+        "message": "Nápověda"
     },
     "quicktext.homenumber.label": {
-        "message": "Tél. domicile"
+        "message": "Telefon domů"
     },
     "quicktext.image.label": {
-        "message": "Embedded HTML image"
+        "message": "Vložený HTML obrázek"
     },
     "quicktext.import.label": {
-        "message": "Importer"
+        "message": "Importovat"
     },
     "quicktext.input.label": {
-        "message": "Input value from user prompt"
+        "message": "Vstupní hodnota zadaná uživatelem"
     },
     "quicktext.insertAs.label": {
-        "message": "Insérer en"
+        "message": "Vložit jako"
     },
     "quicktext.insertTextFromFileAsHTML.label": {
-        "message": "Insérer un fichier en HTML"
+        "message": "Vložit soubor jako HTML"
     },
     "quicktext.insertTextFromFileAsText.label": {
-        "message": "Insérer un fichier en texte"
+        "message": "Vložit soubor jako text"
     },
     "quicktext.insertfile.label": {
-        "message": "Content from file (quicktext variables will be replaced)"
+        "message": "Obsah ze souboru (Quicktext proměnné budou nahrazeny)"
     },
     "quicktext.jobtitle.label": {
-        "message": "Profession"
+        "message": "Pozice"
     },
     "quicktext.keyword.label": {
-        "message": "Mot-clé"
+        "message": "Klíčové slovo"
     },
     "quicktext.keywordKeySetting.label": {
-        "message": "est la touche que je veux utiliser pour activer un mot-clé"
+        "message": "je klávesa, kterou chci aktivovat klíčové slovo"
     },
     "quicktext.label": {
         "message": "Quicktext"
     },
     "quicktext.lastname.label": {
-        "message": "Nom"
+        "message": "Příjmení"
     },
     "quicktext.metaKey.label": {
         "message": "Meta"
     },
     "quicktext.modifierSetting.label": {
-        "message": "est la touche que je veux utiliser pour les raccourcis clavier"
+        "message": "je modifikátor, který chci používat pro klávesové zkratky"
     },
     "quicktext.nickname.label": {
-        "message": "Surnom"
+        "message": "Přezdívka"
     },
     "quicktext.none.label": {
-        "message": "Aucun"
+        "message": "Žádná"
     },
     "quicktext.orgatt.label": {
-        "message": "Original attachment info"
+        "message": "Informace o původní příloze"
     },
     "quicktext.orgheader.label": {
-        "message": "Original header info"
+        "message": "Informace o původním záhlaví"
     },
     "quicktext.other.label": {
-        "message": "Autres"
+        "message": "Ostatní"
     },
     "quicktext.remove.label": {
-        "message": "Supprimer"
+        "message": "Odstranit"
     },
     "quicktext.resetcounter.label": {
-        "message": "Réinitialiser le compteur"
+        "message": "Vynulovat počítadlo"
     },
     "quicktext.rightClickSetting.label": {
-        "message": "Afficher le menu de Quicktext dans le menu contextuel (clic droit)"
+        "message": "Zobrazovat Quicktext v nabídce pod pravým tlačítkem myši"
     },
     "quicktext.save.label": {
-        "message": "Enregistrer"
+        "message": "Uložit"
     },
     "quicktext.script.label": {
-        "message": "Script"
+        "message": "Skript"
     },
     "quicktext.scripts.label": {
-        "message": "Scripts"
+        "message": "Skripty"
     },
     "quicktext.selection.label": {
-        "message": "Selection"
+        "message": "Výběr"
     },
     "quicktext.settings.label": {
-        "message": "Paramètres"
+        "message": "Nastavení"
     },
     "quicktext.settings.title": {
-        "message": "Paramètres de Quicktext"
+        "message": "Nastavení Quicktext"
     },
     "quicktext.sharingScripts.label": {
-        "message": "Partage de scripts"
+        "message": "Sdílení skriptů"
     },
     "quicktext.sharingTemplates.label": {
-        "message": "Partage de modèles"
+        "message": "Sdílení šablon"
     },
     "quicktext.shortcut.label": {
-        "message": "Raccourci"
+        "message": "Zkratka"
     },
     "quicktext.shortcutTypeAdv.label": {
-        "message": "Utiliser le mode avancé pour les raccourcis clavier"
+        "message": "Používat pokročilý režim zkratek"
     },
     "quicktext.shortname.label": {
         "message": "Quicktext"
     },
     "quicktext.spaceKey.label": {
-        "message": "Espace"
+        "message": "Mezera"
     },
     "quicktext.subject.label": {
-        "message": "Sujet"
+        "message": "Předmět"
     },
     "quicktext.tabKey.label": {
         "message": "Tab"
     },
     "quicktext.template.label": {
-        "message": "Modèle"
+        "message": "Šablona"
     },
     "quicktext.templates.label": {
-        "message": "Modèles"
+        "message": "Šablony"
     },
     "quicktext.text.label": {
-        "message": "Texte"
+        "message": "Text"
     },
     "quicktext.title.label": {
-        "message": "Titre"
+        "message": "Název"
     },
     "quicktext.to.label": {
-        "message": "Pour"
+        "message": "Komu"
     },
     "quicktext.url.label": {
-        "message": "Response from URL"
+        "message": "Odpověď z URL"
     },
     "quicktext.variables.label": {
-        "message": "Variables"
+        "message": "Proměnné"
     },
     "quicktext.version.label": {
-        "message": "Version de Thunderbird"
+        "message": "Verze Thunderbirdu"
     },
     "quicktext.worknumber.label": {
-        "message": "Tél. travail"
+        "message": "Telefon do zaměstnání"
     },
     "remove": {
-        "message": "Voulez-vous vraiment supprimer « $P1$ » ?",
+        "message": "Opravdu chcete odstranit “$P1$”?",
         "placeholders": {
             "P1": {
                 "content": "$1"
@@ -399,16 +396,16 @@
         }
     },
     "saveMessage": {
-        "message": "Vos modifications n'ont pas été enregistrées. Souhaitez-vous les enregistrer ?"
+        "message": "Vaše změny nebyly uloženy. Chcete je uložit?"
     },
     "saveMessageTitle": {
-        "message": "Enregistrement des paramètres"
+        "message": "Uložit nastavení"
     },
     "scriptError": {
-        "message": "There was an error in your Quicktext script:"
+        "message": "Ve vašem Quicktext skriptu se objevila chyba:"
     },
     "scriptLine": {
-        "message": "Line"
+        "message": "Řádek"
     },
     "scriptNotFound": {
         "message": "Quicktext script “$P1$” not found!",
@@ -419,10 +416,10 @@
         }
     },
     "template": {
-        "message": "Modèle"
+        "message": "Šablona"
     },
     "time": {
-        "message": "Heure ($P1$)",
+        "message": "Čas ($P1$)",
         "placeholders": {
             "P1": {
                 "content": "$1"
