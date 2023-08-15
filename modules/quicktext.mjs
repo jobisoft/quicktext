@@ -1,27 +1,15 @@
 import { QuicktextVar } from "/modules/quicktextVar.mjs";
 
-/*
- * INSERTING TEXT
- */
-
 export async function insertBody(tab, aStr, type = 0) { // 0 = text
   if (type > 0) {
     await messenger.tabs.sendMessage(tab.id, {
-      insertHtml: removeBadHTML(aStr),
+      insertHtml: utils.removeBadHTML(aStr),
     });
   } else {
     await messenger.tabs.sendMessage(tab.id, {
       insertText: aStr,
     });
   }
-}
-
-function removeBadHTML(aStr) {
-  // Remove the head-tag
-  aStr = aStr.replace(/<head(| [^>]*)>.*<\/head>/gim, '');
-  // Remove html and body tags
-  aStr = aStr.replace(/<(|\/)(head|body)(| [^>]*)>/gim, '');
-  return aStr;
 }
 
 export async function parseVariable(aTab, aVar) {

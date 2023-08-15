@@ -45,3 +45,11 @@ export function replaceText(tag, value, text) {
 function escapeRegExp(aStr) {
     return aStr.replace(/([\^\$\_\.\\\[\]\(\)\|\+\?])/g, "\\$1");
 }
+
+export function removeBadHTML(aStr) {
+    // Remove the head-tag
+    aStr = aStr.replace(/<head(| [^>]*)>.*<\/head>/gim, '');
+    // Remove html and body tags
+    aStr = aStr.replace(/<(|\/)(head|body)(| [^>]*)>/gim, '');
+    return aStr;
+  }
