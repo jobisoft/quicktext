@@ -31,7 +31,7 @@
                 <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('TO=displayname');" />
                 <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('TO=nickname');" />
                 <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('TO=email');" />
-                <menuitem label="__MSG_quicktext.worknumber.label__" oncommand="quicktext.insertVariable('TO=workphone');" />
+                <menuitem label="__MSG_quicktext.workphone.label__" oncommand="quicktext.insertVariable('TO=workphone');" />
                 <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('TO=faxnumber');" />
                 <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
                 <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('TO=jobtitle');" />
@@ -49,7 +49,7 @@
                 <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('FROM=displayname');" />
                 <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('FROM=nickname');" />
                 <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('FROM=email');" />
-                <menuitem label="__MSG_quicktext.worknumber.label__" oncommand="quicktext.insertVariable('FROM=workphone');" />
+                <menuitem label="__MSG_quicktext.workphone.label__" oncommand="quicktext.insertVariable('FROM=workphone');" />
                 <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
                 <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
                 <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
