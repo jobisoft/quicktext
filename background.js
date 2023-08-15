@@ -43,8 +43,7 @@
     }
   });
 
-  // Register legacy chrome url via WindowListener API
-  await messenger.WindowListener.registerChromeUrl([
+  await messenger.Quicktext.registerChromeUrl([
     ["content", "quicktext", "chrome/content/"],
     ["resource", "quicktext", "chrome/"],
   ]);

@@ -135,8 +135,9 @@ var gQuicktext = {
 ,
   loadSettings: async function(aReload)
   {
-    if (!aReload && this.mSettingsLoaded)
+    if (!aReload && this.mSettingsLoaded) {
       return false;
+    }
 
     this.mSettingsLoaded = true;
 
@@ -224,7 +225,6 @@ var gQuicktext = {
     }
 
     this.startEditing();
-
     // Notify that settings has been changed
     this.notifyObservers("updatesettings", "");
 

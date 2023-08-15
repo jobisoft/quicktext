@@ -17,6 +17,25 @@
     ],
     "functions": [
       {
+        "name": "registerChromeUrl",
+        "type": "function",
+        "async": true,
+        "description": "Register folders which should be available as chrome:// urls (as defined in the legacy chrome.manifest)",
+        "parameters": [
+          {
+            "name": "data",
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "description": "Array of manifest url definitions (content, locale, resource)"
+          }
+        ]
+      },
+      {
         "name": "openSettings",
         "type": "function",
         "async": true,
