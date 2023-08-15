@@ -220,7 +220,7 @@
           (module.startsWith("chrome://") &&
             chromeUrls.find((s) => module.startsWith(s)))
         ) {
-          this.log("Unloading: " + module);
+          console.log("Unloading: " + module);
           Cu.unload(module);
         }
       }
