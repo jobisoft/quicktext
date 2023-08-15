@@ -67,31 +67,31 @@
 
   // Add entries to open settings.
   await messenger.menus.create({
-    title: browser.i18n.getMessage("quicktext.label"),
+    title: messenger.i18n.getMessage("quicktext.label"),
     contexts: ["tools_menu"],
     onclick: (info, tab) => messenger.Quicktext.openSettings(tab.windowId)
   })
-  browser.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
-  browser.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
+  messenger.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
+  messenger.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
 
   // Add Quicktext composeBody context menu.
   await messenger.menus.create({
     id: "composeContextMenu",
-    title: browser.i18n.getMessage("quicktext.label"),
+    title: messenger.i18n.getMessage("quicktext.label"),
     contexts: ["compose_body"],
     onclick: (info, tab) => console.log(info)
   })
 
   // Add config options to composeAction context menu.
   await messenger.menus.create({
-    title: browser.i18n.getMessage("quicktext.showToolbar.label"),
+    title: messenger.i18n.getMessage("quicktext.showToolbar.label"),
     contexts: ["compose_action"],
     type: "checkbox",
     checked: await preferences.getPref("toolbar"),
     onclick: (info, tab) => preferences.setPref("toolbar", info.checked)
   })
   await messenger.menus.create({
-    title: browser.i18n.getMessage("quicktext.showContextMenu.label"),
+    title: messenger.i18n.getMessage("quicktext.showContextMenu.label"),
     contexts: ["compose_action"],
     type: "checkbox",
     checked: await preferences.getPref("popup"),
