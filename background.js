@@ -82,7 +82,10 @@
     }
     if (changes.userPrefs.newValue.hasOwnProperty("toolbar")) {
       let visible = changes.userPrefs.newValue.toolbar;
-      messenger.Quicktext.toggleToolbar(visible);
+      let composeTabs = await messenger.tabs.query({type: "messageCompose"});
+      for (let composeTab of composeTabs) {
+        await messenger.Quicktext.toggleToolbar(composeTab.windowId, visible);
+      }
     }
   })
 

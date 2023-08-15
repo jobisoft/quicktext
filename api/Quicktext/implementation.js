@@ -174,8 +174,7 @@
           },
 
           openSettings(windowId) {
-            let window = context.extension.windowManager.get(windowId, context)
-              .window;
+            let { window } = context.extension.windowManager.get(windowId, context);
             window.openDialog(
               "chrome://quicktext/content/settings.xhtml",
               "QuicktextOptions",
@@ -189,9 +188,14 @@
             }
             await install(context.extension, window);
           },
-          toggleToolbar(visible) {
-            console.log("toggleToolbar", visible);
-          }
+          toggleToolbar(windowId, visible) {
+              let { window } = context.extension.windowManager.get(windowId, context);
+              if (visible) {
+                window.document.getElementById("quicktext-toolbar").removeAttribute("collapsed");
+              } else {
+                window.document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
+              }
+            }
         }
       };
     }
