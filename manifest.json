@@ -4,7 +4,7 @@
     "gecko": {
       "id": "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}",
       "strict_min_version": "102.0",
-      "strict_max_version": "115.*"
+      "strict_max_version": "118.*"
     }
   },
   "name": "Quicktext",
