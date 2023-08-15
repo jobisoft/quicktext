@@ -65,6 +65,20 @@
         "script": "api/Quicktext/implementation.js"
       }
     },
+    "LegacyPrefs": {
+      "schema": "api/LegacyPrefs/schema.json",
+      "parent": {
+        "scopes": [
+          "addon_parent"
+        ],
+        "paths": [
+          [
+            "LegacyPrefs"
+          ]
+        ],
+        "script": "api/LegacyPrefs/implementation.js"
+      }
+    },
     "NotifyTools": {
       "schema": "api/NotifyTools/schema.json",
       "parent": {

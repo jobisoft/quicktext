@@ -15,11 +15,21 @@
   };
   await preferences.init(defaultPrefs);
 
-  // Allow to load prefs from managed storage.
+  // Define prefs, which can be overridden by system admins.
   const managedPrefs = [
     "defaultImport",
     "templateFolder",
   ];
+
+  // Still allow to read overrides from LegacyPref.
+  for (let managedPref of managedPrefs) {
+    let override = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}${managedPref}Override`);
+    if (override !== null) {
+      preferences.setPref(managedPref, override);
+    }
+  }
+
+  // Allow override via managed storage.
   for (let managedPref of managedPrefs) {
     try {
       let rv = await messenger.storage.managed.get({ [managedPref]: null });
@@ -43,19 +53,22 @@
     }
   });
 
+  // As long as we have a XUL settings window, we still need this. The next step
+  // is to convert the settigns window to html and move all legacy functions from
+  // the JSMs directly into the Quicktext API.
   await messenger.Quicktext.registerChromeUrl([
     ["content", "quicktext", "chrome/content/"],
     ["resource", "quicktext", "chrome/"],
   ]);
 
   // React to open composer windows.
-  messenger.windows.onCreated.addListener(window => { 
+  messenger.windows.onCreated.addListener(window => {
     if (window.type != "messageCompose") {
       return;
     }
     messenger.Quicktext.load(window.id);
   });
-  let composeWindows = await messenger.windows.getAll({windowTypes: ["messageCompose"]});
+  let composeWindows = await messenger.windows.getAll({ windowTypes: ["messageCompose"] });
   for (let composeWindow of composeWindows) {
     await messenger.Quicktext.load(composeWindow.id);
   }
