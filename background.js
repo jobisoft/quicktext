@@ -55,30 +55,31 @@
   });
 
   // As long as we have a XUL settings window, we still need this. The next step
-  // is to convert the settigns window to html and move all legacy functions from
+  // is to convert the settings window to html and move all legacy functions from
   // the JSMs directly into the Quicktext API.
   await messenger.Quicktext.registerChromeUrl([
     ["content", "quicktext", "chrome/content/"],
     ["resource", "quicktext", "chrome/"],
   ]);
 
-  // React to open composer windows.
-  messenger.windows.onCreated.addListener(window => {
-    if (window.type != "messageCompose") {
-      return;
-    }
-    messenger.Quicktext.load(window.id);
-  });
-  let composeWindows = await messenger.windows.getAll({ windowTypes: ["messageCompose"] });
-  for (let composeWindow of composeWindows) {
-    await messenger.Quicktext.load(composeWindow.id);
+  // React to open composer tabs.
+  async function prepareComposeTab(tab) {
+    await browser.tabs.executeScript(tab.id, {
+      file: "/scripts/compose.js"
+    });
+    messenger.Quicktext.load(tab.windowId);
+  }
+  messenger.tabs.onCreated.addListener(prepareComposeTab);
+  let composeTabs = await messenger.tabs.query({type: "messageCompose"});
+  for (let composeTab of composeTabs) {
+    await prepareComposeTab(composeTab);
   }
 
   // React to pref changes.
-  messenger.storage.sync.onChanged.addListener(changes => {
+  messenger.storage.sync.onChanged.addListener(async changes => {
     if (changes.userPrefs.newValue.hasOwnProperty("popup")) {
       let visible = changes.userPrefs.newValue.popup;
-      messenger.menus.update("composeContextMenu", { visible })
+      await messenger.menus.update("composeContextMenu", { visible })
     }
     if (changes.userPrefs.newValue.hasOwnProperty("toolbar")) {
       let visible = changes.userPrefs.newValue.toolbar;

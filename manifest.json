@@ -38,7 +38,8 @@
   },
   "permissions": [
     "storage",
-    "menus"
+    "menus",
+    "compose"
   ],
   "background": {
     "scripts": [
