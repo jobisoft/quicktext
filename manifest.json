@@ -90,7 +90,8 @@
             "NotifyTools"
           ]
         ],
-        "script": "api/NotifyTools/implementation.js"
+        "script": "api/NotifyTools/implementation.js",
+        "events": ["startup"]
       }
     }
   }
