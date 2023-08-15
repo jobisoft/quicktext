@@ -39,7 +39,8 @@
   "permissions": [
     "storage",
     "menus",
-    "compose"
+    "compose",
+    "clipboardRead"
   ],
   "background": {
     "page": "background.html"

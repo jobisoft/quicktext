@@ -319,32 +319,6 @@ wzQuicktextVar.prototype = {
     return await this.process_script(aVariables);
   }
 ,
-  get_att: function(aVariables)
-  {
-    var data = this.process_att(aVariables);
-
-    if (data.length > 0)
-    {
-      var value = [];
-      for (var i in data)
-      {
-        if (aVariables[0] == "full")
-          value.push(data[i][0] +" ("+ this.niceFileSize(data[i][1]) +")");
-        else if (aVariables[0] == "modified")
-          value.push(data[i][2])
-        else
-          value.push(data[i][0]);
-      }
-
-      if (aVariables.length < 2)
-        aVariables[1] = ", ";
-
-      return TrimString(value.join(aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t")));
-    }
-
-    return "";
-  }
-,
   get_input: function(aVariables)
   {
     var data = this.process_input(aVariables);
@@ -362,11 +336,7 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  get_clipboard: function(aVariables, aType)
-  {
-    return TrimString(this.process_clipboard(aVariables, aType));
-  }
-,  
+
   get_selection: function(aVariables, aType)
   {
     return this.process_selection(aVariables, aType);
@@ -409,51 +379,6 @@ wzQuicktextVar.prototype = {
   get_url: async function(aVariables)
   {
     return await this.process_url(aVariables);
-  }
-,
-  get_version: function(aVariables)
-  {
-    var data = this.process_version(aVariables);
-
-    if (aVariables.length < 1)
-      aVariables[0] = "full";
-    if (typeof data[aVariables[0]] != 'undefined')
-      return data[aVariables[0]];
-
-    return "";
-  }
-,
-  get_counter: async function(aVariables)
-  {
-    return await this.process_counter(aVariables);
-  }
-,
-  get_subject: function(aVariables)
-  {
-    return this.process_subject(aVariables);
-  }
-,
-  get_date: function(aVariables)
-  {
-    var data = this.process_date(aVariables);
-
-    if (aVariables.length < 1)
-      aVariables[0] = "short";
-    if (typeof data[aVariables[0]] != 'undefined')
-      return data[aVariables[0]];
-
-    return "";
-  }
-,
-  get_time: function(aVariables)
-  {
-    var data = this.process_time(aVariables);
-    if (aVariables.length < 1)
-      aVariables[0] = "noseconds";
-    if (typeof data[aVariables[0]] != 'undefined')
-      return data[aVariables[0]];
-
-    return "";
   }
 ,
   get_orgheader: function(aVariables)
@@ -617,42 +542,6 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  process_att: function(aVariables)
-  {
-    if (this.mData['ATT'] && this.mData['ATT'].checked)
-      return this.mData['ATT'].data;
-
-    this.mData['ATT'] = {};
-    this.mData['ATT'].checked = true;
-    this.mData['ATT'].data = [];
-
-    // To get the attachments we look in the attachment-field
-    // in compose-window.
-
-    var bucket = this.mWindow.document.getElementById("attachmentBucket");
-    for (var index = 0; index < bucket.getRowCount(); index++)
-    {
-      var item = bucket.getItemAtIndex(index);
-      var attachment = item.attachment;
-      if (attachment)
-      {
-        var ios = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-        var fileHandler = ios.getProtocolHandler("file").QueryInterface(Components.interfaces.nsIFileProtocolHandler);
-        try {
-          var file = fileHandler.getFileFromURLSpec(attachment.url);
-          if (file.exists())
-            this.mData['ATT'].data.push([attachment.name, file.fileSize, file.lastModifiedTime]);
-        }
-        catch(e)
-        {
-          this.mData['ATT'].data.push([attachment.name]);
-        }
-      }
-    }
-
-    return this.mData['ATT'].data;
-  }
-,
   process_input: function(aVariables)
   {
     if (typeof this.mData['INPUT'] == 'undefined')
@@ -702,69 +591,7 @@ wzQuicktextVar.prototype = {
     }
   }
 ,
-  process_clipboard: function(aVariables, aType)
-  {
-    if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
-      return this.mData['CLIPBOARD'].data;
 
-    this.mData['CLIPBOARD'] = {};
-    this.mData['CLIPBOARD'].checked = true;
-    this.mData['CLIPBOARD'].data = "";
-
-    // Gets the data from the clipboard
-    var clip = Components.classes["@mozilla.org/widget/clipboard;1"].createInstance(Components.interfaces.nsIClipboard);
-    if (clip)
-    {
-      var trans = Components.classes["@mozilla.org/widget/transferable;1"].createInstance(Components.interfaces.nsITransferable);
-      if (trans)
-      {
-        // HTML templates: request the clipboard content as html first
-        var clipboardHTMLfilled = 0;
-        if (aType == 1)
-        {
-          trans.addDataFlavor("text/html");
-          clip.getData(trans, clip.kGlobalClipboard);
-          var clipboardHTML = {};
-          try {
-            trans.getTransferData("text/html", clipboardHTML);
-            if (clipboardHTML)
-            {
-              clipboardHTML = clipboardHTML.value.QueryInterface(Components.interfaces.nsISupportsString);
-              if (clipboardHTML)
-              {
-                this.mData['CLIPBOARD'].data = clipboardHTML.data;
-                clipboardHTMLfilled = 1;
-              }
-            }
-          }
-          catch (e) { Components.utils.reportError(e); }
-        }
-
-
-        // HTML templates: request clipboard content as plain text, if requesting as html failed
-        // Text templates: request clipboard content as plain text only
-        if(clipboardHTMLfilled == 0)
-        {
-          trans.addDataFlavor("text/plain");
-          clip.getData(trans, clip.kGlobalClipboard);
-          var clipboard = {};
-          try {
-            trans.getTransferData("text/plain", clipboard);
-            if (clipboard)
-            {
-              clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
-              if (clipboard)
-                this.mData['CLIPBOARD'].data = clipboard.data;
-            }
-          }
-          catch (e) { Components.utils.reportError(e); }
-        }
-      }
-    }
-
-    return this.mData['CLIPBOARD'].data;
-  }
-,
 /**
  * Gets the VCardProperties of the given card either directly or by reconstructing
  * from a set of flat standard properties.
@@ -1089,67 +916,6 @@ getcarddata_from: function(aData, aIdentity)
     return "";
   }
 ,
-  process_version: function(aVariables)
-  {
-    if (this.mData['VERSION'] && this.mData['VERSION'].checked)
-      return this.mData['VERSION'].data;
-
-    this.mData['VERSION'] = {};
-    this.mData['VERSION'].checked = true;
-    this.mData['VERSION'].data = {};
-	  this.mData['VERSION'].data['number'] = Services.appinfo.version;
-	  this.mData['VERSION'].data['full'] = Services.appinfo.name + ' ' + Services.appinfo.version;
-
-    return this.mData['VERSION'].data;
-  }
-,
-  process_counter: async function(aVariables)
-  {
-    if (this.mData['COUNTER'] && this.mData['COUNTER'].checked)
-      return this.mData['COUNTER'].data;
-
-    this.mData['COUNTER'] = {};
-    this.mData['COUNTER'].checked = true;
-    this.mData['COUNTER'].data = await this.mQuicktext.notifyTools.notifyBackground({command:"getPref", pref: "counter"});
-    this.mData['COUNTER'].data++;
-    await this.mQuicktext.notifyTools.notifyBackground({command:"setPref", pref: "counter", value: this.mData['COUNTER'].data});
-
-    return this.mData['COUNTER'].data;
-  }
-,
-  process_subject: function(aVariables)
-  {
-    if (this.mData['SUBJECT'] && this.mData['SUBJECT'].checked)
-      return this.mData['SUBJECT'].data;
-
-    this.mData['SUBJECT'] = {};
-    this.mData['SUBJECT'].checked = true;
-    this.mData['SUBJECT'].data = "";
-
-    if (this.mWindow.document.getElementById('msgSubject'))
-      this.mData['SUBJECT'].data = this.mWindow.document.getElementById('msgSubject').value;
-
-    return this.mData['SUBJECT'].data;
-  }
-,
-  process_date: function(aVariables)
-  {
-    if (this.mData['DATE'] && this.mData['DATE'].checked)
-      return this.mData['DATE'].data;
-
-    this.preprocess_datetime();
-    return this.mData['DATE'].data;
-  }
-,
-  process_time: function(aVariables)
-  {
-    if (this.mData['TIME'] && this.mData['TIME'].checked)
-      return this.mData['TIME'].data;
-
-    this.preprocess_datetime();
-    return this.mData['TIME'].data;
-  }
-,
   process_orgheader: function(aVariables)
   {
     if (this.mData['ORGHEADER'] && this.mData['ORGHEADER'].checked)
@@ -1167,24 +933,6 @@ getcarddata_from: function(aData, aIdentity)
     this.preprocess_org();
     return this.mData['ORGATT'].data;
   }
-,
-  preprocess_datetime: function()
-  {
-    this.mData['DATE'] = {};
-    this.mData['DATE'].checked = true;
-    this.mData['DATE'].data = {};
-    this.mData['TIME'] = {};
-    this.mData['TIME'].checked = true;
-    this.mData['TIME'].data = {};
-
-    var timeStamp = new Date();
-    let fields = ["DATE-long", "DATE-short", "DATE-monthname", "TIME-seconds", "TIME-noseconds"];
-    for (let i=0; i < fields.length; i++) {
-        let field = fields[i];
-        let fieldinfo = field.split("-");
-        this.mData[fieldinfo[0]].data[fieldinfo[1]] = TrimString(quicktextUtils.dateTimeFormat(field, timeStamp));
-    }
- }
 ,
   preprocess_org: function()
   {
