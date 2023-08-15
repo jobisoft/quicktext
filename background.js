@@ -99,15 +99,6 @@
   messenger.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
   messenger.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
 
-  // Add Quicktext composeBody context menu.
-  await messenger.menus.create({
-    id: "composeContextMenu",
-    title: messenger.i18n.getMessage("quicktext.label"),
-    contexts: ["compose_body"],
-    visible: await preferences.getPref("popup"),
-    onclick: (info, tab) => console.log(info)
-  })
-
   // Add config options to composeAction context menu.
   await messenger.menus.create({
     title: messenger.i18n.getMessage("quicktext.showToolbar.label"),
@@ -116,12 +107,242 @@
     checked: await preferences.getPref("toolbar"),
     onclick: (info, tab) => preferences.setPref("toolbar", info.checked)
   })
-  await messenger.menus.create({
-    title: messenger.i18n.getMessage("quicktext.showContextMenu.label"),
-    contexts: ["compose_action"],
-    type: "checkbox",
-    checked: await preferences.getPref("popup"),
-    onclick: (info, tab) => preferences.setPref("popup", info.checked)
-  })
+
+  // Add Quicktext composeBody context menu.
+  await processMenuData(await getComposeBodyMenuData());
+
+  // Update the menus before showing them.
+  messenger.menus.onShown.addListener(async () => {
+    await updateDateTimeMenus();
+    await updateTemplateMenus();
+    messenger.menus.refresh();
+  });
 
 })();
+
+
+// TODO: ES6 module.
+async function processMenuData(menuData, parentId) {
+  for (let entry of menuData) {
+    let createData = {}
+
+    createData.id = parentId ? `${parentId}.${entry.id}` : entry.id;
+    createData.title = entry.title ? entry.title : messenger.i18n.getMessage(`quicktext.${entry.id}.label`);
+
+    if (entry.contexts) createData.contexts = entry.contexts;
+    if (entry.visible) createData.visible = entry.visible;
+    if (entry.onclick) createData.onclick = entry.onclick;
+    if (parentId) createData.parentId = parentId;
+
+    await messenger.menus.create(createData);
+    if (entry.id && entry.children) {
+      await processMenuData(entry.children, createData.id);
+    }
+  }
+}
+
+async function getContactMenuData() {
+  return [
+    {
+      id: "firstname",
+      onclick: insertFragment,
+    },
+    {
+      id: "lastname",
+      onclick: insertFragment,
+    },
+    {
+      id: "fullname",
+      onclick: insertFragment,
+    },
+    {
+      id: "displayname",
+      onclick: insertFragment,
+    },
+    {
+      id: "nickname",
+      onclick: insertFragment,
+    },
+    {
+      id: "email",
+      onclick: insertFragment,
+    },
+    {
+      id: "worknumber",
+      onclick: insertFragment,
+    },
+    {
+      id: "faxnumber",
+      onclick: insertFragment,
+    },
+    {
+      id: "cellularnumber",
+      onclick: insertFragment,
+    },
+    {
+      id: "jobtitle",
+      onclick: insertFragment,
+    },
+    {
+      id: "custom1",
+      onclick: insertFragment,
+    },
+    {
+      id: "custom2",
+      onclick: insertFragment,
+    },
+    {
+      id: "custom3",
+      onclick: insertFragment,
+    },
+    {
+      id: "custom4",
+      onclick: insertFragment,
+    }
+  ];
+}
+
+async function getDateTimeMenuData() {
+  let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
+  let children = [];
+  let now = Date.now();
+
+  for (let field of fields) {
+    let createData = {
+      id: field,
+      title: messenger.i18n.getMessage("date", quicktextUtils.getDateTimeFormat(field, now)),
+      onclick: insertFragment
+    }
+    children.push(createData)
+  }
+  return children;
+}
+
+async function getComposeBodyMenuData() {
+  return [
+    {
+      id: "composeContextMenu",
+      title: messenger.i18n.getMessage("quicktext.label"),
+      contexts: ["compose_body"],
+      visible: await preferences.getPref("popup"),
+      children: [
+        {
+          id: "variables",
+          children: [
+            {
+              id: "to",
+              children: await getContactMenuData()
+            },
+            {
+              id: "from",
+              children: await getContactMenuData()
+            },
+            {
+              id: "attachments",
+              children: [
+                {
+                  id: "filename",
+                  onclick: insertFragment
+                },
+                {
+                  id: "filenameAndSize",
+                  onclick: insertFragment
+                },
+              ]
+            },
+            {
+              id: "dateTime",
+              children: await getDateTimeMenuData(),
+            },
+            {
+              id: "other",
+              children: [
+                {
+                  id: "clipboard",
+                  onclick: insertFragment
+                },
+                {
+                  id: "counter",
+                  onclick: insertFragment
+                },
+                {
+                  id: "subject",
+                  onclick: insertFragment
+                },
+                {
+                  id: "version",
+                  onclick: insertFragment
+                },
+              ]
+            }
+          ]
+        },
+        {
+          id: "other",
+          children: [
+            {
+              id: "insertTextFromFileAsText",
+              onclick: insertFragment
+            },
+            {
+              id: "insertTextFromFileAsHTML",
+              onclick: insertFragment
+            },
+          ]
+        }
+      ]
+    },
+  ]  
+}
+
+async function updateDateTimeMenus() {
+  let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
+  let menus = ["composeContextMenu.variables.to.", "composeContextMenu.variables.from."];
+  let now = Date.now();
+
+  for (let menu of menus) {
+    for (let field of fields) {
+      await messenger.menus.update(`${menu}${field}`, {
+        title: messenger.i18n.getMessage("date", quicktextUtils.getDateTimeFormat(field, now))
+      })
+    }
+  }
+}
+
+async function updateTemplateMenus() {
+}
+
+async function insertFragment(info, tab) {
+  let itemId = info.menuItemId;
+  let group = null;
+  const GROUP_FROM = "composeContextMenu.variables.from.";
+  const GROUP_TO = "composeContextMenu.variables.to.";
+  
+  if (itemId.startsWith(GROUP_FROM)) {
+    group = "from";
+    itemId = itemId.substring(GROUP_FROM.length)
+  } else if (itemId.startsWith(GROUP_TO)) {
+    group = "to";
+    itemId = itemId.substring(GROUP_TO.length)
+  }
+
+  // Process insert commands
+
+
+  console.log("sending", tab.id, {itemId});
+  let rv = await messenger.tabs.sendMessage(tab.id, {insertText:itemId});
+  console.log("done", rv);
+}
+
+// TODO: ES6 module.
+var quicktextUtils = {
+  getDateTimeFormat(format, timeStamp) {
+    let options = {};
+    options["date-short"] = { dateStyle: "short" };
+    options["date-long"] = { dateStyle: "full" };
+    options["date-monthname"] = { month: "long" };
+    options["time-noseconds"] = { timeStyle: "short" };
+    options["time-seconds"] = { timeStyle: "medium" };
+    return new Intl.DateTimeFormat(browser.i18n.getUILanguage(), options[format.toLowerCase()]).format(timeStamp)
+  }
+}
