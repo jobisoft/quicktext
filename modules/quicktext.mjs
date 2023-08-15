@@ -1,4 +1,4 @@
-import { QuicktextVar } from "/modules/quicktextVar.js";
+import { QuicktextVar } from "/modules/quicktextVar.mjs";
 
 /*
  * INSERTING TEXT

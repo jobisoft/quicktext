@@ -40,7 +40,9 @@
     "storage",
     "menus",
     "compose",
-    "clipboardRead"
+    "clipboardRead",
+    "accountsRead",
+    "addressBooks"
   ],
   "background": {
     "page": "background.html"

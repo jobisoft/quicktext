@@ -1,5 +1,5 @@
-import * as menus from "/modules/menus.js";
-import * as preferences from "/modules/preferences.js";
+import * as menus from "/modules/menus.mjs";
+import * as preferences from "/modules/preferences.mjs";
 
 (async () => {
 

@@ -1,6 +1,6 @@
-import * as utils from "/modules/utils.js";
-import * as quicktext from "/modules/quicktext.js";
-import * as preferences from "/modules/preferences.js";
+import * as utils from "/modules/utils.mjs";
+import * as quicktext from "/modules/quicktext.mjs";
+import * as preferences from "/modules/preferences.mjs";
 
 export async function buildComposeBodyMenu() {
     await processMenuData(await getComposeBodyMenuData());
@@ -26,7 +26,7 @@ async function processMenuData(menuData, parentId) {
 }
 
 async function getContactMenuData(type) {
-    let fields = ["firstname", "lastname", "fullname", "displayname", "nickname", "email", "worknumber", "faxnumber", "cellularnumber", "jobtitle", "custom1", "custom2", "custom3", "custom4"];
+    let fields = ["firstname", "lastname", "fullname", "displayname", "nickname", "email", "workphone", "faxnumber", "cellularnumber", "jobtitle", "custom1", "custom2", "custom3", "custom4"];
     let children = [];
     for (let field of fields) {
         children.push({
