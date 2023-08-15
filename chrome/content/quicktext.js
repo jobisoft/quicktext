@@ -5,17 +5,6 @@ var gQuicktextVar = new wzQuicktextVar();
 var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 
-var quicktextStateListener = {
-  NotifyComposeBodyReady: function()
-  {
-  	quicktext.insertDefaultTemplate();
-  },
-
-  NotifyComposeFieldsReady: function() {},
-  ComposeProcessDone: function(aResult) {},
-  SaveInFolderDone: function(folderURI) {}
-}
-
 var quicktext = {
   mLoaded:                      false,
   mLastFocusedElement:          null,
@@ -55,11 +44,6 @@ var quicktext = {
     }
   }
 ,
-  reload: function()
-  {
-    gQuicktextVar.init(window);
-  }
-,
   unload: function()
   {
     // Remove the observer
@@ -79,27 +63,6 @@ var quicktext = {
 
     window.removeEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
   }
-,
-
-  /**
-   * This is called when the var gMsgCompose is init. We now take
-   * the extraArguments value and listen for state changes so
-   * we know when the editor is finished.
-   */
-  windowInit: function()
-  {
-  	gMsgCompose.RegisterStateListener(quicktextStateListener);
-  }
-,
-  /*
-   * This is called when the body of the mail is set up.
-   * So now it is time to insert the default template if
-   * there exists one.
-   */
-	insertDefaultTemplate: function()
-	{
-	  dump("insertDefaultTemplate\n");
-	}
 ,
   updateGUI: function()
   {
