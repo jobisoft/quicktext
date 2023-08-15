@@ -64,10 +64,12 @@
 
   // React to open composer tabs.
   async function prepareComposeTab(tab) {
+    await messenger.Quicktext.load(tab.windowId, { toolbar: await preferences.getPref("toolbar")});
+    // Why ???
+    // await new Promise(r => window.setTimeout(r, 250));
     await messenger.tabs.executeScript(tab.id, {
       file: "/scripts/compose.js"
     });
-    messenger.Quicktext.load(tab.windowId, { toolbar: await preferences.getPref("toolbar")});
   }
   messenger.tabs.onCreated.addListener(prepareComposeTab);
   let composeTabs = await messenger.tabs.query({type: "messageCompose"});
@@ -312,7 +314,17 @@ async function updateDateTimeMenus() {
 async function updateTemplateMenus() {
 }
 
-async function insertFragment(info, tab) {
+function removeBadHTML(aStr) {
+  // Remove the head-tag
+  aStr = aStr.replace(/<head(| [^>]*)>.*<\/head>/gim, '');
+
+  // Remove html and body tags
+  aStr = aStr.replace(/<(|\/)(head|body)(| [^>]*)>/gim, '');
+
+  return aStr;
+}
+
+async function insertFragment(info, tab, type = 0) {
   let itemId = info.menuItemId;
   let group = null;
   const GROUP_FROM = "composeContextMenu.variables.from.";
@@ -325,13 +337,25 @@ async function insertFragment(info, tab) {
     group = "to";
     itemId = itemId.substring(GROUP_TO.length)
   }
+  
+  let composeDetails = await messenger.compose.getComposeDetails(tab.id);
 
-  // Process insert commands
+  // TODO: Process insert commands.
+  let fragment = "Juhu [[CURSOR]] Haha";
 
-
-  console.log("sending", tab.id, {itemId});
-  let rv = await messenger.tabs.sendMessage(tab.id, {insertText:itemId});
-  console.log("done", rv);
+  // Insert fragment.
+  if (composeDetails.isPlainText) {
+    await messenger.tabs.sendMessage(tab.id, {
+      insertText:fragment,
+    });
+  } else {
+    fragment = removeBadHTML(fragment);
+    await messenger.tabs.sendMessage(tab.id, {
+      insertHtml:fragment,
+    });
+  }
+  
+  console.log("done");
 }
 
 // TODO: ES6 module.
