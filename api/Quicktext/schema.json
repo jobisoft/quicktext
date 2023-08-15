@@ -54,6 +54,10 @@
           {
             "name": "windowId",
             "type": "integer"
+          },
+          {
+            "name": "options",
+            "type": "any"
           }
         ]
       },

@@ -67,7 +67,7 @@
     await browser.tabs.executeScript(tab.id, {
       file: "/scripts/compose.js"
     });
-    messenger.Quicktext.load(tab.windowId);
+    messenger.Quicktext.load(tab.windowId, { toolbar: await preferences.getPref("toolbar")});
   }
   messenger.tabs.onCreated.addListener(prepareComposeTab);
   let composeTabs = await messenger.tabs.query({type: "messageCompose"});

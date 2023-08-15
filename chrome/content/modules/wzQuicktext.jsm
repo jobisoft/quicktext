@@ -38,17 +38,6 @@ var gQuicktext = {
   mCurrentTemplate:      "",
   mStringBundle: Services.strings.createBundle("chrome://quicktext/locale/quicktext.properties")	
 ,
-  get viewToolbar() { return this.mViewToolbar; },
-  set viewToolbar(aViewToolbar)
-  {
-    this.mViewToolbar = aViewToolbar;
-
-    this.notifyTools.notifyBackground({command:"setPref", pref: "toolbar", value: aViewToolbar});
-    this.notifyObservers("updatetoolbar", "");
-
-    return this.mViewToolbar;
-  }
-,
   get viewPopup() { return this.mViewPopup; },
   set viewPopup(aViewPopup)
   {
@@ -187,7 +176,6 @@ var gQuicktext = {
     }
 
     // Get prefs
-    this.mViewToolbar = await this.notifyTools.notifyBackground({command:"getPref", pref: "toolbar"});
     this.mCollapseGroup = await this.notifyTools.notifyBackground({command:"getPref", pref: "menuCollapse"});
     this.mKeywordKey = await this.notifyTools.notifyBackground({command:"getPref", pref: "keywordKey"});
     this.mViewPopup = await this.notifyTools.notifyBackground({command:"getPref", pref: "popup"});

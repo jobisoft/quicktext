@@ -234,9 +234,6 @@ var quicktext = {
     {
       items[i].addEventListener("command", function() { quicktext.insertTemplate(this.getAttribute("i"), this.getAttribute("j"), true, true); }, true);
     }
-
-    
-    this.visibleToolbar();
   }
 ,
   openSettings: function()
@@ -245,27 +242,6 @@ var quicktext = {
     settingsHandle.focus();
   }
 ,
-  toogleToolbar: function()
-  {
-    gQuicktext.viewToolbar = !gQuicktext.viewToolbar;
-  }
-,
-  visibleToolbar: function()
-  {
-    // Set the view of the toolbar to what it should be
-    if (gQuicktext.viewToolbar)
-    {
-      document.getElementById("quicktext-view").setAttribute("checked", true);
-      document.getElementById("quicktext-toolbar").removeAttribute("collapsed");
-    }
-    else
-    {
-      document.getElementById("quicktext-view").removeAttribute("checked");
-      document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
-    }    
-  }
-,
-
   /*
    * INSERTING TEXT
    */
@@ -763,9 +739,6 @@ var quicktext = {
     {
       case "updatesettings":
         this.updateGUI();
-        break;
-      case "updatetoolbar":
-        this.visibleToolbar();
         break;
     }
   }

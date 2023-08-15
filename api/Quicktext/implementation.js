@@ -2,7 +2,7 @@
 
 (function (exports) {
 
-  async function install(extension, window) {
+  async function install(extension, window, option) {
     function localize(entity) {
       let msg = entity.slice("__MSG_".length, -2);
       return extension.localeData.localizeMessage(msg);
@@ -20,7 +20,7 @@
     injectCSS(window, "resource://quicktext/skin/quicktext.css");
 
     let xulString = `
-      <toolbar id="quicktext-toolbar">
+      <toolbar id="quicktext-toolbar" ${option.toolbar ? "" : "collapsed='true'"}>
         <button type="menu" id="quicktext-variables" label="__MSG_quicktext.variables.label__" tabindex="-1">
           <menupopup>
             <menu label="__MSG_quicktext.to.label__">
@@ -181,12 +181,12 @@
               "chrome,resizable,centerscreen"
             );
           },
-          async load(windowId) {
+          async load(windowId, options) {
             let window = getComposeWindow(windowId);
             if (!window || window.document.documentElement.getAttribute("windowtype") != "msgcompose") {
               return;
             }
-            await install(context.extension, window);
+            await install(context.extension, window, options);
           },
           toggleToolbar(windowId, visible) {
               let { window } = context.extension.windowManager.get(windowId, context);
