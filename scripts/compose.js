@@ -28,14 +28,12 @@ async function handlerCursorTags() {
         let foundElements = [];
         let nextItem;
         do {
-            if (
-                nextItem && 
-                nextItem.firstChild && 
-                nextItem.firstChild.nodeType == 3 &&
-                nextItem.firstChild.nodeValue.includes(CURSOR)
-            ) {
-                // Store the actual #text node.
-                foundElements.push(nextItem.firstChild);
+            if (nextItem && nextItem.childNodes.length > 0) {
+                for (let node of nextItem.childNodes) {
+                    if (node.nodeType == 3 && node.nodeValue.includes(CURSOR)) {
+                        foundElements.push(node);
+                    }
+                }
             }
             nextItem = items.iterateNext();
         }
@@ -45,17 +43,20 @@ async function handlerCursorTags() {
             return;
         }
 
+        let selection = window.getSelection();
         for (let foundElement of foundElements) {
-            let selection = window.getSelection();
-            selection.removeAllRanges();
-
-            const range = document.createRange();
-            let startPos = foundElement.nodeValue.indexOf(CURSOR);
-
-            range.setStart(foundElement, startPos);
-            range.setEnd(foundElement, startPos + CURSOR.length);
-            selection.addRange(range);
-            selection.deleteFromDocument();
+            let startPos = -1;
+            do {
+                if (startPos != -1) {
+                    let range = document.createRange();
+                    range.setStart(foundElement, startPos);
+                    range.setEnd(foundElement, startPos + CURSOR.length);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    selection.deleteFromDocument();
+                }
+                startPos = foundElement.nodeValue.indexOf(CURSOR);
+            } while (startPos != -1)
         }
         
     } catch (ex) {
