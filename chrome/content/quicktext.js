@@ -35,10 +35,6 @@ var quicktext = {
       // Add an eventlistener for keypress in the editor
       var contentFrame = GetCurrentEditorElement();
       contentFrame.addEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
-
-      // Need to update GUI when the Quicktext-button is added to the toolbar (updating on ANY change to the toolbar is much more simple, and it does not hurt) 
-      window.addEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
-
     }
   }
 ,
@@ -54,8 +50,6 @@ var quicktext = {
     // Remove the eventlistener from the editor
     var contentFrame = GetCurrentEditorElement();
     contentFrame.removeEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
-
-    window.removeEventListener("aftercustomization", function() { quicktext.updateGUI(); } , false);
   }
 ,
   updateGUI: function()
