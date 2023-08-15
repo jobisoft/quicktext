@@ -22,6 +22,7 @@
   ];
 
   // Still allow to read overrides from LegacyPref.
+  const legacyPrefBranch = "extensions.quicktext.";
   for (let managedPref of managedPrefs) {
     let override = await messenger.LegacyPrefs.getUserPref(`${legacyPrefBranch}${managedPref}Override`);
     if (override !== null) {
