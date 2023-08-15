@@ -102,9 +102,9 @@ var preferences = {
 
       // We need to migration from prefsV1 to prefsV2    
       for(let prefName of Object.keys(defaults)) {
-        let prefV1Value = (await browser.storage[userPrefStorageArea].get("pref.value." + prefName))["pref.value." + prefName];
+        let prefV1Value = (await messenger.storage[userPrefStorageArea].get("pref.value." + prefName))["pref.value." + prefName];
         if (prefV1Value) {
-          await browser.storage[userPrefStorageArea].remove("pref.value." + prefName);
+          await messenger.storage[userPrefStorageArea].remove("pref.value." + prefName);
           preferences.setPref(prefName, prefV1Value);
         }
       }

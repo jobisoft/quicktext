@@ -54,7 +54,7 @@ var quicktext = {
 ,
   updateGUI: function()
   {
-    // Set the date/time in the variablemenu
+    // Set the date/time in the variablemenu in the toolbar
     var timeStamp = new Date();
     let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
     for (let i=0; i < fields.length; i++) {

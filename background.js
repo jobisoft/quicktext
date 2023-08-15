@@ -64,7 +64,7 @@
 
   // React to open composer tabs.
   async function prepareComposeTab(tab) {
-    await browser.tabs.executeScript(tab.id, {
+    await messenger.tabs.executeScript(tab.id, {
       file: "/scripts/compose.js"
     });
     messenger.Quicktext.load(tab.windowId, { toolbar: await preferences.getPref("toolbar")});
@@ -343,6 +343,6 @@ var quicktextUtils = {
     options["date-monthname"] = { month: "long" };
     options["time-noseconds"] = { timeStyle: "short" };
     options["time-seconds"] = { timeStyle: "medium" };
-    return new Intl.DateTimeFormat(browser.i18n.getUILanguage(), options[format.toLowerCase()]).format(timeStamp)
+    return new Intl.DateTimeFormat(messenger.i18n.getUILanguage(), options[format.toLowerCase()]).format(timeStamp)
   }
 }
