@@ -23,7 +23,29 @@
         "parameters": [
           {
             "name": "windowId",
-            "type": "any"
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "load",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "toggleToolbar",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "visible",
+            "type": "boolean"
           }
         ]
       }
