@@ -91,7 +91,9 @@
           ]
         ],
         "script": "api/NotifyTools/implementation.js",
-        "events": ["startup"]
+        "events": [
+          "startup"
+        ]
       }
     }
   }
