@@ -322,7 +322,7 @@
         "message": "Show Quicktext toolbar"
     },
     "quicktext.showContextMenu.label": {
-        "message": "View Quicktext-menu on right-click"
+        "message": "Show Quicktext-menu on right-click"
     },
     "quicktext.save.label": {
         "message": "Save"
