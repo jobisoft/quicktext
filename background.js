@@ -42,16 +42,23 @@
     }
   });
 
-  // load add-on via WindowListener API
+  // Register legacy chrome url via WindowListener API
   await messenger.WindowListener.registerChromeUrl([
     ["content", "quicktext", "chrome/content/"],
     ["resource", "quicktext", "chrome/"],
   ]);
 
-  messenger.WindowListener.registerWindow(
-    "chrome://messenger/content/messengercompose/messengercompose.xhtml",
-    "chrome://quicktext/content/scripts/messengercompose.js");
-  messenger.WindowListener.startListening();
+  // React to open composer windows.
+  messenger.windows.onCreated.addListener(window => { 
+    if (window.type != "messageCompose") {
+      return;
+    }
+    messenger.Quicktext.load(window.id);
+  });
+  let composeWindows = await messenger.windows.getAll({windowTypes: ["messageCompose"]});
+  for (let composeWindow of composeWindows) {
+    await messenger.Quicktext.load(composeWindow.id);
+  }
 
   // React to pref changes.
   messenger.storage.sync.onChanged.addListener(changes => {
