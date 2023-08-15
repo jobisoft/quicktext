@@ -31,6 +31,7 @@
     }
   }
 
+  // Allow legacy code to access local storage prefs.
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
@@ -86,6 +87,7 @@
     id: "composeContextMenu",
     title: messenger.i18n.getMessage("quicktext.label"),
     contexts: ["compose_body"],
+    visible: await preferences.getPref("popup"),
     onclick: (info, tab) => console.log(info)
   })
 
