@@ -42,10 +42,7 @@
     "compose"
   ],
   "background": {
-    "scripts": [
-      "/scripts/preferences.js",
-      "background.js"
-    ]
+    "page": "background.html"
   },
   "options_ui": {
     "page": "options/options.html",
