@@ -1,7 +1,7 @@
 (async () => {
 
   // Define default prefs.
-  let defaultPrefs = {
+  const defaultPrefs = {
     "counter": 0,
     "templateFolder": "",
     "defaultImport": "",
@@ -15,24 +15,20 @@
   };
   await preferences.init(defaultPrefs);
 
-  try {
-    // Allow to set defaultImport from managed storage.
-    let { defaultImportOverride } = await browser.storage.managed.get({ "defaultImportOverride": "" });
-    if (defaultImportOverride) {
-      preferences.setPref("defaultImport", defaultImportOverride);
+  // Allow to load prefs from managed storage.
+  const managedPrefs = [
+    "defaultImport",
+    "templateFolder",
+  ];
+  for (let managedPref of managedPrefs) {
+    try {
+      let rv = await messenger.storage.managed.get({ [managedPref]: null });
+      if (rv[managedPref] != null) {
+        preferences.setPref([managedPref], rv[managedPref]);
+      }
+    } catch (ex) {
+      // No managed storage manifest found, ignore.
     }
-  } catch (ex) {
-    // No managed storage manifest found, ignore.
-  }
-
-  try {
-    // Allow to override templateFolder from managed storage.
-    let { templateFolderOverride } = await browser.storage.managed.get({ "templateFolderOverride": "" });
-    if (templateFolderOverride) {
-      preferences.setPref("templateFolder", templateFolderOverride);
-    }
-  } catch (ex) {
-    // No managed storage manifest found, ignore.
   }
 
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
