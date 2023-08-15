@@ -14,9 +14,12 @@ var quicktext = {
   mPickedIndex: null,
   mOS: "WINNT"
   ,
-  init: async function () {
+  load: async function () {
     if (!this.mLoaded) {
       this.mLoaded = true;
+
+      this.extension = ExtensionParent.GlobalManager.getExtension("{8845E3B3-E8FB-40E2-95E9-EC40294818C4}");
+      await window.i18n.updateDocument({ extension: this.extension });
 
       // add OS as attribute to outer dialog
       document.getElementById('quicktextSettingsWindow').setAttribute("OS", Services.appinfo.OS);
@@ -74,8 +77,8 @@ var quicktext = {
       promptService = Services.prompt;
       if (promptService) {
         result = promptService.confirmEx(window,
-          gQuicktext.mStringBundle.GetStringFromName("saveMessageTitle"),
-          gQuicktext.mStringBundle.GetStringFromName("saveMessage"),
+          this.extension.localeData.localizeMessage("saveMessageTitle"),
+          this.extension.localeData.localizeMessage("saveMessage"),
           (promptService.BUTTON_TITLE_SAVE * promptService.BUTTON_POS_0) +
           (promptService.BUTTON_TITLE_CANCEL * promptService.BUTTON_POS_1) +
           (promptService.BUTTON_TITLE_DONT_SAVE * promptService.BUTTON_POS_2),
@@ -141,7 +144,7 @@ var quicktext = {
       if (this.mPickedIndex[1] > -1) {
         var title = document.getElementById('text-title').value;
         if (title.replace(/[\s]/g, '') == "")
-          title = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
+          title = this.extension.localeData.localizeMessage("newTemplate");
 
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'name', title);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'text', document.getElementById('text').value);
@@ -159,7 +162,7 @@ var quicktext = {
       else {
         var title = document.getElementById('text-title').value;
         if (title.replace(/[\s]/g, '') == "")
-          title = gQuicktext.mStringBundle.GetStringFromName("newGroup");
+          title = this.extension.localeData.localizeMessage("newGroup");
 
         this.saveGroupCell(this.mPickedIndex[0], 'name', title);
       }
@@ -192,7 +195,7 @@ var quicktext = {
     if (this.mScriptIndex != null) {
       var title = document.getElementById('script-title').value;
       if (title.replace(/[\s]/g, '') == "")
-        title = gQuicktext.mStringBundle.GetStringFromName("newScript");
+        title = this.extension.localeData.localizeMessage("newScript");
 
       this.saveScriptCell(this.mScriptIndex, 'name', title);
       this.saveScriptCell(this.mScriptIndex, 'script', document.getElementById('script').value);
@@ -249,9 +252,9 @@ var quicktext = {
       case 0:
         if (value.replace(/[\s]/g, '') == "")
           if (this.mPickedIndex[1] > -1)
-            value = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
+            value = this.extension.localeData.localizeMessage("newTemplate");
           else
-            value = gQuicktext.mStringBundle.GetStringFromName("newGroup");
+            value = this.extension.localeData.localizeMessage("newGroup");
         break;
       case 2:
         if (this.shortcutTypeAdv()) {
@@ -301,7 +304,7 @@ var quicktext = {
     switch (aIndex) {
       case 0:
         if (value.replace(/[\s]/g, '') == "")
-          value = gQuicktext.mStringBundle.GetStringFromName("newScript");
+          value = this.extension.localeData.localizeMessage("newScript");
         break;
     }
 
@@ -408,7 +411,7 @@ var quicktext = {
       let field = fields[i];
       let fieldtype = field.split("-")[0];
       if (document.getElementById(field)) {
-        document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
+        document.getElementById(field).setAttribute("label", this.extension.localeData.localizeMessage(fieldtype, quicktextUtils.dateTimeFormat(field, timeStamp)));
       }
     }
 
@@ -551,13 +554,13 @@ var quicktext = {
   }
   ,
   insertFileVariable: async function () {
-    if ((file = await gQuicktext.pickFile(window, 2, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 2, 0, this.extension.localeData.localizeMessage("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
     this.enableSave();
   }
   ,
   insertImageVariable: async function () {
-    if ((file = await gQuicktext.pickFile(window, 4, 0, gQuicktext.mStringBundle.GetStringFromName("insertImage"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 4, 0, this.extension.localeData.localizeMessage("insertImage"))) != null)
       this.insertVariable('IMAGE=' + file.path);
     this.enableSave();
   }
@@ -567,12 +570,12 @@ var quicktext = {
    * IMPORT/EXPORT FUNCTIONS
    */
   exportTemplatesToFile: async function () {
-    if ((file = await gQuicktext.pickFile(window, 3, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 3, 1, this.extension.localeData.localizeMessage("exportFile"))) != null)
       gQuicktext.exportTemplatesToFile(file);
   }
   ,
   importTemplatesFromFile: async function () {
-    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null) {
+    if ((file = await gQuicktext.pickFile(window, 3, 0, this.extension.localeData.localizeMessage("importFile"))) != null) {
       this.saveText();
       this.saveScript();
 
@@ -587,12 +590,12 @@ var quicktext = {
   }
   ,
   exportScriptsToFile: async function () {
-    if ((file = await gQuicktext.pickFile(window, 3, 1, gQuicktext.mStringBundle.GetStringFromName("exportFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, 3, 1, this.extension.localeData.localizeMessage("exportFile"))) != null)
       gQuicktext.exportScriptsToFile(file);
   }
   ,
   importScriptsFromFile: async function () {
-    if ((file = await gQuicktext.pickFile(window, 3, 0, gQuicktext.mStringBundle.GetStringFromName("importFile"))) != null) {
+    if ((file = await gQuicktext.pickFile(window, 3, 0, this.extension.localeData.localizeMessage("importFile"))) != null) {
       this.saveText();
       this.saveScript();
 
@@ -605,7 +608,7 @@ var quicktext = {
   }
   ,
   browseAttachment: async function () {
-    if ((file = await gQuicktext.pickFile(window, -1, 0, gQuicktext.mStringBundle.GetStringFromName("attachmentFile"))) != null) {
+    if ((file = await gQuicktext.pickFile(window, -1, 0, this.extension.localeData.localizeMessage("attachmentFile"))) != null) {
       var filePath = file.path;
       var attachments = document.getElementById('text-attachments').value;
       if (attachments != "")
@@ -659,7 +662,7 @@ var quicktext = {
     var index = document.getElementById('group-tree').view.selection.currentIndex;
 
     if (!this.mTreeArray[index]) {
-      document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("group");
+      document.getElementById('text-caption').textContent = this.extension.localeData.localizeMessage("group");
       document.getElementById('text-title').value = "";
       this.showElement("group", true);
       this.mPickedIndex = null;
@@ -679,7 +682,7 @@ var quicktext = {
 
     if (textIndex > -1) {
       var text = gQuicktext.getText(groupIndex, textIndex, true);
-      document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("template");
+      document.getElementById('text-caption').textContent = this.extension.localeData.localizeMessage("template");
 
       document.getElementById('text-title').value = text.name;
       document.getElementById('text').value = text.text;
@@ -687,7 +690,7 @@ var quicktext = {
       document.getElementById('text-subject').value = text.subject;
       document.getElementById('text-attachments').value = text.attachments;
 
-      document.getElementById('label-shortcutModifier').value = gQuicktext.mStringBundle.GetStringFromName(document.getElementById('select-shortcutModifier').value + "Key") + "+";
+      document.getElementById('label-shortcutModifier').value = this.extension.localeData.localizeMessage(document.getElementById('select-shortcutModifier').value + "Key") + "+";
 
 
       if (this.shortcutTypeAdv()) {
@@ -717,7 +720,7 @@ var quicktext = {
       document.getElementById('text-type').selectedIndex = type;
     }
     else {
-      document.getElementById('text-caption').textContent = gQuicktext.mStringBundle.GetStringFromName("group");
+      document.getElementById('text-caption').textContent = this.extension.localeData.localizeMessage("group");
 
       document.getElementById("text-title").value = gQuicktext.getGroup(groupIndex, true).name;
       document.getElementById("text").value = "";
@@ -773,7 +776,7 @@ var quicktext = {
    * Add/Remove groups/templates
    */
   addGroup: function () {
-    var title = gQuicktext.mStringBundle.GetStringFromName("newGroup");
+    var title = this.extension.localeData.localizeMessage("newGroup");
     this.saveText();
 
     gQuicktext.addGroup(title, true);
@@ -796,7 +799,7 @@ var quicktext = {
   }
   ,
   addText: function () {
-    var title = gQuicktext.mStringBundle.GetStringFromName("newTemplate");
+    var title = this.extension.localeData.localizeMessage("newTemplate");
     this.saveText();
 
     var groupIndex = -1;
@@ -845,7 +848,7 @@ var quicktext = {
       if (textIndex > -1)
         title = gQuicktext.getText(groupIndex, textIndex, true).name;
 
-      if (confirm(gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1))) {
+      if (confirm(this.extension.localeData.localizeMessage("remove", title))) {
         this.mPickedIndex = null;
 
         var textLength = gQuicktext.getTextLength(groupIndex, true);
@@ -907,7 +910,7 @@ var quicktext = {
   addScript: function () {
     this.saveScript();
 
-    var title = gQuicktext.mStringBundle.GetStringFromName("newScript");
+    var title = this.extension.localeData.localizeMessage("newScript");
     gQuicktext.addScript(title, true);
 
     this.updateScriptGUI();
@@ -930,7 +933,7 @@ var quicktext = {
     var scriptIndex = document.getElementById('script-list').value;
     if (scriptIndex != null) {
       var title = gQuicktext.getScript(scriptIndex, true).name;
-      if (confirm(gQuicktext.mStringBundle.formatStringFromName("remove", [title], 1))) {
+      if (confirm(this.extension.localeData.localizeMessage("remove", title))) {
         gQuicktext.removeScript(scriptIndex, true);
         this.changesMade();
 
@@ -1264,14 +1267,9 @@ var quicktext = {
    */
   observe: function (aSubject, aTopic, aData) {
     if (aTopic == "updatesettings") {
-      // this.updateGUI();
+      this.updateGUI();
     }
   }
 }
 
-async function load() {
-  let extension = ExtensionParent.GlobalManager.getExtension("{8845E3B3-E8FB-40E2-95E9-EC40294818C4}");
-  window.i18n.updateDocument({ extension });
-}
-
-window.addEventListener("load", load);
+window.addEventListener("load", quicktext.load.bind(quicktext));

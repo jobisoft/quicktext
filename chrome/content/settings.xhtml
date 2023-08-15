@@ -4,14 +4,13 @@
 <?xml-stylesheet href="chrome://messenger/skin/messenger.css" type="text/css"?>
 <?xml-stylesheet href="resource://quicktext/skin/quicktext.css" type="text/css"?>
 
-<!DOCTYPE dialog SYSTEM "chrome://quicktext/locale/quicktext.dtd">
+<!DOCTYPE dialog>
 
 <dialog id="quicktextSettingsWindow"
         title="__MSG_quicktext.settings.title__"
         xmlns:html="http://www.w3.org/1999/xhtml"
         xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
 
-        onload="quicktext.init();"
         onunload="quicktext.unload();"
         ondialogcancel="return quicktext.close(false);"
 

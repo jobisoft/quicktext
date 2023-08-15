@@ -13,16 +13,18 @@ var quicktext = {
   mShortcutModifierDown:        false,
   mKeywords:                    {}
 ,
-  load: async function()
+  load: async function(extension)
   {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
+      this.extension = extension;
 
       gQuicktext.addObserver(this);
-      if (!(await gQuicktext.loadSettings(false)))
+      if (!(await gQuicktext.loadSettings(false))) {
         this.updateGUI();
-
+      }
+      
       gQuicktextVar.init(window);
 
       // Add an eventlistener for keypress in the window
@@ -73,7 +75,7 @@ var quicktext = {
         let field = fields[i];
         let fieldtype = field.split("-")[0];
         if (document.getElementById(field)) {
-            document.getElementById(field).setAttribute("label", gQuicktext.mStringBundle.formatStringFromName(fieldtype, [quicktextUtils.dateTimeFormat(field, timeStamp)], 1));
+            document.getElementById(field).setAttribute("label", this.extension.localeData.localizeMessage(fieldtype, quicktextUtils.dateTimeFormat(field, timeStamp)));
         }
     }
 
@@ -607,7 +609,7 @@ var quicktext = {
 ,
   insertContentFromFile: async function(aType)
   {
-    if ((file = await gQuicktext.pickFile(window, aType, 0, gQuicktext.mStringBundle.GetStringFromName("insertFile"))) != null)
+    if ((file = await gQuicktext.pickFile(window, aType, 0, this.extension.localeData.localizeMessage("insertFile"))) != null)
       await this.insertBody(gQuicktext.readFile(file), aType, true);
   }
 ,
