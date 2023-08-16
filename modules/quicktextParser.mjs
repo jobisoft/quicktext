@@ -71,6 +71,23 @@ export class QuicktextParser {
     return "";
   }
 
+  async process_selection(aVariables) {
+    let details = await this.getDetails();
+
+    if (details.isPlainText) {
+      return messenger.tabs.sendMessage(this.mTabId, {
+        getSelection: "TEXT",
+      });
+    } else {
+      return messenger.tabs.sendMessage(this.mTabId, {
+        getSelection: "HTML",
+      });
+    }
+  }
+  async get_selection(aVariables, aType) {
+    return this.process_selection(aVariables, aType);
+  }
+
   async process_text(aVariables) {
     if (aVariables.length != 2)
       return "";

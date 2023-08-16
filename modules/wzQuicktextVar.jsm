@@ -38,11 +38,7 @@ wzQuicktextVar.prototype = {
   }
 ,
 
-  get_selection: function(aVariables, aType)
-  {
-    return this.process_selection(aVariables, aType);
-  }
-,
+
 
   get_url: async function(aVariables)
   {
@@ -156,17 +152,7 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  process_selection: function(aVariables, aType)
-  {
-    if (aType == 0) {
-      // return selected text as plain text
-      return this.mQuicktext.mSelectionContent;
-    } else {
-      // return selected text as html
-      return this.mQuicktext.mSelectionContentHtml;
-    }
-  }
-,
+
 
   process_url: async function(aVariables)
   {

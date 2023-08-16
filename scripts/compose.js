@@ -8,6 +8,30 @@ async function insertTextFragment(message) {
     await handlerCursorTags();
 }
 
+async function getSelection(mode) {
+    console.log(mode);
+    let selection = window.getSelection();
+    if (mode == "TEXT") {
+        return selection.toString();
+    }
+    // https://stackoverflow.com/questions/5083682/get-selected-html-in-browser-via-javascript
+    if (selection.rangeCount > 0) {
+        // It may be beneficial to include the surrounding node
+        // to copy the format
+        // let wrapperNode = selection.anchorNode.parentElement.tagName;
+
+        let range = selection.getRangeAt(0);
+        let clonedSelection = range.cloneContents();
+        //let container = document.createElement(wrapperNode);
+        //container.appendChild(clonedSelection);
+
+        let div = document.createElement('div');
+        div.appendChild(clonedSelection);
+        return div.innerHTML;
+    }
+    return "";
+}
+
 messenger.runtime.onMessage.addListener((message, sender) => {
     if (message.insertText) {
         return insertTextFragment(message);
@@ -20,6 +44,9 @@ messenger.runtime.onMessage.addListener((message, sender) => {
     }
     if (message.alertLabel) {
         return Promise.resolve(window.alert(message.alertLabel));
+    }
+    if (message.getSelection) {
+        return getSelection(message.getSelection)
     }
     return false;
 });
@@ -64,7 +91,7 @@ async function handlerCursorTags() {
                 startPos = foundElement.nodeValue.indexOf(CURSOR);
             } while (startPos != -1)
         }
-        
+
     } catch (ex) {
         console.debug(ex);
     }
