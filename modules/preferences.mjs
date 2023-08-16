@@ -5,7 +5,7 @@ const defaultPrefs = {
   "defaultImport": "",
   "menuCollapse": true,
   "toolbar": true,
-  "popup": false,
+  "popup": true,
   "keywordKey": "Tab",
   "shortcutModifier": "alt",
   "shortcutTypeAdv": false,
@@ -13,7 +13,7 @@ const defaultPrefs = {
 };
 
 export async function getPref(aName) {
-  let { userPrefs } = await messenger.storage[userPrefStorageArea].get("userPrefs");
+  let { userPrefs } = await messenger.storage[userPrefStorageArea].get({"userPrefs":{}});
   if (userPrefs.hasOwnProperty(aName)) {
     return userPrefs[aName];
   }
@@ -21,7 +21,7 @@ export async function getPref(aName) {
 }
 
 export async function setPref(aName, aValue) {
-  let { userPrefs } = await messenger.storage[userPrefStorageArea].get("userPrefs");
+  let { userPrefs } = await messenger.storage[userPrefStorageArea].get({"userPrefs": {}});
   userPrefs[aName] = aValue;
   await messenger.storage[userPrefStorageArea].set({ userPrefs });
 }

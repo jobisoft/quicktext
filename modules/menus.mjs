@@ -11,7 +11,11 @@ async function processMenuData(menuData, parentId) {
         let createData = {}
 
         createData.id = parentId ? `${parentId}.${entry.id}` : entry.id;
-        createData.title = entry.title ? entry.title : messenger.i18n.getMessage(`quicktext.${entry.id}.label`);
+        if (entry.type == "separator") {
+            createData.type = entry.type;
+        } else {
+            createData.title = entry.title ? entry.title : messenger.i18n.getMessage(`quicktext.${entry.id}.label`);
+        }
 
         if (entry.contexts) createData.contexts = entry.contexts;
         if (entry.visible) createData.visible = entry.visible;
@@ -38,87 +42,63 @@ async function getContactMenuData(type) {
 }
 
 async function getComposeBodyMenuData() {
+    let contexts = await preferences.getPref("popup")
+        ? ["compose_body", "compose_action_menu"]
+        : ["compose_action_menu"];
+    console.log(contexts);
     return [
         {
-            id: "composeContextMenu",
-            title: messenger.i18n.getMessage("quicktext.label"),
-            contexts: ["compose_body"],
-            visible: await preferences.getPref("popup"),
+            contexts,
+            id: "variables",
             children: [
                 {
-                    id: "variables",
+                    id: "to",
+                    children: await getContactMenuData("TO")
+                },
+                {
+                    id: "from",
+                    children: await getContactMenuData("FROM")
+                },
+                {
+                    id: "attachments",
                     children: [
                         {
-                            id: "to",
-                            children: await getContactMenuData("TO")
+                            id: "filename",
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, 'ATT=name')
                         },
                         {
-                            id: "from",
-                            children: await getContactMenuData("FROM")
+                            id: "filenameAndSize",
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, 'ATT=full')
+                        },
+                    ]
+                },
+                {
+                    id: "dateTime",
+                    children: [
+                        {
+                            id: "date",
+                            title: await quicktext.parseVariable(null, "DATE"),
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE")
                         },
                         {
-                            id: "attachments",
-                            children: [
-                                {
-                                    id: "filename",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'ATT=name')
-                                },
-                                {
-                                    id: "filenameAndSize",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'ATT=full')
-                                },
-                            ]
+                            id: "date-long",
+                            title: await quicktext.parseVariable(null, "DATE=long"),
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE=long")
                         },
                         {
-                            id: "dateTime",
-                            children: [
-                                {
-                                    id: "date",
-                                    title: await quicktext.parseVariable(null, "DATE"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE")
-                                },
-                                {
-                                    id: "date-long",
-                                    title: await quicktext.parseVariable(null, "DATE=long"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE=long")
-                                },
-                                {
-                                    id: "date-month",
-                                    title: await quicktext.parseVariable(null, "DATE=monthname"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE=monthname")
-                                },
-                                {
-                                    id: "time",
-                                    title: await quicktext.parseVariable(null, "TIME"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "TIME")
-                                },
-                                {
-                                    id: "time-seconds",
-                                    title: await quicktext.parseVariable(null, "TIME=seconds"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "TIME=seconds")
-                                }
-                            ]
+                            id: "date-month",
+                            title: await quicktext.parseVariable(null, "DATE=monthname"),
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE=monthname")
                         },
                         {
-                            id: "other",
-                            children: [
-                                {
-                                    id: "clipboard",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'CLIPBOARD')
-                                },
-                                {
-                                    id: "counter",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'COUNTER')
-                                },
-                                {
-                                    id: "subject",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'SUBJECT')
-                                },
-                                {
-                                    id: "version",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'VERSION')
-                                },
-                            ]
+                            id: "time",
+                            title: await quicktext.parseVariable(null, "TIME"),
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, "TIME")
+                        },
+                        {
+                            id: "time-seconds",
+                            title: await quicktext.parseVariable(null, "TIME=seconds"),
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, "TIME=seconds")
                         }
                     ]
                 },
@@ -126,23 +106,56 @@ async function getComposeBodyMenuData() {
                     id: "other",
                     children: [
                         {
-                            id: "insertTextFromFileAsText",
-                            onclick: (info, tab) => quicktext.insertContentFromFile(tab.id, 0)
+                            id: "clipboard",
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, 'CLIPBOARD')
                         },
                         {
-                            id: "insertTextFromFileAsHTML",
-                            onclick: (info, tab) => quicktext.insertContentFromFile(tab.id, 1)
+                            id: "counter",
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, 'COUNTER')
+                        },
+                        {
+                            id: "subject",
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, 'SUBJECT')
+                        },
+                        {
+                            id: "version",
+                            onclick: (info, tab) => quicktext.insertVariable(tab.id, 'VERSION')
                         },
                     ]
                 }
             ]
+        },
+        {
+            contexts,
+            id: "other",
+            children: [
+                {
+                    id: "insertTextFromFileAsText",
+                    onclick: (info, tab) => quicktext.insertContentFromFile(tab.id, 0)
+                },
+                {
+                    id: "insertTextFromFileAsHTML",
+                    onclick: (info, tab) => quicktext.insertContentFromFile(tab.id, 1)
+                },
+            ]
+        },
+        {
+            contexts,
+            id: "separator",
+            type: "separator",
+        },
+        {
+            contexts,
+            id: "settings",
+            title: messenger.i18n.getMessage("quicktext.settings.title"),
+            onclick: (info, tab) => messenger.Quicktext.openSettings(tab.id)
         },
     ]
 }
 
 export async function updateDateTimeMenus() {
     let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
-    let menus = ["composeContextMenu.variables.to.", "composeContextMenu.variables.from."];
+    let menus = ["variables.to.", "variables.from."];
     let now = Date.now();
 
     for (let menu of menus) {

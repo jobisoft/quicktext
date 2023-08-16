@@ -21,6 +21,7 @@
   "compose_action": {
     "default_title": "Quicktext",
     "default_label": "",
+    "type": "menu",
     "default_icon": {
       "16": "icons/icon16.png",
       "24": "icons/icon24.png",

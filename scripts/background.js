@@ -74,7 +74,8 @@ import * as preferences from "/modules/preferences.mjs";
         return templates;
       case "insertContentFromFile":
         return quicktext.insertContentFromFile(info.tabId, info.type)
-
+      case "openHomepage":
+        return browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/");
     }
   });
 
@@ -105,8 +106,13 @@ import * as preferences from "/modules/preferences.mjs";
   // React to pref changes.
   messenger.storage.sync.onChanged.addListener(async changes => {
     if (changes.userPrefs.newValue.hasOwnProperty("popup")) {
-      let visible = changes.userPrefs.newValue.popup;
-      await messenger.menus.update("composeContextMenu", { visible })
+      let contexts = changes.userPrefs.newValue.popup
+      ? ["compose_body", "compose_action_menu"]
+      : ["compose_action_menu"];
+      await messenger.menus.update("variables", { contexts })
+      await messenger.menus.update("other", { contexts })
+      await messenger.menus.update("separator", { contexts })
+      await messenger.menus.update("settings", { contexts })
     }
     if (changes.userPrefs.newValue.hasOwnProperty("toolbar")) {
       let visible = changes.userPrefs.newValue.toolbar;
@@ -133,6 +139,13 @@ import * as preferences from "/modules/preferences.mjs";
     type: "checkbox",
     checked: await preferences.getPref("toolbar"),
     onclick: (info, tab) => preferences.setPref("toolbar", info.checked)
+  })
+  await messenger.menus.create({
+    title: messenger.i18n.getMessage("quicktext.showContextMenu.label"),
+    contexts: ["compose_action"],
+    type: "checkbox",
+    checked: await preferences.getPref("popup"),
+    onclick: (info, tab) => preferences.setPref("popup", info.checked)
   })
 
   // Add Quicktext composeBody context menu.
