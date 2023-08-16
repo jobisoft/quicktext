@@ -77,16 +77,6 @@ wzQuicktextVar.prototype = {
     return await this.process_script(aVariables);
   }
 ,
-  get_input: function(aVariables)
-  {
-    var data = this.process_input(aVariables);
-
-    if (typeof data[aVariables[0]] != "undefined")
-      return data[aVariables[0]];
-
-    return "";
-  }
-,
 
   get_selection: function(aVariables, aType)
   {
@@ -230,44 +220,6 @@ wzQuicktextVar.prototype = {
     //if we reach this point, the user requested an non-existing script
     this.mWindow.alert(gQuicktext.mStringBundle.formatStringFromName("scriptNotFound", [scriptName], 1))
     return "";
-  }
-,
-  process_input: function(aVariables)
-  {
-    if (typeof this.mData['INPUT'] == 'undefined')
-      this.mData['INPUT'] = {};
-    if (typeof this.mData['INPUT'].data == 'undefined')
-      this.mData['INPUT'].data = {};
-
-    if (typeof this.mData['INPUT'].data[aVariables[0]] != 'undefined')
-      return this.mData['INPUT'].data;
-
-    // There are two types of input select and text.
-    var promptService = Services.prompt;
-    if (aVariables[1] == 'select')
-    {
-      var checkValue = {};
-      var value = {};
-      if (typeof aVariables[2] != 'undefined')
-         value.value = aVariables[2].split(";");
-      if (promptService.select(this.mWindow, gQuicktext.mStringBundle.GetStringFromName("inputTitle"), gQuicktext.mStringBundle.formatStringFromName("inputText", [aVariables[0]], 1), value.value, checkValue))
-        this.mData['INPUT'].data[aVariables[0]] = value.value[checkValue.value];
-      else
-        this.mData['INPUT'].data[aVariables[0]] = "";
-    }
-    else
-    {
-      var checkValue = {};      
-      var value = {};
-      if (typeof aVariables[2] != 'undefined')
-        value.value = aVariables[2];
-      if (promptService.prompt(this.mWindow, gQuicktext.mStringBundle.GetStringFromName("inputTitle"), gQuicktext.mStringBundle.formatStringFromName("inputText", [aVariables[0]], 1), value, null, checkValue))
-        this.mData['INPUT'].data[aVariables[0]] = value.value;
-      else
-        this.mData['INPUT'].data[aVariables[0]] = "";
-    }
-
-    return this.mData['INPUT'].data;
   }
 ,
   process_selection: function(aVariables, aType)
