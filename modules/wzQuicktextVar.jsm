@@ -1,42 +1,7 @@
-var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
 
-var Services = globalThis.Services || ChromeUtils.import(
-  "resource://gre/modules/Services.jsm"
-).Services;
-var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
-var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
-
-var { XPCOMUtils } = ChromeUtils.import("resource://gre/modules/XPCOMUtils.jsm");
-XPCOMUtils.defineLazyModuleGetters(this, {
-  newUID: "resource:///modules/AddrBookUtils.jsm",
-  AddrBookCard: "resource:///modules/AddrBookCard.jsm",
-  BANISHED_PROPERTIES: "resource:///modules/VCardUtils.jsm",
-  VCardProperties: "resource:///modules/VCardUtils.jsm",
-  VCardUtils: "resource:///modules/VCardUtils.jsm",
-});
-
-const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 
-function wzQuicktextVar()
-{
-  this.mData        = {};
-  this.mWindow      = null;
-
-  // Need the Main Quicktext component
-  this.mQuicktext = gQuicktext;
-}
-
 wzQuicktextVar.prototype = {
-  init: function(aWindow)
-  {
-    // Save the window we are in
-    this.mWindow = aWindow;
-
-    // New mail so we need to destroy all tag-data
-    this.mData = {};
-  }
-,
   cleanTagData: function()
   {
     // Just save some of the tag-data.
@@ -338,7 +303,3 @@ wzQuicktextVar.prototype = {
   }
 
 }
-
-
-var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
-

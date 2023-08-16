@@ -4,13 +4,8 @@ var Services = globalThis.Services || ChromeUtils.import(
 
 var EXPORTED_SYMBOLS = ["gQuicktext"];
 
-const kDebug        = true;
-const kSepChar1a    = String.fromCharCode(65533, 65533);
-const kSepChar1b    = String.fromCharCode(164, 164);
-const kSepChar2     = "||";
 const kIllegalChars = String.fromCharCode(1) +"-"+ String.fromCharCode(8) + String.fromCharCode(11) + String.fromCharCode(12) + String.fromCharCode(14) +"-"+ String.fromCharCode(31) + String.fromCharCode(127) +"-"+ String.fromCharCode(132) + String.fromCharCode(134) +"-"+ String.fromCharCode(159);
 const kFileShortcuts = ['ProfD', 'UsrDocs', 'Home', 'Desk', 'Pers'];
-const kHomepage     = "https://github.com/jobisoft/quicktext/wiki/";
 
 var gQuicktext = {
   mSettingsLoaded:       false,
@@ -82,10 +77,6 @@ var gQuicktext = {
     return this.mShortcutModifier;
   }
 ,
-  //obsolete but cannot remove due to IDL
-  get firstTime() { return false },
-  set firstTime(aFirstTime) {}
-,
   get collapseState() { return this.mCollapseState; },
   set collapseState(aCollapseState)
   {
@@ -111,14 +102,7 @@ var gQuicktext = {
     return this.mShortcutTypeAdv;
   }
 ,
-  openHomepage: function()
-  {
-    let ioservice = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
-    let uriToOpen = ioservice.newURI(kHomepage, null, null);
-    let extps = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"].getService(Components.interfaces.nsIExternalProtocolService);
-    extps.loadURI(uriToOpen, null);    
-  }
-,
+
   loadSettings: async function(aReload)
   {
     if (!aReload && this.mSettingsLoaded) {
@@ -828,14 +812,3 @@ var gQuicktext = {
   }
 }
 
-
-var debug = kDebug ?  function(m) {dump("\t *** wzQuicktext: " + m + "\n");} : function(m) {};
-
-
-
-
-function TrimString(aStr)
-{
-  if (!aStr) return "";
-  return aStr.replace(/(^\s+)|(\s+$)/g, '')
-}
