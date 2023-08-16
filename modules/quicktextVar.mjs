@@ -21,6 +21,102 @@ export class QuicktextVar {
     return this.mDetails
   }
 
+  async get_header(aVariables) {
+    if (aVariables.length == 0) {
+      return "";
+    }
+    
+    let name = aVariables[0].toLowerCase();
+    switch (name) {
+      case "to": 
+      case "cc":
+      case "bcc":
+      case "subject":
+      case "from":
+        await browser.compose.setComposeDetails(this.mTabId, {[name]: aVariables[1]});
+        break;
+      case "reply-to":
+        await browser.compose.setComposeDetails(this.mTabId, {"replyTo": aVariables[1]});
+        break;
+    }
+
+    return "";
+  }
+
+  async preprocess_org()
+  {
+    this.mData['ORGHEADER'] = {};
+    this.mData['ORGHEADER'].checked = true;
+    this.mData['ORGHEADER'].data = {};
+
+    this.mData['ORGATT'] = {};
+    this.mData['ORGATT'].checked = true;
+    this.mData['ORGATT'].data = [];
+
+    let details = await this.getDetails();
+    if (!details.relatedMessageId) {
+      return
+    }
+
+
+    // Store all headers in the mData-variable
+    let data = await browser.messages.getFull(details.relatedMessageId);
+    for (let [name, value] of Object.entries(data.headers)) {
+      if (typeof this.mData['ORGHEADER'].data[name] == 'undefined') {
+        this.mData['ORGHEADER'].data[name] = [];
+      }
+      this.mData['ORGHEADER'].data[name].push(...value);
+    }
+
+    // Store all attachments in the mData-variable
+    let attachments = await browser.messages.listAttachments(details.relatedMessageId);
+    for (let attachment of attachments) {
+      this.mData['ORGATT'].data.push(attachment); // {contentType, name, size, partName}
+    }
+  }
+  async process_orgheader(aVariables) {
+    if (this.mData['ORGHEADER'] && this.mData['ORGHEADER'].checked)
+      return this.mData['ORGHEADER'].data;
+
+    await this.preprocess_org();
+    return this.mData['ORGHEADER'].data;
+  }
+  async get_orgheader(aVariables) {
+    if (aVariables.length == 0) {
+      return "";
+    }
+
+    let data = await this.process_orgheader(aVariables);
+
+    let name = aVariables[0].toLowerCase();
+    let seperator = aVariables.length > 1
+      ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t")
+      : ", "
+    
+    // data is array of objects, reduce to array of specific object member.
+    if (data[name]) {
+      return data[name].join(seperator);
+    }
+    return "";
+  }
+  async process_orgatt(aVariables) {
+    if (this.mData['ORGATT'] && this.mData['ORGATT'].checked)
+      return this.mData['ORGATT'].data;
+
+    await this.preprocess_org();
+    return this.mData['ORGATT'].data;
+  }
+  async get_orgatt(aVariables) {
+    var data = await this.process_orgatt(aVariables);
+    let seperator = aVariables.length > 0
+      ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t")
+      : ", "
+
+    // data is array of objects {contentType, name, size, partName}, reduce to
+    // array of specific object member.
+    return data.map(a => a["name"]).join(seperator);
+  }
+
   async process_version(aVariables) {
     if (this.mData['VERSION'] && this.mData['VERSION'].checked) {
       return this.mData['VERSION'].data;
@@ -205,7 +301,6 @@ export class QuicktextVar {
       'lastname': ''
     };
     await this.getcarddata_from(identity);
-    console.log(this.mData['FROM'].data);
 
     return this.mData['FROM'].data;
   }
@@ -295,7 +390,6 @@ export class QuicktextVar {
       }
     }
 
-    console.log(this.mData['TO'].data);
     return this.mData['TO'].data;
   }
   async getcarddata_to(aIndex) {
@@ -408,7 +502,6 @@ export class QuicktextVar {
 
       // if the method "get_[tagname]" exists and there is enough arguments we call it
       if (typeof this["get_" + tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
-
         // these tags need different behavior if added in "text" or "html" mode
         if (
           tags[i].tagName.toLowerCase() == "image" ||

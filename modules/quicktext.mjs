@@ -24,14 +24,17 @@ export async function parseVariable(aTabId, aVar) {
 }
 
 export async function insertVariable(aTabId, aVar, aType = 0) {
-  await insertBody(aTabId, `${await parseVariable(aTabId, aVar)} `, aType);
+  let content = await parseVariable(aTabId, aVar)
+  if (content) {
+    await insertBody(aTabId, `${content} `, aType);
+  }
 }
 
 export async function insertContentFromFile(aTabId, aType) {
   let content = await browser.Quicktext.pickFile(aTabId, aType, 0, browser.i18n.getMessage("insertFile"));
   if (content) {
     let quicktextVar = new QuicktextVar(aTabId);
-    await insertBody(aTabId, `${await quicktextVar.parse(content)}`, aType);
+    await insertBody(aTabId, await quicktextVar.parse(content), aType);
   }
 }
 

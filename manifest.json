@@ -42,7 +42,8 @@
     "compose",
     "clipboardRead",
     "accountsRead",
-    "addressBooks"
+    "addressBooks",
+    "messagesRead"
   ],
   "background": {
     "page": "background.html"

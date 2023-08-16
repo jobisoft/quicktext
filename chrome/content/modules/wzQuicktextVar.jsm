@@ -87,13 +87,6 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  get_header: function(aVariables)
-  {
-    gQuicktext.mCurrentTemplate.addHeader(aVariables[0], aVariables[1]);
-    // return an empty string, to remove the header tags from the body.
-    return "";
-  }
-,
 
   get_selection: function(aVariables, aType)
   {
@@ -105,36 +98,8 @@ wzQuicktextVar.prototype = {
   {
     return await this.process_url(aVariables);
   }
-,
-  get_orgheader: function(aVariables)
-  {
-    var data = this.process_orgheader(aVariables);
 
-    aVariables[0] = aVariables[0].toLowerCase();
-    if (typeof data[aVariables[0]] != 'undefined')
-    {
-      if (aVariables.length < 2)
-        aVariables[1] = ", ";
 
-      return data[aVariables[0]].join(aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t"));
-    }
-    else
-      return "";
-  }
-,
-  get_orgatt: function(aVariables)
-  {
-    var data = this.process_orgatt(aVariables);
-
-    if (typeof data != 'undefined')
-    {
-      if (aVariables.length == 0)
-        aVariables[0] = ", ";
-      return data['displayName'].join(aVariables[0].replace(/\\n/g, "\n").replace(/\\t/g, "\t"));
-    }
-
-    return "";
-  }
 ,
   // These process functions get the data and mostly saves it
   // in this.mData so if the data is requested again it is quick
@@ -419,69 +384,7 @@ wzQuicktextVar.prototype = {
 
     return "";
   }
-,
-  process_orgheader: function(aVariables)
-  {
-    if (this.mData['ORGHEADER'] && this.mData['ORGHEADER'].checked)
-      return this.mData['ORGHEADER'].data;
 
-    this.preprocess_org();
-    return this.mData['ORGHEADER'].data;
-  }
-,
-  process_orgatt: function(aVariables)
-  {
-    if (this.mData['ORGATT'] && this.mData['ORGATT'].checked)
-      return this.mData['ORGATT'].data;
-
-    this.preprocess_org();
-    return this.mData['ORGATT'].data;
-  }
-,
-  preprocess_org: function()
-  {
-    this.mData['ORGHEADER'] = {};
-    this.mData['ORGHEADER'].checked = true;
-    this.mData['ORGHEADER'].data = {};
-
-    this.mData['ORGATT'] = {};
-    this.mData['ORGATT'].checked = true;
-    this.mData['ORGATT'].data = {contentType:[], url:[], displayName:[], uri:[], isExternal:[]};
-
-    var msgURI = this.mWindow.gMsgCompose.originalMsgURI;
-    if (!msgURI || msgURI == "")
-      return;
-
-    var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance(Components.interfaces.nsIMessenger);
-    var mms = messenger.messageServiceFromURI(msgURI).QueryInterface(Components.interfaces.nsIMsgMessageService);
-
-    //Lazy async-to-sync implementation with ACK from Philipp Kewisch
-    //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
-    let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
-    let listener = streamListener(inspector);
-    mms.streamMessage(msgURI, listener, null, null, true, "filter");
-
-    //lazy async, wait for listener
-    inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
-
-    // Store all headers in the mData-variable
-    for (var i = 0; i < listener.mHeaders.length; i++)
-    {
-      var name = listener.mHeaders[i].name;
-      if (typeof this.mData['ORGHEADER'].data[name] == 'undefined')
-        this.mData['ORGHEADER'].data[name] = [];
-      this.mData['ORGHEADER'].data[name].push(listener.mHeaders[i].value);
-    }
-
-    // Store all attachments in the mData-variable
-    for (var i = 0; i < listener.mAttachments.length; i++)
-    {
-      var attachment = listener.mAttachments[i];
-      for (var fields in attachment)
-        this.mData['ORGATT'].data[fields][i] = attachment[fields];
-    }
-  }
-,
 }
 
 
