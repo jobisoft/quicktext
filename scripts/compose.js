@@ -15,6 +15,12 @@ messenger.runtime.onMessage.addListener((message, sender) => {
     if (message.insertHtml) {
         return insertHtmlFragment(message);
     }
+    if (message.promptLabel) {
+        return Promise.resolve(window.prompt(message.promptLabel, message.promptValue));
+    }
+    if (message.alertLabel) {
+        return Promise.resolve(window.alert(message.alertLabel));
+    }
     return false;
 });
 

@@ -25,26 +25,70 @@ export class QuicktextVar {
     if (aVariables.length == 0) {
       return "";
     }
-    
+
     let name = aVariables[0].toLowerCase();
     switch (name) {
-      case "to": 
+      case "to":
       case "cc":
       case "bcc":
       case "subject":
       case "from":
-        await browser.compose.setComposeDetails(this.mTabId, {[name]: aVariables[1]});
+        await browser.compose.setComposeDetails(this.mTabId, { [name]: aVariables[1] });
         break;
       case "reply-to":
-        await browser.compose.setComposeDetails(this.mTabId, {"replyTo": aVariables[1]});
+        await browser.compose.setComposeDetails(this.mTabId, { "replyTo": aVariables[1] });
         break;
     }
 
     return "";
   }
 
-  async preprocess_org()
-  {
+  async process_input(aVariables) {
+    if (typeof this.mData['INPUT'] == 'undefined')
+      this.mData['INPUT'] = {};
+    if (typeof this.mData['INPUT'].data == 'undefined')
+      this.mData['INPUT'].data = {};
+
+    if (typeof this.mData['INPUT'].data[aVariables[0]] != 'undefined')
+      return this.mData['INPUT'].data;
+
+    let rv;
+    let label = browser.i18n.getMessage("inputText", [aVariables[0]]);
+    let value = typeof aVariables[2] != 'undefined'
+      ? aVariables[2]
+      : "";
+
+    // There are two types of input: select and text.
+    if (aVariables[1] == 'select') {
+      // Not supported, manually open popup with select, or drop support.
+      await messenger.tabs.sendMessage(this.mTabId, {
+        alertLabel: "'select' INPUT not implemented",
+      });
+    } else {
+      rv = await messenger.tabs.sendMessage(this.mTabId, {
+        promptLabel: label,
+        promptValue: value,
+      });
+    }
+    if (rv) {
+      this.mData['INPUT'].data[aVariables[0]] = rv
+    } else {
+      this.mData['INPUT'].data[aVariables[0]] = "";
+    }
+
+    return this.mData['INPUT'].data;
+  }
+  async get_input(aVariables) {
+    console.log("dsflödsflj");
+    let data = await this.process_input(aVariables);
+
+    if (typeof data[aVariables[0]] != "undefined")
+      return data[aVariables[0]];
+
+    return "";
+  }
+
+  async preprocess_org() {
     this.mData['ORGHEADER'] = {};
     this.mData['ORGHEADER'].checked = true;
     this.mData['ORGHEADER'].data = {};
@@ -92,7 +136,7 @@ export class QuicktextVar {
     let seperator = aVariables.length > 1
       ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t")
       : ", "
-    
+
     // data is array of objects, reduce to array of specific object member.
     if (data[name]) {
       return data[name].join(seperator);
