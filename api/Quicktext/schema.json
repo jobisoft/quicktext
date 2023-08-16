@@ -1,20 +1,6 @@
 [
   {
     "namespace": "Quicktext",
-    "events": [
-      {
-        "name": "onNotifyBackground",
-        "type": "function",
-        "description": "Fired when a new notification from notifyTools.js in an Experiment has been received.",
-        "parameters": [
-          {
-            "name": "data",
-            "type": "any",
-            "description": "Restrictions of the structured clone algorithm apply."
-          }
-        ]
-      }
-    ],
     "functions": [
       {
         "name": "registerChromeUrl",
