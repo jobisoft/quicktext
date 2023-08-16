@@ -219,7 +219,7 @@
     
     Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", window.quicktext, "UTF-8");
 
-    injectCSS(window, "resource://quicktext/skin/quicktext.css");
+    injectCSS(window, "resource://quicktext/quicktext.css");
 
     let xulString = `
       <toolbar id="quicktext-toolbar" ${option.toolbar ? "" : "collapsed='true'"}>
