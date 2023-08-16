@@ -1,5 +1,5 @@
 import * as utils from "/modules/utils.mjs";
-import { QuicktextVar } from "/modules/quicktextVar.mjs";
+import { QuicktextParser } from "/modules/quicktextParser.mjs";
 import { QuicktextGroup } from "/modules/quicktextGroup.mjs";
 import { QuicktextScript } from "/modules/quicktextScript.mjs";
 import { QuicktextTemplate } from "/modules/quicktextTemplate.mjs";
@@ -8,37 +8,28 @@ import { QuicktextTemplate } from "/modules/quicktextTemplate.mjs";
 
 export var templates = [];
 
-export async function insertBody(aTabId, aStr, aType = 0) { // 0 = text
-  if (aType > 0) {
-    await messenger.tabs.sendMessage(aTabId, {
-      insertHtml: utils.removeBadHTML(aStr),
-    });
-  } else {
-    await messenger.tabs.sendMessage(aTabId, {
-      insertText: aStr,
-    });
-  }
-}
-
 export async function parseVariable(aTabId, aVar) {
-  let quicktextVar = new QuicktextVar(aTabId, templates);
-  return quicktextVar.parse("[[" + aVar + "]]");
+  let quicktextParser = new QuicktextParser(aTabId, templates);
+  return quicktextParser.parse("[[" + aVar + "]]");
 }
 
-export async function insertVariable(aTabId, aVar, aType = 0) {
-  let content = await parseVariable(aTabId, aVar)
-  console.log(aVar, content);
-  if (content) {
-    await insertBody(aTabId, `${content} `, aType);
+export async function insertVariable(aTabId, aVar, aForceAsText) {
+  // If aForceAsText is not set, but after parsing it is set, we should rerun
+  // with aForceAsText set from the beginning. 
+  let quicktextParser = new QuicktextParser(aTabId, templates, aForceAsText);
+  let parsed = await quicktextParser.parse("[[" + aVar + "]]");
+  if (parsed) {
+    await quicktextParser.insertBody(`${parsed} `);
   }
 }
 
 export async function insertContentFromFile(aTabId, aType) {
   let content = await browser.Quicktext.pickFile(aTabId, aType, 0, browser.i18n.getMessage("insertFile"));
-  if (content) {
-    let quicktextVar = new QuicktextVar(aTabId, templates);
-    await insertBody(aTabId, await quicktextVar.parse(content), aType);
+  if (!content) {
+    return;
   }
+  let quicktextParser = new QuicktextParser(aTabId, templates, aType == 0);
+  await quicktextParser.insertBody(content);
 }
 
 // ---- TEMPLATE
@@ -278,7 +269,7 @@ function getTagValue(aElem, aTag) {
 }
 
 // ---- TODO / UNCHECKED
-
+/*
 async function insertTemplate(aGroupIndex, aTextIndex, aHandleTransaction = true, aFocusBody = false) {
   //store selected content
   var editor = GetCurrentEditor();
@@ -465,3 +456,4 @@ function dumpTree(aNode, aLevel) {
   }
 }
 
+*/

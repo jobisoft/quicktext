@@ -66,7 +66,7 @@ import * as preferences from "/modules/preferences.mjs";
       case "insertVariable":
         return quicktext.insertVariable(info.tabId, info.variable);
       case "getTemplates":
-        return templates;
+        return quicktext.templates;
       case "insertContentFromFile":
         return quicktext.insertContentFromFile(info.tabId, info.type)
       case "openHomepage":

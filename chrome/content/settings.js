@@ -51,8 +51,6 @@ var quicktext = {
     this.mEditingTexts = this.templates.editingTexts;
     this.mEditingScripts = this.templates.editingScripts;
 
-    console.log(this.templates);
-
     let states = await this.getPref("collapseState");
     if (states != "") {
       states = states.split(/;/);

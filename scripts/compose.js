@@ -24,7 +24,7 @@ messenger.runtime.onMessage.addListener((message, sender) => {
     return false;
 });
 
-console.log("Loaded");
+console.log("Compose script loaded");
 
 
 async function handlerCursorTags() {

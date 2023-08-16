@@ -3,11 +3,25 @@ import * as preferences from "/modules/preferences.mjs";
 
 const allowedTags = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
 
-export class QuicktextVar {
-  constructor(aTabId, templates) {
+export class QuicktextParser {
+  constructor(aTabId, templates, forceAsText = false) {
     this.clearData();
     this.mTabId = aTabId;
     this.mTemplates = templates;
+    this.mForceAsText = forceAsText;
+  }
+
+  async insertBody(aStr) {
+    let type = await this.getInsertType();
+    if (type == 0) {
+      await messenger.tabs.sendMessage(this.mTabId, {
+        insertText: aStr,
+      });
+    } else {
+      await messenger.tabs.sendMessage(this.mTabId, {
+        insertHtml: utils.removeBadHTML(aStr),
+      });
+    }
   }
 
   clearData() {
@@ -15,11 +29,24 @@ export class QuicktextVar {
     this.mDetails = null;
   }
 
+  async getInsertType() {
+    let details = await this.getDetails();
+    if (details.isPlainText || this.mForceAsText) {
+      return 0;
+    }
+    return 1;
+  }
+
   async getDetails() {
     if (!this.mDetails) {
       this.mDetails = await browser.compose.getComposeDetails(this.mTabId)
     }
     return this.mDetails
+  }
+
+  async setDetails(details) {
+    await browser.compose.setComposeDetails(this.mTabId, details);
+    this.mDetails = null;
   }
 
   async get_header(aVariables) {
@@ -34,10 +61,10 @@ export class QuicktextVar {
       case "bcc":
       case "subject":
       case "from":
-        await browser.compose.setComposeDetails(this.mTabId, { [name]: aVariables[1] });
+        await this.setDetails(this.mTabId, { [name]: aVariables[1] });
         break;
       case "reply-to":
-        await browser.compose.setComposeDetails(this.mTabId, { "replyTo": aVariables[1] });
+        await this.setDetails(this.mTabId, { "replyTo": aVariables[1] });
         break;
     }
 
@@ -54,6 +81,13 @@ export class QuicktextVar {
         for (let j = 0; j < this.mTemplates.texts[i].length; j++) {
           var text = this.mTemplates.texts[i][j];
           if (aVariables[1] == text.mName) {
+            // Force insertion mode to TEXT if the template requests it.
+            // This will affect also the "parent" template, if the current
+            // template is a nested template, because the entire parsed string
+            // will be inserted in one go. 
+            if (text.mType == 0) {
+              this.mForceAsText = true;
+            }
             return text.text;
           }
         }
@@ -102,7 +136,6 @@ export class QuicktextVar {
     return this.mData['INPUT'].data;
   }
   async get_input(aVariables) {
-    console.log("dsflödsflj");
     let data = await this.process_input(aVariables);
 
     if (typeof data[aVariables[0]] != "undefined")
@@ -318,7 +351,7 @@ export class QuicktextVar {
     return "";
   }
 
-  async process_clipboard(aVariables, aType) {
+  async process_clipboard(aVariables) {
     if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
       return this.mData['CLIPBOARD'].data;
 
@@ -326,13 +359,14 @@ export class QuicktextVar {
     this.mData['CLIPBOARD'].checked = true;
     this.mData['CLIPBOARD'].data = "";
 
-    // I do not know how to access html variant.
+    // I do not know how to access html variant, but if, we would call
+    // this.getDetails and check isPlainText to determine if we need it.
     this.mData['CLIPBOARD'].data = await navigator.clipboard.readText();
 
     return this.mData['CLIPBOARD'].data;
   }
-  async get_clipboard(aVariables, aType) {
-    return utils.trimString(await this.process_clipboard(aVariables, aType));
+  async get_clipboard(aVariables) {
+    return utils.trimString(await this.process_clipboard(aVariables));
   }
 
   async process_counter(aVariables) {
@@ -510,7 +544,7 @@ export class QuicktextVar {
 
   // -------------------------------------------------------------------------
 
-  async parse(aStr, aType) {
+  async parse(aStr) {
     try {
       // Reparse the text until there is no difference in the text
       // or that we parse 100 times (so we don't make an infinitive loop)
@@ -520,7 +554,7 @@ export class QuicktextVar {
       do {
         count++;
         oldStr = aStr;
-        aStr = await this.parseText(aStr, aType);
+        aStr = await this.parseText(aStr);
       } while (aStr != oldStr && count < 20);
 
       return aStr;
@@ -528,17 +562,17 @@ export class QuicktextVar {
       console.log(ex);
     }
   }
-  async parseText(aStr, aType) {
-    var tags = getTags(aStr);
+  async parseText(aStr) {
+    let tags = getTags(aStr);
 
     // If we don't find any tags there will be no changes to the string so return.
     if (tags.length == 0)
       return aStr;
 
     // Replace all tags with there right contents
-    for (var i = 0; i < tags.length; i++) {
-      var value = "";
-      var variable_limit = -1;
+    for (let i = 0; i < tags.length; i++) {
+      let value = "";
+      let variable_limit = -1;
       switch (tags[i].tagName.toLowerCase()) {
         case 'att':
         case 'clipboard':
@@ -569,15 +603,7 @@ export class QuicktextVar {
 
       // if the method "get_[tagname]" exists and there is enough arguments we call it
       if (typeof this["get_" + tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
-        // these tags need different behavior if added in "text" or "html" mode
-        if (
-          tags[i].tagName.toLowerCase() == "image" ||
-          tags[i].tagName.toLowerCase() == "clipboard" ||
-          tags[i].tagName.toLowerCase() == "selection") {
-          value = await this["get_" + tags[i].tagName.toLowerCase()](tags[i].variables, aType);
-        } else {
-          value = await this["get_" + tags[i].tagName.toLowerCase()](tags[i].variables);
-        }
+        value = await this["get_" + tags[i].tagName.toLowerCase()](tags[i].variables);
       }
 
       aStr = utils.replaceText(tags[i].tag, value, aStr);
