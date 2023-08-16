@@ -53,7 +53,7 @@ export async function loadTemplates(imports, options) {
         if (defaultImport[i].match(/^(http|https):\/\//)) {
           await importFromHttpUrl(imports, defaultImport[i], 1, true, false);
         } else {
-          await importFromFilePath(imports, parseFilePath(defaultImport[i]), 1, true, false);
+          await importFromFilePath(imports, defaultImport[i], 1, true, false);
         }
       } catch (e) { console.error(e); }
     }
