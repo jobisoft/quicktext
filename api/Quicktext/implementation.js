@@ -2,7 +2,7 @@
 
 (function (exports) {
 
-  async function install(extension, tabId, option) {
+  async function install(extension, tabId, option, dateLabels) {
     function localize(entity) {
       let msg = entity.slice("__MSG_".length, -2);
       return extension.localeData.localizeMessage(msg);
@@ -307,6 +307,13 @@
       messageEditor
     );
 
+    // Update date menu entries
+    for (let [field, label] of Object.entries(dateLabels)) {
+      if (window.document.getElementById(field)) {
+        window.document.getElementById(field).setAttribute("label", label);
+      }
+    }
+
     await window.quicktext.load(extension, tabId);
     console.log("install");
   }
@@ -380,8 +387,8 @@
               "chrome,resizable,centerscreen"
             );
           },
-          async addToolbar(tabId, options) {
-            return install(context.extension, tabId, options);
+          async addToolbar(tabId, options, dateLabels) {
+            return install(context.extension, tabId, options, dateLabels);
           },
           async toggleToolbar(tabId, visible) {
             let { window } = context.extension.tabManager.get(tabId);

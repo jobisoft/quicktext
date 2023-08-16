@@ -1,3 +1,4 @@
+import * as utils from "/modules/utils.mjs";
 import * as menus from "/modules/menus.mjs";
 import * as quicktext from "/modules/quicktext.mjs";
 import * as preferences from "/modules/preferences.mjs";
@@ -76,7 +77,18 @@ import * as preferences from "/modules/preferences.mjs";
 
   // React to open composer tabs.
   async function prepareComposeTab(tab) {
-    await messenger.Quicktext.addToolbar(tab.id, { toolbar: await preferences.getPref("toolbar")});
+    let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
+    let dateLabels = {};
+    let now = Date.now();
+    for (let field of fields) {
+      dateLabels[field] = messenger.i18n.getMessage("date", utils.getDateTimeFormat(field, now));
+    }
+
+    await messenger.Quicktext.addToolbar(
+      tab.id, 
+      { toolbar: await preferences.getPref("toolbar")},
+      dateLabels
+    );
     await messenger.tabs.executeScript(tab.id, {
       file: "/scripts/compose.js"
     });

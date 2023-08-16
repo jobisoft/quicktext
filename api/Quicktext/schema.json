@@ -58,6 +58,10 @@
           {
             "name": "options",
             "type": "any"
+          },
+          {
+            "name": "dateLabels",
+            "type": "any"
           }
         ]
       },
