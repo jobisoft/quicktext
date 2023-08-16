@@ -154,7 +154,7 @@ wzQuicktextVar.prototype = {
           return content.replace(/<!--[\s\S]*?(?:-->)/g, '');
         }
         return content;
-      } catch(e) { Components.utils.reportError(e); }
+      } catch(e) { console.error(e); }
     }
 
     return "";
@@ -181,7 +181,7 @@ wzQuicktextVar.prototype = {
                 ? "<img src='"+src+"'>"
                 : src;
       } catch(e) { 
-        Components.utils.reportError(e); 
+        console.error(e); 
       }
     }
 

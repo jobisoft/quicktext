@@ -3,6 +3,13 @@ import * as quicktext from "/modules/quicktext.mjs";
 import * as preferences from "/modules/preferences.mjs";
 
 (async () => {
+  // As long as we have a XUL settings window, we still need this. The next step
+  // is to convert the settings window to html and move all legacy functions from
+  // the JSMs directly into the Quicktext API.
+  await messenger.Quicktext.registerChromeUrl([
+    ["content", "quicktext", "chrome/content/"],
+    ["resource", "quicktext", "chrome/"],
+  ]);
 
   // Define prefs, which can be overridden by system admins.
   const managedPrefs = [
@@ -31,28 +38,41 @@ import * as preferences from "/modules/preferences.mjs";
     }
   }
 
-  // Allow legacy code to access local storage prefs.
+  // Get some prefs which need to during startup
+  const OPTIONS = [
+    "templateFolder", "collapseGroup", "keywordKey", "viewPopup", "shortcutTypeAdv",
+    "shortcutModifier", "collapseState", "defaultImport"
+  ]
+  let options = {}
+  for (let name of OPTIONS) {
+    options[name] = await preferences.getPref(name);
+  }
+
+  // Fix invalid options
+  // - reset the value of mShortcutModifier to "alt", if it has not a valid value - see issue #177
+  if (!["alt", "control", "meta"].includes(options.shortcutModifier)) {
+    options.shortcutModifier = "alt";
+    await preferences.setPref("shortcutModifier", options.shortcutModifier)
+  }
+
+  // Load templates.
+  let templates = {}
+  await quicktext.loadTemplates(templates, options);
+  console.log(templates);
+
+  // Allow legacy code to access WebExtension modules.
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
         return preferences.setPref(info.pref, info.value);
-        break;
       case "getPref":
         return preferences.getPref(info.pref);
-        break;
       case "insertVariable":
         return quicktext.insertVariable(info.tabId, info.variable);
-
+      case "getTemplates":
+        return templates;
     }
   });
-
-  // As long as we have a XUL settings window, we still need this. The next step
-  // is to convert the settings window to html and move all legacy functions from
-  // the JSMs directly into the Quicktext API.
-  await messenger.Quicktext.registerChromeUrl([
-    ["content", "quicktext", "chrome/content/"],
-    ["resource", "quicktext", "chrome/"],
-  ]);
 
   // React to open composer tabs.
   async function prepareComposeTab(tab) {

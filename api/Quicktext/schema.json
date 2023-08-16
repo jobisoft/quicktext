@@ -75,6 +75,28 @@
             "type": "boolean"
           }
         ]
+      },
+      {
+        "name": "getQuicktextFilePaths",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "options",
+            "type": "any"
+          }
+        ]
+      },
+      {
+        "name": "readFile",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "aFilePath",
+            "type": "string"
+          }
+        ]
       }
     ]
   }

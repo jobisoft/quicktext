@@ -1,6 +1,3 @@
-var { wzQuicktextGroup } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextGroup.jsm");
-var { wzQuicktextTemplate } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextTemplate.jsm");
-var { wzQuicktextScript } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktextScript.jsm");
 var Services = globalThis.Services || ChromeUtils.import(
   "resource://gre/modules/Services.jsm"
 ).Services;
@@ -208,7 +205,7 @@ var gQuicktext = {
             fp.initWithPath(this.parseFilePath(defaultImport[i]));
             this.importFromFile(fp, 1, true, false);
           }
-        } catch (e) { Components.utils.reportError(e); }
+        } catch (e) { console.error(e); }
       }
     }
 
@@ -520,7 +517,7 @@ var gQuicktext = {
           var file = dirSer.get(results[i][1], Components.interfaces.nsIFile);
           rexp = new RegExp ("\\["+ results[i][1] +"\\]", "g");
           aPath = aPath.replace(rexp, file.path);
-        } catch(e) { Components.utils.reportError(e); }
+        } catch(e) { console.error(e); }
       }
     }
 
@@ -587,7 +584,7 @@ var gQuicktext = {
       } catch (e) {
         //ISO-Latin-1 fallback obtained via nsIScriptableInputStream::read
         text = fileHeader + fileBody;
-        Components.utils.reportError(e);		  
+        console.error(e);		  
       }
 
       // Removes \r because that makes crashes on atleast on Windows.
@@ -793,227 +790,7 @@ var gQuicktext = {
     buffer += "</quicktext>";
     this.writeFile(aFile, buffer);
   }
-,
-  importFromFile: function(aFile, aType, aBefore, aEditingMode)
-  {
-    var start = this.mGroup.length;
 
-    var data = this.readFile(aFile);
-    this.parseImport(data, aType, aBefore, aEditingMode);
-  }
-,
-  importFromHTTPFile: function(aURI, aType, aBefore, aEditingMode)
-  {
-    var req = new XMLHttpRequest();
-    req.open('GET', aURI, true);
-    req.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
-    req.mQuicktext = this;
-    req.mType = aType;
-    req.mBefore = aBefore;
-    req.mEditingMode = aEditingMode
-    req.onload = function(event)
-    {
-      var self = event.target;
-      if (self.status == 200)
-      {
-        if (typeof self.mQuicktext != 'undefined')
-        {
-          self.mQuicktext.parseImport(self.responseText, self.mType, self.mBefore, self.mEditingMode);
-          self.mQuicktext.notifyObservers("updatesettings", "");
-        }
-        else
-          debug('Something strange has happen!');
-      }
-    }
-    req.send(null);
-  }
-,
-  parseImport: function(aData, aType, aBefore, aEditingMode)
-  {
-    var parser = new DOMParser();
-    var dom = parser.parseFromString(aData, "text/xml");
-
-    var version = dom.documentElement.getAttribute("version");
-
-    var group = [];
-    var texts = [];
-    var scripts = [];
-
-    switch (version)
-    {
-      case "2":
-        var filetype = this.getTagValue(dom.documentElement, "filetype");
-        switch (filetype)
-        {
-          case "scripts":
-            var elems = dom.documentElement.getElementsByTagName("script");
-            for (var i = 0; i < elems.length; i++)
-            {
-              var tmp = new wzQuicktextScript();
-              tmp.name = this.getTagValue(elems[i], "name");
-              tmp.script = this.getTagValue(elems[i], "body");
-              tmp.type = aType;
-
-              scripts.push(tmp);
-            }
-            break;
-          case "":
-          case "templates":
-            var elems = dom.documentElement.getElementsByTagName("menu");
-            for (var i = 0; i < elems.length; i++)
-            {
-              var tmp = new wzQuicktextGroup();
-              tmp.name = this.getTagValue(elems[i], "title");
-              tmp.type = aType;
-    
-              group.push(tmp);
-              var subTexts = [];
-              var textsNodes = elems[i].getElementsByTagName("texts");
-              if (textsNodes.length > 0)
-              {
-                var subElems = textsNodes[0].getElementsByTagName("text");
-                for (var j = 0; j < subElems.length; j++)
-                {
-                  var tmp = new wzQuicktextTemplate();
-                  tmp.name = this.getTagValue(subElems[j], "name");
-                  tmp.text = this.getTagValue(subElems[j], "body");
-                  tmp.shortcut = subElems[j].getAttribute("shortcut");
-                  tmp.type = subElems[j].getAttribute("type");
-                  tmp.keyword = this.getTagValue(subElems[j], "keyword");
-                  tmp.subject = this.getTagValue(subElems[j], "subject");
-                  tmp.attachments = this.getTagValue(subElems[j], "attachments");
-
-                  // There seems to be no use to read dynamically gathered header informations from the last use of a template from the file
-
-                  // var headersTag = subElems[j].getElementsByTagName("headers");
-                  // if (headersTag.length > 0)
-                  // {
-                  //   var headers = headersTag[0].getElementsByTagName("header");
-                  //   for (var k = 0; k < headers.length; k++)
-                  //     tmp.addHeader(this.getTagValue(headers[k], "type"), this.getTagValue(headers[k], "value"));
-                  // }
-
-                  subTexts.push(tmp);
-                }
-              }
-              texts.push(subTexts);
-            }            
-            break;
-          default:
-            // Alert the user that the importer don't understand the filetype
-            break;
-        }
-        
-        break;
-      case null:
-        // When the version-number not is set it is version 1.
-
-        var elems = dom.documentElement.getElementsByTagName("menu");
-        for (var i = 0; i < elems.length; i++)
-        {
-          var tmp = new wzQuicktextGroup();
-          tmp.name = elems[i].getAttribute("title");
-          tmp.type = aType;
-
-          group.push(tmp);
-
-          var subTexts = [];
-          var subElems = elems[i].getElementsByTagName("text");
-          for (var j = 0; j < subElems.length; j++)
-          {
-            var tmp = new wzQuicktextTemplate();
-            tmp.name = subElems[j].getAttribute("title");
-            tmp.text = subElems[j].firstChild.nodeValue;
-            tmp.shortcut = subElems[j].getAttribute("shortcut");
-            tmp.type = subElems[j].getAttribute("type");
-            tmp.keyword = subElems[j].getAttribute("keyword");
-            tmp.subject = subElems[j].getAttribute("subject");
-
-            subTexts.push(tmp);
-          }
-          texts.push(subTexts);
-        }
-        break;
-      default:
-        // Alert the user that there version of Quicktext can't import the file, need to upgrade
-        return;
-    }
-
-    if (scripts.length > 0)
-    {
-      if (aBefore)
-      {
-        scripts.reverse();
-        if (!aEditingMode)
-          for (var i = 0; i < scripts.length; i++)
-            this.mScripts.unshift(scripts[i]);
-
-        for (var i = 0; i < scripts.length; i++)
-          this.mEditingScripts.unshift(scripts[i]);
-      }
-      else
-      {
-        if (!aEditingMode)
-          for (var i = 0; i < scripts.length; i++)
-            this.mScripts.push(scripts[i]);
-
-        for (var i = 0; i < scripts.length; i++)
-          this.mEditingScripts.push(scripts[i]);
-      }
-    }
-
-    if (group.length > 0 && texts.length > 0)
-    {
-      if (aBefore)
-      {
-        group.reverse();
-        texts.reverse();
-        if (!aEditingMode)
-        {
-          for (var i = 0; i < group.length; i++)
-            this.mGroup.unshift(group[i]);
-          for (var i = 0; i < texts.length; i++)
-            this.mTexts.unshift(texts[i]);
-        }
-        for (var i = 0; i < group.length; i++)
-          this.mEditingGroup.unshift(group[i]);
-        for (var i = 0; i < texts.length; i++)
-          this.mEditingTexts.unshift(texts[i]);
-      }
-      else
-      {
-        if (!aEditingMode)
-        {
-          for (var i = 0; i < group.length; i++)
-            this.mGroup.push(group[i]);
-          for (var i = 0; i < texts.length; i++)
-            this.mTexts.push(texts[i]);
-        }
-        for (var i = 0; i < group.length; i++)
-          this.mEditingGroup.push(group[i]);
-        for (var i = 0; i < texts.length; i++)
-          this.mEditingTexts.push(texts[i]);
-      }
-    }
-  }
-,
-  getTagValue: function(aElem, aTag)
-  {
-    var tagElem = aElem.getElementsByTagName(aTag);
-    if (tagElem.length > 0)
-    {
-      // can't be used anymore as sometimes there are several CDATA entries - see removeIllegalCharsCDATA
-      // return tagElem[0].firstChild.nodeValue;
-
-      var result = '';
-      for (const child of tagElem[0].childNodes) {
-        result = result + child.nodeValue;
-      }
-      return result;
-    }
-
-    return "";
-  }
 ,
   removeIllegalChars: function(aStr)
   {
