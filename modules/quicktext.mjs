@@ -272,7 +272,7 @@ function getTagValue(aElem, aTag) {
   return "";
 }
 
-// ----
+// ---- TODO / UNCHECKED
 
 async function insertTemplate(aGroupIndex, aTextIndex, aHandleTransaction = true, aFocusBody = false) {
   //store selected content

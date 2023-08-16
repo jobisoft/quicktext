@@ -3,7 +3,6 @@ var EXPORTED_SYMBOLS = ["wzQuicktextVar"];
 var Services = globalThis.Services || ChromeUtils.import(
   "resource://gre/modules/Services.jsm"
 ).Services;
-var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { MailServices } = ChromeUtils.import("resource:///modules/MailServices.jsm");
 

@@ -1,5 +1,4 @@
 var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
-var { quicktextUtils } = ChromeUtils.import("chrome://quicktext/content/modules/utils.jsm");
 var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
 
 var quicktext = {
@@ -403,17 +402,6 @@ var quicktext = {
    * GUI CHANGES
    */
   updateGUI: function () {
-
-    // Set the date/time in the variablemenu
-    var timeStamp = new Date();
-    let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
-    for (let i = 0; i < fields.length; i++) {
-      let field = fields[i];
-      let fieldtype = field.split("-")[0];
-      if (document.getElementById(field)) {
-        document.getElementById(field).setAttribute("label", this.extension.localeData.localizeMessage(fieldtype, quicktextUtils.dateTimeFormat(field, timeStamp)));
-      }
-    }
 
     // Update info in the generalsettings tab
     if (document.getElementById("checkbox-viewPopup"))
