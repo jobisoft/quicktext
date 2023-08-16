@@ -1,73 +1,77 @@
-var { gQuicktext } = ChromeUtils.import("chrome://quicktext/content/modules/wzQuicktext.jsm");
 var { ExtensionParent } = ChromeUtils.import("resource://gre/modules/ExtensionParent.jsm");
 
 var quicktext = {
-  mChangesMade: false,
-  mTextChangesMade: [],
-  mScriptChangesMade: [],
-  mGeneralChangesMade: [],
   mLoaded: false,
   mTreeArray: [],
   mCollapseState: [],
   mScriptIndex: null,
   mPickedIndex: null,
-  mOS: "WINNT"
-  ,
+  mOS: "WINNT",
+  mGroup: [],
+  mTexts: [],
+  mScripts: [],
+  mEditingGroup: [],
+  mEditingTexts: [],
+  mEditingScripts: [],
+
+  getPref: async function (name) {
+    return this.notifyTools.notifyBackground({ command: "getPref", pref: name });
+  },
+  setPref: async function (name, value) {
+    return this.notifyTools.notifyBackground({ command: "setPref", pref: name, value });
+  },
+  getTemplates: async function () {
+    return this.notifyTools.notifyBackground({ command: "getTemplates" });
+  },
+  openHomepage: function () {
+    return this.notifyTools.notifyBackground({ command: "openHomepage" });
+  },
+
   load: async function () {
-    if (!this.mLoaded) {
-      this.mLoaded = true;
-
-      this.extension = ExtensionParent.GlobalManager.getExtension("{8845E3B3-E8FB-40E2-95E9-EC40294818C4}");
-      await window.i18n.updateDocument({ extension: this.extension });
-
-      // add OS as attribute to outer dialog
-      document.getElementById('quicktextSettingsWindow').setAttribute("OS", Services.appinfo.OS);
-      console.log("Adding attribute 'OS' = '" + Services.appinfo.OS + "' to settings dialog element.");
-
-      this.mOS = Services.appinfo.OS;
-
-      gQuicktext.addObserver(this);
-      var hasLoadedBefore = !(await gQuicktext.loadSettings(false));
-
-      var states = gQuicktext.collapseState;
-      if (states != "") {
-        states = states.split(/;/);
-        for (var i = 0; i < states.length; i++)
-          this.mCollapseState[i] = (states[i] == "1");
-      }
-
-      var groupLength = gQuicktext.getGroupLength(true);
-      if (states.length < groupLength) {
-        for (var i = states.length; i < groupLength; i++)
-          this.mCollapseState[i] = true;
-      }
-
-      if (hasLoadedBefore) {
-        gQuicktext.startEditing();
-        this.updateGUI();
-      }
-
-      // window.resizeTo(gQuicktext.getSettingsWindowSize(0), gQuicktext.getSettingsWindowSize(1));
-      document.getElementById('tabbox-main').selectedIndex = 1;
-
-      document.getElementById('text-keyword').addEventListener("keypress", function (e) { quicktext.noSpaceForKeyword(e); }, false);
-
-      this.disableSave();
-      document.documentElement.getButton("extra1").addEventListener("command", function (e) { quicktext.save(); }, false);
+    if (this.mLoaded) {
+      return;
     }
-  }
-  ,
-  unload: function () {
-    gQuicktext.removeObserver(this);
+    this.mLoaded = true;
+    this.extension = ExtensionParent.GlobalManager.getExtension("{8845E3B3-E8FB-40E2-95E9-EC40294818C4}");
+    await window.i18n.updateDocument({ extension: this.extension });
 
-    var states = [];
-    for (var i = 0; i < this.mCollapseState.length; i++)
-      states[i] = (this.mCollapseState[i]) ? "1" : "";
-    gQuicktext.collapseState = states.join(";");
+    Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", quicktext, "UTF-8");
 
-    document.getElementById('text-keyword').removeEventListener("keypress", function (e) { quicktext.noSpaceForKeyword(e); }, false);
-  }
-  ,
+    // add OS as attribute to outer dialog
+    document.getElementById('quicktextSettingsWindow').setAttribute("OS", Services.appinfo.OS);
+    console.log("Adding attribute 'OS' = '" + Services.appinfo.OS + "' to settings dialog element.");
+
+    this.mOS = Services.appinfo.OS;
+
+    this.templates = await this.getTemplates();
+    this.mGroup = this.templates.group;
+    this.mTexts = this.templates.texts;
+    this.mScripts = this.templates.scripts;
+    this.mEditingGroup = this.templates.editingGroup;
+    this.mEditingTexts = this.templates.editingTexts;
+    this.mEditingScripts = this.templates.editingScripts;
+
+    console.log(this.templates);
+
+    let states = await this.getPref("collapseState");
+    if (states != "") {
+      states = states.split(/;/);
+      for (var i = 0; i < states.length; i++)
+        this.mCollapseState[i] = (states[i] == "1");
+    }
+
+    var groupLength = this.templates.group.length;
+    if (states.length < groupLength) {
+      for (var i = states.length; i < groupLength; i++)
+        this.mCollapseState[i] = true;
+    }
+
+    document.getElementById('tabbox-main').selectedIndex = 1;
+    document.getElementById('text-keyword').addEventListener("keypress", function (e) { quicktext.noSpaceForKeyword(e); }, false);
+    document.documentElement.getButton("extra1").addEventListener("command", function (e) { quicktext.save(); }, false);
+
+    await this.updateGUI();
+  },
   close: function (aClose) {
     this.saveText();
     this.saveScript();
@@ -102,42 +106,33 @@ var quicktext = {
       window.close();
 
     return true;
-  }
-  ,
-  save: function () {
+  },
+  save: async function () {
     this.saveText();
     this.saveScript();
 
     if (document.getElementById("checkbox-viewPopup"))
-      gQuicktext.viewPopup = document.getElementById("checkbox-viewPopup").checked;
+      await this.setPrefs("viewPopup", document.getElementById("checkbox-viewPopup").checked);
     if (document.getElementById("text-defaultImport"))
-      gQuicktext.defaultImport = document.getElementById("text-defaultImport").value;
+      await this.setPrefs("defaultImport", document.getElementById("text-defaultImport").value);
     if (document.getElementById("select-shortcutModifier"))
-      gQuicktext.shortcutModifier = document.getElementById("select-shortcutModifier").value;
+      await this.setPrefs("shortcutModifier", document.getElementById("select-shortcutModifier").value);
     if (document.getElementById("checkbox-shortcutTypeAdv"))
-      gQuicktext.shortcutTypeAdv = document.getElementById("checkbox-shortcutTypeAdv").checked;
+      await this.setPrefs("shortcutTypeAdv", document.getElementById("checkbox-shortcutTypeAdv").checked);
     if (document.getElementById("select-keywordKey"))
-      gQuicktext.keywordKey = document.getElementById("select-keywordKey").value;
+      await this.setPrefs("keywordKey", document.getElementById("select-keywordKey").value);
     if (document.getElementById("checkbox-collapseGroup"))
-      gQuicktext.collapseGroup = document.getElementById("checkbox-collapseGroup").checked;
+      await this.setPrefs("collapseGroup", document.getElementById("checkbox-collapseGroup").checked);
 
     gQuicktext.saveSettings();
-
-    this.mChangesMade = false;
-    this.mTextChangesMade = [];
-    this.mScriptChangesMade = [];
-    this.mGeneralChangesMade = [];
-    this.disableSave();
-    this.updateGUI();
-  }
-  ,
+    await this.updateGUI();
+  },
   shortcutTypeAdv: function () {
     if (this.mOS.substr(0, 3).toLowerCase() == "mac" || (this.mOS.substr(0, 3).toLowerCase() == "win" && document.getElementById('select-shortcutModifier').value == "alt"))
       return false;
 
     return document.getElementById('checkbox-shortcutTypeAdv').checked;
-  }
-  ,
+  },
   saveText: function () {
     if (this.mPickedIndex != null) {
       if (this.mPickedIndex[1] > -1) {
@@ -166,8 +161,7 @@ var quicktext = {
         this.saveGroupCell(this.mPickedIndex[0], 'name', title);
       }
     }
-  }
-  ,
+  },
   saveTextCell: function (aGroupIndex, aTextIndex, aColumn, aValue) {
     var text = gQuicktext.getText(aGroupIndex, aTextIndex, true);
     if (typeof text[aColumn] != "undefined" && text[aColumn] != aValue) {
@@ -177,8 +171,7 @@ var quicktext = {
       return true;
     }
     return false;
-  }
-  ,
+  },
   saveGroupCell: function (aGroupIndex, aColumn, aValue) {
     var group = gQuicktext.getGroup(aGroupIndex, true);
     if (typeof group[aColumn] != "undefined" && group[aColumn] != aValue) {
@@ -188,8 +181,7 @@ var quicktext = {
       return true;
     }
     return false;
-  }
-  ,
+  },
   saveScript: function () {
     if (this.mScriptIndex != null) {
       var title = document.getElementById('script-title').value;
@@ -199,8 +191,7 @@ var quicktext = {
       this.saveScriptCell(this.mScriptIndex, 'name', title);
       this.saveScriptCell(this.mScriptIndex, 'script', document.getElementById('script').value);
     }
-  }
-  ,
+  },
   saveScriptCell: function (aIndex, aColumn, aValue) {
     var script = gQuicktext.getScript(aIndex, true);
     if (typeof script[aColumn] != "undefined" && script[aColumn] != aValue) {
@@ -211,236 +202,55 @@ var quicktext = {
       return true;
     }
     return false;
-  }
-  ,
+  },
   noSpaceForKeyword: function (e) {
     if (e.charCode == KeyEvent.DOM_VK_SPACE) {
       e.stopPropagation();
       e.preventDefault();
     }
-  }
-  ,
-  checkForGeneralChanges: function (aIndex) {
-    var ids = ['checkbox-viewPopup', 'checkbox-collapseGroup', 'select-shortcutModifier', 'checkbox-shortcutTypeAdv', 'select-keywordKey', 'text-defaultImport'];
-    var type = ['checked', 'checked', 'value', 'checked', 'value', 'value'];
-    var keys = ['viewPopup', 'collapseGroup', 'shortcutModifier', 'shortcutTypeAdv', 'keywordKey', 'defaultImport'];
-
-    if (typeof ids[aIndex] == 'undefined')
-      return;
-
-    var value = document.getElementById(ids[aIndex])[type[aIndex]];
-
-    if (gQuicktext[keys[aIndex]] != value)
-      this.generalChangeMade(aIndex);
-    else
-      this.noGeneralChangeMade(aIndex);
-  }
-  ,
-  checkForTextChanges: function (aIndex) {
-    if (!this.mPickedIndex)
-      return;
-
-    var ids = ['text-title', 'text', 'text-shortcutBasic', 'text-type', 'text-keyword', 'text-subject', 'text-attachments'];
-    var keys = ['name', 'text', 'shortcut', 'type', 'keyword', 'subject', 'attachments'];
-
-    if (this.shortcutTypeAdv())
-      ids[2] = 'text-shortcutAdv';
-
-    var value = document.getElementById(ids[aIndex]).value;
-    switch (aIndex) {
-      case 0:
-        if (value.replace(/[\s]/g, '') == "")
-          if (this.mPickedIndex[1] > -1)
-            value = this.extension.localeData.localizeMessage("newTemplate");
-          else
-            value = this.extension.localeData.localizeMessage("newGroup");
-        break;
-      case 2:
-        if (this.shortcutTypeAdv()) {
-          value = value.replace(/[^\d]/g, '');
-          document.getElementById(ids[aIndex]).value = value;
-        }
-      case 4:
-        value = value.replace(/[\s]/g, '');
-        document.getElementById(ids[aIndex]).value = value;
-        break;
-    }
-
-    if (this.mPickedIndex[1] > -1) {
-      if (gQuicktext.getText(this.mPickedIndex[0], this.mPickedIndex[1], true)[keys[aIndex]] != value)
-        this.textChangeMade(aIndex);
-      else
-        this.noTextChangeMade(aIndex);
-    }
-    else {
-      if (gQuicktext.getGroup(this.mPickedIndex[0], true)[keys[aIndex]] != value)
-        this.textChangeMade(aIndex);
-      else
-        this.noTextChangeMade(aIndex);
-    }
-
-    if (aIndex == 0 || aIndex == 2) {
-      var selectedIndex = document.getElementById('group-tree').view.selection.currentIndex;
-      if (aIndex == 0) {
-        this.mTreeArray[selectedIndex][6] = value;
-      }
-      else {
-        this.mTreeArray[selectedIndex][7] = value;
-      }
-      document.getElementById('group-tree').invalidateRow(selectedIndex);
-      this.updateVariableGUI();
-    }
-  }
-  ,
-  checkForScriptChanges: function (aIndex) {
-    if (this.mScriptIndex == null)
-      return;
-
-    var ids = ['script-title', 'script'];
-    var keys = ['name', 'script'];
-
-    var value = document.getElementById(ids[aIndex]).value;
-    switch (aIndex) {
-      case 0:
-        if (value.replace(/[\s]/g, '') == "")
-          value = this.extension.localeData.localizeMessage("newScript");
-        break;
-    }
-
-    if (gQuicktext.getScript(this.mScriptIndex, true)[keys[aIndex]] != value)
-      this.scriptChangeMade(aIndex);
-    else
-      this.noScriptChangeMade(aIndex);
-
-    if (aIndex == 0) {
-      this.updateVariableGUI();
-      var listItem = document.getElementById('script-list').getItemAtIndex(this.mScriptIndex);
-      listItem.firstChild.value = value;
-    }
-  }
-  ,
-  changesMade: function () {
-    this.mChangesMade = true;
-    this.enableSave();
-  }
-  ,
-  anyChangesMade: function () {
-    if (this.textChangesMade() || this.scriptChangesMade() || this.generalChangesMade())
-      return true;
-
-    return false;
-  }
-  ,
-  generalChangesMade: function () {
-    for (var i = 0; i < this.mGeneralChangesMade.length; i++) {
-      if (typeof this.mGeneralChangesMade[i] != "undefined" && this.mGeneralChangesMade[i] == true)
-        return true;
-    }
-
-    return false;
-  }
-  ,
-  generalChangeMade: function (aIndex) {
-    this.enableSave();
-
-    this.mGeneralChangesMade[aIndex] = true;
-  }
-  ,
-  noGeneralChangeMade: function (aIndex) {
-    this.mGeneralChangesMade[aIndex] = false;
-
-    if (!this.mChangesMade && !this.anyChangesMade())
-      this.disableSave();
-  }
-  ,
-  textChangesMade: function () {
-    for (var i = 0; i < this.mTextChangesMade.length; i++) {
-      if (typeof this.mTextChangesMade[i] != "undefined" && this.mTextChangesMade[i] == true)
-        return true;
-    }
-
-    return false;
-  }
-  ,
-  textChangeMade: function (aIndex) {
-    this.enableSave();
-
-    this.mTextChangesMade[aIndex] = true;
-  }
-  ,
-  noTextChangeMade: function (aIndex) {
-    this.mTextChangesMade[aIndex] = false;
-
-    if (!this.mChangesMade && !this.anyChangesMade())
-      this.disableSave();
-  }
-  ,
-  scriptChangesMade: function () {
-    for (var i = 0; i < this.mScriptChangesMade.length; i++) {
-      if (typeof this.mScriptChangesMade[i] != "undefined" && this.mScriptChangesMade[i] == true)
-        return true;
-    }
-
-    return false;
-  }
-  ,
-  scriptChangeMade: function (aIndex) {
-    this.enableSave();
-
-    this.mScriptChangesMade[aIndex] = true;
-  }
-  ,
-  noScriptChangeMade: function (aIndex) {
-    this.mScriptChangesMade[aIndex] = false;
-
-    if (!this.mChangesMade && !this.anyChangesMade())
-      this.disableSave();
-  }
-  ,
+  },
 
   /*
    * GUI CHANGES
    */
-  updateGUI: function () {
-
+  updateGUI: async function () {
     // Update info in the generalsettings tab
     if (document.getElementById("checkbox-viewPopup"))
-      document.getElementById("checkbox-viewPopup").checked = gQuicktext.viewPopup;
+      document.getElementById("checkbox-viewPopup").checked = await this.getPref("viewPopup");
     if (document.getElementById("checkbox-collapseGroup"))
-      document.getElementById("checkbox-collapseGroup").checked = gQuicktext.collapseGroup;
+      document.getElementById("checkbox-collapseGroup").checked = await this.getPref("collapseGroup");
     if (document.getElementById("select-shortcutModifier"))
-      document.getElementById("select-shortcutModifier").value = gQuicktext.shortcutModifier;
+      document.getElementById("select-shortcutModifier").value = await this.getPref("shortcutModifier");
     if (document.getElementById("checkbox-shortcutTypeAdv")) {
       var elem = document.getElementById("checkbox-shortcutTypeAdv");
-      elem.checked = gQuicktext.shortcutTypeAdv;
+      elem.checked = await this.getPref("shortcutTypeAdv");
 
       this.shortcutModifierChange();
     }
     if (document.getElementById("text-defaultImport"))
-      document.getElementById("text-defaultImport").value = gQuicktext.defaultImport;
+      document.getElementById("text-defaultImport").value = await this.getPref("defaultImport");
     if (document.getElementById("select-keywordKey"))
-      document.getElementById("select-keywordKey").value = gQuicktext.keywordKey;
+      document.getElementById("select-keywordKey").value = await this.getPref("keywordKey");
 
     // Update the variable menu 
-    this.updateVariableGUI();
+    //this.updateVariableGUI();
 
     // Update Script list
-    this.updateScriptGUI();
+    //this.updateScriptGUI();
 
     // Update the tree
-    this.buildTreeGUI();
+    //this.buildTreeGUI();
 
     // Update the remove and add buttons
-    this.updateButtonStates();
-  }
-  ,
+    //this.updateButtonStates();
+  },
   updateVariableGUI: function () {
     // Set all other text in the variablemenu
     var topParent = document.getElementById('quicktext-other-texts');
     for (var i = topParent.childNodes.length - 1; i >= 0; i--)
       topParent.removeChild(topParent.childNodes[i]);
 
-    var groupLength = gQuicktext.getGroupLength(true);
+    var groupLength = this.mGroup.length;
     if (groupLength > 0) {
       topParent.removeAttribute('hidden');
       parent = document.createXULElement("menupopup");
@@ -448,7 +258,7 @@ var quicktext = {
       for (var i = 0; i < groupLength; i++) {
         var textLength = gQuicktext.getTextLength(i, true);
         if (textLength > 0) {
-          var group = gQuicktext.getGroup(i, true);
+          var group = this.mGroup[i];;
           var groupElem = document.createXULElement("menu");
           groupElem.setAttribute('label', group.name);
           groupElem = parent.appendChild(groupElem);
@@ -473,14 +283,14 @@ var quicktext = {
     for (var i = topParent.childNodes.length - 1; i >= 0; i--)
       topParent.removeChild(topParent.childNodes[i]);
 
-    var scriptLength = gQuicktext.getScriptLength(true);
+    var scriptLength = this.mScripts.length;
     if (scriptLength > 0) {
       topParent.removeAttribute('hidden');
       parent = document.createXULElement("menupopup");
       parent = topParent.appendChild(parent);
 
       for (var i = 0; i < scriptLength; i++) {
-        var script = gQuicktext.getScript(i, true);
+        var script = this.mScripts[i];
         var textElem = document.createXULElement("menuitem");
         textElem.setAttribute('label', script.name);
         textElem.addEventListener("command", function () { quicktext.insertVariable("SCRIPT=" + this.getAttribute("label")); });
@@ -489,14 +299,13 @@ var quicktext = {
     }
     else
       topParent.setAttribute('hidden', true);
-  }
-  ,
+  },
   disableShortcuts: function (aShortcut) {
     var grouplist = document.getElementById('popup-shortcutBasic');
     for (var i = 0; i <= 10; i++)
       grouplist.childNodes[i].removeAttribute("disabled");
 
-    var groupLength = gQuicktext.getGroupLength(true);
+    var groupLength = this.mGroup.length;
     for (var i = 0; i < groupLength; i++) {
       var textLength = gQuicktext.getTextLength(i, true);
       for (var j = 0; j < textLength; j++) {
@@ -506,20 +315,8 @@ var quicktext = {
           grouplist.childNodes[selectedIndex].setAttribute("disabled", true);
       }
     }
-  }
-  ,
+  },
 
-  disableSave: function () {
-    document.documentElement.getButton("extra1").setAttribute("disabled", true);
-    document.getElementById("toolbar-save").setAttribute("disabled", true);
-  }
-  ,
-
-  enableSave: function () {
-    document.documentElement.getButton("extra1").removeAttribute("disabled");
-    document.getElementById("toolbar-save").removeAttribute("disabled");
-  }
-  ,
   /*
    * INSERT VARIABLES
    */
@@ -539,20 +336,17 @@ var quicktext = {
     var selNewStart = selStart + 4 + aStr.length;
     textbox.setSelectionRange(selNewStart, selNewStart);
     this.enableSave();
-  }
-  ,
+  },
   insertFileVariable: async function () {
     if ((file = await gQuicktext.pickFile(window, 2, 0, this.extension.localeData.localizeMessage("insertFile"))) != null)
       this.insertVariable('FILE=' + file.path);
     this.enableSave();
-  }
-  ,
+  },
   insertImageVariable: async function () {
     if ((file = await gQuicktext.pickFile(window, 4, 0, this.extension.localeData.localizeMessage("insertImage"))) != null)
       this.insertVariable('IMAGE=' + file.path);
     this.enableSave();
-  }
-  ,
+  },
 
   /*
    * IMPORT/EXPORT FUNCTIONS
@@ -560,8 +354,7 @@ var quicktext = {
   exportTemplatesToFile: async function () {
     if ((file = await gQuicktext.pickFile(window, 3, 1, this.extension.localeData.localizeMessage("exportFile"))) != null)
       gQuicktext.exportTemplatesToFile(file);
-  }
-  ,
+  },
   importTemplatesFromFile: async function () {
     if ((file = await gQuicktext.pickFile(window, 3, 0, this.extension.localeData.localizeMessage("importFile"))) != null) {
       this.saveText();
@@ -575,13 +368,11 @@ var quicktext = {
       document.getElementById('group-tree').rowCountChanged(length - 1, this.mTreeArray.length - length);
       this.updateButtonStates();
     }
-  }
-  ,
+  },
   exportScriptsToFile: async function () {
     if ((file = await gQuicktext.pickFile(window, 3, 1, this.extension.localeData.localizeMessage("exportFile"))) != null)
       gQuicktext.exportScriptsToFile(file);
-  }
-  ,
+  },
   importScriptsFromFile: async function () {
     if ((file = await gQuicktext.pickFile(window, 3, 0, this.extension.localeData.localizeMessage("importFile"))) != null) {
       this.saveText();
@@ -593,8 +384,7 @@ var quicktext = {
       this.updateScriptGUI();
       this.updateButtonStates();
     }
-  }
-  ,
+  },
   browseAttachment: async function () {
     if ((file = await gQuicktext.pickFile(window, -1, 0, this.extension.localeData.localizeMessage("attachmentFile"))) != null) {
       var filePath = file.path;
@@ -605,8 +395,7 @@ var quicktext = {
         document.getElementById('text-attachments').value = filePath;
       this.checkForTextChanges(6);
     }
-  }
-  ,
+  },
   pickScript: function () {
     var index = document.getElementById('script-list').value;
 
@@ -644,8 +433,7 @@ var quicktext = {
       document.getElementById('script-button-remove').setAttribute("disabled", true);
     else
       document.getElementById('script-button-remove').removeAttribute("disabled");
-  }
-  ,
+  },
   pickText: function () {
     var index = document.getElementById('group-tree').view.selection.currentIndex;
 
@@ -732,8 +520,7 @@ var quicktext = {
       this.showElement("group", disabled);
     else
       this.showElement("text", disabled);
-  }
-  ,
+  },
   showElement: function (aType, aDisabled) {
     var elements = document.getElementsByAttribute("candisable", "true");
     for (var i = 0; i < elements.length; i++) {
@@ -757,8 +544,7 @@ var quicktext = {
       else
         elements[i].hidden = true;
     }
-  }
-  ,
+  },
 
   /*
    * Add/Remove groups/templates
@@ -784,8 +570,7 @@ var quicktext = {
     var titleElem = document.getElementById('text-title');
     titleElem.focus();
     titleElem.setSelectionRange(0, title.length);
-  }
-  ,
+  },
   addText: function () {
     var title = this.extension.localeData.localizeMessage("newTemplate");
     this.saveText();
@@ -794,7 +579,7 @@ var quicktext = {
     if (this.mPickedIndex)
       groupIndex = this.mPickedIndex[0];
 
-    var groupLength = gQuicktext.getGroupLength(true);
+    var groupLength = this.mGroup.length;
     if (groupIndex == -1) {
       if (groupLength == 0)
         return;
@@ -823,8 +608,7 @@ var quicktext = {
     var titleElem = document.getElementById('text-title');
     titleElem.focus();
     titleElem.setSelectionRange(0, title.length);
-  }
-  ,
+  },
   removeText: function () {
     this.saveText();
 
@@ -886,15 +670,13 @@ var quicktext = {
           this.selectTreeRow(selectedIndex);
       }
     }
-  }
-  ,
+  },
   getCommunityScripts: function () {
     let ioservice = Components.classes["@mozilla.org/network/io-service;1"].getService(Components.interfaces.nsIIOService);
     let uriToOpen = ioservice.newURI("https://github.com/jobisoft/quicktext/wiki/Community-scripts", null, null);
     let extps = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"].getService(Components.interfaces.nsIExternalProtocolService);
     extps.loadURI(uriToOpen, null);
-  }
-  ,
+  },
   addScript: function () {
     this.saveScript();
 
@@ -913,8 +695,7 @@ var quicktext = {
     var titleElem = document.getElementById('script-title');
     titleElem.focus();
     titleElem.setSelectionRange(0, title.length);
-  }
-  ,
+  },
   removeScript: function () {
     this.saveScript();
 
@@ -925,7 +706,7 @@ var quicktext = {
         gQuicktext.removeScript(scriptIndex, true);
         this.changesMade();
 
-        if (gQuicktext.getScriptLength(true) > 0) {
+        if (this.mScripts.length > 0) {
           var selectedIndex = document.getElementById('script-list').selectedIndex - 1;
           if (selectedIndex < 0)
             selectedIndex = 0;
@@ -943,12 +724,11 @@ var quicktext = {
         this.updateButtonStates();
       }
     }
-  }
-  ,
+  },
 
   updateScriptGUI: function () {
     // Update the listmenu in the scripttab and the variable-menu
-    var scriptLength = gQuicktext.getScriptLength(true);
+    var scriptLength = this.mScripts.length;
 
     listElem = document.getElementById('script-list');
     var selectedIndex = listElem.selectedIndex;
@@ -956,7 +736,7 @@ var quicktext = {
 
     if (scriptLength > 0) {
       for (var i = 0; i < scriptLength; i++) {
-        var script = gQuicktext.getScript(i, true);
+        var script = this.mScripts[i];
         if (i < oldLength) {
           var listItem = listElem.getItemAtIndex(i);
           listItem.firstChild.value = script.name;
@@ -986,8 +766,7 @@ var quicktext = {
       listElem.selectedIndex = -1;
 
     this.pickScript();
-  }
-  ,
+  },
   /*
    * Update the treeview
    */
@@ -995,7 +774,7 @@ var quicktext = {
     this.mTreeArray = [];
     var k = 0;
 
-    var groupLength = gQuicktext.getGroupLength(true);
+    var groupLength = this.mGroup.length;
 
     if (this.mCollapseState.length < groupLength) {
       for (var i = this.mCollapseState.length; i < groupLength; i++)
@@ -1008,7 +787,7 @@ var quicktext = {
       var groupIndex = k;
       var textLength = gQuicktext.getTextLength(i, true);
 
-      this.mTreeArray[k] = [i, -1, 0, -1, true, textLength, gQuicktext.getGroup(i, true).name, ''];
+      this.mTreeArray[k] = [i, -1, 0, -1, true, textLength, this.mGroup[i].name, ''];
       k++;
 
       if (!this.mCollapseState[i])
@@ -1021,12 +800,10 @@ var quicktext = {
         k++;
       }
     }
-  }
-  ,
+  },
   updateTreeGUI: function () {
     // maybe
-  }
-  ,
+  },
   buildTreeGUI: function () {
     this.makeTreeArray();
 
@@ -1119,7 +896,7 @@ var quicktext = {
             textLength = 0;
 
           if (aOrient > 0) {
-            gQuicktext.moveGroup(quicktext.mTreeArray[index][0], gQuicktext.getGroupLength(true), true);
+            gQuicktext.moveGroup(quicktext.mTreeArray[index][0], this.mGroup.length, true);
 
             var state = quicktext.mCollapseState.splice(quicktext.mTreeArray[index][0], 1);
             state = (state == "false") ? false : true;
@@ -1203,18 +980,16 @@ var quicktext = {
     this.selectTreeRow(selectedIndex);
 
     this.pickText();
-  }
-  ,
+  },
   selectTreeRow: function (aRow) {
     document.getElementById('group-tree').view.selection.select(aRow);
     document.getElementById('group-tree').ensureRowIsVisible(aRow);
-  }
-  ,
+  },
   updateButtonStates: function () {
     // Update the add-buttons
     if (this.mTreeArray.length) {
       var index = document.getElementById('group-tree').view.selection.currentIndex;
-      if (this.mTreeArray[index] && gQuicktext.getGroup(this.mTreeArray[index][0], true).type > 0) {
+      if (this.mTreeArray[index] && this.mGroup[this.mTreeArray[index][0]].type > 0) {
         document.getElementById("group-button-remove").setAttribute("disabled", true);
         document.getElementById("group-button-add-text").setAttribute("disabled", true);
       }
@@ -1229,17 +1004,13 @@ var quicktext = {
     }
 
     let scriptIndex = document.getElementById('script-list').value;
-    let script = gQuicktext.getScript(scriptIndex, true);
-    if (gQuicktext.getScriptLength(true) && script.type == 0)
+    let script = this.mScripts[scriptIndex];
+    if (this.mScripts.length && script.type == 0)
       document.getElementById('script-button-remove').removeAttribute("disabled");
     else
       document.getElementById('script-button-remove').setAttribute("disabled", true);
-  }
-  ,
-  openHomepage: function () {
-    gQuicktext.openHomepage();
-  }
-  ,
+  },
+
   resetCounter: function () {
     notifyTools.notifyBackground({ command: "setPref", pref: "counter", value: 0 });
   }
@@ -1249,15 +1020,6 @@ var quicktext = {
     document.getElementById('checkbox-shortcutTypeAdv').disabled = state;
   }
   ,
-
-  /*
-   * OBSERVERS
-   */
-  observe: function (aSubject, aTopic, aData) {
-    if (aTopic == "updatesettings") {
-      this.updateGUI();
-    }
-  }
 }
 
 window.addEventListener("load", quicktext.load.bind(quicktext));

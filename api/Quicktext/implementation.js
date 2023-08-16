@@ -50,8 +50,6 @@
       unload: function () {
         console.log("unload");
         return;
-        // Remove the observer
-        gQuicktext.removeObserver(this);
 
         window.removeEventListener("keypress", function (e) { quicktext.windowKeyPress(e); }, true);
         window.removeEventListener("keydown", function (e) { quicktext.windowKeyDown(e); }, true);
