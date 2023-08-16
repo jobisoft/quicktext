@@ -1,4 +1,5 @@
 import * as menus from "/modules/menus.mjs";
+import * as quicktext from "/modules/quicktext.mjs";
 import * as preferences from "/modules/preferences.mjs";
 
 (async () => {
@@ -34,11 +35,14 @@ import * as preferences from "/modules/preferences.mjs";
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
       case "setPref":
-        preferences.setPref(info.pref, info.value);
+        return preferences.setPref(info.pref, info.value);
         break;
       case "getPref":
-        return await preferences.getPref(info.pref);
+        return preferences.getPref(info.pref);
         break;
+      case "insertVariable":
+        return quicktext.insertVariable(info.tabId, info.variable);
+
     }
   });
 
@@ -52,9 +56,7 @@ import * as preferences from "/modules/preferences.mjs";
 
   // React to open composer tabs.
   async function prepareComposeTab(tab) {
-    await messenger.Quicktext.load(tab.windowId, { toolbar: await preferences.getPref("toolbar")});
-    // Why ???
-    // await new Promise(r => window.setTimeout(r, 250));
+    await messenger.Quicktext.addToolbar(tab.id, { toolbar: await preferences.getPref("toolbar")});
     await messenger.tabs.executeScript(tab.id, {
       file: "/scripts/compose.js"
     });
@@ -75,7 +77,7 @@ import * as preferences from "/modules/preferences.mjs";
       let visible = changes.userPrefs.newValue.toolbar;
       let composeTabs = await messenger.tabs.query({type: "messageCompose"});
       for (let composeTab of composeTabs) {
-        await messenger.Quicktext.toggleToolbar(composeTab.windowId, visible);
+        await messenger.Quicktext.toggleToolbar(composeTab.id, visible);
       }
     }
   })
@@ -84,10 +86,10 @@ import * as preferences from "/modules/preferences.mjs";
   await messenger.menus.create({
     title: messenger.i18n.getMessage("quicktext.label"),
     contexts: ["tools_menu"],
-    onclick: (info, tab) => messenger.Quicktext.openSettings(tab.windowId)
+    onclick: (info, tab) => messenger.Quicktext.openSettings(tab.id)
   })
-  messenger.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
-  messenger.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.windowId); });
+  messenger.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.id); });
+  messenger.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.id); });
 
   // Add config options to composeAction context menu.
   await messenger.menus.create({

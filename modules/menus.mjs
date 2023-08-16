@@ -31,7 +31,7 @@ async function getContactMenuData(type) {
     for (let field of fields) {
         children.push({
             id: field,
-            onclick: (info, tab) => quicktext.insertVariable(tab, `${type}=${field}`)
+            onclick: (info, tab) => quicktext.insertVariable(tab.id, `${type}=${field}`)
         })
     }
     return children;
@@ -61,11 +61,11 @@ async function getComposeBodyMenuData() {
                             children: [
                                 {
                                     id: "filename",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, 'ATT=name')
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'ATT=name')
                                 },
                                 {
                                     id: "filenameAndSize",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, 'ATT=full')
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'ATT=full')
                                 },
                             ]
                         },
@@ -75,27 +75,27 @@ async function getComposeBodyMenuData() {
                                 {
                                     id: "date",
                                     title: await quicktext.parseVariable(null, "DATE"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, "DATE")
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE")
                                 },
                                 {
                                     id: "date-long",
                                     title: await quicktext.parseVariable(null, "DATE=long"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, "DATE=long")
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE=long")
                                 },
                                 {
                                     id: "date-month",
                                     title: await quicktext.parseVariable(null, "DATE=monthname"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, "DATE=monthname")
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "DATE=monthname")
                                 },
                                 {
                                     id: "time",
                                     title: await quicktext.parseVariable(null, "TIME"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, "TIME")
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "TIME")
                                 },
                                 {
                                     id: "time-seconds",
                                     title: await quicktext.parseVariable(null, "TIME=seconds"),
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, "TIME=seconds")
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, "TIME=seconds")
                                 }
                             ]
                         },
@@ -104,19 +104,19 @@ async function getComposeBodyMenuData() {
                             children: [
                                 {
                                     id: "clipboard",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, 'CLIPBOARD')
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'CLIPBOARD')
                                 },
                                 {
                                     id: "counter",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, 'COUNTER')
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'COUNTER')
                                 },
                                 {
                                     id: "subject",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, 'SUBJECT')
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'SUBJECT')
                                 },
                                 {
                                     id: "version",
-                                    onclick: (info, tab) => quicktext.insertVariable(tab, 'VERSION')
+                                    onclick: (info, tab) => quicktext.insertVariable(tab.id, 'VERSION')
                                 },
                             ]
                         }

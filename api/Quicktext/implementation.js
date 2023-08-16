@@ -2,7 +2,7 @@
 
 (function (exports) {
 
-  async function install(extension, window, option) {
+  async function install(extension, tabId, option) {
     function localize(entity) {
       let msg = entity.slice("__MSG_".length, -2);
       return extension.localeData.localizeMessage(msg);
@@ -14,6 +14,11 @@
       element.setAttribute("href", cssFile);
       return window.document.documentElement.appendChild(element);
     };
+
+    let { window } = extension.tabManager.get(tabId);
+    if (!window || window.document.documentElement.getAttribute("windowtype") != "msgcompose") {
+      return null;
+    }
 
     Services.scriptloader.loadSubScript("chrome://quicktext/content/quicktext.js", window, "UTF-8");
 
@@ -105,12 +110,15 @@
       messageEditor
     );
 
-    await window.quicktext.load(extension);
+    await window.quicktext.load(extension, tabId);
     console.log("install");
   }
 
   function uninstall(window) {
-    window.document.getElementById("quicktext-toolbar").remove();
+    let toolbar = window.document.getElementById("quicktext-toolbar");
+    if (toolbar) {
+      toolbar.remove();
+    }
     window.quicktext.unload();
     window.quicktext = {};
     console.log("uninstall");
@@ -129,14 +137,9 @@
 
   class Quicktext extends ExtensionCommon.ExtensionAPI {
     getAPI(context) {
-      function getComposeWindow(windowId) {
-        let { window } = context.extension.windowManager.get(windowId);
-        return window;
-      }
-
       return {
         Quicktext: {
-          registerChromeUrl(data) {
+          async registerChromeUrl(data) {
             console.log("registerChromeUrl START");
 
             for (let entry of data) {
@@ -173,29 +176,25 @@
             console.log("registerChromeUrl DONE");
           },
 
-          openSettings(windowId) {
-            let { window } = context.extension.windowManager.get(windowId, context);
+          async openSettings(tabId) {
+            let { window } = context.extension.tabManager.get(tabId);
             window.openDialog(
               "chrome://quicktext/content/settings.xhtml",
               "QuicktextOptions",
               "chrome,resizable,centerscreen"
             );
           },
-          async load(windowId, options) {
-            let window = getComposeWindow(windowId);
-            if (!window || window.document.documentElement.getAttribute("windowtype") != "msgcompose") {
-              return;
-            }
-            await install(context.extension, window, options);
+          async addToolbar(tabId, options) {
+            return install(context.extension, tabId, options);
           },
-          toggleToolbar(windowId, visible) {
-              let { window } = context.extension.windowManager.get(windowId, context);
-              if (visible) {
-                window.document.getElementById("quicktext-toolbar").removeAttribute("collapsed");
-              } else {
-                window.document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
-              }
+          async toggleToolbar(tabId, visible) {
+            let { window } = context.extension.tabManager.get(tabId);
+            if (visible) {
+              window.document.getElementById("quicktext-toolbar").removeAttribute("collapsed");
+            } else {
+              window.document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
             }
+          }
         }
       };
     }

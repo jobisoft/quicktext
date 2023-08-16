@@ -13,13 +13,16 @@ var quicktext = {
   mShortcutModifierDown:        false,
   mKeywords:                    {}
 ,
-  load: async function(extension)
+  load: async function(extension, aTabId)
   {
     if (!this.mLoaded)
     {
       this.mLoaded = true;
       this.extension = extension;
+      this.mTabId = aTabId;
 
+      Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", quicktext, "UTF-8");
+/*
       gQuicktext.addObserver(this);
       if (!(await gQuicktext.loadSettings(false))) {
         this.updateGUI();
@@ -35,11 +38,15 @@ var quicktext = {
       // Add an eventlistener for keypress in the editor
       var contentFrame = GetCurrentEditorElement();
       contentFrame.addEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
+      */
+      console.log("load");
     }
   }
 ,
   unload: function()
   {
+    console.log("unload");
+    return;
     // Remove the observer
     gQuicktext.removeObserver(this);
 
@@ -235,10 +242,11 @@ var quicktext = {
    */
   insertVariable: async function(aVar)
   {
-    gQuicktextVar.cleanTagData();
-    await this.insertBody("[["+ aVar +"]] ", 0, true);
+    return this.notifyTools.notifyBackground({command:"insertVariable", tabId: this.mTabId, variable: aVar});
+    // gQuicktextVar.cleanTagData();
+    // await this.insertBody("[["+ aVar +"]] ", 0, true);
   }
-,
+,//-----------------------------
   insertTemplate: async function(aGroupIndex, aTextIndex, aHandleTransaction = true, aFocusBody = false)
   {
     //store selected content

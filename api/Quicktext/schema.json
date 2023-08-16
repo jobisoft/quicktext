@@ -41,18 +41,18 @@
         "async": true,
         "parameters": [
           {
-            "name": "windowId",
+            "name": "tabId",
             "type": "integer"
           }
         ]
       },
       {
-        "name": "load",
+        "name": "addToolbar",
         "type": "function",
         "async": true,
         "parameters": [
           {
-            "name": "windowId",
+            "name": "tabId",
             "type": "integer"
           },
           {
@@ -67,7 +67,7 @@
         "async": true,
         "parameters": [
           {
-            "name": "windowId",
+            "name": "tabId",
             "type": "integer"
           },
           {

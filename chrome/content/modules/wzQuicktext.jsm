@@ -1062,6 +1062,3 @@ function TrimString(aStr)
   if (!aStr) return "";
   return aStr.replace(/(^\s+)|(\s+$)/g, '')
 }
-
-Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", gQuicktext, "UTF-8");
-

@@ -1,27 +1,27 @@
 import { QuicktextVar } from "/modules/quicktextVar.mjs";
 
-export async function insertBody(tab, aStr, type = 0) { // 0 = text
-  if (type > 0) {
-    await messenger.tabs.sendMessage(tab.id, {
+export async function insertBody(aTabId, aStr, aType = 0) { // 0 = text
+  if (aType > 0) {
+    await messenger.tabs.sendMessage(aTabId, {
       insertHtml: utils.removeBadHTML(aStr),
     });
   } else {
-    await messenger.tabs.sendMessage(tab.id, {
+    await messenger.tabs.sendMessage(aTabId, {
       insertText: aStr,
     });
   }
 }
 
-export async function parseVariable(aTab, aVar) {
-  let quicktextVar = new QuicktextVar(aTab);
+export async function parseVariable(aTabId, aVar) {
+  let quicktextVar = new QuicktextVar(aTabId);
   return quicktextVar.parse("[[" + aVar + "]]");
 }
 
-export async function insertVariable(aTab, aVar, aType = 0) {
-  await insertBody(aTab, `${await parseVariable(aTab, aVar)} `, aType);
+export async function insertVariable(aTabId, aVar, aType = 0) {
+  await insertBody(aTabId, `${await parseVariable(aTabId, aVar)} `, aType);
 }
 
-export async function insertContentFromFile(tab, aType) {
+export async function insertContentFromFile(aTabId, aType) {
   if ((file = await gQuicktext.pickFile(window, aType, 0, browser.i18n.getMessage("insertFile"))) != null)
     await insertBody(gQuicktext.readFile(file), aType, true);
 }

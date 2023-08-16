@@ -4,9 +4,9 @@ import * as preferences from "/modules/preferences.mjs";
 const allowedTags = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
 
 export class QuicktextVar {
-  constructor(aTab) {
+  constructor(aTabId) {
     this.clearData();
-    this.mTab = aTab;
+    this.mTabId = aTabId;
   }
 
   clearData() {
@@ -16,7 +16,7 @@ export class QuicktextVar {
 
   async getDetails() {
     if (!this.mDetails) {
-      this.mDetails = await browser.compose.getComposeDetails(this.mTab.id)
+      this.mDetails = await browser.compose.getComposeDetails(this.mTabId)
     }
     return this.mDetails
   }
@@ -57,7 +57,7 @@ export class QuicktextVar {
     this.mData['ATT'].checked = true;
     this.mData['ATT'].data = [];
 
-    let attachments = await browser.compose.listAttachments(this.mTab.id);
+    let attachments = await browser.compose.listAttachments(this.mTabId);
     for (let attachment of attachments) {
       let file = await browser.compose.getAttachmentFile(attachment.id);
       this.mData['ATT'].data.push([file.name, file.size, file.lastModified]);
