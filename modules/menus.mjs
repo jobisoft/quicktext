@@ -127,11 +127,11 @@ async function getComposeBodyMenuData() {
                     children: [
                         {
                             id: "insertTextFromFileAsText",
-                            onclick: (info, tab) => quicktext.insertContentFromFile(tab, 0)
+                            onclick: (info, tab) => quicktext.insertContentFromFile(tab.id, 0)
                         },
                         {
                             id: "insertTextFromFileAsHTML",
-                            onclick: (info, tab) => quicktext.insertContentFromFile(tab, 1)
+                            onclick: (info, tab) => quicktext.insertContentFromFile(tab.id, 1)
                         },
                     ]
                 }
