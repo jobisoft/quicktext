@@ -32,11 +32,6 @@ wzQuicktextVar.prototype = {
     }
   }
 ,
-  get_text: function(aVariables)
-  {
-    return this.process_text(aVariables);
-  }
-,
   get_script: async function(aVariables)
   {
     return await this.process_script(aVariables);
@@ -107,33 +102,7 @@ wzQuicktextVar.prototype = {
     return rv;
   }
 ,
-  process_text: function(aVariables)
-  {
-    if (aVariables.length != 2)
-      return "";
 
-    // Looks after the group and text-name and returns
-    // the text from it
-    var groupLength = this.mQuicktext.getGroupLength(false);
-    for (var j = 0; j < groupLength; j++)
-    {
-      if (aVariables[0] == this.mQuicktext.getGroup(j, true).name)
-      {
-        var textLength = this.mQuicktext.getTextLength(j, false);
-        for (var k = 0; k < textLength; k++)
-        {
-          var text = this.mQuicktext.getText(j, k, false);
-          if (aVariables[1] == text.name)
-          {
-            return text.text;
-          }
-        }
-      }
-    }
-
-    return "";
-  }
-,
   process_script: async function(aVariables)
   {
     if (aVariables.length == 0)

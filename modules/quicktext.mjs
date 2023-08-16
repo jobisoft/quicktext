@@ -6,6 +6,8 @@ import { QuicktextTemplate } from "/modules/quicktextTemplate.mjs";
 
 // ---- INSERT
 
+export var templates = [];
+
 export async function insertBody(aTabId, aStr, aType = 0) { // 0 = text
   if (aType > 0) {
     await messenger.tabs.sendMessage(aTabId, {
@@ -19,12 +21,13 @@ export async function insertBody(aTabId, aStr, aType = 0) { // 0 = text
 }
 
 export async function parseVariable(aTabId, aVar) {
-  let quicktextVar = new QuicktextVar(aTabId);
+  let quicktextVar = new QuicktextVar(aTabId, templates);
   return quicktextVar.parse("[[" + aVar + "]]");
 }
 
 export async function insertVariable(aTabId, aVar, aType = 0) {
   let content = await parseVariable(aTabId, aVar)
+  console.log(aVar, content);
   if (content) {
     await insertBody(aTabId, `${content} `, aType);
   }
@@ -33,14 +36,14 @@ export async function insertVariable(aTabId, aVar, aType = 0) {
 export async function insertContentFromFile(aTabId, aType) {
   let content = await browser.Quicktext.pickFile(aTabId, aType, 0, browser.i18n.getMessage("insertFile"));
   if (content) {
-    let quicktextVar = new QuicktextVar(aTabId);
+    let quicktextVar = new QuicktextVar(aTabId, templates);
     await insertBody(aTabId, await quicktextVar.parse(content), aType);
   }
 }
 
 // ---- TEMPLATE
 
-export async function loadTemplates(imports, options) {
+export async function loadTemplates(options, imports = {}) {
   let { quicktextFilePath, scriptFilePath } = await browser.Quicktext.getQuicktextFilePaths(options);
 
   if (quicktextFilePath) {
@@ -65,13 +68,12 @@ export async function loadTemplates(imports, options) {
       } catch (e) { console.error(e); }
     }
   }
+  templates = imports;
 }
 
 export async function importFromFilePath(imports, aFilePath, aType, aBefore, aEditingMode) {
   let data = await browser.Quicktext.readFile(aFilePath);
-  let parsed = await parseImport(imports, data, aType, aBefore, aEditingMode);
-  console.log(parsed);
-  return parsed;
+  await parseImport(imports, data, aType, aBefore, aEditingMode);
 }
 
 export async function importFromHttpUrl(imports, aURI, aType, aBefore, aEditingMode) {

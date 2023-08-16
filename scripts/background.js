@@ -56,11 +56,6 @@ import * as preferences from "/modules/preferences.mjs";
     await preferences.setPref("shortcutModifier", options.shortcutModifier)
   }
 
-  // Load templates.
-  let templates = {}
-  await quicktext.loadTemplates(templates, options);
-  console.log(templates);
-
   // Allow legacy code to access WebExtension modules.
   messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
     switch (info.command) {
@@ -147,6 +142,9 @@ import * as preferences from "/modules/preferences.mjs";
     checked: await preferences.getPref("popup"),
     onclick: (info, tab) => preferences.setPref("popup", info.checked)
   })
+
+  // Load templates from disc.
+  await quicktext.loadTemplates(options);
 
   // Add Quicktext composeBody context menu.
   await menus.buildComposeBodyMenu();

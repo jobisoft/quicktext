@@ -4,9 +4,10 @@ import * as preferences from "/modules/preferences.mjs";
 const allowedTags = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
 
 export class QuicktextVar {
-  constructor(aTabId) {
+  constructor(aTabId, templates) {
     this.clearData();
     this.mTabId = aTabId;
+    this.mTemplates = templates;
   }
 
   clearData() {
@@ -41,6 +42,28 @@ export class QuicktextVar {
     }
 
     return "";
+  }
+
+  async process_text(aVariables) {
+    if (aVariables.length != 2)
+      return "";
+    // Looks after the group and text-name and returns
+    // the text from it
+    for (let i = 0; i < this.mTemplates.group.length; i++) {
+      if (aVariables[0] == this.mTemplates.group[i].mName) {
+        for (let j = 0; j < this.mTemplates.texts[i].length; j++) {
+          var text = this.mTemplates.texts[i][j];
+          if (aVariables[1] == text.mName) {
+            return text.text;
+          }
+        }
+      }
+    }
+
+    return "";
+  }
+  async get_text(aVariables) {
+    return this.process_text(aVariables);
   }
 
   async process_input(aVariables) {

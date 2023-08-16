@@ -42,11 +42,38 @@ async function getContactMenuData(type) {
 }
 
 async function getComposeBodyMenuData() {
+    let menuData = [];
     let contexts = await preferences.getPref("popup")
         ? ["compose_body", "compose_action_menu"]
         : ["compose_action_menu"];
-    console.log(contexts);
-    return [
+
+    for (let i = 0; i < quicktext.templates.group.length; i++) {
+        let children = [];
+        for (let j = 0; j < quicktext.templates.texts[i].length; j++) {
+            children.push({
+                id: `group-${i}-text-${j}`,
+                title: quicktext.templates.texts[i][j].mName,
+                onclick: (info, tab) => quicktext.insertVariable(tab.id, `TEXT=${quicktext.templates.group[i].mName}|${quicktext.templates.texts[i][j].mName}`)
+            });
+
+        }
+        menuData.push({
+            contexts,
+            id: `group-${i}`,
+            title: quicktext.templates.group[i].mName,
+            children
+        });
+    }
+
+    if (quicktext.templates.group.length > 0) {
+        menuData.push({
+            contexts,
+            id: `group-separator`,
+            type: "separator"
+        });
+    }
+
+    menuData.push(
         {
             contexts,
             id: "variables",
@@ -150,7 +177,9 @@ async function getComposeBodyMenuData() {
             title: messenger.i18n.getMessage("quicktext.settings.title"),
             onclick: (info, tab) => messenger.Quicktext.openSettings(tab.id)
         },
-    ]
+    );
+
+    return menuData;
 }
 
 export async function updateDateTimeMenus() {
