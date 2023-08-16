@@ -22,16 +22,6 @@ wzQuicktextVar.prototype = {
     return this.process_file(aVariables);
   }
 ,
-  get_image: function(aVariables, aType)
-  {
-    if (aType == 1) {
-      // image tag may only be added in html mode
-      return this.process_image_content(aVariables);
-    } else {
-      return "";
-    }
-  }
-,
   get_script: async function(aVariables)
   {
     return await this.process_script(aVariables);
@@ -59,7 +49,7 @@ wzQuicktextVar.prototype = {
       try {
         aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
         fp.initWithPath(aVariables[0]);
-        let content = this.mQuicktext.readFile(fp);
+        let content = this.mQuicktext.readTextFile(fp);
         if (aVariables.length > 1 && aVariables[1].includes("strip_html_comments")) {
           return content.replace(/<!--[\s\S]*?(?:-->)/g, '');
         }
@@ -69,34 +59,7 @@ wzQuicktextVar.prototype = {
 
     return "";
   }
-,
-  process_image_content: function(aVariables)
-  {
-    let rv = "";
-    
-    if (aVariables.length > 0 && aVariables[0] != "")
-    {
-      let mode = (aVariables.length > 1 && "src" == aVariables[1].toString().toLowerCase()) ? "src" : "tag";
-      
-      // Tries to open the file and returning the content
-      try {
-        let fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-        fp.initWithPath(this.mQuicktext.parseFilePath(aVariables[0]));
-        let rawContent = this.mQuicktext.readBinaryFile(fp);
-        let decoder = new TextDecoder('utf-8');
-        let content = this.mWindow.btoa(rawContent);
-        let type = this.mQuicktext.getTypeFromExtension(fp);
-        let src = "data:" + type + ";filename=" + fp.leafName + ";base64," + content;
-        rv = (mode == "tag") 
-                ? "<img src='"+src+"'>"
-                : src;
-      } catch(e) { 
-        console.error(e); 
-      }
-    }
 
-    return rv;
-  }
 ,
 
   process_script: async function(aVariables)

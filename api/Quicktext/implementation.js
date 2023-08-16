@@ -214,7 +214,7 @@
         }
       }
     }
-    
+
     Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", window.quicktext, "UTF-8");
 
     injectCSS(window, "resource://quicktext/quicktext.css");
@@ -434,8 +434,11 @@
             }
             return rv;
           },
-          async readFile(aFilePath) {
+          async readTextFile(aFilePath) {
             return IOUtils.readUTF8(aFilePath);
+          },
+          async readBinaryFile(aFilePath) {
+            return IOUtils.read(aFilePath);
           },
           async pickFile(tabId, type, mode, title) {
             let { window } = context.extension.tabManager.get(tabId);

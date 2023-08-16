@@ -71,6 +71,39 @@ export class QuicktextParser {
     return "";
   }
 
+  async process_image_content(aVariables) {
+    let rv = "";
+    
+    if (aVariables.length > 0 && aVariables[0] != "")
+    {
+      let mode = (aVariables.length > 1 && "src" == aVariables[1].toString().toLowerCase()) ? "src" : "tag";
+      
+      // Tries to open the file and returning the content
+      try {
+        let bytes = await browser.Quicktext.readBinaryFile(aVariables[0]);
+        let leafName = utils.getLeafName(aVariables[0]);
+        let type = utils.getTypeFromExtension(leafName);
+        let binContent = utils.uint8ArrayToBase64(bytes);
+        let src = "data:" + type + ";filename=" + leafName + ";base64," + binContent;
+        rv = (mode == "tag") 
+                ? "<img src='"+src+"'>"
+                : src;
+      } catch(e) { 
+        console.error(e); 
+      }
+    }
+    return rv;
+  }
+  async get_image(aVariables) {
+    let details = await this.getDetails();
+    if (!details.isPlainText) {
+      // image tag may only be added in html mode
+      return this.process_image_content(aVariables);
+    } else {
+      return "";
+    }
+  }
+
   async process_selection(aVariables) {
     let details = await this.getDetails();
 

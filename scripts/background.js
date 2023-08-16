@@ -39,7 +39,7 @@ import * as preferences from "/modules/preferences.mjs";
     }
   }
 
-  // Get some prefs which need to during startup
+  // Get some prefs which we need to during startup.
   const OPTIONS = [
     "templateFolder", "collapseGroup", "keywordKey", "viewPopup", "shortcutTypeAdv",
     "shortcutModifier", "collapseState", "defaultImport"
@@ -49,7 +49,7 @@ import * as preferences from "/modules/preferences.mjs";
     options[name] = await preferences.getPref(name);
   }
 
-  // Fix invalid options
+  // Fix invalid options:
   // - reset the value of mShortcutModifier to "alt", if it has not a valid value - see issue #177
   if (!["alt", "control", "meta"].includes(options.shortcutModifier)) {
     options.shortcutModifier = "alt";

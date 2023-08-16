@@ -678,38 +678,6 @@ var gQuicktext = {
     }
   }
 ,
-  getTypeFromExtension(aFile)
-  {
-
-    var ext = aFile.leafName.substring(aFile.leafName.lastIndexOf('.'));
-
-    // Extracted from https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types#Image_types
-    switch(ext)
-    {
-      case ".apng":
-        return "image/apng";
-      case ".bmp":
-        return "image/bmp";
-      case ".gif":
-        return "image/gif";
-      case ".ico", ".cur":
-        return "image/x-icon";
-      case ".jpg", ".jpeg", ".jfif", ".pjpeg", ".pjp":
-        return "image/jpeg";
-      case ".png":
-        return "image/png";
-      case ".svg":
-        return "image/svg+xml";
-      case ".tif", ".tiff":
-        return "image/tiff";
-      case ".webp":
-        return "image/webp";
-      default:
-        return "application/octet-stream";
-    }
-
-  }
-,
   /*
    * IMPORT/EXPORT FUNCTIONS
    */

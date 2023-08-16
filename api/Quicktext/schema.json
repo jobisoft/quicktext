@@ -78,7 +78,18 @@
         ]
       },
       {
-        "name": "readFile",
+        "name": "readBinaryFile",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "aFilePath",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "readTextFile",
         "type": "function",
         "async": true,
         "parameters": [

@@ -63,7 +63,7 @@ export async function loadTemplates(options, imports = {}) {
 }
 
 export async function importFromFilePath(imports, aFilePath, aType, aBefore, aEditingMode) {
-  let data = await browser.Quicktext.readFile(aFilePath);
+  let data = await browser.Quicktext.readTextFile(aFilePath);
   await parseImport(imports, data, aType, aBefore, aEditingMode);
 }
 
