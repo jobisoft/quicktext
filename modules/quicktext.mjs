@@ -1,3 +1,4 @@
+import * as utils from "/modules/utils.mjs";
 import { QuicktextVar } from "/modules/quicktextVar.mjs";
 import { QuicktextGroup } from "/modules/quicktextGroup.mjs";
 import { QuicktextScript } from "/modules/quicktextScript.mjs";
@@ -27,8 +28,11 @@ export async function insertVariable(aTabId, aVar, aType = 0) {
 }
 
 export async function insertContentFromFile(aTabId, aType) {
-  if ((file = await gQuicktext.pickFile(window, aType, 0, browser.i18n.getMessage("insertFile"))) != null)
-    await insertBody(gQuicktext.readFile(file), aType, true);
+  let content = await browser.Quicktext.pickFile(aTabId, aType, 0, browser.i18n.getMessage("insertFile"));
+  if (content) {
+    let quicktextVar = new QuicktextVar(aTabId);
+    await insertBody(aTabId, `${await quicktextVar.parse(content)}`, aType);
+  }
 }
 
 // ---- TEMPLATE

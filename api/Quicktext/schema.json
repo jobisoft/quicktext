@@ -101,6 +101,29 @@
             "type": "string"
           }
         ]
+      },
+      {
+        "name": "pickFile",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "tabId",
+            "type": "integer"
+          },
+          {
+            "name": "type",
+            "type": "integer"
+          },
+          {
+            "name": "mode",
+            "type": "integer"
+          },
+          {
+            "name": "title",
+            "type": "string"
+          }
+        ]
       }
     ]
   }
