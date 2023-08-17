@@ -14,7 +14,6 @@ async function insertHtmlFragment(message) {
 }
 
 async function insertTextFragment(message) {
-    // A normal space causes the selection to ignore the space.
     let space = message.extraSpace ? " " : "";
     document.execCommand('insertText', false, `${message.insertText}${space}`);
     await handlerCursorTags();
@@ -133,13 +132,11 @@ function editorKeyPress(e) {
         e.preventDefault();
         
         // The following line will remove the keyword before we replace it. If we
-        // so not do that, we see the keyword being selected and then replaced.
-        // It does look interesting.
+        // do not do that, we see the keyword being selected and then replaced.
+        // It does look interesting, but I keep it as it was before.
         selection.deleteFromDocument()
         
         let text = keywords[lastWord];
-        //selection.removeAllRanges();
-        //selection.addRange(initialSelectionRange);
         messenger.runtime.sendMessage({command: "insertTemplate", group: text[0], text: text[1]});
     }
 }
