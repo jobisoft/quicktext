@@ -50,6 +50,23 @@ const HOMEPAGE = "https://github.com/jobisoft/quicktext/wiki/";
     await preferences.setPref("shortcutModifier", options.shortcutModifier)
   }
 
+  // Allow compose script to access WebExtension modules.
+  messenger.runtime.onMessage.addListener(async (info, sender, sendResponse) => {
+    switch (info.command) {
+      case "setPref":
+        return preferences.setPref(info.pref, info.value);
+      case "getPref":
+        return preferences.getPref(info.pref);
+      case "getKeywords": 
+        return quicktext.getKeywords();
+      case "insertTemplate":
+        return quicktext.insertVariable(
+          sender.tab.id, 
+          `TEXT=${quicktext.templates.group[info.group].mName}|${quicktext.templates.texts[info.group][info.text].mName}`
+        );
+      }
+  });
+
   // React to open composer tabs.
   async function prepareComposeTab(tab) {
     // BUG: Thunderbird should wait with executeScript until tab is ready.
@@ -60,7 +77,7 @@ const HOMEPAGE = "https://github.com/jobisoft/quicktext/wiki/";
     });
   }
   messenger.tabs.onCreated.addListener(prepareComposeTab);
-  let composeTabs = await messenger.tabs.query({type: "messageCompose"});
+  let composeTabs = await messenger.tabs.query({ type: "messageCompose" });
   for (let composeTab of composeTabs) {
     await prepareComposeTab(composeTab);
   }

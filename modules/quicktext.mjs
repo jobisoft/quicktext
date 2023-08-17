@@ -18,7 +18,7 @@ export async function insertVariable(aTabId, aVar, aForceAsText) {
   let quicktextParser = new QuicktextParser(aTabId, templates, aForceAsText);
   let parsed = await quicktextParser.parse("[[" + aVar + "]]");
   if (parsed) {
-    await quicktextParser.insertBody(`${parsed} `);
+    await quicktextParser.insertBody(parsed, {extraSpace: true});
   }
 }
 
@@ -28,7 +28,7 @@ export async function insertContentFromFile(aTabId, aType) {
     return;
   }
   let quicktextParser = new QuicktextParser(aTabId, templates, aType == 0);
-  await quicktextParser.insertBody(content);
+  await quicktextParser.insertBody(content, {extraSpace: false});
 }
 
 // ---- TEMPLATE
@@ -59,6 +59,31 @@ export async function loadTemplates(options, imports = {}) {
     }
   }
   templates = imports;
+}
+
+function getKeywordsAndShortcuts() {
+    let keywords = {};
+    let shortcuts = {};
+
+    for (let i = 0; i < templates.group.length; i++) {
+      for (let j = 0; j < templates.texts[i].length; j++) {
+        let text = templates.texts[i][j];
+        let shortcut = text.shortcut;
+        if (shortcut != "" && typeof shortcuts[shortcut] == "undefined") {
+          shortcuts[shortcut] = [i, j];
+        }
+
+        let keyword = text.keyword;
+        if (keyword != "" && typeof keywords[keyword.toLowerCase()] == "undefined")
+          keywords[keyword.toLowerCase()] = [i, j];
+      }
+    }
+    return {keywords, shortcuts};
+}
+// This is defined async, so it can be used in an runtim.onMessage listener
+// without further logic to return a Promise.
+export function getKeywords() {
+  return getKeywordsAndShortcuts().keywords;
 }
 
 export async function importFromFilePath(imports, aFilePath, aType, aBefore, aEditingMode) {

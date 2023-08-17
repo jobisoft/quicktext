@@ -12,15 +12,17 @@ export class QuicktextParser {
     this.mForceAsText = forceAsText;
   }
 
-  async insertBody(aStr) {
+  async insertBody(aStr, options = {}) {
     let type = await this.getInsertType();
     if (type == 0) {
       await messenger.tabs.sendMessage(this.mTabId, {
         insertText: aStr,
+        extraSpace: options.extraSpace,
       });
     } else {
       await messenger.tabs.sendMessage(this.mTabId, {
         insertHtml: utils.removeBadHTML(aStr),
+        extraSpace: options.extraSpace,
       });
     }
   }
@@ -187,7 +189,7 @@ export class QuicktextParser {
           resolve();
         }
       };
-      
+
       let postdata = method == "post"
         ? post.map(encodeURIComponent).join("&")
         : null;
