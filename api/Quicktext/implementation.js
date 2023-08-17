@@ -2,24 +2,10 @@
 
 (function (exports) {
 
-  async function install(extension, tabId, option, dateLabels) {
-    function localize(entity) {
-      let msg = entity.slice("__MSG_".length, -2);
-      return extension.localeData.localizeMessage(msg);
-    }
-
-    function injectCSS(window, cssFile) {
-      let element = window.document.createElement("link");
-      element.setAttribute("rel", "stylesheet");
-      element.setAttribute("href", cssFile);
-      return window.document.documentElement.appendChild(element);
-    };
-
-    let { window } = extension.tabManager.get(tabId);
-    if (!window || window.document.documentElement.getAttribute("windowtype") != "msgcompose") {
-      return null;
-    }
-
+  /*
+   * KEYPRESS MOVE TO compose script
+   */
+  async function install() {
     window.quicktext = {
       mLoaded: false,
       mShortcuts: {},
@@ -28,29 +14,17 @@
       mKeywords: {}
       ,
       load: async function (extension, aTabId) {
-        if (!this.mLoaded) {
-          this.mLoaded = true;
-          this.extension = extension;
-          this.mTabId = aTabId;
+        // Add an eventlistener for keypress in the window
+        window.addEventListener("keypress", function (e) { quicktext.windowKeyPress(e); }, true);
+        window.addEventListener("keydown", function (e) { quicktext.windowKeyDown(e); }, true);
+        window.addEventListener("keyup", function (e) { quicktext.windowKeyUp(e); }, true);
 
-          /*
-                // Add an eventlistener for keypress in the window
-                window.addEventListener("keypress", function(e) { quicktext.windowKeyPress(e); }, true);
-                window.addEventListener("keydown", function(e) { quicktext.windowKeyDown(e); }, true);
-                window.addEventListener("keyup", function(e) { quicktext.windowKeyUp(e); }, true);
-          
-                // Add an eventlistener for keypress in the editor
-                var contentFrame = GetCurrentEditorElement();
-                contentFrame.addEventListener("keypress", function(e) { quicktext.editorKeyPress(e); }, false);
-          */
-          console.log("load");
-        }
+        // Add an eventlistener for keypress in the editor
+        var contentFrame = GetCurrentEditorElement();
+        contentFrame.addEventListener("keypress", function (e) { quicktext.editorKeyPress(e); }, false);
       }
       ,
       unload: function () {
-        console.log("unload");
-        return;
-
         window.removeEventListener("keypress", function (e) { quicktext.windowKeyPress(e); }, true);
         window.removeEventListener("keydown", function (e) { quicktext.windowKeyDown(e); }, true);
         window.removeEventListener("keyup", function (e) { quicktext.windowKeyUp(e); }, true);
@@ -60,20 +34,6 @@
         contentFrame.removeEventListener("keypress", function (e) { quicktext.editorKeyPress(e); }, false);
       }
       ,
-      /*
-       * INSERTING TEXT
-       */
-      insertVariable: async function (aVar) {
-        return this.notifyTools.notifyBackground({ command: "insertVariable", tabId: this.mTabId, variable: aVar });
-      }
-      ,
-      insertContentFromFile: async function (aType) {
-        return this.notifyTools.notifyBackground({ command: "insertContentFromFile", tabId: this.mTabId, type: aType });
-      }
-      ,
-      /*
-       * KEYPRESS MOVE TO compose script
-       */
       windowKeyPress: async function (e) {
         if (gQuicktext.shortcutTypeAdv) {
           var shortcut = e.charCode - 48;
@@ -214,103 +174,7 @@
         }
       }
     }
-
-    Services.scriptloader.loadSubScript("chrome://quicktext/content/notifyTools/notifyTools.js", window.quicktext, "UTF-8");
-
-    injectCSS(window, "resource://quicktext/quicktext.css");
-
-    let xulString = `
-      <toolbar id="quicktext-toolbar" ${option.toolbar ? "" : "collapsed='true'"}>
-        <button type="menu" id="quicktext-variables" label="__MSG_quicktext.variables.label__" tabindex="-1">
-          <menupopup>
-            <menu label="__MSG_quicktext.to.label__">
-              <menupopup>
-                <menuitem label="__MSG_quicktext.firstname.label__" oncommand="quicktext.insertVariable('TO=firstname');" />
-                <menuitem label="__MSG_quicktext.lastname.label__" oncommand="quicktext.insertVariable('TO=lastname');" />
-                <menuitem label="__MSG_quicktext.fullname.label__" oncommand="quicktext.insertVariable('TO=fullname');" />
-                <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('TO=displayname');" />
-                <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('TO=nickname');" />
-                <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('TO=email');" />
-                <menuitem label="__MSG_quicktext.workphone.label__" oncommand="quicktext.insertVariable('TO=workphone');" />
-                <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('TO=faxnumber');" />
-                <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
-                <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('TO=jobtitle');" />
-                <menuitem label="__MSG_quicktext.custom1.label__" oncommand="quicktext.insertVariable('TO=custom1');" />
-                <menuitem label="__MSG_quicktext.custom2.label__" oncommand="quicktext.insertVariable('TO=custom2');" />
-                <menuitem label="__MSG_quicktext.custom3.label__" oncommand="quicktext.insertVariable('TO=custom3');" />
-                <menuitem label="__MSG_quicktext.custom4.label__" oncommand="quicktext.insertVariable('TO=custom4');" />
-              </menupopup>
-            </menu>
-            <menu label="__MSG_quicktext.from.label__">
-              <menupopup>
-                <menuitem label="__MSG_quicktext.firstname.label__" oncommand="quicktext.insertVariable('FROM=firstname');" />
-                <menuitem label="__MSG_quicktext.lastname.label__" oncommand="quicktext.insertVariable('FROM=lastname');" />
-                <menuitem label="__MSG_quicktext.fullname.label__" oncommand="quicktext.insertVariable('FROM=fullname');" />
-                <menuitem label="__MSG_quicktext.displayname.label__" oncommand="quicktext.insertVariable('FROM=displayname');" />
-                <menuitem label="__MSG_quicktext.nickname.label__" oncommand="quicktext.insertVariable('FROM=nickname');" />
-                <menuitem label="__MSG_quicktext.email.label__" oncommand="quicktext.insertVariable('FROM=email');" />
-                <menuitem label="__MSG_quicktext.workphone.label__" oncommand="quicktext.insertVariable('FROM=workphone');" />
-                <menuitem label="__MSG_quicktext.faxnumber.label__" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
-                <menuitem label="__MSG_quicktext.cellularnumber.label__" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
-                <menuitem label="__MSG_quicktext.jobtitle.label__" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
-                <menuitem label="__MSG_quicktext.custom1.label__" oncommand="quicktext.insertVariable('FROM=custom1');" />
-                <menuitem label="__MSG_quicktext.custom2.label__" oncommand="quicktext.insertVariable('FROM=custom2');" />
-                <menuitem label="__MSG_quicktext.custom3.label__" oncommand="quicktext.insertVariable('FROM=custom3');" />
-                <menuitem label="__MSG_quicktext.custom4.label__" oncommand="quicktext.insertVariable('FROM=custom4');" />
-              </menupopup>
-            </menu>
-            <menu label="__MSG_quicktext.attachments.label__">
-              <menupopup>
-                <menuitem label="__MSG_quicktext.filename.label__" oncommand="quicktext.insertVariable('ATT=name');" />
-                <menuitem label="__MSG_quicktext.filenameAndSize.label__" oncommand="quicktext.insertVariable('ATT=full');" />
-              </menupopup>
-            </menu>
-            <menu label="__MSG_quicktext.dateTime.label__">
-              <menupopup>
-                <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
-                <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
-                <menuitem id="date-monthname" oncommand="quicktext.insertVariable('DATE=monthname');" />
-                <menuitem id="time-noseconds" oncommand="quicktext.insertVariable('TIME');" />
-                <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
-              </menupopup>
-            </menu>
-            <menu label="__MSG_quicktext.other.label__">
-              <menupopup>
-                <menuitem label="__MSG_quicktext.clipboard.label__" oncommand="quicktext.insertVariable('CLIPBOARD');" />
-                <menuitem label="__MSG_quicktext.counter.label__" oncommand="quicktext.insertVariable('COUNTER');" />
-                <menuitem label="__MSG_quicktext.subject.label__" oncommand="quicktext.insertVariable('SUBJECT');" />
-                <menuitem label="__MSG_quicktext.version.label__" oncommand="quicktext.insertVariable('VERSION');" />
-              </menupopup>
-            </menu>
-          </menupopup>
-        </button>
-        <button type="menu" id="quicktext-other" label="__MSG_quicktext.other.label__" tabindex="-1">
-          <menupopup>
-            <menuitem label="__MSG_quicktext.insertTextFromFileAsText.label__" oncommand="quicktext.insertContentFromFile(0);" />
-            <menuitem label="__MSG_quicktext.insertTextFromFileAsHTML.label__" oncommand="quicktext.insertContentFromFile(1);" />
-          </menupopup>
-        </button>
-      </toolbar>`;
-    let localizedXulString = xulString.replace(
-      /__MSG_(.*?)__/g,
-      localize
-    );
-    let element = Array.from(
-      window.MozXULElement.parseXULToFragment(localizedXulString, []).children
-    ).pop();
-
-    let messageEditor = window.document.getElementById("messageEditor");
-    messageEditor.parentNode.insertBefore(
-      element,
-      messageEditor
-    );
-
-    // Update date menu entries
-    for (let [field, label] of Object.entries(dateLabels)) {
-      if (window.document.getElementById(field)) {
-        window.document.getElementById(field).setAttribute("label", label);
-      }
-    }
+  }
 
   class Quicktext extends ExtensionCommon.ExtensionAPI {
     getAPI(context) {
