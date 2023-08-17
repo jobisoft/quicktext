@@ -318,9 +318,6 @@
     "quicktext.resetcounter.label": {
         "message": "Vynulovat počítadlo"
     },
-    "quicktext.showToolbar.label": {
-        "message": "Show Quicktext toolbar"
-    },
     "quicktext.showContextMenu.label": {
         "message": "Zobrazovat Quicktext v nabídce pod pravým tlačítkem myši"
     },

@@ -3,15 +3,9 @@ import * as menus from "/modules/menus.mjs";
 import * as quicktext from "/modules/quicktext.mjs";
 import * as preferences from "/modules/preferences.mjs";
 
-(async () => {
-  // As long as we have a XUL settings window, we still need this. The next step
-  // is to convert the settings window to html and move all legacy functions from
-  // the JSMs directly into the Quicktext API.
-  await messenger.Quicktext.registerChromeUrl([
-    ["content", "quicktext", "chrome/content/"],
-    ["resource", "quicktext", "chrome/"],
-  ]);
+const HOMEPAGE = "https://github.com/jobisoft/quicktext/wiki/";
 
+(async () => {
   // Define prefs, which can be overridden by system admins.
   const managedPrefs = [
     "defaultImport",
@@ -56,38 +50,11 @@ import * as preferences from "/modules/preferences.mjs";
     await preferences.setPref("shortcutModifier", options.shortcutModifier)
   }
 
-  // Allow legacy code to access WebExtension modules.
-  messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
-    switch (info.command) {
-      case "setPref":
-        return preferences.setPref(info.pref, info.value);
-      case "getPref":
-        return preferences.getPref(info.pref);
-      case "insertVariable":
-        return quicktext.insertVariable(info.tabId, info.variable);
-      case "getTemplates":
-        return quicktext.templates;
-      case "insertContentFromFile":
-        return quicktext.insertContentFromFile(info.tabId, info.type)
-      case "openHomepage":
-        return browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/");
-    }
-  });
-
   // React to open composer tabs.
   async function prepareComposeTab(tab) {
-    let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
-    let dateLabels = {};
-    let now = Date.now();
-    for (let field of fields) {
-      dateLabels[field] = messenger.i18n.getMessage("date", utils.getDateTimeFormat(field, now));
-    }
-
-    await messenger.Quicktext.addToolbar(
-      tab.id, 
-      { toolbar: await preferences.getPref("toolbar")},
-      dateLabels
-    );
+    // BUG: Thunderbird should wait with executeScript until tab is ready.
+    //      Getting the compose details works around this.
+    await messenger.compose.getComposeDetails(tab.id);
     await messenger.tabs.executeScript(tab.id, {
       file: "/scripts/compose.js"
     });
@@ -101,20 +68,8 @@ import * as preferences from "/modules/preferences.mjs";
   // React to pref changes.
   messenger.storage.sync.onChanged.addListener(async changes => {
     if (changes.userPrefs.newValue.hasOwnProperty("popup")) {
-      let contexts = changes.userPrefs.newValue.popup
-      ? ["compose_body", "compose_action_menu"]
-      : ["compose_action_menu"];
-      await messenger.menus.update("variables", { contexts })
-      await messenger.menus.update("other", { contexts })
-      await messenger.menus.update("separator", { contexts })
-      await messenger.menus.update("settings", { contexts })
-    }
-    if (changes.userPrefs.newValue.hasOwnProperty("toolbar")) {
-      let visible = changes.userPrefs.newValue.toolbar;
-      let composeTabs = await messenger.tabs.query({type: "messageCompose"});
-      for (let composeTab of composeTabs) {
-        await messenger.Quicktext.toggleToolbar(composeTab.id, visible);
-      }
+      // Placeholder for preference changes we might need to act on, the
+      // "popup" preference no longer exists.
     }
   })
 
@@ -126,22 +81,6 @@ import * as preferences from "/modules/preferences.mjs";
   })
   messenger.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.id); });
   messenger.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.id); });
-
-  // Add config options to composeAction context menu.
-  await messenger.menus.create({
-    title: messenger.i18n.getMessage("quicktext.showToolbar.label"),
-    contexts: ["compose_action"],
-    type: "checkbox",
-    checked: await preferences.getPref("toolbar"),
-    onclick: (info, tab) => preferences.setPref("toolbar", info.checked)
-  })
-  await messenger.menus.create({
-    title: messenger.i18n.getMessage("quicktext.showContextMenu.label"),
-    contexts: ["compose_action"],
-    type: "checkbox",
-    checked: await preferences.getPref("popup"),
-    onclick: (info, tab) => preferences.setPref("popup", info.checked)
-  })
 
   // Load templates from disc.
   await quicktext.loadTemplates(options);

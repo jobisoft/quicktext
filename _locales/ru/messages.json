@@ -318,9 +318,6 @@
     "quicktext.resetcounter.label": {
         "message": "Сбросить счетчик"
     },
-    "quicktext.showToolbar.label": {
-        "message": "Show Quicktext toolbar"
-    },
     "quicktext.showContextMenu.label": {
         "message": "Просмотр Quicktext-меню по правому клику"
     },

@@ -4,8 +4,6 @@ const defaultPrefs = {
   "templateFolder": "",
   "defaultImport": "",
   "menuCollapse": true,
-  "toolbar": true,
-  "popup": true,
   "keywordKey": "Tab",
   "shortcutModifier": "alt",
   "shortcutTypeAdv": false,

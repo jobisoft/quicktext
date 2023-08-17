@@ -43,9 +43,7 @@ async function getContactMenuData(type) {
 
 async function getComposeBodyMenuData() {
     let menuData = [];
-    let contexts = await preferences.getPref("popup")
-        ? ["compose_body", "compose_action_menu"]
-        : ["compose_action_menu"];
+    let contexts = ["compose_body", "compose_action_menu"]
 
     for (let i = 0; i < quicktext.templates.group.length; i++) {
         let children = [];

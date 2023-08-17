@@ -312,90 +312,10 @@
       }
     }
 
-    await window.quicktext.load(extension, tabId);
-    console.log("install");
-  }
-
-  function uninstall(window) {
-    let toolbar = window.document.getElementById("quicktext-toolbar");
-    if (toolbar) {
-      toolbar.remove();
-    }
-    window.quicktext.unload();
-    window.quicktext = {};
-    console.log("uninstall");
-  }
-
-  let chromeHandle = null;
-  let chromeData = [];
-  let resourceData = [];
-
-  const aomStartup = Cc[
-    "@mozilla.org/addons/addon-manager-startup;1"
-  ].getService(Ci.amIAddonManagerStartup);
-  const resProto = Cc[
-    "@mozilla.org/network/protocol;1?name=resource"
-  ].getService(Ci.nsISubstitutingProtocolHandler);
-
   class Quicktext extends ExtensionCommon.ExtensionAPI {
     getAPI(context) {
       return {
         Quicktext: {
-          async registerChromeUrl(data) {
-            console.log("registerChromeUrl START");
-
-            for (let entry of data) {
-              if (entry[0] == "resource") resourceData.push(entry);
-              else chromeData.push(entry);
-            }
-
-            if (chromeData.length > 0) {
-              const manifestURI = Services.io.newURI(
-                "manifest.json",
-                null,
-                context.extension.rootURI
-              );
-              chromeHandle = aomStartup.registerChrome(
-                manifestURI,
-                chromeData
-              );
-            }
-
-            for (let res of resourceData) {
-              // [ "resource", "shortname" , "path" ]
-              let uri = Services.io.newURI(
-                res[2],
-                null,
-                context.extension.rootURI
-              );
-              resProto.setSubstitutionWithFlags(
-                res[1],
-                uri,
-                resProto.ALLOW_CONTENT_ACCESS
-              );
-            }
-
-            console.log("registerChromeUrl DONE");
-          },
-          async openSettings(tabId) {
-            let { window } = context.extension.tabManager.get(tabId);
-            window.openDialog(
-              "chrome://quicktext/content/settings.xhtml",
-              "QuicktextOptions",
-              "chrome,resizable,centerscreen"
-            );
-          },
-          async addToolbar(tabId, options, dateLabels) {
-            return install(context.extension, tabId, options, dateLabels);
-          },
-          async toggleToolbar(tabId, visible) {
-            let { window } = context.extension.tabManager.get(tabId);
-            if (visible) {
-              window.document.getElementById("quicktext-toolbar").removeAttribute("collapsed");
-            } else {
-              window.document.getElementById("quicktext-toolbar").setAttribute("collapsed", true);
-            }
-          },
           async getQuicktextFilePaths(options) {
             let rv = {};
 
@@ -496,51 +416,6 @@
 
     onShutdown(isAppShutdown) {
       if (isAppShutdown) return;
-      for (let window of Services.wm.getEnumerator("msgcompose")) {
-        uninstall(window);
-      }
-
-      // Extract all registered chrome content urls.
-      let chromeUrls = [];
-      if (chromeData) {
-        for (let chromeEntry of chromeData) {
-          if (chromeEntry[0].toLowerCase().trim() == "content") {
-            chromeUrls.push("chrome://" + chromeEntry[1] + "/");
-          }
-        }
-      }
-
-      // Unload JSMs.
-      const rootURI = this.extension.rootURI.spec;
-      for (let module of Cu.loadedModules) {
-        if (
-          module.startsWith(rootURI) ||
-          (module.startsWith("chrome://") &&
-            chromeUrls.find((s) => module.startsWith(s)))
-        ) {
-          console.log("Unloading: " + module);
-          Cu.unload(module);
-        }
-      }
-
-      // Flush all caches
-      Services.obs.notifyObservers(null, "startupcache-invalidate");
-
-      if (resourceData) {
-        const resProto = Cc[
-          "@mozilla.org/network/protocol;1?name=resource"
-        ].getService(Ci.nsISubstitutingProtocolHandler);
-        for (let res of resourceData) {
-          // [ "resource", "shortname" , "path" ]
-          resProto.setSubstitution(res[1], null);
-        }
-      }
-
-      if (chromeHandle) {
-        chromeHandle.destruct();
-        chromeHandle = null;
-      }
-
     }
   };
 

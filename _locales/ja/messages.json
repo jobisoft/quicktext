@@ -318,9 +318,6 @@
     "quicktext.resetcounter.label": {
         "message": "カウンターをリセット"
     },
-    "quicktext.showToolbar.label": {
-        "message": "Show Quicktext toolbar"
-    },
     "quicktext.showContextMenu.label": {
         "message": "コンテキストメニューに Quicktext を表示する"
     },

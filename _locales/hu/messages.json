@@ -321,9 +321,6 @@
     "quicktext.resetcounter.label": {
         "message": "Számláló visszaállítása"
     },
-    "quicktext.showToolbar.label": {
-        "message": "Show Quicktext toolbar"
-    },
     "quicktext.showContextMenu.label": {
         "message": "Jobb kattintással a gyorsszöveg menü megnyitása"
     },

@@ -51,7 +51,7 @@ messenger.runtime.onMessage.addListener((message, sender) => {
     return false;
 });
 
-console.log("Compose script loaded");
+console.log("Quicktext compose script loaded");
 
 
 async function handlerCursorTags() {

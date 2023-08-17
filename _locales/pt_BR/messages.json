@@ -318,9 +318,6 @@
     "quicktext.resetcounter.label": {
         "message": "Reiniciar contador"
     },
-    "quicktext.showToolbar.label": {
-        "message": "Show Quicktext toolbar"
-    },
     "quicktext.showContextMenu.label": {
         "message": "Exibir menu de texto rápido com o botão direito do mouse"
     },
