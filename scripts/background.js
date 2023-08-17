@@ -94,10 +94,10 @@ const HOMEPAGE = "https://github.com/jobisoft/quicktext/wiki/";
   await messenger.menus.create({
     title: messenger.i18n.getMessage("quicktext.label"),
     contexts: ["tools_menu"],
-    onclick: (info, tab) => messenger.Quicktext.openSettings(tab.id)
+    onclick: (info, tab) => browser.runtime.openOptionsPage()
   })
-  messenger.composeAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.id); });
-  messenger.browserAction.onClicked.addListener(tab => { messenger.Quicktext.openSettings(tab.id); });
+  messenger.composeAction.onClicked.addListener(tab => { browser.runtime.openOptionsPage() });
+  messenger.browserAction.onClicked.addListener(tab => { browser.runtime.openOptionsPage() });
 
   // Load templates from disc.
   await quicktext.loadTemplates(options);

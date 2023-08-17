@@ -173,7 +173,7 @@ async function getComposeBodyMenuData() {
             contexts,
             id: "settings",
             title: messenger.i18n.getMessage("quicktext.settings.title"),
-            onclick: (info, tab) => messenger.Quicktext.openSettings(tab.id)
+            onclick: (info, tab) => browser.runtime.openOptionsPage()
         },
     );
 
