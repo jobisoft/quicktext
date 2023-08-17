@@ -49,6 +49,13 @@ export class QuicktextParser {
     this.mDetails = null;
   }
 
+  // These process functions get the data and mostly saves it
+  // in this.mData so if the data is requested again, it is quick.
+  // Not all tags have a process function.
+
+  // The get-functions takes the data from the process-functions and
+  // returns string depending of what aVariables is.
+
   async get_header(aVariables) {
     if (aVariables.length == 0) {
       return "";
@@ -71,6 +78,114 @@ export class QuicktextParser {
     return "";
   }
 
+  // This needs the <all_urls> permission, otherwise requests to remote pages
+  // will fail due to CORS.
+  async process_url(aVariables) {
+    if (aVariables.length == 0) {
+      return "";
+    }
+
+    let url = aVariables.shift();
+    if (url == "") {
+      return "";
+    }
+
+    let debug = true;
+    let method = "post";
+    let post = [];
+
+    if (aVariables.length > 0) {
+      let variables = aVariables.shift().split(";");
+      for (let k = 0; k < variables.length; k++) {
+        let tag = variables[k].toLowerCase();
+        let data = null;
+
+        switch (tag) {
+          case 'to':
+          case 'att':
+          case 'orgheader':
+          case 'orgatt':
+            data = await this["process_" + tag]();
+            if (typeof data != 'undefined') {
+              for (let i in data)
+                for (let j in data[i])
+                  post.push(tag + '[' + i + '][' + j + ']=' + data[i][j]);
+            }
+            break;
+          case 'from':
+          case 'version':
+          case 'date':
+          case 'time':
+            data = await this["process_" + tag]();
+            if (typeof data != 'undefined') {
+              for (let i in data)
+                post.push(tag + '[' + i + ']=' + data[i]);
+            }
+            break;
+          case 'subject':
+          case 'clipboard':
+          case 'selection':
+          case 'counter':
+            data = await this["process_" + tag]();
+            if (typeof data != 'undefined')
+              post.push(tag + '=' + data);
+            break;
+
+          case 'post':
+          case 'get':
+          case 'options':
+            method = tag;
+            break;
+
+          case 'debug':
+            debug = true;
+            break;
+        }
+      }
+    }
+
+    let response = new Promise(resolve => {
+      let req = new XMLHttpRequest();
+      req.open(method, url, true);
+      if (method == "post") req.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+      req.ontimeout = function () {
+        if (debug) {
+          resolve("Quicktext timeout");
+        } else {
+          resolve()
+        }
+      };
+
+      req.onerror = function () {
+        if (debug) {
+          resolve(`Quicktext global error: ${req.status}`);
+        } else {
+          resolve()
+        }
+      };
+
+      req.onload = function () {
+        if (req.status == 200) {
+          resolve(req.responseText);
+        } else if (debug) {
+          resolve(`Quicktext onLoad error: ${req.status}`);
+        } else {
+          resolve();
+        }
+      };
+      
+      let postdata = method == "post"
+        ? post.map(encodeURIComponent).join("&")
+        : null;
+      req.send(postdata);
+    });
+
+    return response;
+  }
+  async get_url(aVariables) {
+    return this.process_url(aVariables);
+  }
 
   async get_file(aVariables) {
     return this.process_file(aVariables);
@@ -149,7 +264,7 @@ export class QuicktextParser {
     for (let i = 0; i < this.mTemplates.group.length; i++) {
       if (aVariables[0] == this.mTemplates.group[i].mName) {
         for (let j = 0; j < this.mTemplates.texts[i].length; j++) {
-          var text = this.mTemplates.texts[i][j];
+          let text = this.mTemplates.texts[i][j];
           if (aVariables[1] == text.mName) {
             let content = text.text;
             // Force insertion mode to TEXT if the template requests it.
@@ -284,7 +399,7 @@ export class QuicktextParser {
     return this.mData['ORGATT'].data;
   }
   async get_orgatt(aVariables) {
-    var data = await this.process_orgatt(aVariables);
+    let data = await this.process_orgatt(aVariables);
     let seperator = aVariables.length > 0
       ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t")
       : ", "
@@ -339,11 +454,11 @@ export class QuicktextParser {
     return this.mData['ATT'].data;
   }
   async get_att(aVariables) {
-    var data = await this.process_att(aVariables);
+    let data = await this.process_att(aVariables);
 
     if (data.length > 0) {
-      var value = [];
-      for (var i in data) {
+      let value = [];
+      for (let i in data) {
         if (aVariables[0] == "full")
           value.push(data[i][0] + " (" + utils.niceFileSize(data[i][1]) + ")");
         else if (aVariables[0] == "modified")
@@ -386,7 +501,7 @@ export class QuicktextParser {
     this.mData['TIME'].checked = true;
     this.mData['TIME'].data = {};
 
-    var timeStamp = new Date();
+    let timeStamp = new Date();
     let fields = ["DATE-long", "DATE-short", "DATE-monthname", "TIME-seconds", "TIME-noseconds"];
     for (let i = 0; i < fields.length; i++) {
       let field = fields[i];
@@ -409,7 +524,7 @@ export class QuicktextParser {
     return this.mData['TIME'].data;
   }
   async get_date(aVariables) {
-    var data = await this.process_date(aVariables);
+    let data = await this.process_date(aVariables);
 
     if (aVariables.length < 1)
       aVariables[0] = "short";
@@ -419,7 +534,7 @@ export class QuicktextParser {
     return "";
   }
   async get_time(aVariables) {
-    var data = await this.process_time(aVariables);
+    let data = await this.process_time(aVariables);
     if (aVariables.length < 1)
       aVariables[0] = "noseconds";
     if (typeof data[aVariables[0]] != 'undefined')
@@ -459,7 +574,7 @@ export class QuicktextParser {
     return this.mData['COUNTER'].data;
   }
   async get_counter(aVariables) {
-    return await this.process_counter(aVariables);
+    return this.process_counter(aVariables);
   }
 
   async process_from(aVariables) {
@@ -625,8 +740,8 @@ export class QuicktextParser {
     try {
       // Reparse the text until there is no difference in the text
       // or that we parse 100 times (so we don't make an infinitive loop)
-      var oldStr;
-      var count = 0;
+      let oldStr;
+      let count = 0;
 
       do {
         count++;
@@ -693,9 +808,9 @@ export class QuicktextParser {
 function getTags(aStr) {
   // We only get the beginning of the tag.
   // This is because we want to handle recursive use of tags.
-  var rexp = new RegExp("\\[\\[((" + allowedTags.join("|") + ")(\\_[a-z]+)?)", "ig");
-  var results = [];
-  var result = null;
+  let rexp = new RegExp("\\[\\[((" + allowedTags.join("|") + ")(\\_[a-z]+)?)", "ig");
+  let results = [];
+  let result = null;
   while ((result = rexp.exec(aStr)))
     results.push(result);
 
@@ -704,18 +819,18 @@ function getTags(aStr) {
     return [];
 
   // Take care of the tags starting with the last one
-  var hits = [];
+  let hits = [];
   results.reverse();
-  var strLen = aStr.length;
-  for (var i = 0; i < results.length; i++) {
-    var tmpHit = {};
+  let strLen = aStr.length;
+  for (let i = 0; i < results.length; i++) {
+    let tmpHit = {};
     tmpHit.tag = results[i][0];
     tmpHit.variables = [];
 
     // if the tagname contains a "_"-char that means
     // that is an old tag and we need to translate it
     // to a tagname and a variable
-    var pos = results[i][1].indexOf("_");
+    let pos = results[i][1].indexOf("_");
     if (pos > 0) {
       tmpHit.variables.push(results[i][1].substr(pos + 1).toLowerCase());
       tmpHit.tagName = results[i][1].substring(0, pos);
@@ -737,9 +852,9 @@ function getTags(aStr) {
       // through the same amount of [ and ] before. So if there
       // is an tag in the middle we just jump over it.
       pos++;
-      var bracketCount = 0;
-      var ready = false;
-      var vars = "";
+      let bracketCount = 0;
+      let ready = false;
+      let vars = "";
       while (!ready && pos < strLen) {
         if (aStr[pos] == "[")
           bracketCount++;
@@ -758,7 +873,7 @@ function getTags(aStr) {
       if (ready) {
         tmpHit.tag += "=" + vars + "]]";
         vars = vars.split("|");
-        for (var j = 0; j < vars.length; j++)
+        for (let j = 0; j < vars.length; j++)
           tmpHit.variables.push(vars[j]);
 
         // Adds the tag
@@ -776,7 +891,7 @@ function getTags(aStr) {
 // Checks if the tag isn't added before.
 // We just want to handle all unique tags once
 function addTag(aTags, aNewTag) {
-  for (var i = 0; i < aTags.length; i++)
+  for (let i = 0; i < aTags.length; i++)
     if (aTags[i].tag == aNewTag.tag)
       return aTags;
 

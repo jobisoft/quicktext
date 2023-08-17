@@ -44,7 +44,8 @@
     "clipboardRead",
     "accountsRead",
     "addressBooks",
-    "messagesRead"
+    "messagesRead",
+    "<all_urls>"
   ],
   "background": {
     "page": "background.html"

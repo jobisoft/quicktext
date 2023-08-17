@@ -14,53 +14,13 @@ wzQuicktextVar.prototype = {
     this.mData = tmpData;
   }
 ,
-  // The get-functions takes the data from the process-functions and
-  // returns string depending of what aVariables is
-
-  get_file: function(aVariables)
-  {
-    return this.process_file(aVariables);
-  }
-,
+ 
   get_script: async function(aVariables)
   {
     return await this.process_script(aVariables);
   }
 ,
 
-
-
-  get_url: async function(aVariables)
-  {
-    return await this.process_url(aVariables);
-  }
-
-
-,
-  // These process functions get the data and mostly saves it
-  // in this.mData so if the data is requested again it is quick
-
-  process_file: function(aVariables)
-  {
-    if (aVariables.length > 0 && aVariables[0] != "")
-    {
-      // Tries to open the file and returning the content
-      var fp = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);
-      try {
-        aVariables[0] = this.mQuicktext.parseFilePath(aVariables[0]);
-        fp.initWithPath(aVariables[0]);
-        let content = this.mQuicktext.readTextFile(fp);
-        if (aVariables.length > 1 && aVariables[1].includes("strip_html_comments")) {
-          return content.replace(/<!--[\s\S]*?(?:-->)/g, '');
-        }
-        return content;
-      } catch(e) { console.error(e); }
-    }
-
-    return "";
-  }
-
-,
 
   process_script: async function(aVariables)
   {
@@ -117,107 +77,6 @@ wzQuicktextVar.prototype = {
 ,
 
 
-  process_url: async function(aVariables)
-  {
-    if (aVariables.length == 0)
-      return "";
 
-    var url = aVariables.shift();
-
-    if (url != "")
-    {
-      var debug = false;
-      var method = "post";
-      var post = [];
-      
-      if (aVariables.length > 0)
-      {
-        var variables = aVariables.shift().split(";");
-        for (var k = 0; k < variables.length; k++)
-        {
-          var tag = variables[k].toLowerCase();
-          var data = null;
-
-          switch (tag)
-          {
-            case 'to':
-            case 'att':
-            case 'orgheader':
-            case 'orgatt':
-              data = await this["process_"+ tag]();
-              if (typeof data != 'undefined')
-              {
-                for (var i in data)
-                  for (var j in data[i])
-                    post.push(tag +'['+ i +']['+ j +']='+ data[i][j]);
-              }
-              break;
-            case 'from':
-            case 'version':
-            case 'date':
-            case 'time':
-              data = await this["process_"+ tag]();
-              if (typeof data != 'undefined')
-              {
-                for (var i in data)
-                  post.push(tag +'['+ i +']='+ data[i]);
-              }
-              break;
-            case 'subject':
-            case 'clipboard':
-            case 'selection':
-            case 'counter':
-              data = await this["process_"+ tag]();
-              if (typeof data != 'undefined')
-                post.push(tag +'='+ data);
-              break;
-
-            case 'post':
-            case 'get':
-            case 'options':
-              method = tag;
-              break;
-
-            case 'debug':
-              debug = true;
-              break;
-          }
-        }
-      }
-
-      var req = new XMLHttpRequest();
-      req.open(method, url, true);
-      if (method == "post") req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
-      let response = "";
-
-      //Lazy async-to-sync implementation with ACK from Philipp Kewisch
-      //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
-      let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
-      
-      req.ontimeout = function () {
-        if (debug) response = "Quicktext timeout";
-        inspector.exitNestedEventLoop();
-      };
-
-      req.onerror = function () {
-        if (debug) response = "error (" + req.status + ")";
-        inspector.exitNestedEventLoop();
-      };
-
-      req.onload = function() {
-        if (req.status == 200) response = req.responseText;
-        else 	if (debug) response = "error (" + req.status + ")";
-        inspector.exitNestedEventLoop();
-      };
-
-      if (method == "post") req.send(post.join("&"));
-      else req.send();
-
-      inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
-      return response;
-    }
-
-    return "";
-  }
 
 }

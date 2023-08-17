@@ -1,4 +1,3 @@
-import * as utils from "/modules/utils.mjs";
 import { QuicktextParser } from "/modules/quicktextParser.mjs";
 import { QuicktextGroup } from "/modules/quicktextGroup.mjs";
 import { QuicktextScript } from "/modules/quicktextScript.mjs";
@@ -69,7 +68,7 @@ export async function importFromFilePath(imports, aFilePath, aType, aBefore, aEd
 
 export async function importFromHttpUrl(imports, aURI, aType, aBefore, aEditingMode) {
   return new Promise((resolve, reject) => {
-    var req = new XMLHttpRequest();
+    let req = new XMLHttpRequest();
     req.open('GET', aURI, true);
     req.setRequestHeader("Cache-Control", "no-cache, no-store, max-age=0");
     req.mQuicktext = this;
