@@ -61,7 +61,9 @@ export async function loadTemplates(options, imports = {}) {
   templates = imports;
 }
 
-function getKeywordsAndShortcuts() {
+// This is defined async, so it can be used in an runtim.onMessage listener
+// without further logic to return a Promise.
+export async function getKeywordsAndShortcuts() {
     let keywords = {};
     let shortcuts = {};
 
@@ -79,11 +81,6 @@ function getKeywordsAndShortcuts() {
       }
     }
     return {keywords, shortcuts};
-}
-// This is defined async, so it can be used in an runtim.onMessage listener
-// without further logic to return a Promise.
-export function getKeywords() {
-  return getKeywordsAndShortcuts().keywords;
 }
 
 export async function importFromFilePath(imports, aFilePath, aType, aBefore, aEditingMode) {

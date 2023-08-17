@@ -2,7 +2,9 @@ const alternatives = {
     "Enter": ["NumpadEnter"]
 }
 
-let keywords, keywordKey, shortcutTypeAdv, shortcutModifier;
+let keywords, keywordKey, shortcutTypeAdv, shortcutModifier, shortcuts;
+let advShortcutModifierIsDown = false;
+let advShortcutString = "";
 
 // -----------------------------------------------------------------------------
 
@@ -17,6 +19,10 @@ async function insertTextFragment(message) {
     let space = message.extraSpace ? " " : "";
     document.execCommand('insertText', false, `${message.insertText}${space}`);
     await handlerCursorTags();
+}
+
+function requestInsertTemplate(text) {
+    return messenger.runtime.sendMessage({ command: "insertTemplate", group: text[0], text: text[1] });
 }
 
 async function getSelection(mode) {
@@ -85,7 +91,29 @@ async function handlerCursorTags() {
     }
 }
 
-function editorKeyPress(e) {
+// -----------------------------------------------------------------------------
+
+function hasMatchingModifier(e, modifier) {
+    return (
+        e.altKey && modifier == "alt" ||
+        e.ctrlKey && modifier == "control" ||
+        e.metaKey && modifier == "meta"
+    )
+}
+
+function isMatchingModifier(e, modifier) {
+    return (
+        e.key == "Alt" && modifier == "alt" ||
+        e.key == "Control" && modifier == "control" ||
+        e.key == "Meta" && modifier == "meta"
+    )
+}
+
+function isRealKey(e) {
+    return e.key.length == 1;
+}
+
+function keywordListener(e) {
     if (e.code == keywordKey || alternatives[keywordKey]?.includes(e.code)) {
         let selection = window.getSelection();
         if (!(selection.rangeCount > 0)) {
@@ -96,11 +124,11 @@ function editorKeyPress(e) {
         // and as the user usually does not have any text selected when
         // triggering keywords, it is a collapsed range at the current
         // cursor position.
-        var initialSelectionRange = selection.getRangeAt(0).cloneRange();
-        
+        let initialSelectionRange = selection.getRangeAt(0).cloneRange();
+
         // Get a temp selection, which we can modify to search for the beginning
         // of the last word.
-        var tmpRange = initialSelectionRange.cloneRange();
+        let tmpRange = initialSelectionRange.cloneRange();
         tmpRange.collapse(false);
         selection.removeAllRanges();
         selection.addRange(tmpRange);
@@ -130,27 +158,60 @@ function editorKeyPress(e) {
         // and insert the template.
         e.stopPropagation();
         e.preventDefault();
-        
+
         // The following line will remove the keyword before we replace it. If we
         // do not do that, we see the keyword being selected and then replaced.
         // It does look interesting, but I keep it as it was before.
         selection.deleteFromDocument()
-        
-        let text = keywords[lastWord];
-        messenger.runtime.sendMessage({command: "insertTemplate", group: text[0], text: text[1]});
+        requestInsertTemplate(keywords[lastWord])
     }
 }
 
-async function setupKeyListeners() {
+function shortcutKeyDown(e) {
+    if (!hasMatchingModifier(e, shortcutModifier)) {
+        return;
+    }
+
+    if (shortcutTypeAdv) {
+        advShortcutModifierIsDown = true;
+        if (isRealKey(e)) {
+            advShortcutString += e.key;
+            //console.log(advShortcutString);
+        }
+    } else if (isRealKey(e) && shortcuts[e.key] && !e.repeat) {
+        requestInsertTemplate(shortcuts[e.key]);
+    }
+
+    // Eat all keys while modifier is down.
+    e.stopPropagation();
+    e.preventDefault();
+}
+
+async function shortcutKeyUp(e) {
+    if (advShortcutModifierIsDown && shortcutTypeAdv && isMatchingModifier(e, shortcutModifier)) {
+        if (advShortcutString != "" && typeof shortcuts[advShortcutString] != "undefined") {
+            requestInsertTemplate(shortcuts[advShortcutString]);
+        }
+        advShortcutModifierIsDown = false;
+        advShortcutString = "";
+    }
+}
+
+// -----------------------------------------------------------------------------
+
+async function setup() {
     keywordKey = await messenger.runtime.sendMessage({ command: "getPref", pref: "keywordKey" });
     shortcutTypeAdv = await messenger.runtime.sendMessage({ command: "getPref", pref: "shortcutTypeAdv" });
     shortcutModifier = await messenger.runtime.sendMessage({ command: "getPref", pref: "shortcutModifier" });
 
-    keywords = await messenger.runtime.sendMessage({ command: "getKeywords" });
+    let rv = await messenger.runtime.sendMessage({ command: "getKeywordsAndShortcuts" });
+    keywords = rv.keywords;
+    shortcuts = rv.shortcuts;
 
-    window.addEventListener("keydown", editorKeyPress, false);
+    window.addEventListener("keydown", shortcutKeyDown, true);
+    window.addEventListener("keyup", shortcutKeyUp, true);
+    window.addEventListener("keydown", keywordListener, false);
 }
-// -----------------------------------------------------------------------------
 
 messenger.runtime.onMessage.addListener((message, sender) => {
     if (message.insertText) {
@@ -171,89 +232,6 @@ messenger.runtime.onMessage.addListener((message, sender) => {
     return false;
 });
 
-setupKeyListeners();
+setup();
 
 console.log("Quicktext compose script loaded");
-
-// -----------------------------------------------------------------------------
-
-/*
-async function windowKeyPress(e) {
-    if (shortcutTypeAdv) {
-        var shortcut = e.charCode - 48;
-        if (shortcut >= 0 && shortcut < 10 && this.mShortcutModifierDown) {
-            this.mShortcutString += String.fromCharCode(e.charCode);
-
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    }
-    else {
-        var modifier = shortcutModifier;
-        var shortcut = e.charCode - 48;
-        if (shortcut >= 0 && shortcut < 10 && typeof this.mShortcuts[shortcut] != "undefined" && (
-            e.altKey && modifier == "alt" ||
-            e.ctrlKey && modifier == "control" ||
-            e.metaKey && modifier == "meta")) {
-            await this.insertTemplate(this.mShortcuts[shortcut][0], this.mShortcuts[shortcut][1]);
-
-            e.stopPropagation();
-            e.preventDefault();
-        }
-    }
-}
-
-function windowKeyDown(e) {
-    var modifier = shortcutModifier;
-    if (!this.mShortcutModifierDown && shortcutTypeAdv && (
-        e.keyCode == e.DOM_VK_ALT && modifier == "alt" ||
-        e.keyCode == e.DOM_VK_CONTROL && modifier == "control" ||
-        e.keyCode == e.DOM_VK_META && modifier == "meta"))
-        this.mShortcutModifierDown = true;
-}
-
-async function windowKeyUp(e) {
-    var modifier = shortcutModifier;
-    if (shortcutTypeAdv && (
-        e.keyCode == e.DOM_VK_ALT && modifier == "alt" ||
-        e.keyCode == e.DOM_VK_CONTROL && modifier == "control" ||
-        e.keyCode == e.DOM_VK_META && modifier == "meta")) {
-        if (this.mShortcutString != "" && typeof this.mShortcuts[this.mShortcutString] != "undefined") {
-            await this.insertTemplate(this.mShortcuts[this.mShortcutString][0], this.mShortcuts[this.mShortcutString][1]);
-
-            e.stopPropagation();
-            e.preventDefault();
-        }
-
-        this.mShortcutModifierDown = false;
-        this.mShortcutString = "";
-    }
-}
-async function install() {
-    window.quicktext = {
-        mLoaded: false,
-        mShortcuts: {},
-        mShortcutString: "",
-        mShortcutModifierDown: false,
-        mKeywords: {}
-        ,
-        load: async function (extension, aTabId) {
-            // Add an eventlistener for keypress in the window
-            window.addEventListener("keypress", function (e) { quicktext.windowKeyPress(e); }, true);
-            window.addEventListener("keydown", function (e) { quicktext.windowKeyDown(e); }, true);
-            window.addEventListener("keyup", function (e) { quicktext.windowKeyUp(e); }, true);
-        }
-        ,
-        unload: function () {
-            window.removeEventListener("keypress", function (e) { quicktext.windowKeyPress(e); }, true);
-            window.removeEventListener("keydown", function (e) { quicktext.windowKeyDown(e); }, true);
-            window.removeEventListener("keyup", function (e) { quicktext.windowKeyUp(e); }, true);
-
-            // Remove the eventlistener from the editor
-            var contentFrame = GetCurrentEditorElement();
-            contentFrame.removeEventListener("keypress", function (e) { quicktext.editorKeyPress(e); }, false);
-        }
-        ,
-    }
-}
-*/

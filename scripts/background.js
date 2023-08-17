@@ -57,8 +57,8 @@ const HOMEPAGE = "https://github.com/jobisoft/quicktext/wiki/";
         return preferences.setPref(info.pref, info.value);
       case "getPref":
         return preferences.getPref(info.pref);
-      case "getKeywords": 
-        return quicktext.getKeywords();
+      case "getKeywordsAndShortcuts": 
+        return quicktext.getKeywordsAndShortcuts();
       case "insertTemplate":
         return quicktext.insertVariable(
           sender.tab.id, 
