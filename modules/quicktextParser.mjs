@@ -2,6 +2,7 @@ import * as utils from "/modules/utils.mjs";
 import * as preferences from "/modules/preferences.mjs";
 
 const allowedTags = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
+const persistentTags = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 
 export class QuicktextParser {
   constructor(aTabId, templates, forceAsText = false) {
@@ -24,9 +25,21 @@ export class QuicktextParser {
     }
   }
 
+  // ???
   clearData() {
     this.mData = {}
     this.mDetails = null;
+  }
+
+  // ???
+  cleanTagData() {
+    // Remove non-persistent data.
+    let tmpData = {};
+    for (let i in this.mData) {
+      if (persistentTags.indexOf(i) > -1)
+        tmpData[i] = this.mData[i];
+    }
+    this.mData = tmpData;
   }
 
   async getInsertType() {
