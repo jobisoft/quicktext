@@ -71,13 +71,33 @@ export class QuicktextParser {
     return "";
   }
 
+
+  async get_file(aVariables) {
+    return this.process_file(aVariables);
+  }
+  async process_file(aVariables) {
+    if (aVariables.length > 0 && aVariables[0] != "") {
+      // Tries to open the file and returning the content.
+      try {
+        let content = await browser.Quicktext.readTextFile(aVariables[0]);
+        if (aVariables.length > 1 && aVariables[1].includes("force_as_text")) {
+          this.mForceAsText = true;
+        }
+        if (aVariables.length > 1 && aVariables[1].includes("strip_html_comments")) {
+          content = content.replace(/<!--[\s\S]*?(?:-->)/g, '');
+        }
+        return content;
+      } catch (e) { console.error(e); }
+    }
+    return "";
+  }
+
   async process_image_content(aVariables) {
     let rv = "";
-    
-    if (aVariables.length > 0 && aVariables[0] != "")
-    {
+
+    if (aVariables.length > 0 && aVariables[0] != "") {
       let mode = (aVariables.length > 1 && "src" == aVariables[1].toString().toLowerCase()) ? "src" : "tag";
-      
+
       // Tries to open the file and returning the content
       try {
         let bytes = await browser.Quicktext.readBinaryFile(aVariables[0]);
@@ -85,11 +105,11 @@ export class QuicktextParser {
         let type = utils.getTypeFromExtension(leafName);
         let binContent = utils.uint8ArrayToBase64(bytes);
         let src = "data:" + type + ";filename=" + leafName + ";base64," + binContent;
-        rv = (mode == "tag") 
-                ? "<img src='"+src+"'>"
-                : src;
-      } catch(e) { 
-        console.error(e); 
+        rv = (mode == "tag")
+          ? "<img src='" + src + "'>"
+          : src;
+      } catch (e) {
+        console.error(e);
       }
     }
     return rv;
@@ -131,6 +151,7 @@ export class QuicktextParser {
         for (let j = 0; j < this.mTemplates.texts[i].length; j++) {
           var text = this.mTemplates.texts[i][j];
           if (aVariables[1] == text.mName) {
+            let content = text.text;
             // Force insertion mode to TEXT if the template requests it.
             // This will affect also the "parent" template, if the current
             // template is a nested template, because the entire parsed string
@@ -138,7 +159,13 @@ export class QuicktextParser {
             if (text.mType == 0) {
               this.mForceAsText = true;
             }
-            return text.text;
+            if (aVariables.length > 1 && aVariables[1].includes("force_as_text")) {
+              this.mForceAsText = true;
+            }
+            if (aVariables.length > 1 && aVariables[1].includes("strip_html_comments")) {
+              content = content.replace(/<!--[\s\S]*?(?:-->)/g, '');
+            }
+            return content;
           }
         }
       }
