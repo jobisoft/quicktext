@@ -57,7 +57,8 @@
       "parent": {
         "scopes": ["addon_parent"],
         "paths": [["NotifyTools"]],
-        "script": "api/NotifyTools/implementation.js"
+        "script": "api/NotifyTools/implementation.js",
+        "events": ["startup"]
       }
     },
     "LegacyPrefs": {
