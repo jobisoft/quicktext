@@ -93,6 +93,62 @@ export class QuicktextParser {
     return "";
   }
 
+  async get_script(aVariables) {
+    return this.process_script(aVariables);
+  }
+  async process_script(aVariables) {
+    if (aVariables.length == 0)
+      return "";
+
+    let scriptName = aVariables.shift();
+
+    // Looks through all scripts and tries to find the 
+    // one we look for
+    for (let i = 0; i < this.mTemplates.scripts.length; i++) {
+        let script = this.mTemplates.scripts[i];
+        if (script.name == scriptName) {
+          let returnValue = "";
+
+          let referenceLineNumber = 0
+          try {
+            let error = variableNotAvailable; // provoke an error to create a reference for the other linenumber
+          } catch (eReference) {
+            referenceLineNumber = eReference.lineNumber;
+          }
+
+          try {
+            let s = Components.utils.Sandbox(this.mWindow);
+            s.mQuicktext = this;
+            s.mVariables = aVariables;
+            s.mWindow = this.mWindow;
+            returnValue = await Components.utils.evalInSandbox("scriptObject = {}; scriptObject.mQuicktext = mQuicktext; scriptObject.mVariables = mVariables; scriptObject.mWindow = mWindow; scriptObject.run = async function() {\n" + script.script + "\n; return ''; }; scriptObject.run();", s);
+          } catch (e) {
+            if (this.mTabId) {
+              let lines = script.script.split("\n");
+
+              // Takes the linenumber where the error where and remove
+              // the line that it was run on so we get the line in the script
+              // calculate it by using a reference error linenumber and an offset
+              // offset: 10 lines between "variableNotAvailable" and "evalInSandbox"
+              let lineNumber = e.lineNumber - referenceLineNumber - 10;
+              await messenger.tabs.sendMessage(this.mTabId, {
+                alertLabel: `${browser.i18n.getMessage("scriptError")} ${script.name}\n${e.name}: ${e.message}\n${browser.i18n.getMessage("scriptLine")} ${lineNumber}: ${lines[lineNumber - 1]}`,
+              });
+            }
+          }
+
+          return returnValue;
+        }
+
+      //if we reach this point, the user requested an non-existing script
+      await messenger.tabs.sendMessage(this.mTabId, {
+        alertLabel: browser.i18n.getMessage("scriptNotFound", [scriptName]),
+      });
+
+      return "";
+    }
+  }
+
   // This needs the <all_urls> permission, otherwise requests to remote pages
   // will fail due to CORS.
   async process_url(aVariables) {
