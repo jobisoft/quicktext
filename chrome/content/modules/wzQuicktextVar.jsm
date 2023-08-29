@@ -20,6 +20,14 @@ const kDebug          = true;
 const persistentTags  = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 const allowedTags     = ['ATT', 'CLIPBOARD', 'COUNTER', 'DATE', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT', 'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'];
 
+function getThunderbirdVersion() {
+  let parts = Services.appinfo.version.split(".");
+  return {
+    major: parseInt(parts[0]),
+    minor: parseInt(parts[1]),
+  }
+}
+
 function streamListener(aInspector)
 {
   var newStreamListener = {
@@ -745,11 +753,12 @@ wzQuicktextVar.prototype = {
         // Text templates: request clipboard content as plain text only
         if(clipboardHTMLfilled == 0)
         {
-          trans.addDataFlavor("text/plain");
+          const textFlavor = getThunderbirdVersion().major < 115 ? "text/unicode" : "text/plain";
+          trans.addDataFlavor(textFlavor);
           clip.getData(trans, clip.kGlobalClipboard);
           var clipboard = {};
           try {
-            trans.getTransferData("text/plain", clipboard);
+            trans.getTransferData(textFlavor, clipboard);
             if (clipboard)
             {
               clipboard = clipboard.value.QueryInterface(Components.interfaces.nsISupportsString);
