@@ -90,8 +90,3 @@
   messenger.WindowListener.startListening();
 })();
 
-browser.runtime.onInstalled.addListener(() => {
-  browser.tabs.create({
-    url:"https://github.com/jobisoft/quicktext/issues/371"
-  })
-});
