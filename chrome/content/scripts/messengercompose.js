@@ -10,23 +10,28 @@ function onLoad(activatedWhileWindowOpen) {
   
   WL.injectCSS("resource://quicktext/skin/quicktext.css");
   WL.injectElements(`
-	<popup id="msgComposeContext">
-		<menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator"/>
-		<menu id="quicktext-popup" label="&quicktext.label;" hidden="true" insertafter="spellCheckSuggestionsSeparator"  class="menu-iconic quicktext-icon menuitem-iconic" >
-		  <menupopup id="quicktext-popup-menupopup"/>
-		</menu>
-	</popup>
+  <popup id="msgComposeContext">
+    <menuseparator id="quicktext-popupsep" hidden="true" insertafter="spellCheckSuggestionsSeparator" />
+    <menu id="quicktext-popup" label="&quicktext.label;" hidden="true" insertafter="spellCheckSuggestionsSeparator"
+      class="menu-iconic quicktext-icon menuitem-iconic">
+      <menupopup id="quicktext-popup-menupopup" />
+    </menu>
+  </popup>
 
   <menupopup id="menu_View_Popup">
-    <menuitem id="quicktext-view" type="checkbox" label="&quicktext.label;" oncommand="quicktext.toogleToolbar();"/>
+    <menuitem id="quicktext-view" type="checkbox" label="&quicktext.label;" oncommand="quicktext.toogleToolbar();" />
   </menupopup>
 
   <menupopup id="taskPopup">
-    <menuitem id="quicktext-settings" label="&quicktext.label;" oncommand="quicktext.openSettings();" insertafter="tasksMenuAddressBook" class="menu-iconic quicktext-icon menuitem-iconic" />
+    <menuitem id="quicktext-settings" label="&quicktext.label;" oncommand="quicktext.openSettings();"
+      insertafter="tasksMenuAddressBook" class="menu-iconic quicktext-icon menuitem-iconic" />
     <menuseparator insertafter="tasksMenuAddressBook" />
   </menupopup>
 
-  <toolbar id="quicktext-toolbar" insertbefore="messageEditor">
+  <hbox id="quicktext-toolbar" insertbefore="messageEditor">
+    <html:div id="quicktext-templates-toolbar" />
+    <spacer flex="1" />
+    <hbox>
       <button type="menu" id="quicktext-variables" label="&quicktext.variables.label;" tabindex="-1">
         <menupopup>
           <menu label="&quicktext.to.label;">
@@ -39,7 +44,8 @@ function onLoad(activatedWhileWindowOpen) {
               <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('TO=email');" />
               <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('TO=workphone');" />
               <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('TO=faxnumber');" />
-              <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('TO=cellularnumber');" />
+              <menuitem label="&quicktext.cellularnumber.label;"
+                oncommand="quicktext.insertVariable('TO=cellularnumber');" />
               <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('TO=jobtitle');" />
               <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('TO=custom1');" />
               <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('TO=custom2');" />
@@ -57,7 +63,8 @@ function onLoad(activatedWhileWindowOpen) {
               <menuitem label="&quicktext.email.label;" oncommand="quicktext.insertVariable('FROM=email');" />
               <menuitem label="&quicktext.worknumber.label;" oncommand="quicktext.insertVariable('FROM=workphone');" />
               <menuitem label="&quicktext.faxnumber.label;" oncommand="quicktext.insertVariable('FROM=faxnumber');" />
-              <menuitem label="&quicktext.cellularnumber.label;" oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
+              <menuitem label="&quicktext.cellularnumber.label;"
+                oncommand="quicktext.insertVariable('FROM=cellularnumber');" />
               <menuitem label="&quicktext.jobtitle.label;" oncommand="quicktext.insertVariable('FROM=jobtitle');" />
               <menuitem label="&quicktext.custom1.label;" oncommand="quicktext.insertVariable('FROM=custom1');" />
               <menuitem label="&quicktext.custom2.label;" oncommand="quicktext.insertVariable('FROM=custom2');" />
@@ -96,7 +103,8 @@ function onLoad(activatedWhileWindowOpen) {
           <menuitem label="&quicktext.insertTextFromFileAsHTML.label;" oncommand="quicktext.insertContentFromFile(1);" />
         </menupopup>
       </button>
-    </toolbar>`,
+    </hbox>
+  </hbox>`,
   ["chrome://quicktext/locale/quicktext.dtd"]);
   
   window.quicktext.load();

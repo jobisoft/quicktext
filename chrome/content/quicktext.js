@@ -119,27 +119,14 @@ var quicktext = {
     this.mKeywords = {};
 
     // Update the toolbar
-    var toolbar = document.getElementById("quicktext-toolbar");
+    var toolbar = document.getElementById("quicktext-templates-toolbar");
     if (toolbar != null)
     {
 
-      //clear toolbar and store current "variables" and "other" menus (the two rightmost ones)
-      var toolbarbuttonVar = null;
-      var toolbarbuttonOther = null;
+      // Clear template toolbar.
       var length = toolbar.children.length;
-      for(var i = length-1; i >= 0; i--)
-      {
-        var element = toolbar.children[i];
-        switch(element.getAttribute("id"))
-        {
-          case 'quicktext-variables':
-            toolbarbuttonVar = element.cloneNode(true);
-            break;
-          case 'quicktext-other':
-            toolbarbuttonOther = element.cloneNode(true);
-            break;
-        }
-        toolbar.removeChild(element);
+      for(var i = length-1; i >= 0; i--) {
+        toolbar.removeChild(toolbar.children[i]);
       }
 
       //rebuild template groups (the leftmost entries)
@@ -211,16 +198,8 @@ var quicktext = {
         }
       }
 
-      //add a flex spacer to push the VAR and OTHER elements to the right 
-      var spacer = document.createXULElement("spacer");
-      spacer.setAttribute("flex", "1");
-      toolbar.appendChild(spacer);
-      toolbar.appendChild(toolbarbuttonVar);
-      toolbar.appendChild(toolbarbuttonOther);
-
-            
-      // Update the toolbar inside the toolbarpalette and the drop-down menu - if used
-      let optionalUI = ["button-quicktext", "quicktext-popup"];
+      // Update the template menu inside the context menu - if used.
+      let optionalUI = ["quicktext-popup"];
       for (let a=0; a < optionalUI.length; a++) { 
         if (document.getElementById(optionalUI[a] + "-menupopup")) {
           let rootElement = document.getElementById(optionalUI[a] + "-menupopup");

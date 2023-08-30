@@ -1,32 +1,5 @@
-#button-quicktext {
-  list-style-image: url("resource://quicktext/skin/button.large.png");
-  -moz-image-region: rect(0px 24px 24px 0px);
-}
-
-#button-quicktext:hover {
-  -moz-image-region: rect(24px 24px 48px 0px);
-}
-
-#button-quicktext[disabled] {
-  -moz-image-region: rect(48px 24px 72px 0px);
-}
-
-toolbar[iconsize="small"] #button-quicktext {
-  list-style-image: url("resource://quicktext/skin/button.small.png");
-  -moz-image-region: rect(0px 16px 16px 0px);
-}
-
-toolbar[iconsize="small"] #button-quicktext:hover {
-  -moz-image-region: rect(16px 16px 32px 0px);
-}
-
-toolbar[iconsize="small"] #button-quicktext[disabled] {
-  -moz-image-region: rect(32px 16px 48px 0px);
-}
-
 .quicktext-icon {
-  list-style-image: url("resource://quicktext/skin/button.small.png");
-  -moz-image-region: rect(16px 16px 32px 0px);
+  list-style-image: url("resource://quicktext/skin/icon16.png");
 }
 
 dialog[OS=WINNT] legend.insideTab {
