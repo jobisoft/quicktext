@@ -28,7 +28,7 @@ function onLoad(activatedWhileWindowOpen) {
     <menuseparator insertafter="tasksMenuAddressBook" />
   </menupopup>
 
-  <hbox id="quicktext-toolbar" insertbefore="messageEditor">
+  <toolbar id="quicktext-toolbar" insertbefore="messageEditor">
     <html:div id="quicktext-templates-toolbar" />
     <spacer flex="1" />
     <hbox>
@@ -104,7 +104,7 @@ function onLoad(activatedWhileWindowOpen) {
         </menupopup>
       </button>
     </hbox>
-  </hbox>`,
+  </toolbar>`,
   ["chrome://quicktext/locale/quicktext.dtd"]);
   
   window.quicktext.load();
