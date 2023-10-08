@@ -14,6 +14,7 @@ XPCOMUtils.defineLazyModuleGetters(this, {
   BANISHED_PROPERTIES: "resource:///modules/VCardUtils.jsm",
   VCardProperties: "resource:///modules/VCardUtils.jsm",
   VCardUtils: "resource:///modules/VCardUtils.jsm",
+  MsgHdrToMimeMessage: "resource:///modules/gloda/MimeMessage.jsm"
 });
 
 const kDebug          = true;
@@ -26,61 +27,6 @@ function getThunderbirdVersion() {
     major: parseInt(parts[0]),
     minor: parseInt(parts[1]),
   }
-}
-
-function streamListener(aInspector)
-{
-  var newStreamListener = {
-    mAttachments: [],
-    mHeaders: [],
-
-    onStartRequest : function (aRequest, aContext)
-    {
-      this.mAttachments = [];
-      this.mHeaders = [];
-
-      var channel = aRequest.QueryInterface(Components.interfaces.nsIChannel);
-      channel.URI.QueryInterface(Components.interfaces.nsIMsgMailNewsUrl);
-      channel.URI.msgHeaderSink = this;  // adds this header sink interface to the channel
-    },
-    onStopRequest : function (aRequest, aContext, aStatusCode)
-    {
-      aInspector.exitNestedEventLoop();
-    },
-    onDataAvailable : function (aRequest, aContext, aInputStream, aOffset, aCount) {},
-    onStartHeaders: function() {},
-    onEndHeaders: function() {},
-    processHeaders: function(aHeaderNameEnumerator, aHeaderValueEnumerator, aDontCollectAddress)
-    {
-      while (aHeaderNameEnumerator.hasMore())
-        this.mHeaders.push({name:aHeaderNameEnumerator.getNext().toLowerCase(), value:aHeaderValueEnumerator.getNext()});
-    },
-    handleAttachment: function(aContentType, aUrl, aDisplayName, aUri, aIsExternalAttachment)
-    {
-      if (aContentType == "text/html") return;
-      this.mAttachments.push({contentType:aContentType, url:aUrl, displayName:aDisplayName, uri:aUri, isExternal:aIsExternalAttachment});
-    },
-    onEndAllAttachments: function() {},
-    onEndMsgDownload: function(aUrl) {},
-    onEndMsgHeaders: function(aUrl) {},
-    onMsgHasRemoteContent: function(aMsgHdr) {},
-    getSecurityInfo: function() {},
-    setSecurityInfo: function(aSecurityInfo) {},
-    getDummyMsgHeader: function() {},
-
-    QueryInterface : function(aIID)
-    {
-      if (aIID.equals(Components.interfaces.nsIStreamListener) ||
-          aIID.equals(Components.interfaces.nsIMsgHeaderSink) ||
-          aIID.equals(Components.interfaces.nsISupports))
-        return this;
-
-      throw Components.results.NS_NOINTERFACE;
-      return 0;
-    }
-  };
-
-  return newStreamListener;
 }
 
 function wzQuicktextVar()
@@ -464,9 +410,9 @@ wzQuicktextVar.prototype = {
     return "";
   }
 ,
-  get_orgheader: function(aVariables)
+  get_orgheader: async function(aVariables)
   {
-    var data = this.process_orgheader(aVariables);
+    var data = await this.process_orgheader(aVariables);
 
     aVariables[0] = aVariables[0].toLowerCase();
     if (typeof data[aVariables[0]] != 'undefined')
@@ -480,9 +426,9 @@ wzQuicktextVar.prototype = {
       return "";
   }
 ,
-  get_orgatt: function(aVariables)
+  get_orgatt: async function(aVariables)
   {
-    var data = this.process_orgatt(aVariables);
+    var data = await this.process_orgatt(aVariables);
 
     if (typeof data != 'undefined')
     {
@@ -1159,21 +1105,21 @@ getcarddata_from: function(aData, aIdentity)
     return this.mData['TIME'].data;
   }
 ,
-  process_orgheader: function(aVariables)
+  process_orgheader: async function(aVariables)
   {
     if (this.mData['ORGHEADER'] && this.mData['ORGHEADER'].checked)
       return this.mData['ORGHEADER'].data;
 
-    this.preprocess_org();
+    await this.preprocess_org();
     return this.mData['ORGHEADER'].data;
   }
 ,
-  process_orgatt: function(aVariables)
+  process_orgatt: async function(aVariables)
   {
     if (this.mData['ORGATT'] && this.mData['ORGATT'].checked)
       return this.mData['ORGATT'].data;
 
-    this.preprocess_org();
+    await this.preprocess_org();
     return this.mData['ORGATT'].data;
   }
 ,
@@ -1195,48 +1141,86 @@ getcarddata_from: function(aData, aIdentity)
     }
  }
 ,
-  preprocess_org: function()
-  {
-    this.mData['ORGHEADER'] = {};
-    this.mData['ORGHEADER'].checked = true;
-    this.mData['ORGHEADER'].data = {};
+preprocess_org: async function () {
 
-    this.mData['ORGATT'] = {};
-    this.mData['ORGATT'].checked = true;
-    this.mData['ORGATT'].data = {contentType:[], url:[], displayName:[], uri:[], isExternal:[]};
+  this.mData['ORGHEADER'] = {};
+  this.mData['ORGHEADER'].checked = true;
+  this.mData['ORGHEADER'].data = {};
 
-    var msgURI = this.mWindow.gMsgCompose.originalMsgURI;
-    if (!msgURI || msgURI == "")
-      return;
+  this.mData['ORGATT'] = {};
+  this.mData['ORGATT'].checked = true;
+  this.mData['ORGATT'].data = { contentType: [], url: [], displayName: [], uri: [], isExternal: [] };
 
-    var mms = MailServices.messageServiceFromURI(msgURI).QueryInterface(Components.interfaces.nsIMsgMessageService);
+  let msgURI = this.mWindow.gMsgCompose.originalMsgURI;
+  if (!msgURI || msgURI == "") {
+    return;
+  }
 
-    //Lazy async-to-sync implementation with ACK from Philipp Kewisch
-    //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
-    let inspector = Components.classes["@mozilla.org/jsinspector;1"].createInstance(Components.interfaces.nsIJSInspector);
-    let listener = streamListener(inspector);
-    mms.streamMessage(msgURI, listener, null, null, true, "filter");
+  let messenger = Cc["@mozilla.org/messenger;1"].createInstance(Ci.nsIMessenger);
+  let relatedMsgHdr = messenger.msgHdrFromURI(msgURI);
+  
+  let mimeMsg;
+  try {
+    mimeMsg = await new Promise(resolve => {
+      MsgHdrToMimeMessage(
+        relatedMsgHdr,
+        null,
+        (_msgHdr, mimeMsg) => {
+          if (!mimeMsg) {
+            reject();
+          } else {
+            mimeMsg.attachments = mimeMsg.allInlineAttachments;
+            resolve(mimeMsg);
+          }
+        },
+        true,
+        { examineEncryptedParts: true }
+      );
+    });
+  } catch (ex) {
+    // Something went wrong. Return null, which will inform the user that the
+    return;
+  }
 
-    //lazy async, wait for listener
-    inspector.enterNestedEventLoop(0); /* wait for async process to terminate */
+  if (!mimeMsg) {
+    return;
+  }
 
-    // Store all headers in the mData-variable
-    for (var i = 0; i < listener.mHeaders.length; i++)
-    {
-      var name = listener.mHeaders[i].name;
-      if (typeof this.mData['ORGHEADER'].data[name] == 'undefined')
+  // Decode headers. This also takes care of headers, which still include
+  // encoded words and need to be RFC 2047 decoded.
+  if ("headers" in mimeMsg) {
+    for (let header of Object.keys(mimeMsg.headers)) {
+      let name = header.toLowerCase();
+      let value = mimeMsg.headers[header].map(h =>
+        MailServices.mimeConverter.decodeMimeHeader(
+          h,
+          null,
+          false /* override_charset */,
+          true /* eatContinuations */
+        )
+      );
+
+      // Store header in the mData-variable
+      if (typeof this.mData['ORGHEADER'].data[name] == 'undefined') {
         this.mData['ORGHEADER'].data[name] = [];
-      this.mData['ORGHEADER'].data[name].push(listener.mHeaders[i].value);
-    }
-
-    // Store all attachments in the mData-variable
-    for (var i = 0; i < listener.mAttachments.length; i++)
-    {
-      var attachment = listener.mAttachments[i];
-      for (var fields in attachment)
-        this.mData['ORGATT'].data[fields][i] = attachment[fields];
+      }
+      this.mData['ORGHEADER'].data[name].push(value);
     }
   }
+
+  if ("attachments" in mimeMsg) {
+    for (let attachment of mimeMsg.attachments) {
+      if (attachment.contentType == "text/html") return;
+
+      // Store attachments in the mData-variable
+      this.mData['ORGATT'].data.contentType = attachment.contentType;
+      this.mData['ORGATT'].data.url = attachment.url;
+      this.mData['ORGATT'].data.displayName = attachment.displayName;
+      this.mData['ORGATT'].data.uri = attachment.uri;
+      this.mData['ORGATT'].data.isExternal = attachment.isExternal;
+    }
+  }
+}
 ,
   escapeRegExp: function(aStr)
   {
