@@ -1209,8 +1209,7 @@ getcarddata_from: function(aData, aIdentity)
     if (!msgURI || msgURI == "")
       return;
 
-    var messenger = Components.classes["@mozilla.org/messenger;1"].createInstance(Components.interfaces.nsIMessenger);
-    var mms = messenger.messageServiceFromURI(msgURI).QueryInterface(Components.interfaces.nsIMsgMessageService);
+    var mms = MailServices.messageServiceFromURI(msgURI).QueryInterface(Components.interfaces.nsIMsgMessageService);
 
     //Lazy async-to-sync implementation with ACK from Philipp Kewisch
     //http://lists.thunderbird.net/pipermail/maildev_lists.thunderbird.net/2018-June/001205.html
