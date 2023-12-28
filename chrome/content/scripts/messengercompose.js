@@ -83,6 +83,7 @@ function onLoad(activatedWhileWindowOpen) {
               <menuitem id="date-short" oncommand="quicktext.insertVariable('DATE');" />
               <menuitem id="date-long" oncommand="quicktext.insertVariable('DATE=long');" />
               <menuitem id="date-monthname" oncommand="quicktext.insertVariable('DATE=monthname');" />
+              <menuitem id="date-year" oncommand="quicktext.insertVariable('DATE=year');" />
               <menuitem id="time-noseconds" oncommand="quicktext.insertVariable('TIME');" />
               <menuitem id="time-seconds" oncommand="quicktext.insertVariable('TIME=seconds');" />
             </menupopup>

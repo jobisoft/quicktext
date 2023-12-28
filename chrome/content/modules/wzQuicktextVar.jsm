@@ -1133,7 +1133,7 @@ getcarddata_from: function(aData, aIdentity)
     this.mData['TIME'].data = {};
 
     var timeStamp = new Date();
-    let fields = ["DATE-long", "DATE-short", "DATE-monthname", "TIME-seconds", "TIME-noseconds"];
+    let fields = ["DATE-long", "DATE-short", "DATE-monthname", "DATE-year", "TIME-seconds", "TIME-noseconds"];
     for (let i=0; i < fields.length; i++) {
         let field = fields[i];
         let fieldinfo = field.split("-");
