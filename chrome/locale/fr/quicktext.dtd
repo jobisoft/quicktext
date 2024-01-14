@@ -3,7 +3,7 @@
 
 <!ENTITY quicktext.settings.title "Paramètres de Quicktext">
 <!ENTITY quicktext.settings.label "Paramètres">
-<!ENTITY quicktext.accesskey.settings "n">
+<!ENTITY quicktext.accesskey.settings "p">
 <!ENTITY quicktext.resetcounter.label "Réinitialiser le compteur">
 <!ENTITY quicktext.accesskey.resetCounter "u">
 <!ENTITY quicktext.file.label "Fichier">
@@ -13,14 +13,14 @@
 <!ENTITY quicktext.help.label "Aide">
 <!ENTITY quicktext.accesskey.help "d">
 <!ENTITY quicktext.close.label "Fermer">
-<!ENTITY quicktext.accesskey.close "c">
+<!ENTITY quicktext.accesskey.close "r">
 <!ENTITY quicktext.save.label "Enregistrer">
-<!ENTITY quicktext.accesskey.save "s">
+<!ENTITY quicktext.accesskey.save "e">
 
 <!ENTITY quicktext.general.label "Générales">
 <!ENTITY quicktext.accesskey.general "g">
 <!ENTITY quicktext.templates.label "Modèles">
-<!ENTITY quicktext.accesskey.templates "t">
+<!ENTITY quicktext.accesskey.templates "m">
 <!ENTITY quicktext.scripts.label "Scripts">
 <!ENTITY quicktext.accesskey.scripts "s">
 
@@ -43,14 +43,14 @@
 <!ENTITY quicktext.f11Key.label "F11">
 <!ENTITY quicktext.f12Key.label "F12">
 
-<!ENTITY quicktext.defaultImport.label "Importé au démarrage">
+<!ENTITY quicktext.defaultImport.label "Importer au démarrage">
 
 <!ENTITY quicktext.sharingTemplates.label "Partage de modèles">
 <!ENTITY quicktext.sharingScripts.label "Partage de scripts">
 <!ENTITY quicktext.export.label "Exporter">
 <!ENTITY quicktext.accesskey.export "o">
 <!ENTITY quicktext.accesskeyTemplate.export "e">
-<!ENTITY quicktext.accesskeyScripts.export "x">
+<!ENTITY quicktext.accesskeyScripts.export "s">
 <!ENTITY quicktext.import.label "Importer">
 <!ENTITY quicktext.accesskey.import "r">
 <!ENTITY quicktext.accesskeyTemplate.import "i">
@@ -63,10 +63,10 @@
 <!ENTITY quicktext.accesskey.addTemplate "l">
 <!ENTITY quicktext.addScript.label "Ajouter un script">
 <!ENTITY quicktext.accesskey.addScript "t">
-<!ENTITY quicktext.getScript.label "Community Scripts">
+<!ENTITY quicktext.getScript.label "Scripts communautaires">
 <!ENTITY quicktext.accesskey.communityScripts "s">
 <!ENTITY quicktext.remove.label "Supprimer">
-<!ENTITY quicktext.accesskey.remove "v">
+<!ENTITY quicktext.accesskey.remove "s">
 <!ENTITY quicktext.shortcut.label "Raccourci">
 
 <!ENTITY quicktext.group.label "Groupe">
@@ -97,18 +97,18 @@
 
 <!ENTITY quicktext.other.label "Autres">
 <!ENTITY quicktext.clipboard.label "Presse-papiers">
-<!ENTITY quicktext.header.label "Header (To, Cc, Bcc)">
-<!ENTITY quicktext.selection.label "Selection">
+<!ENTITY quicktext.header.label "En-tête (To, Cc, Bcc)">
+<!ENTITY quicktext.selection.label "Sélection">
 <!ENTITY quicktext.cursor.label "Position du curseur">
 <!ENTITY quicktext.subject.label "Sujet">
 <!ENTITY quicktext.version.label "Version de Thunderbird">
-<!ENTITY quicktext.image.label "Embedded HTML image">
-<!ENTITY quicktext.counter.label "Counter">
-<!ENTITY quicktext.input.label "Input value from user prompt">
+<!ENTITY quicktext.image.label "Image HTML intégrée">
+<!ENTITY quicktext.counter.label "Compteur">
+<!ENTITY quicktext.input.label "Valeur entrée par l'utilisteur">
 <!ENTITY quicktext.orgatt.label "Original attachment info">
 <!ENTITY quicktext.orgheader.label "Original header info">
-<!ENTITY quicktext.url.label "Response from URL">
-<!ENTITY quicktext.insertfile.label "Content from file (quicktext variables will be replaced)">
+<!ENTITY quicktext.url.label "Intégrer les données d'une URL">
+<!ENTITY quicktext.insertfile.label "Intégrer les données d'un fichier">
 
 <!ENTITY quicktext.attachments.label "Pièces jointes">
 <!ENTITY quicktext.filename.label "Nom du fichier">
