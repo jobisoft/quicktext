@@ -29,9 +29,6 @@ const ADDON_ID = "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}";
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-var Services = globalThis.Services || 
-  ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
-
 var notifyTools = {
   registeredCallbacks: {},
   registeredCallbacksNextId: 1,

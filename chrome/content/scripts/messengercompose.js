@@ -1,8 +1,3 @@
-// Import any needed modules.
-var Services = globalThis.Services || ChromeUtils.import(
-  "resource://gre/modules/Services.jsm"
-).Services;
-
 // Load an additional JavaScript file.
 Services.scriptloader.loadSubScript("chrome://quicktext/content/quicktext.js", window, "UTF-8");
 

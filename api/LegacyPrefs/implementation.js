@@ -44,10 +44,6 @@ var { ExtensionUtils } = ChromeUtils.import(
 );
 var { ExtensionError } = ExtensionUtils;
 
-var Services = globalThis.Services || 
-  ChromeUtils.import("resource://gre/modules/Services.jsm").Services;
-
-
 var LegacyPrefs = class extends ExtensionCommon.ExtensionAPI {
   getAPI(context) {
 

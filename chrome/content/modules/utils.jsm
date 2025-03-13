@@ -2,10 +2,6 @@
 
 var EXPORTED_SYMBOLS = ["quicktextUtils"]
 
-var Services = globalThis.Services || ChromeUtils.import(
-  "resource://gre/modules/Services.jsm"
-).Services;
-
 var quicktextUtils = {
   get dateTimeFormat() {
     if (Services.vc.compare(Services.appinfo.platformVersion, "59.0-1") >= 0) {
