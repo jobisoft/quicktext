@@ -36,7 +36,7 @@ export class QuicktextParser {
 
   async insertBody(aStr, options = {}) {
     let { isPlainText } = await this.getDetails();
-    let extraSpace = options?.extraSpace == false;
+    let extraSpace = options?.extraSpace !== false;
 
     if (isPlainText || this.mForceAsText) {
       await messenger.tabs.sendMessage(this.mTabId, {
