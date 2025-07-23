@@ -847,9 +847,15 @@ export class QuicktextParser {
     this.mData['CLIPBOARD'].checked = true;
     this.mData['CLIPBOARD'].data = "";
 
-    // I do not know how to access html variant, but if, we would call
-    // this.getDetails and check isPlainText to determine if we need it.
-    this.mData['CLIPBOARD'].data = await navigator.clipboard.readText();
+    if (aVariables?.[0]?.toLowerCase?.() === "html") {
+      const items = await navigator.clipboard.read();
+      const htmlItem = items.find((item) => item.types.includes("text/html"));
+      if (htmlItem) {
+        this.mData['CLIPBOARD'].data = await (await htmlItem.getType("text/html")).text();
+      }
+    } else {
+      this.mData['CLIPBOARD'].data = await navigator.clipboard.readText();
+    }
 
     return this.mData['CLIPBOARD'].data;
   }
