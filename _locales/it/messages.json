@@ -55,7 +55,7 @@
         "message": "Meta"
     },
     "newGroup": {
-        "message": "Nuovo GRuppo"
+        "message": "Nuovo Gruppo"
     },
     "newScript": {
         "message": "Nuovo script"
@@ -319,7 +319,7 @@
         "message": "Rimuovi"
     },
     "quicktext.resetcounter.label": {
-        "message": "Azera il contatore"
+        "message": "Azzera il contatore"
     },
     "quicktext.showContextMenu.label": {
         "message": "Mostra il menu Quicktext al click destro"
