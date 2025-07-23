@@ -1,0 +1,435 @@
+{
+    "altKey": {
+        "message": "Alt"
+    },
+    "attachmentFile": {
+        "message": "Scegli il file da aggiungere agli allegati"
+    },
+    "controlKey": {
+        "message": "Ctrl"
+    },
+    "controlled-via-managed-storage": {
+        "message": "Controllato tramite archiviazione gestita"
+    },
+    "date": {
+        "message": "Data ($P1$)",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "exportFile": {
+        "message": "Scegli il file in cui esportare (UTF-8)"
+    },
+    "extensionDescription": {
+        "message": "Aggiunge una barra degli strumenti con un numero illimitato di testi da inserire rapidamente. È anche possibile utilizzare variabili come [[TO=firstname]]. Con impostazioni per tutto."
+    },
+    "fileNotUTF8": {
+        "message": "Il file selezionato non sembra essere codificato in UTF-8 e non verrà caricato correttamente. Seleziona un altro file."
+    },
+    "group": {
+        "message": "Gruppo"
+    },
+    "importFile": {
+        "message": "Scegli il file da importare (UTF-8)"
+    },
+    "inputText": {
+        "message": "Inserisci il valore di $P1$",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "inputTitle": {
+        "message": "Valore della variabile"
+    },
+    "insertFile": {
+        "message": "Scegli il file da inserire (UTF-8)"
+    },
+    "insertImage": {
+        "message": "Scegli il file immagine da inserire"
+    },
+    "metaKey": {
+        "message": "Meta"
+    },
+    "newGroup": {
+        "message": "Nuovo GRuppo"
+    },
+    "newScript": {
+        "message": "Nuovo script"
+    },
+    "newTemplate": {
+        "message": "Nuovo template"
+    },
+    "quicktext.HTML.label": {
+        "message": "HTML"
+    },
+    "quicktext.accesskey.addGroup": {
+        "message": "p"
+    },
+    "quicktext.accesskey.addScript": {
+        "message": "t"
+    },
+    "quicktext.accesskey.addTemplate": {
+        "message": "l"
+    },
+    "quicktext.accesskey.close": {
+        "message": "c"
+    },
+    "quicktext.accesskey.communityScripts": {
+        "message": "s"
+    },
+    "quicktext.accesskey.export": {
+        "message": "o"
+    },
+    "quicktext.accesskey.file": {
+        "message": "f"
+    },
+    "quicktext.accesskey.general": {
+        "message": "g"
+    },
+    "quicktext.accesskey.goToHomepage": {
+        "message": "h"
+    },
+    "quicktext.accesskey.help": {
+        "message": "p"
+    },
+    "quicktext.accesskey.import": {
+        "message": "r"
+    },
+    "quicktext.accesskey.remove": {
+        "message": "v"
+    },
+    "quicktext.accesskey.resetCounter": {
+        "message": "u"
+    },
+    "quicktext.accesskey.save": {
+        "message": "s"
+    },
+    "quicktext.accesskey.scripts": {
+        "message": "s"
+    },
+    "quicktext.accesskey.settings": {
+        "message": "n"
+    },
+    "quicktext.accesskey.templates": {
+        "message": "t"
+    },
+    "quicktext.accesskeyScripts.export": {
+        "message": "p"
+    },
+    "quicktext.accesskeyScripts.import": {
+        "message": "m"
+    },
+    "quicktext.accesskeyTemplate.export": {
+        "message": "e"
+    },
+    "quicktext.accesskeyTemplate.import": {
+        "message": "i"
+    },
+    "quicktext.addGroup.label": {
+        "message": "Aggiungi gruppo"
+    },
+    "quicktext.addScript.label": {
+        "message": "Aggiungi script"
+    },
+    "quicktext.addTemplate.label": {
+        "message": "Aggiungi template"
+    },
+    "quicktext.altKey.label": {
+        "message": "Alt"
+    },
+    "quicktext.attachments.label": {
+        "message": "Allegati"
+    },
+    "quicktext.browse.label": {
+        "message": "Sfoglia"
+    },
+    "quicktext.cellularnumber.label": {
+        "message": "Numero di cellulare"
+    },
+    "quicktext.clipboard.label": {
+        "message": "Appunti"
+    },
+    "quicktext.close.label": {
+        "message": "Chiudi"
+    },
+    "quicktext.collapseSetting.label": {
+        "message": "Riduci il gruppo quando contiene un solo modello"
+    },
+    "quicktext.controlKey.label": {
+        "message": "Ctrl"
+    },
+    "quicktext.counter.label": {
+        "message": "Contatore"
+    },
+    "quicktext.cursor.label": {
+        "message": "Imposta la posizione del cursore"
+    },
+    "quicktext.custom1.label": {
+        "message": "Personalizzato 1"
+    },
+    "quicktext.custom2.label": {
+        "message": "Personalizzato 2"
+    },
+    "quicktext.custom3.label": {
+        "message": "Personalizzato 3"
+    },
+    "quicktext.custom4.label": {
+        "message": "Personalizzato 4"
+    },
+    "quicktext.dateTime.label": {
+        "message": "Data/Ora"
+    },
+    "quicktext.defaultImport.label": {
+        "message": "Importa all'avvio"
+    },
+    "quicktext.displayname.label": {
+        "message": "Nome visualizzato"
+    },
+    "quicktext.email.label": {
+        "message": "Email"
+    },
+    "quicktext.enterKey.label": {
+        "message": "Invio"
+    },
+    "quicktext.export.label": {
+        "message": "Esporta"
+    },
+    "quicktext.f11Key.label": {
+        "message": "F11"
+    },
+    "quicktext.f12Key.label": {
+        "message": "F12"
+    },
+    "quicktext.f2Key.label": {
+        "message": "F2"
+    },
+    "quicktext.f4Key.label": {
+        "message": "F4"
+    },
+    "quicktext.f5Key.label": {
+        "message": "F5"
+    },
+    "quicktext.f8Key.label": {
+        "message": "F8"
+    },
+    "quicktext.faxnumber.label": {
+        "message": "Numero di fax"
+    },
+    "quicktext.file.label": {
+        "message": "File"
+    },
+    "quicktext.filename.label": {
+        "message": "Nome del file"
+    },
+    "quicktext.filenameAndSize.label": {
+        "message": "Nome file e dimensione"
+    },
+    "quicktext.firstname.label": {
+        "message": "Nome"
+    },
+    "quicktext.from.label": {
+        "message": "Da"
+    },
+    "quicktext.fullname.label": {
+        "message": "Nome completo"
+    },
+    "quicktext.general.label": {
+        "message": "Generale"
+    },
+    "quicktext.getScript.label": {
+        "message": "Script della community"
+    },
+    "quicktext.goToHomepage.label": {
+        "message": "Vai alla homepage"
+    },
+    "quicktext.group.label": {
+        "message": "Gruppo"
+    },
+    "quicktext.header.label": {
+        "message": "Aggiungi intestazione (A, Cc, Ccn)"
+    },
+    "quicktext.help.label": {
+        "message": "Aiuto"
+    },
+    "quicktext.homenumber.label": {
+        "message": "Numero di casa"
+    },
+    "quicktext.image.label": {
+        "message": "Immagine HTML incorporata"
+    },
+    "quicktext.import.label": {
+        "message": "Importa"
+    },
+    "quicktext.input.label": {
+        "message": "Valore immesso dall'utente tramite prompt"
+    },
+    "quicktext.insertAs.label": {
+        "message": "Inserisci come"
+    },
+    "quicktext.insertTextFromFileAsHTML.label": {
+        "message": "Inserisci file come HTML"
+    },
+    "quicktext.insertTextFromFileAsText.label": {
+        "message": "Inserisci file come testo"
+    },
+    "quicktext.insertfile.label": {
+        "message": "Contenuto dal file (le variabili quicktext saranno sostituite)"
+    },
+    "quicktext.jobtitle.label": {
+        "message": "Titolo di lavoro"
+    },
+    "quicktext.keyword.label": {
+        "message": "Parola chiave"
+    },
+    "quicktext.keywordKeySetting.label": {
+        "message": "è il tasto che si vuole utilizzare per attivare una parola chiave"
+    },
+    "quicktext.label": {
+        "message": "Quicktext"
+    },
+    "quicktext.lastname.label": {
+        "message": "Cognome"
+    },
+    "quicktext.metaKey.label": {
+        "message": "Meta"
+    },
+    "quicktext.modifierSetting.label": {
+        "message": "è il modificatore che voglio usare per le scorciatoie da tastiera"
+    },
+    "quicktext.nickname.label": {
+        "message": "Soprannome"
+    },
+    "quicktext.none.label": {
+        "message": "Nessuno"
+    },
+    "quicktext.orgatt.label": {
+        "message": "Informazioni sull'allegato originale"
+    },
+    "quicktext.orgheader.label": {
+        "message": "Informazioni dell'intestazione originale"
+    },
+    "quicktext.other.label": {
+        "message": "Altro"
+    },
+    "quicktext.remove.label": {
+        "message": "Rimuovi"
+    },
+    "quicktext.resetcounter.label": {
+        "message": "Azera il contatore"
+    },
+    "quicktext.showContextMenu.label": {
+        "message": "Mostra il menu Quicktext al click destro"
+    },
+    "quicktext.save.label": {
+        "message": "Salva"
+    },
+    "quicktext.script.label": {
+        "message": "Script"
+    },
+    "quicktext.scripts.label": {
+        "message": "Script"
+    },
+    "quicktext.selection.label": {
+        "message": "Selezione"
+    },
+    "quicktext.settings.label": {
+        "message": "Impostazioni"
+    },
+    "quicktext.settings.title": {
+        "message": "Impostazioni Quicktext"
+    },
+    "quicktext.sharingScripts.label": {
+        "message": "Condivisione di script"
+    },
+    "quicktext.sharingTemplates.label": {
+        "message": "Condivisione dei modelli"
+    },
+    "quicktext.shortcut.label": {
+        "message": "Scorciatoia"
+    },
+    "quicktext.shortcutTypeAdv.label": {
+        "message": "Usa la modalità avanzata per le scorciatoie"
+    },
+    "quicktext.shortname.label": {
+        "message": "Quicktext"
+    },
+    "quicktext.spaceKey.label": {
+        "message": "Spazio"
+    },
+    "quicktext.subject.label": {
+        "message": "Oggetto"
+    },
+    "quicktext.tabKey.label": {
+        "message": "Tab"
+    },
+    "quicktext.template.label": {
+        "message": "Modello"
+    },
+    "quicktext.templates.label": {
+        "message": "Modelli"
+    },
+    "quicktext.text.label": {
+        "message": "Testo"
+    },
+    "quicktext.title.label": {
+        "message": "Titolo"
+    },
+    "quicktext.to.label": {
+        "message": "A"
+    },
+    "quicktext.url.label": {
+        "message": "Risposta dall'URL"
+    },
+    "quicktext.variables.label": {
+        "message": "Variabili"
+    },
+    "quicktext.version.label": {
+        "message": "Versione di Thunderbird"
+    },
+    "quicktext.workphone.label": {
+        "message": "Numero di lavoro"
+    },
+    "remove": {
+        "message": "Sei sicuro di voler rimuovere “$P1$”?",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "saveMessage": {
+        "message": "Le modifiche non sono state salvate. Vuoi salvarle?"
+    },
+    "saveMessageTitle": {
+        "message": "Salva impostazioni"
+    },
+    "scriptError": {
+        "message": "Si è verificato un errore nello script Quicktext:"
+    },
+    "scriptLine": {
+        "message": "Linea"
+    },
+    "scriptNotFound": {
+        "message": "Script Quicktext “$P1$” non trovato!",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    },
+    "template": {
+        "message": "Modello"
+    },
+    "time": {
+        "message": "Ora ($P1$)",
+        "placeholders": {
+            "P1": {
+                "content": "$1"
+            }
+        }
+    }
+}
