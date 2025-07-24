@@ -839,28 +839,30 @@ export class QuicktextParser {
     return "";
   }
 
-  async process_clipboard(aVariables) {
+  async process_clipboard() {
     if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
       return this.mData['CLIPBOARD'].data;
 
     this.mData['CLIPBOARD'] = {};
     this.mData['CLIPBOARD'].checked = true;
-    this.mData['CLIPBOARD'].data = "";
 
-    if (aVariables?.[0]?.toLowerCase?.() === "html") {
-      const items = await navigator.clipboard.read();
-      const htmlItem = items.find((item) => item.types.includes("text/html"));
-      if (htmlItem) {
-        this.mData['CLIPBOARD'].data = await (await htmlItem.getType("text/html")).text();
-      }
-    } else {
-      this.mData['CLIPBOARD'].data = await navigator.clipboard.readText();
+    let html;
+    const items = await navigator.clipboard.read();
+    const htmlItem = items.find((item) => item.types.includes("text/html"));
+    if (htmlItem) {
+      html = await (await htmlItem.getType("text/html")).text();
     }
+
+    this.mData['CLIPBOARD'].data = {
+      html,
+      plain: await navigator.clipboard.readText(),
+    };
 
     return this.mData['CLIPBOARD'].data;
   }
   async get_clipboard(aVariables) {
-    return utils.trimString(await this.process_clipboard(aVariables));
+    const format = aVariables?.[0]?.toLowerCase?.() === "html" ? "html" : "plain";
+    return utils.trimString((await this.process_clipboard(aVariables))[format]);
   }
 
   async process_counter(aVariables) {
