@@ -846,7 +846,7 @@ export class QuicktextParser {
     this.mData['CLIPBOARD'] = {};
     this.mData['CLIPBOARD'].checked = true;
 
-    let html;
+    let html = "";
     const items = await navigator.clipboard.read();
     const htmlItem = items.find((item) => item.types.includes("text/html"));
     if (htmlItem) {
