@@ -139,7 +139,7 @@ export class StorageListener {
     if (area == "local") {
       for (let [key, value] of Object.entries(changes)) {
         const watchedPref = this.#watchedPrefs.find(p => key == p);
-        
+
         // Do not monitor managed prefs.
         let managedPref = await getManagedPref(key);
         if (managedPref !== undefined) {

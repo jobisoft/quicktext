@@ -255,6 +255,9 @@
     "quicktext.help.label": {
         "message": "Súgó"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Nem kompatibilis szkript"
+    },
     "quicktext.homenumber.label": {
         "message": "Otthoni szám"
     },

@@ -252,6 +252,9 @@
     "quicktext.help.label": {
         "message": "Помощь"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Несовместимый сценарий"
+    },
     "quicktext.homenumber.label": {
         "message": "Домашний телефон"
     },

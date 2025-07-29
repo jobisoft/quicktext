@@ -7,7 +7,6 @@
   xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   xmlns:html="http://www.w3.org/1999/xhtml"
   persist="width height screenX screenY sizemode"
-  sstyle="padding: 5px;"
   width="600"
   height="400">
 
@@ -327,7 +326,9 @@
                     <hbox><legend class="insideTab">__MSG_quicktext.title.label__</legend></hbox>
                     <hbox><button id="script-button-add" label="__MSG_quicktext.addScript.label__" flex="1" oncommand="settingsDialog.addScript();" accesskey="__MSG_quicktext.accesskey.addScript__"/></hbox>
                     <hbox><button label="__MSG_quicktext.getScript.label__" flex="1" oncommand="settingsDialog.getCommunityScripts();" accesskey="__MSG_quicktext.accesskey.communityScripts__"/></hbox>
-                    <richlistbox id="script-list" flex="1" onselect="settingsDialog.pickScript();"/>
+                    <hbox flex="1">
+                      <richlistbox id="script-list" onselect="settingsDialog.pickScript();"/>
+                    </hbox>
                     <hbox><button id="script-button-remove" label="__MSG_quicktext.remove.label__" flex="1" oncommand="settingsDialog.removeScript();" accesskey="__MSG_quicktext.accesskey.remove__"/></hbox>
                   </vbox>
                 </fieldset>
@@ -355,6 +356,19 @@
 
                       <vbox class="textarea-container" style="display:flex; flex-direction: column;" flex="1">
                         <html:textarea id="script" style="font-family:Consolas,Courier New,monospace; flex:1" disabled="true" wrap="off" oninput="settingsDialog.checkForScriptChanges(1);"/>
+                        <html:div id="scriptwarning" style="
+                            display:none;
+                            position: absolute;
+                            bottom: 2em;
+                            right: 15px;
+                            font-size: 1em;
+                            color: red;
+                            pointer-events: none; ">
+                            ⚠️ __MSG_quicktext.scripthelp.label__ (Quicktext v6)
+                          </html:div>
+                      </vbox>
+                      <vbox>
+
                       </vbox>
                   </vbox>
                 </fieldset>
@@ -367,6 +381,7 @@
 
     <hbox style="margin: 5px">
       <div flex="1"></div>
+      <button id="scripthelpbutton" label="__MSG_quicktext.scripthelp.label__?" style="display:none"/>
       <button id="helpbutton" label="__MSG_quicktext.help.label__"/>
       <button id="savebutton" label="__MSG_quicktext.save.label__"/>
       <button id="closebutton" label="__MSG_quicktext.close.label__"/>

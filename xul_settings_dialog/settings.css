@@ -22,3 +22,9 @@ textarea {
 #text-defaultImport:disabled {
   background-color: #ccc;
 }
+
+#script-list {
+  overflow-y: auto;
+  height: 100%;
+  width: 100%
+}

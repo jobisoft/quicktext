@@ -255,6 +255,9 @@
     "quicktext.help.label": {
         "message": "Help"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Incompatible script"
+    },
     "quicktext.homenumber.label": {
         "message": "Homenumber"
     },

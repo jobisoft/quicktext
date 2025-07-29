@@ -252,6 +252,9 @@
     "quicktext.help.label": {
         "message": "Hjälp"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Inkompatibelt skript"
+    },
     "quicktext.homenumber.label": {
         "message": "Hemnummer"
     },

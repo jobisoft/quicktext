@@ -255,6 +255,9 @@
     "quicktext.help.label": {
         "message": "Aiuto"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Scrittura incompatibile"
+    },
     "quicktext.homenumber.label": {
         "message": "Numero di casa"
     },

@@ -252,6 +252,9 @@
     "quicktext.help.label": {
         "message": "Ayuda"
     },
+    "quicktext.scripthelp.label": {
+        "message": "¿Guión incompatible"
+    },
     "quicktext.homenumber.label": {
         "message": "Número de casa"
     },

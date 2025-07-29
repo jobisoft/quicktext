@@ -252,6 +252,9 @@
     "quicktext.help.label": {
         "message": "Nápověda"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Nekompatibilní skripts"
+    },
     "quicktext.homenumber.label": {
         "message": "Telefon domů"
     },

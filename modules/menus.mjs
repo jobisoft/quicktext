@@ -135,6 +135,7 @@ async function getComposeBodyMenuData() {
         });
     }
 
+    let now = Date.now();
     menuData.push(
         {
             contexts,
@@ -166,27 +167,27 @@ async function getComposeBodyMenuData() {
                     children: [
                         {
                             id: "date",
-                            title: await quicktext.parseVariable({ variable: "DATE" }),
+                            title: getDateTimeMenuTitle("date-short", now),
                             onclick: (info, tab) => quicktext.insertVariable({ tabId: tab.id, variable: "DATE" })
                         },
                         {
                             id: "date-long",
-                            title: await quicktext.parseVariable({ variable: "DATE=long" }),
+                            title: getDateTimeMenuTitle("date-long", now),
                             onclick: (info, tab) => quicktext.insertVariable({ tabId: tab.id, variable: "DATE=long" })
                         },
                         {
                             id: "date-month",
-                            title: await quicktext.parseVariable({ variable: "DATE=monthname" }),
+                            title: getDateTimeMenuTitle("date-monthname", now),
                             onclick: (info, tab) => quicktext.insertVariable({ tabId: tab.id, variable: "DATE=monthname" })
                         },
                         {
                             id: "time",
-                            title: await quicktext.parseVariable({ variable: "TIME" }),
+                            title: getDateTimeMenuTitle("time-noseconds", now),
                             onclick: (info, tab) => quicktext.insertVariable({ tabId: tab.id, variable: "TIME" })
                         },
                         {
                             id: "time-seconds",
-                            title: await quicktext.parseVariable({ variable: "TIME=seconds" }),
+                            title: getDateTimeMenuTitle("time-seconds", now),
                             onclick: (info, tab) => quicktext.insertVariable({ tabId: tab.id, variable: "TIME=seconds" })
                         }
                     ]
@@ -244,6 +245,11 @@ async function getComposeBodyMenuData() {
     return menuData;
 }
 
+function getDateTimeMenuTitle(field, timeStamp) {
+    const fieldType = field.split("-")[0];
+    return messenger.i18n.getMessage(fieldType, utils.getDateTimeFormat(field, timeStamp));
+}
+
 async function updateDateTimeMenus() {
     let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
     let menus = ["variables.dateTime."];
@@ -251,7 +257,7 @@ async function updateDateTimeMenus() {
 
     for (let menu of menus) {
         for (let field of fields) {
-            const title = messenger.i18n.getMessage("date", utils.getDateTimeFormat(field, now));
+            const title = getDateTimeMenuTitle(field, now);
             await messenger.menus.update(`${menu}${field}`, { title })
         }
     }

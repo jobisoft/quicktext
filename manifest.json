@@ -1,15 +1,15 @@
 {
   "manifest_version": 2,
-  "applications": {
+  "browser_specific_settings": {
     "gecko": {
       "id": "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}",
       "update_url": "https://raw.githubusercontent.com/jobisoft/quicktext/refs/heads/Main/updates.json",
       "strict_min_version": "128.0",
-      "strict_max_version": "140.*"
+      "strict_max_version": "143.*"
     }
   },
   "name": "Quicktext",
-  "version": "6.3.15",
+  "version": "6.4",
   "author": "John Bieling",
   "homepage_url": "https://github.com/jobisoft/quicktext",
   "default_locale": "en-US",

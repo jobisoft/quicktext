@@ -23,6 +23,7 @@ export class QuicktextParser {
     this.mTemplates = templates;
     this.mScripts = scripts;
 
+    // Insert the content as text/plain into an html composer (verbatim).
     // Can only be changed by the current template or nested templates which by
     // definition use the same QuicktextParser. This value is not saved nor
     // restored.
@@ -30,6 +31,9 @@ export class QuicktextParser {
 
     this.mData = {}
     this.mDetails = null;
+
+    // The template insertion type (text/html or text/plain).
+    this.mInsertType = null;
 
     this.keepStates = false;
   }
@@ -559,6 +563,9 @@ export class QuicktextParser {
               this.mForceAsText = true;
             }
 
+            // The template insertion type (text/html or text/plain).
+            this.mInsertType = text.type;
+
             if (aVariables.length > 2 && aVariables[2].includes("strip_html_comments")) {
               content = content.replace(/<!--[\s\S]*?(?:-->)/g, '');
             }
@@ -839,22 +846,49 @@ export class QuicktextParser {
     return "";
   }
 
-  async process_clipboard(aVariables) {
+  async process_clipboard() {
     if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
       return this.mData['CLIPBOARD'].data;
 
     this.mData['CLIPBOARD'] = {};
     this.mData['CLIPBOARD'].checked = true;
-    this.mData['CLIPBOARD'].data = "";
+    this.mData['CLIPBOARD'].data = {
+      plain: await navigator.clipboard.readText()
+    }
 
-    // I do not know how to access html variant, but if, we would call
-    // this.getDetails and check isPlainText to determine if we need it.
-    this.mData['CLIPBOARD'].data = await navigator.clipboard.readText();
+    const html = await navigator.clipboard.read().then(items => items.find(
+      item => item.types.includes("text/html")
+    ));
+    if (html) {
+      this.mData['CLIPBOARD'].data.html = await html.getType("text/html").then(
+        v => v.text()
+      );
+    }
 
     return this.mData['CLIPBOARD'].data;
   }
   async get_clipboard(aVariables) {
-    return utils.trimString(await this.process_clipboard(aVariables));
+    const { isPlainText } = await this.getDetails();
+    const data = await this.process_clipboard();
+    const parameter = aVariables?.[0]?.toLowerCase?.();
+
+    const getFormat = (parameter) => {
+      switch (parameter) {
+        case "auto":
+          // Auto should never paste verbatim html code into the composer. The
+          // insert type must be text/html and the composer must support html.
+          return (!isPlainText && this.mInsertType == "text/html")
+            ? "html"
+            : "plain";
+        case "html":
+          return "html";
+        case "plain":
+        default:
+          return "plain"
+      }
+    }
+
+    return utils.trimString(data[getFormat(parameter)] || data.plain);
   }
 
   async process_counter(aVariables) {

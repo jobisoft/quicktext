@@ -362,3 +362,79 @@ export async function checkBadNameEntries(templates, scripts) {
         });
     }
 }
+
+export async function checkDuplicatedEntries(templates, scripts) {
+    const findDuplicates = array => {
+        const seen = new Set();
+        const duplicates = new Set();
+        for (const item of array) {
+            if (seen.has(item)) {
+                duplicates.add(item);
+            } else {
+                seen.add(item);
+            }
+        }
+        return [...duplicates];
+    }
+    const createNotification = async message => {
+        await browser.notifications.create(
+            "qt-duplicated-entries", {
+            type: "basic",
+            title: "Quicktext v6",
+            message
+        });
+        console.warn(`[Quicktext v6] ${message}`)
+    }
+
+    const scriptNames = Array.isArray(scripts)
+        ? scripts.map(e => e.name.trim())
+        : []
+    const duplicatedScriptNames = findDuplicates(scriptNames);
+    if (duplicatedScriptNames.length) {
+        await createNotification(
+            `Invalid script data, multiple scripts with the same name: ${duplicatedScriptNames.join(", ")}`
+        );
+    }
+
+    const groupNames = Array.isArray(templates?.groups)
+        ? templates.groups.map(e => e.name.trim())
+        : []
+    const duplicatedGroupNames = findDuplicates(groupNames);
+    if (duplicatedGroupNames.length) {
+        await createNotification(
+            `Invalid template data, multiple groups with the same name: ${duplicatedGroupNames.join(", ")}`
+        );
+    }
+
+    if (Array.isArray(templates?.texts)) {
+        if (templates.texts.length != groupNames.length) {
+            await createNotification(
+                `Invalid template data, number of groups does not match number of template groups.`
+            );
+        }
+        for (let i = 0; i < templates.texts.length; i++) {
+            const textNames = templates.texts[i].map(e => e.name.trim());
+            const duplicatedNames = findDuplicates(textNames);
+            if (duplicatedNames.length) {
+                await createNotification(
+                    `Invalid template data, multiple templates in group "${groupNames[i]}" with the same name: ${duplicatedNames.join(", ")}`
+                )
+            }
+        }
+    }
+}
+
+export async function checkForIncompatibleScripts(scripts) {
+    const targets = ["this.mWindow", "this.mVariables", "this.mQuicktext"];
+    const incompatibleScripts = scripts.filter(s =>
+        targets.some(target => s.script.includes(target))
+    );
+    if (incompatibleScripts.length > 0) {
+        browser.notifications.create("qt-incompatible-scripts", {
+            type: "basic",
+            title: "Quicktext v6 - Incompatible Scripts!",
+            message: `Some of your scripts (for example ${incompatibleScripts.map(s => `'${s.name}'`).slice(0,2).join(" and ")}) are incompatible with Quicktext v6. Click for more details.`,
+        });
+
+    }
+}

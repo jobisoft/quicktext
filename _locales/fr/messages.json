@@ -252,6 +252,9 @@
     "quicktext.help.label": {
         "message": "Aide"
     },
+    "quicktext.scripthelp.label": {
+        "message": "Script incompatible"
+    },
     "quicktext.homenumber.label": {
         "message": "Tél. domicile"
     },

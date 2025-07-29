@@ -19,6 +19,12 @@ const OS = Services.appinfo.OS;
 
 Services.scriptloader.loadSubScript("resource://quicktext/api/NotifyTools/notifyTools.js", window, "UTF-8");
 
+
+function isIncompatibleScript(script) {
+  const targets = ["this.mWindow", "this.mVariables", "this.mQuicktext"];
+  return script && targets.some(target => script.script.includes(target));
+}
+
 // This exists for historic reasons, but all of it is related to the settings
 // dialog as well.
 var gQuicktext = {
@@ -198,7 +204,7 @@ var gQuicktext = {
     const scripts = this.prettify(this.mScripts);
     await notifyTools.notifyBackground({ command: "setScripts", data: scripts });
     await notifyTools.notifyBackground({ command: "setTemplates", data: templates });
-    await notifyTools.notifyBackground({ command: "checkBadNameEntries", data: { scripts, templates } });
+    await notifyTools.notifyBackground({ command: "checkBadEntries", data: { scripts, templates } });
     this.startEditing();
 
     this.notifyObservers("updatesettings", "");
@@ -531,6 +537,12 @@ var settingsDialog = {
     document.getElementById("savebutton").addEventListener("command", function (e) { settingsDialog.save(); }, false);
     document.getElementById("closebutton").addEventListener("command", function (e) { settingsDialog.close(true); }, false);
     document.getElementById("helpbutton").addEventListener("command", function (e) { settingsDialog.openHomepage(); }, false);
+    document.getElementById("scripthelpbutton").addEventListener("command", function (e) { settingsDialog.openScriptHelp(); }, false);
+
+    // Update boxHeightOffset
+    let scriptListElem = document.getElementById('script-list');
+    let elementHeight = scriptListElem.getBoundingClientRect().height;
+    boxHeightOffset = window.innerHeight - elementHeight;
   },
   unload: function () {
     gQuicktext.removeObserver(this);
@@ -601,16 +613,16 @@ var settingsDialog = {
     this.mScriptChangesMade = [];
     this.mGeneralChangesMade = [];
     this.disableSave();
-    this.updateGUI();
+    await this.updateGUI();
   },
   saveText: function () {
     if (this.mPickedIndex != null) {
       if (this.mPickedIndex[1] > -1) {
-        var title = document.getElementById('text-title').value;
-        if (title.replace(/[\s]/g, '') == "")
-          title = extension.localeData.localizeMessage("newTemplate");
-
-        this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'name', title);
+        // The title is updated in the onchange event.
+        //var title = document.getElementById('text-title').value;
+        //if (title.replace(/[\s]/g, '') == "")
+        //  title = extension.localeData.localizeMessage("newTemplate");
+        //this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'name', title);
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'text', document.getElementById('text').value);
 
         if (gQuicktext.shortcutTypeAdv)
@@ -624,11 +636,11 @@ var settingsDialog = {
         this.saveTextCell(this.mPickedIndex[0], this.mPickedIndex[1], 'attachments', document.getElementById('text-attachments').value);
       }
       else {
-        var title = document.getElementById('text-title').value;
-        if (title.replace(/[\s]/g, '') == "")
-          title = extension.localeData.localizeMessage("newGroup");
-
-        this.saveGroupCell(this.mPickedIndex[0], 'name', title);
+        // The title is updated in the onchange event.
+        //var title = document.getElementById('text-title').value;
+        //if (title.replace(/[\s]/g, '') == "")
+        //  title = extension.localeData.localizeMessage("newGroup");
+        //this.saveGroupCell(this.mPickedIndex[0], 'name', title);
       }
     }
   },
@@ -654,11 +666,11 @@ var settingsDialog = {
   },
   saveScript: function () {
     if (this.mScriptIndex != null) {
-      var title = document.getElementById('script-title').value;
-      if (title.replace(/[\s]/g, '') == "")
-        title = extension.localeData.localizeMessage("newScript");
-
-      this.saveScriptCell(this.mScriptIndex, 'name', title);
+      // The title is updated in the onchange event.
+      //var title = document.getElementById('script-title').value;
+      //if (title.replace(/[\s]/g, '') == "")
+      //  title = extension.localeData.localizeMessage("newScript");
+      //this.saveScriptCell(this.mScriptIndex, 'name', title);
       this.saveScriptCell(this.mScriptIndex, 'script', document.getElementById('script').value);
     }
   },
@@ -704,37 +716,57 @@ var settingsDialog = {
     if (gQuicktext.shortcutTypeAdv)
       ids[2] = 'text-shortcutAdv';
 
-    var value = document.getElementById(ids[aIndex]).value;
+    let element = document.getElementById(ids[aIndex])
+    var value = element.value;
     switch (aIndex) {
       case 0:
-        if (value.replace(/[\s]/g, '') == "")
-          if (this.mPickedIndex[1] > -1)
+        if (this.mPickedIndex[1] > -1) {
+          if (value.replace(/[\s]/g, '') == "") {
             value = extension.localeData.localizeMessage("newTemplate");
-          else
+          }
+          // Prevent duplicated names.
+          value = this.makeUnique(value, gQuicktext.mEditingTexts[this.mPickedIndex[0]].map(t => t.mName));
+        } else {
+          if (value.replace(/[\s]/g, '') == "") {
             value = extension.localeData.localizeMessage("newGroup");
+          }
+          // Prevent duplicated names.
+          value = this.makeUnique(value, gQuicktext.mEditingGroup.map(g => g.mName))
+        }
         break;
       case 2:
         if (gQuicktext.shortcutTypeAdv) {
           value = value.replace(/[^\d]/g, '');
-          document.getElementById(ids[aIndex]).value = value;
+          element.value = value;
         }
       case 4:
         value = value.replace(/[\s]/g, '');
-        document.getElementById(ids[aIndex]).value = value;
+        element.value = value;
         break;
     }
 
     if (this.mPickedIndex[1] > -1) {
-      if (gQuicktext.getText(this.mPickedIndex[0], this.mPickedIndex[1], true)[keys[aIndex]] != value)
+      if (gQuicktext.getText(this.mPickedIndex[0], this.mPickedIndex[1], true)[keys[aIndex]] != value) {
         this.textChangeMade(aIndex);
-      else
+      } else {
         this.noTextChangeMade(aIndex);
+      }
     }
     else {
-      if (gQuicktext.getGroup(this.mPickedIndex[0], true)[keys[aIndex]] != value)
+      if (gQuicktext.getGroup(this.mPickedIndex[0], true)[keys[aIndex]] != value) {
         this.textChangeMade(aIndex);
-      else
+      } else {
         this.noTextChangeMade(aIndex);
+      }
+    }
+
+    // Auto-save names.
+    if (aIndex == 0) {
+      if (this.mPickedIndex[1] > -1) {
+        gQuicktext.mEditingTexts[this.mPickedIndex[0]][this.mPickedIndex[1]].mName = value;
+      } else {
+        gQuicktext.mEditingGroup[this.mPickedIndex[0]].mName = value;
+      }
     }
 
     if (aIndex == 0 || aIndex == 2) {
@@ -759,8 +791,11 @@ var settingsDialog = {
     var value = document.getElementById(ids[aIndex]).value;
     switch (aIndex) {
       case 0:
-        if (value.replace(/[\s]/g, '') == "")
+        if (value.replace(/[\s]/g, '') == "") {
           value = extension.localeData.localizeMessage("newScript");
+        }
+        // Prevent duplicated names.
+        value = this.makeUnique(value, gQuicktext.mEditingScripts.map(t => t.mName));
         break;
     }
 
@@ -770,6 +805,9 @@ var settingsDialog = {
       this.noScriptChangeMade(aIndex);
 
     if (aIndex == 0) {
+      // Auto-save names.
+      gQuicktext.mEditingScripts[this.mScriptIndex].mName = value;
+
       this.updateVariableGUI();
       var listItem = document.getElementById('script-list').getItemAtIndex(this.mScriptIndex);
       listItem.firstChild.value = value;
@@ -850,15 +888,9 @@ var settingsDialog = {
   /*
    * GUI CHANGES
    */
-  updateGUI: function () {
-    const dateTimeFormat = (format, timeStamp) => {
-      let options = {};
-      options["date-short"] = { dateStyle: "short" };
-      options["date-long"] = { dateStyle: "long" };
-      options["date-monthname"] = { month: "long" };
-      options["time-noseconds"] = { timeStyle: "short" };
-      options["time-seconds"] = { timeStyle: "long" };
-      return new Services.intl.DateTimeFormat(undefined, options[format.toLowerCase()]).format(timeStamp)
+  updateGUI: async function () {
+    const dateTimeFormat = async (format, timeStamp) => {
+      return notifyTools.notifyBackground({ command: "getDateTimeFormat", data: { format, timeStamp } });
     }
 
     // Set the date/time in the variablemenu
@@ -866,11 +898,11 @@ var settingsDialog = {
     let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
     for (let i = 0; i < fields.length; i++) {
       let field = fields[i];
-      let fieldtype = field.split("-")[0];
+      let fieldType = field.split("-")[0];
       if (document.getElementById(field)) {
         document.getElementById(field).setAttribute(
           "label",
-          extension.localeData.localizeMessage(fieldtype, [dateTimeFormat(field, timeStamp)])
+          extension.localeData.localizeMessage(fieldType, [await dateTimeFormat(field, timeStamp)])
         );
       }
     }
@@ -975,14 +1007,33 @@ var settingsDialog = {
           var listItem = listElem.getItemAtIndex(i);
           listItem.firstChild.value = script.name;
           listItem.value = i;
-        }
-        else {
+
+          let isIncompatible = isIncompatibleScript(script);
+          if (listItem.children.length > 1 && !isIncompatible) {
+            listItem.children[1].remove();
+          } else if (listItem.children.length == 1 && isIncompatible) {
+            let newItemWarning = document.createXULElement("label");
+            newItemWarning.value = "⚠️";
+            listItem.appendChild(newItemWarning);
+          };
+        } else {
+          // Keep the height of the script list fixed, prevent it growing.
+          let elementHeight = listElem.getBoundingClientRect().height;
           let newItem = document.createXULElement("richlistitem");
           newItem.value = i;
+
           let newItemLabel = document.createXULElement("label");
           newItemLabel.value = script.name;
           newItem.appendChild(newItemLabel);
+
+          if (isIncompatibleScript(script)) {
+            let newItemWarning = document.createXULElement("label");
+            newItemWarning.value = "⚠️";
+            newItem.appendChild(newItemWarning);
+          }
+
           listElem.appendChild(newItem);
+          listElem.style.height = `${elementHeight}px`;
         }
       }
     }
@@ -1402,6 +1453,15 @@ var settingsDialog = {
       document.getElementById('script-button-remove').setAttribute("disabled", true);
     else
       document.getElementById('script-button-remove').removeAttribute("disabled");
+
+    if (isIncompatibleScript(script)) {
+      document.getElementById('scripthelpbutton').style.display = "block";
+      document.getElementById('scriptwarning').style.display = "block";
+    } else {
+      document.getElementById('scripthelpbutton').style.display = "none";
+      document.getElementById('scriptwarning').style.display = "none";
+    }
+
   },
   pickText: function () {
     var index = document.getElementById('group-tree').view.selection.currentIndex;
@@ -1513,13 +1573,27 @@ var settingsDialog = {
     }
   },
 
+  makeUnique: function (name, arr) {
+    let sanitizedName = name.replaceAll("|", "/");
+    let suffix = 1;
+    let unique = sanitizedName;
+    while (arr.includes(unique)) {
+      suffix++;
+      unique = `${sanitizedName} #${suffix}`
+    }
+    return unique;
+  },
+
   /*
    * Add/Remove groups/templates
    */
   addGroup: function () {
-    var title = extension.localeData.localizeMessage("newGroup");
     this.saveText();
 
+    let title = this.makeUnique(
+      extension.localeData.localizeMessage("newGroup"),
+      gQuicktext.mEditingGroup.map(g => g.mName)
+    );
     gQuicktext.addGroup(title, true);
     this.mCollapseState.push(true);
 
@@ -1539,7 +1613,6 @@ var settingsDialog = {
     titleElem.setSelectionRange(0, title.length);
   },
   addText: function () {
-    var title = extension.localeData.localizeMessage("newTemplate");
     this.saveText();
 
     var groupIndex = -1;
@@ -1554,6 +1627,10 @@ var settingsDialog = {
         groupIndex = 0;
     }
 
+    let title = this.makeUnique(
+      extension.localeData.localizeMessage("newTemplate"),
+      gQuicktext.mEditingTexts[groupIndex].map(t => t.mName)
+    );
     gQuicktext.addText(groupIndex, title, true);
 
     this.makeTreeArray();
@@ -1641,7 +1718,10 @@ var settingsDialog = {
   addScript: function () {
     this.saveScript();
 
-    var title = extension.localeData.localizeMessage("newScript");
+    let title = this.makeUnique(
+      extension.localeData.localizeMessage("newScript"),
+      gQuicktext.mEditingScripts.map(s => s.mName)
+    );
     gQuicktext.addScript(title, true);
 
     this.updateScriptGUI();
@@ -1696,6 +1776,9 @@ var settingsDialog = {
   openHomepage: function () {
     notifyTools.notifyBackground({ command: "openWebPage", url: "https://github.com/jobisoft/quicktext/wiki/" });
   },
+  openScriptHelp: function () {
+    notifyTools.notifyBackground({ command: "openWebPage", url: "https://github.com/jobisoft/quicktext/issues/451" });
+  },
   resetCounter: function () {
     notifyTools.notifyBackground({ command: "setPref", pref: "counter", value: 0 });
   },
@@ -1712,3 +1795,11 @@ var settingsDialog = {
 
 window.addEventListener("DOMContentLoaded", () => settingsDialog.init());
 window.addEventListener("unload", () => settingsDialog.unload());
+window.addEventListener('resize', () => {
+  // Keep the known offset between window size and script list size, to make it
+  // correctly adjust to the changed window size.
+  let listElem = document.getElementById('script-list');
+  listElem.style.height = `${Math.max(150, window.innerHeight - boxHeightOffset)}px`;
+});
+
+

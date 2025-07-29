@@ -252,6 +252,9 @@
     "quicktext.help.label": {
         "message": "ヘルプ"
     },
+    "quicktext.scripthelp.label": {
+        "message": "互換性のないスクリプトですか"
+    },
     "quicktext.homenumber.label": {
         "message": "自宅の電話番号"
     },

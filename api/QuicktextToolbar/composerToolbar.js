@@ -2,14 +2,8 @@ var quicktextToolbar = {
   windowId: null,
   extension: null,
 
-  dateTimeFormat(format, timeStamp) {
-    let options = {};
-    options["date-short"] = { dateStyle: "short" };
-    options["date-long"] = { dateStyle: "long" };
-    options["date-monthname"] = { month: "long" };
-    options["time-noseconds"] = { timeStyle: "short" };
-    options["time-seconds"] = { timeStyle: "long" };
-    return new Services.intl.DateTimeFormat(undefined, options[format.toLowerCase()]).format(timeStamp)
+  async dateTimeFormat(format, timeStamp) {
+    return this.notifyTools.notifyBackground({ command: "getDateTimeFormat", data: { format, timeStamp } });
   },
 
   getPrettyKeyName(key) {
@@ -40,11 +34,11 @@ var quicktextToolbar = {
     let fields = ["date-short", "date-long", "date-monthname", "time-noseconds", "time-seconds"];
     for (let i = 0; i < fields.length; i++) {
       let field = fields[i];
-      let fieldtype = field.split("-")[0];
+      let fieldType = field.split("-")[0];
       if (document.getElementById(field)) {
         document.getElementById(field).setAttribute(
           "label",
-          this.extension.localeData.localizeMessage(fieldtype, [this.dateTimeFormat(field, timeStamp)])
+          this.extension.localeData.localizeMessage(fieldType, [await this.dateTimeFormat(field, timeStamp)])
         );
       }
     }

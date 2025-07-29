@@ -10,11 +10,16 @@ import * as menus from "../modules/menus.mjs";
 import * as utils from "../modules/utils.mjs";
 
 browser.runtime.onInstalled.addListener(details => {
+  let manifest = browser.runtime.getManifest();
+  if (!manifest.browser_specific_settings.gecko.update_url) {
+    return
+  };
+
   if (details.reason == "update") {
     browser.notifications.create("qt-update", {
       type: "basic",
       title: "Quicktext v6",
-      message: `Quicktext pre-release was updated to v${browser.runtime.getManifest().version}\n(new script engine, click for details)`,
+      message: `Quicktext GitHub Edition was updated to v${manifest.version}. Click for details.`,
     });
   }
 });
@@ -40,6 +45,12 @@ browser.notifications.onClicked.addListener(notificationId => {
       break;
     case "qt-bad-entries":
       browser.Quicktext.openTemplateManager();
+      break;
+    case "qt-incompatible-scripts":
+      browser.tabs.create({
+        url: `https://github.com/jobisoft/quicktext/issues/451`,
+      });
+      break;
   }
 })
 
@@ -150,9 +161,6 @@ try {
   // No managed storage.
 }
 
-// Check if templates or scripts use the pipe char ("|") in names.
-await utils.checkBadNameEntries(templates, scripts);
-
 // NotifyTools needed by Experiment code to access WebExtension code.
 messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
   switch (info.command) {
@@ -171,11 +179,14 @@ messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
       return storage.setTemplates(info.data);
     case "getTemplates":
       return storage.getTemplates();
-    case "checkBadNameEntries": {
-      return utils.checkBadNameEntries(info.data.templates, info.data.scripts)
-    }
+    case "checkBadEntries":
+      await utils.checkBadNameEntries(info.data.templates, info.data.scripts);
+      return utils.checkDuplicatedEntries(info.data.templates, info.data.scripts);
     case "openWebPage":
       return browser.windows.openDefaultBrowser(info.url);
+
+    case "getDateTimeFormat":
+      return utils.getDateTimeFormat(info.data.format, info.data.timeStamp);
 
     case "parseTemplateFileForImport":
       return browser.Quicktext.readTextFile(info.path)
@@ -317,3 +328,8 @@ new storage.StorageListener(
     }
   }
 )
+
+// Check if templates or scripts are invalid.
+await utils.checkBadNameEntries(templates, scripts);
+await utils.checkDuplicatedEntries(templates, scripts);
+await utils.checkForIncompatibleScripts(scripts);
