@@ -273,7 +273,7 @@ async function insertAttachments({ qParser, attachments }) {
     let leafName = utils.getLeafName(attachment);
     let type = utils.getTypeFromExtension(leafName);
     let file = new File([bytes], leafName, { type });
-    qParser.addAttachment(file);
+    await qParser.addAttachment(file);
   };
 }
 

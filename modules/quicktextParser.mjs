@@ -8,7 +8,7 @@ import * as utils from "/modules/utils.mjs";
 import * as storage from "/modules/storage.mjs";
 
 const allowedTags = [
-  'ALERT', 'ATT', 'CLIPBOARD', 'COUNTER', 'CSCRIPT', 'DATE', 'ESCRIPT', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT',
+  'ALERT', 'ATT', 'ATTACHMENT', 'CLIPBOARD', 'COUNTER', 'CSCRIPT', 'DATE', 'ESCRIPT', 'FILE', 'IMAGE', 'FROM', 'INPUT', 'ORGATT',
   'ORGHEADER', 'SCRIPT', 'SUBJECT', 'TEXT', 'TIME', 'TO', 'URL', 'VERSION', 'SELECTION', 'HEADER'
 ];
 
@@ -492,27 +492,50 @@ export class QuicktextParser {
   }
 
   async process_image_content(aVariables) {
-    let rv = "";
+    let [mode, source, type] = aVariables;
+    let mode_lc = mode.toLowerCase();
 
-    if (aVariables.length > 0 && aVariables[0] != "") {
-      let mode = (aVariables.length > 1 && "src" == aVariables[1].toString().toLowerCase()) ? "src" : "tag";
+    // The first parameter is optional, defaults to FILE.
+    if (!["url", "file"].includes(mode_lc)) {
+      type = source;
+      source = mode;
+      mode_lc = "file";
+    }
 
-      // Tries to open the file and returning the content
+    if (!type) {
+      type = "tag"
+    }
+
+    let src = "";
+    if (mode && source && type) {
+      // Tries to open the file and return the content
       try {
-        let bytes = await browser.Quicktext.readBinaryFile(aVariables[0]);
-        let leafName = utils.getLeafName(aVariables[0]);
-        let type = utils.getTypeFromExtension(leafName);
-        let binContent = utils.uint8ArrayToBase64(bytes);
-        let src = "data:" + type + ";filename=" + leafName + ";base64," + binContent;
-        rv = (mode == "tag")
-          ? "<img src='" + src + "'>"
-          : src;
+        switch (mode_lc) {
+          case "url": {
+            src = await utils.fetchFileAsDataUrl(source);
+            break;
+          }
+          case "file": {
+            let bytes = await browser.Quicktext.readBinaryFile(source);
+            let leafName = utils.getLeafName(source);
+            let type = utils.getTypeFromExtension(leafName);
+            let binContent = utils.uint8ArrayToBase64(bytes);
+            src = "data:" + type + ";filename=" + leafName + ";base64," + binContent;
+            break;
+          }
+        }        
       } catch (e) {
         console.error(e);
       }
     }
-    return rv;
+    if (src) {
+      return (type == "tag")
+        ? "<img src='" + src + "'>"
+        : src;
+    }
+    return "";
   }
+
   async get_image(aVariables) {
     let details = await this.getDetails();
     if (!details.isPlainText) {
@@ -777,6 +800,39 @@ export class QuicktextParser {
     }
 
     return "";
+  }
+
+
+  async process_attachment(aVariables) {
+    let [mode, source, name] = aVariables;
+    let mode_lc = mode.toLowerCase();
+
+    // The first parameter is optional, defaults to FILE.
+    if (!["url", "file"].includes(mode_lc)) {
+      name = source;
+      source = mode;
+      mode_lc = "file";
+    }
+
+    switch (mode_lc) {
+      case "url": {
+        let file = await utils.fetchFileAsFile(source, name);
+        await this.addAttachment(file);
+        break;
+      }
+      case "file": {
+        let bytes = await browser.Quicktext.readBinaryFile(source);
+        let leafName = name ?? utils.getLeafName(source);
+        let type = utils.getTypeFromExtension(leafName);
+        let file = new File([bytes], leafName, { type });
+        await this.addAttachment(file);
+        break;
+      }
+    }
+    return "";
+  }
+  async get_attachment(aVariables) {
+    return this.process_attachment(aVariables);
   }
 
   async process_subject(aVariables) {
@@ -1127,6 +1183,7 @@ export class QuicktextParser {
         case 'cscript':
         case 'to':
         case 'url':
+        case 'attachment':
           variable_limit = 1;
           break;
         case 'text':
@@ -1154,7 +1211,8 @@ export class QuicktextParser {
 function getTags(aStr) {
   // We only get the beginning of the tag.
   // This is because we want to handle recursive use of tags.
-  let rexp = new RegExp("\\[\\[((" + allowedTags.join("|") + ")(\\_[a-z]+)?)", "ig");
+  // Sorting to test for longer tags first (ATTACHMENT vs ATT).
+  let rexp = new RegExp("\\[\\[((" + allowedTags.sort((a, b) => b.length - a.length).join("|") + ")(\\_[a-z]+)?)", "ig");
   let results = [];
   let result = null;
   while ((result = rexp.exec(aStr)))

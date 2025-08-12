@@ -1574,7 +1574,10 @@ var settingsDialog = {
   },
 
   makeUnique: function (name, arr) {
-    let sanitizedName = name.replaceAll("|", "/");
+    let sanitizedName = name
+      .replaceAll("|", "/")
+      .replaceAll("[[", "{[")
+      .replaceAll("]]", "]}");
     let suffix = 1;
     let unique = sanitizedName;
     while (arr.includes(unique)) {
