@@ -244,7 +244,8 @@ async function insertSubject({ qParser, subject }) {
 }
 
 async function insertAttachments({ qParser, attachments }) {
-  for (let attachment of attachments.split(";")) {
+  let parsedAttachments = await qParser.parse(attachments);
+  for (let attachment of parsedAttachments.split(";")) {
     if (!attachment) {
       continue;
     }
