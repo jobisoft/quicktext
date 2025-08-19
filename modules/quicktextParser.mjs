@@ -47,6 +47,13 @@ export class QuicktextParser {
 
   }
 
+  async parseAndInsert(str) {
+    const parsed = await this.parse(str);
+    if (parsed) {
+      await this.insertBody(parsed, { extraSpace: false });
+    }
+  }
+
   async insertBody(aStr, options = {}) {
     let { isPlainText } = await this.getStaticDetails();
     let extraSpace = options?.extraSpace !== false;
