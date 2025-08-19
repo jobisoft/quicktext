@@ -22,29 +22,33 @@ const collapsingTags = [
 // If another template is inserted (or the same template again), the state is cleared.
 const persistentTags = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 
+// TODO: Some tags (subject, att, from, to) are currently not cached, because they
+//       can be modified in scripts or by other tags. If we find a reliable method
+//       to update the cache using onChange events, we could cache these and declare
+//       them as persistent tags.
+
 export class QuicktextParser {
   constructor(aTabId, templates, scripts) {
     this.mTabId = aTabId;
     this.mTemplates = templates;
     this.mScripts = scripts;
+    this.mStaticDetails = null;
+
+    //TODO: Evaluate if these these values SHOULD be preserved (as getters/setters
+    //      into local storage)
 
     // Insert the content as text/plain into an html composer (verbatim).
     // Can only be changed by the current template or nested templates which by
-    // definition use the same QuicktextParser. This value is not saved nor
-    // restored.
+    // definition use the same QuicktextParser. This value is currently not saved
+    // nor restored.
     this.mForceAsText = false;
-
-    this.mData = {}
-    this.mDetails = null;
-
     // The template insertion type (text/html or text/plain).
     this.mInsertType = null;
 
-    this.keepStates = false;
   }
 
   async insertBody(aStr, options = {}) {
-    let { isPlainText } = await this.getDetails();
+    let { isPlainText } = await this.getStaticDetails();
     let extraSpace = options?.extraSpace !== false;
 
     if (isPlainText || this.mForceAsText) {
@@ -70,42 +74,61 @@ export class QuicktextParser {
     return this.mTemplates;
   }
 
+  async getStateData() {
+    return browser.storage.session
+      .get({ [`QuicktextStateData_${this.mTabId}`]: {} })
+      .then(rv => rv[`QuicktextStateData_${this.mTabId}`]);
+  }
+
+  async setStateData(value) {
+    return browser.storage.session
+      .set({ [`QuicktextStateData_${this.mTabId}`]: value });
+  }
+
   async clearNonPersistentData() {
-    for (let key of Object.keys(this.mData)) {
+    let stateData = await this.getStateData();
+    for (let key of Object.keys(stateData)) {
       if (persistentTags.includes(key)) {
         continue;
       }
-      delete this.mData[key];
+      delete stateData[key];
     }
+    await this.setStateData(stateData);
   }
 
-  async saveState() {
-    let state = {
-      mData: this.mData,
+  async loadStates(itemsWithDefaults) {
+    const stateData = await this.getStateData();
+    // Shallow clone so we don’t mutate the original.
+    const result = { ...itemsWithDefaults };
+    for (const key of Object.keys(result)) {
+      if (Object.hasOwn(stateData, key)) {
+        result[key] = stateData[key];
+      }
     }
-    await browser.storage.local.set({ [`QuicktextStateData_${this.mTabId}`]: state });
+    return result;
   }
 
-  async loadState() {
-    let stateData = await browser.storage.local
-      .get({ [`QuicktextStateData_${this.mTabId}`]: null })
-      .then(rv => rv[`QuicktextStateData_${this.mTabId}`]);
-
-    if (stateData) {
-      this.mData = stateData.mData;
+  async saveStates(items) {
+    let stateData = await this.getStateData();
+    for (let [item, value] of Object.entries(items)) {
+      stateData[item] = value;
     }
+    await this.setStateData(stateData);
+  }
+
+  async getStaticDetails() {
+    if (!this.mStaticDetails) {
+      this.mStaticDetails = await browser.compose.getComposeDetails(this.mTabId);
+    }
+    return this.mStaticDetails
   }
 
   async getDetails() {
-    if (!this.mDetails) {
-      this.mDetails = await browser.compose.getComposeDetails(this.mTabId);
-    }
-    return this.mDetails
+    return browser.compose.getComposeDetails(this.mTabId);
   }
 
   async setDetail(name, newValue) {
     await browser.compose.setComposeDetails(this.mTabId, { [name]: newValue });
-    this.mDetails = await browser.compose.getComposeDetails(this.mTabId);
   }
 
   async addDetail(name, newValue) {
@@ -122,16 +145,14 @@ export class QuicktextParser {
     values.push(newValue);
 
     await browser.compose.setComposeDetails(this.mTabId, { [name]: values });
-    this.mDetails = await browser.compose.getComposeDetails(this.mTabId);
   }
 
   async addAttachment(file) {
     await browser.compose.addAttachment(this.mTabId, { file })
-    this.mDetails = await browser.compose.getComposeDetails(this.mTabId);
   }
 
-  // These process functions get the data and mostly saves it
-  // in this.mData so if the data is requested again, it is quick.
+  // These process functions get the data and mostly saves their state, 
+  // so if the data is requested again, it is quick.
   // Not all tags have a process function.
 
   // The get-functions takes the data from the process-functions and
@@ -484,7 +505,7 @@ export class QuicktextParser {
     let insertMode = options?.insertMode ?? "text/html";
     let stripHtmlComments = options?.stripHtmlComments == false;
 
-    let { isPlainText } = await this.getDetails();
+    let { isPlainText } = await this.getStaticDetails();
     if (insertMode == "text/plain" && isPlainText == false) {
       this.mForceAsText = true;
     }
@@ -542,8 +563,8 @@ export class QuicktextParser {
   }
 
   async get_image(aVariables) {
-    let details = await this.getDetails();
-    if (!details.isPlainText) {
+    let { isPlainText } = await this.getStaticDetails();
+    if (!isPlainText) {
       // image tag may only be added in html mode
       return this.process_image_content(aVariables);
     } else {
@@ -552,9 +573,9 @@ export class QuicktextParser {
   }
 
   async process_selection(aVariables) {
-    let details = await this.getDetails();
+    let { isPlainText } = await this.getStaticDetails();
 
-    if (details.isPlainText) {
+    if (isPlainText) {
       return messenger.tabs.sendMessage(this.mTabId, {
         getSelection: "TEXT",
       });
@@ -583,7 +604,7 @@ export class QuicktextParser {
             // This will affect also the "parent" template, if the current
             // template is a nested template, because the entire parsed string
             // will be inserted in one go. 
-            let { isPlainText } = await this.getDetails();
+            let { isPlainText } = await this.getStaticDetails();
             if (
               (text.type == "text/plain" || (aVariables.length > 2 && aVariables[2].includes("force_as_text"))) &&
               isPlainText == false
@@ -611,48 +632,43 @@ export class QuicktextParser {
   }
 
   async process_input(aVariables) {
-    if (typeof this.mData['INPUT'] == 'undefined')
-      this.mData['INPUT'] = {};
-    if (typeof this.mData['INPUT'].data == 'undefined')
-      this.mData['INPUT'].data = {};
+    const inputState = `INPUT_${aVariables[0]}`;
+    let states = await this.loadStates({
+      [inputState]: { checked: false, data: "" }
+    });
 
-    if (typeof this.mData['INPUT'].data[aVariables[0]] != 'undefined')
-      return this.mData['INPUT'].data;
+    if (!states[inputState].checked) {
+      let rv;
+      let label = browser.i18n.getMessage("inputText", [aVariables[0]]);
+      let value = aVariables[2] ?? "";
 
-    let rv;
-    let label = browser.i18n.getMessage("inputText", [aVariables[0]]);
-    let value = typeof aVariables[2] != 'undefined'
-      ? aVariables[2]
-      : "";
+      // There are two types of input: select and text.
+      if (aVariables[1] == 'select') {
+        let values = value.split(";");
+        rv = await utils.openPopup(this.mTabId, {
+          selectLabel: label,
+          selectValues: values,
+        });
+      } else {
+        rv = await utils.openPopup(this.mTabId, {
+          promptLabel: label,
+          promptValue: value,
+        });
+      }
 
-    // There are two types of input: select and text.
-    if (aVariables[1] == 'select') {
-      let values = value.split(";");
-      rv = await utils.openPopup(this.mTabId, {
-        selectLabel: label,
-        selectValues: values,
-      });
-    } else {
-      rv = await utils.openPopup(this.mTabId, {
-        promptLabel: label,
-        promptValue: value,
-      });
+      // Note: Empty is cancel.
+      if (rv) {
+        states[inputState].data = rv;
+        states[inputState].checked = true;
+        await this.saveStates(states);
+      }
+
     }
-    if (rv) {
-      this.mData['INPUT'].data[aVariables[0]] = rv
-    } else {
-      this.mData['INPUT'].data[aVariables[0]] = "";
-    }
 
-    return this.mData['INPUT'].data;
+    return states[inputState].data;
   }
   async get_input(aVariables) {
-    let data = await this.process_input(aVariables);
-
-    if (typeof data[aVariables[0]] != "undefined")
-      return data[aVariables[0]];
-
-    return "";
+    return this.process_input(aVariables);
   }
 
   async process_alert(aVariables) {
@@ -668,41 +684,42 @@ export class QuicktextParser {
   }
 
   async preprocess_org() {
-    this.mData['ORGHEADER'] = {};
-    this.mData['ORGHEADER'].checked = true;
-    this.mData['ORGHEADER'].data = {};
+    let states = await this.loadStates({
+      "ORGHEADER": { checked: false, data: {} },
+      "ORGATT": { checked: false, data: [] },
+    });
 
-    this.mData['ORGATT'] = {};
-    this.mData['ORGATT'].checked = true;
-    this.mData['ORGATT'].data = [];
+    if (!states["ORGHEADER"].checked || !states["ORGATT"].checked) {
+      states["ORGHEADER"].checked = true;
+      states["ORGATT"].checked = true;
 
-    let details = await this.getDetails();
-    if (!details.relatedMessageId) {
-      return
-    }
-
-
-    // Store all headers in the mData-variable
-    let data = await browser.messages.getFull(details.relatedMessageId);
-    for (let [name, value] of Object.entries(data.headers)) {
-      if (typeof this.mData['ORGHEADER'].data[name] == 'undefined') {
-        this.mData['ORGHEADER'].data[name] = [];
+      let { relatedMessageId } = await this.getStaticDetails();
+      if (relatedMessageId) {
+        // Store all headers in states["ORGHEADER"].
+        let data = await browser.messages.getFull(relatedMessageId);
+        for (let [name, value] of Object.entries(data.headers)) {
+          if (!Object.hasOwn(states["ORGHEADER"].data, name)) {
+            states["ORGHEADER"].data[name] = [];
+          }
+          states["ORGHEADER"].data[name].push(...value);
+        }
+        // Store all attachments in states["ORGATT"].
+        let attachments = await browser.messages.listAttachments(relatedMessageId);
+        for (let attachment of attachments) {
+          states["ORGATT"].data.push(attachment); // {contentType, name, size, partName}
+        }
       }
-      this.mData['ORGHEADER'].data[name].push(...value);
+      await this.saveStates(states)
     }
 
-    // Store all attachments in the mData-variable
-    let attachments = await browser.messages.listAttachments(details.relatedMessageId);
-    for (let attachment of attachments) {
-      this.mData['ORGATT'].data.push(attachment); // {contentType, name, size, partName}
+    return {
+      orgHeaderState: states["ORGHEADER"],
+      orgAttState: states["ORGATT"]
     }
   }
   async process_orgheader(aVariables) {
-    if (this.mData['ORGHEADER'] && this.mData['ORGHEADER'].checked)
-      return this.mData['ORGHEADER'].data;
-
-    await this.preprocess_org();
-    return this.mData['ORGHEADER'].data;
+    const { orgHeaderState } = await this.preprocess_org();
+    return orgHeaderState.data;
   }
   async get_orgheader(aVariables) {
     if (aVariables.length == 0) {
@@ -723,11 +740,8 @@ export class QuicktextParser {
     return "";
   }
   async process_orgatt(aVariables) {
-    if (this.mData['ORGATT'] && this.mData['ORGATT'].checked)
-      return this.mData['ORGATT'].data;
-
-    await this.preprocess_org();
-    return this.mData['ORGATT'].data;
+    const { orgAttState } = await this.preprocess_org();
+    return orgAttState.data;
   }
   async get_orgatt(aVariables) {
     let data = await this.process_orgatt(aVariables);
@@ -741,18 +755,19 @@ export class QuicktextParser {
   }
 
   async process_version(aVariables) {
-    if (this.mData['VERSION'] && this.mData['VERSION'].checked) {
-      return this.mData['VERSION'].data;
+    let states = await this.loadStates({
+      "VERSION": { checked: false, data: {} }
+    });
+
+    if (!states["VERSION"].checked) {
+      let info = await browser.runtime.getBrowserInfo();
+      states["VERSION"].checked = true;
+      states["VERSION"].data['number'] = info.version;
+      states["VERSION"].data['full'] = `${info.name} ${info.version}`;
+      await this.saveStates(states);
     }
 
-    let info = await browser.runtime.getBrowserInfo();
-    this.mData['VERSION'] = {};
-    this.mData['VERSION'].checked = true;
-    this.mData['VERSION'].data = {};
-    this.mData['VERSION'].data['number'] = info.version;
-    this.mData['VERSION'].data['full'] = `${info.name} ${info.version}`;
-
-    return this.mData['VERSION'].data;
+    return states["VERSION"].data;
   }
   async get_version(aVariables = []) {
     let data = await this.process_version(aVariables);
@@ -761,7 +776,7 @@ export class QuicktextParser {
       aVariables.push("full");
     }
 
-    if (typeof data[aVariables[0]] != 'undefined') {
+    if (Object.hasOwn(data, aVariables[0])) {
       return data[aVariables[0]];
     }
 
@@ -769,20 +784,28 @@ export class QuicktextParser {
   }
 
   async process_att(aVariables) {
-    if (this.mData['ATT'] && this.mData['ATT'].checked)
-      return this.mData['ATT'].data;
-
-    this.mData['ATT'] = {};
-    this.mData['ATT'].checked = true;
-    this.mData['ATT'].data = [];
+    // We cache known attachments, but not the return value itself, since
+    // attachments can be removed/added by scripts.
+    // Note: We do have onAttachmentAdded/onAttachmentRemoved.
+    let att = [];
+    let updated = false;
+    let states = await this.loadStates({
+      "ATT": { data: {} }
+    });
 
     let attachments = await browser.compose.listAttachments(this.mTabId);
     for (let attachment of attachments) {
-      let file = await browser.compose.getAttachmentFile(attachment.id);
-      this.mData['ATT'].data.push([file.name, file.size, file.lastModified]);
+      if (!Object.hasOwn(states["ATT"], attachment.id)) {
+        let file = await browser.compose.getAttachmentFile(attachment.id);
+        states['ATT'][attachment.id] = [file.name, file.size, file.lastModified];
+        updated = true;
+      }
+      att.push(states["ATT"][attachment.id]);
     }
-
-    return this.mData['ATT'].data;
+    if (updated) {
+      await this.saveStates(states);
+    }
+    return att;
   }
   async get_att(aVariables) {
     let data = await this.process_att(aVariables);
@@ -841,59 +864,55 @@ export class QuicktextParser {
   }
 
   async process_subject(aVariables) {
-    if (this.mData['SUBJECT'] && this.mData['SUBJECT'].checked)
-      return this.mData['SUBJECT'].data;
-
-    this.mData['SUBJECT'] = {};
-    this.mData['SUBJECT'].checked = true;
-    this.mData['SUBJECT'].data = "";
-
-    let details = await this.getDetails();
-    this.mData['SUBJECT'].data = details.subject;
-
-    return this.mData['SUBJECT'].data;
+    // For now we do not cache the subject. Since scripts can change it, we
+    // need a global onChange event in order to cache and update it correctly.
+    let { subject } = await this.getDetails();
+    return subject;
   }
   async get_subject(aVariables) {
     return this.process_subject(aVariables);
   }
 
-  preprocess_datetime() {
-    this.mData['DATE'] = {};
-    this.mData['DATE'].checked = true;
-    this.mData['DATE'].data = {};
-    this.mData['TIME'] = {};
-    this.mData['TIME'].checked = true;
-    this.mData['TIME'].data = {};
+  async preprocess_datetime() {
+    let states = await this.loadStates({
+      "TIME": { checked: false, data: {} },
+      "DATE": { checked: false, data: {} },
+    });
 
-    let timeStamp = new Date();
-    let fields = ["DATE-long", "DATE-short", "DATE-monthname", "TIME-seconds", "TIME-noseconds"];
-    for (let i = 0; i < fields.length; i++) {
-      let field = fields[i];
-      let fieldinfo = field.split("-");
-      this.mData[fieldinfo[0]].data[fieldinfo[1]] = utils.trimString(utils.getDateTimeFormat(field, timeStamp));
+    if (!states["TIME"].checked || !states["DATE"].checked) {
+      states["DATE"].checked = true;
+      states["TIME"].checked = true;
+
+      let timeStamp = new Date();
+      for (let field of ["long", "short", "monthname"]) {
+        states["DATE"].data[field] = utils.trimString(utils.getDateTimeFormat(`date-${field}`, timeStamp));
+      }
+      for (let field of ["seconds", "noseconds"]) {
+        states["TIME"].data[field] = utils.trimString(utils.getDateTimeFormat(`time-${field}`, timeStamp));
+      }
+      await this.saveStates(states);
     }
+
+    return {
+      timeState: states["TIME"],
+      dateState: states["DATE"],
+    };
   }
   async process_date(aVariables) {
-    if (this.mData['DATE'] && this.mData['DATE'].checked)
-      return this.mData['DATE'].data;
-
-    this.preprocess_datetime();
-    return this.mData['DATE'].data;
+    const { dateState } = await this.preprocess_datetime();
+    return dateState.data;
   }
   async process_time(aVariables) {
-    if (this.mData['TIME'] && this.mData['TIME'].checked)
-      return this.mData['TIME'].data;
-
-    this.preprocess_datetime();
-    return this.mData['TIME'].data;
+    const { timeState } = await this.preprocess_datetime();
+    return timeState.data;
   }
   async get_date(aVariables) {
     let data = await this.process_date(aVariables);
-
     if (aVariables.length < 1)
       aVariables[0] = "short";
-    if (typeof data[aVariables[0]] != 'undefined')
+    if (Object.hasOwn(data, aVariables[0])) {
       return data[aVariables[0]];
+    }
 
     return "";
   }
@@ -901,35 +920,35 @@ export class QuicktextParser {
     let data = await this.process_time(aVariables);
     if (aVariables.length < 1)
       aVariables[0] = "noseconds";
-    if (typeof data[aVariables[0]] != 'undefined')
+    if (Object.hasOwn(data, aVariables[0])) {
       return data[aVariables[0]];
+    }
 
     return "";
   }
 
   async process_clipboard() {
-    if (this.mData['CLIPBOARD'] && this.mData['CLIPBOARD'].checked)
-      return this.mData['CLIPBOARD'].data;
+    let states = await this.loadStates({
+      "CLIPBOARD": { checked: false, data: {} }
+    });
 
-    this.mData['CLIPBOARD'] = {};
-    this.mData['CLIPBOARD'].checked = true;
-    this.mData['CLIPBOARD'].data = {
-      plain: await navigator.clipboard.readText()
+    if (!states["CLIPBOARD"].checked) {
+      states['CLIPBOARD'].data.plain = await navigator.clipboard.readText();
+      const html = await navigator.clipboard.read().then(items => items.find(
+        item => item.types.includes("text/html")
+      ));
+      if (html) {
+        states['CLIPBOARD'].data.html = await html.getType("text/html").then(
+          v => v.text()
+        );
+      }
+      await this.saveStates(states);
     }
 
-    const html = await navigator.clipboard.read().then(items => items.find(
-      item => item.types.includes("text/html")
-    ));
-    if (html) {
-      this.mData['CLIPBOARD'].data.html = await html.getType("text/html").then(
-        v => v.text()
-      );
-    }
-
-    return this.mData['CLIPBOARD'].data;
+    return states['CLIPBOARD'].data;
   }
   async get_clipboard(aVariables) {
-    const { isPlainText } = await this.getDetails();
+    const { isPlainText } = await this.getStaticDetails();
     const data = await this.process_clipboard();
     const parameter = aVariables?.[0]?.toLowerCase?.();
 
@@ -953,42 +972,43 @@ export class QuicktextParser {
   }
 
   async process_counter(aVariables) {
-    if (this.mData['COUNTER'] && this.mData['COUNTER'].checked)
-      return this.mData['COUNTER'].data;
+    let states = await this.loadStates({
+      "COUNTER": { checked: false, data: null }
+    });
 
-    this.mData['COUNTER'] = {};
-    this.mData['COUNTER'].checked = true;
-    this.mData['COUNTER'].data = await storage.getPref("counter");
-    this.mData['COUNTER'].data++;
-    await storage.setPref("counter", this.mData['COUNTER'].data);
+    if (!states["COUNTER"].checked) {
+      states['COUNTER'].checked = true;
+      states['COUNTER'].data = (await storage.getPref("counter")) + 1;
+      await storage.setPref("counter", states['COUNTER'].data);
+      await this.saveStates(states);
+    }
 
-    return this.mData['COUNTER'].data;
+    return states['COUNTER'].data;
   }
   async get_counter(aVariables) {
     return this.process_counter(aVariables);
   }
 
   async process_from(aVariables) {
-    if (this.mData['FROM'] && this.mData['FROM'].checked) {
-      return this.mData['FROM'].data;
-    }
-
+    // For now we do not cache FROM, since it can be changed by scripts. We need
+    // a global on change event for the used identity in order to cache FROM.
+    // Note: We do have onIdentityChanged
     let details = await this.getDetails();
     let identity = await browser.identities.get(details.identityId);
 
-    this.mData['FROM'] = {};
-    this.mData['FROM'].checked = true;
-    this.mData['FROM'].data = {
+    let states = {};
+    states['FROM'] = {};
+    states['FROM'].data = {
       'email': identity.email,
       'displayname': identity.name,
       'firstname': '',
       'lastname': ''
     };
-    await this.getcarddata_from(identity);
+    await this.getcarddata_from(identity, states);
 
-    return this.mData['FROM'].data;
+    return states['FROM'].data;
   }
-  async getcarddata_from(identity) {
+  async getcarddata_from(identity, states) {
     // 1. TODO: CardBook -> need cardbook api
     // ...
 
@@ -1011,26 +1031,25 @@ export class QuicktextParser {
     // Get directly stored props first.
     for (let [name, value] of Object.entries(card.properties)) {
       // For backward compatibility, use lowercase props.
-      this.mData['FROM'].data[name.toLowerCase()] = value;
+      states['FROM'].data[name.toLowerCase()] = value;
     }
-    this.mData['FROM'].data['fullname'] = utils.trimString(this.mData['FROM'].data['firstname'] + " " + this.mData['FROM'].data['lastname']);
+    states['FROM'].data['fullname'] = utils.trimString(states['FROM'].data['firstname'] + " " + states['FROM'].data['lastname']);
   }
   async get_from(aVariables) {
     let data = await this.process_from(aVariables);
 
-    if (typeof data[aVariables[0]] != 'undefined') {
+    if (Object.hasOwn(data, aVariables[0])) {
       return utils.trimString(data[aVariables[0]]);
     }
     return "";
   }
 
   async process_to(aVariables) {
-    if (this.mData['TO'] && this.mData['TO'].checked)
-      return this.mData['TO'].data;
-
-    this.mData['TO'] = {};
-    this.mData['TO'].checked = true;
-    this.mData['TO'].data = {
+    // For now we do not cache TO, since it can be changed by scripts or by
+    // the HEADER tag.
+    let states = {};
+    states['TO'] = {};
+    states['TO'].data = {
       'email': [],
       'firstname': [],
       'lastname': [],
@@ -1044,39 +1063,39 @@ export class QuicktextParser {
       // TODO: Add code for getting info about all people in a mailing list
 
       let contactData = await utils.parseDisplayName(emailAddresses[i]);
-      let k = this.mData['TO'].data['email'].length;
-      this.mData['TO'].data['email'][k] = contactData.email.toLowerCase();
-      this.mData['TO'].data['fullname'][k] = utils.trimString(contactData.name);
-      this.mData['TO'].data['firstname'][k] = "";
-      this.mData['TO'].data['lastname'][k] = "";
+      let k = states['TO'].data['email'].length;
+      states['TO'].data['email'][k] = contactData.email.toLowerCase();
+      states['TO'].data['fullname'][k] = utils.trimString(contactData.name);
+      states['TO'].data['firstname'][k] = "";
+      states['TO'].data['lastname'][k] = "";
 
-      await this.getcarddata_to(k);
+      await this.getcarddata_to(k, states);
 
-      let validParts = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].filter(e => e.trim() != "");
+      let validParts = [states['TO'].data['firstname'][k], states['TO'].data['lastname'][k]].filter(e => e.trim() != "");
       if (validParts.length == 0) {
         // if no first and last name, generate them from fullname
-        let parts = this.mData['TO'].data['fullname'][k].replace(/,/g, ", ").split(" ").filter(e => e.trim() != "");
-        this.mData['TO'].data['firstname'][k] = parts.length > 1 ? utils.trimString(parts.splice(0, 1)) : "";
-        this.mData['TO'].data['lastname'][k] = utils.trimString(parts.join(" "));
+        let parts = states['TO'].data['fullname'][k].replace(/,/g, ", ").split(" ").filter(e => e.trim() != "");
+        states['TO'].data['firstname'][k] = parts.length > 1 ? utils.trimString(parts.splice(0, 1)) : "";
+        states['TO'].data['lastname'][k] = utils.trimString(parts.join(" "));
       } else {
         // if we have a first and/or last name (which can only happen if read from card), generate fullname from it
-        this.mData['TO'].data['fullname'][k] = validParts.join(" ");
+        states['TO'].data['fullname'][k] = validParts.join(" ");
       }
 
       // swap names if wrong
-      if (this.mData['TO'].data['firstname'][k].endsWith(",")) {
-        let temp_firstname = this.mData['TO'].data['firstname'][k].replace(/,/g, "");
-        let temp_lastname = this.mData['TO'].data['lastname'][k];
-        this.mData['TO'].data['firstname'][k] = temp_lastname;
-        this.mData['TO'].data['lastname'][k] = temp_firstname;
+      if (states['TO'].data['firstname'][k].endsWith(",")) {
+        let temp_firstname = states['TO'].data['firstname'][k].replace(/,/g, "");
+        let temp_lastname = states['TO'].data['lastname'][k];
+        states['TO'].data['firstname'][k] = temp_lastname;
+        states['TO'].data['lastname'][k] = temp_firstname;
         // rebuild fullname
-        this.mData['TO'].data['fullname'][k] = [this.mData['TO'].data['firstname'][k], this.mData['TO'].data['lastname'][k]].join(" ");
+        states['TO'].data['fullname'][k] = [states['TO'].data['firstname'][k], states['TO'].data['lastname'][k]].join(" ");
       }
     }
 
-    return this.mData['TO'].data;
+    return states['TO'].data;
   }
-  async getcarddata_to(aIndex) {
+  async getcarddata_to(aIndex, states) {
     // 1. CardBook -> need cardbook api
     // ...
 
@@ -1084,7 +1103,7 @@ export class QuicktextParser {
     // 2. search identity email
     let cards = await browser.contacts.quickSearch({
       includeRemote: false,
-      searchString: this.mData['TO'].data['email'][aIndex].toLowerCase()
+      searchString: states['TO'].data['email'][aIndex].toLowerCase()
     })
     let card = cards.find(c => c.type == "contact");
 
@@ -1093,20 +1112,20 @@ export class QuicktextParser {
       for (let [name, value] of Object.entries(card.properties)) {
         let lowerCaseName = name.toLowerCase();
 
-        if (typeof this.mData['TO'].data[lowerCaseName] == 'undefined') {
-          this.mData['TO'].data[lowerCaseName] = []
+        if (!Object.hasOwn(states['TO'].data, lowerCaseName)) {
+          states['TO'].data[lowerCaseName] = []
         }
-        if (value != "" || typeof this.mData['TO'].data[lowerCaseName][aIndex] == 'undefined' || this.mData['TO'].data[lowerCaseName][aIndex] == "") {
-          this.mData['TO'].data[lowerCaseName][aIndex] = utils.trimString(value);
+        if (value != "" || !Object.hasOwn(states['TO'].data[lowerCaseName], aIndex) || states['TO'].data[lowerCaseName][aIndex] == "") {
+          states['TO'].data[lowerCaseName][aIndex] = utils.trimString(value);
         }
       }
     }
-    return this.mData;
+    return states;
   }
   async get_to(aVariables) {
     let data = await this.process_to(aVariables);
 
-    if (typeof data[aVariables[0]] != 'undefined') {
+    if (Object.hasOwn(data, aVariables[0])) {
       // use ", " as default seperator
       let mainSep = (aVariables.length > 1) ? aVariables[1].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : ", ";
       let lastSep = (aVariables.length > 2) ? aVariables[2].replace(/\\n/g, "\n").replace(/\\t/g, "\t") : mainSep;
@@ -1146,13 +1165,6 @@ export class QuicktextParser {
     }
   }
   async parseText(aStr) {
-    // If a template is inserted, keepStates is set to true and all non-persistent
-    // states are kept until the entire template has been processed. The persistent
-    // states are kept for the entire lifetime of the tab.
-    if (!this.keepStates) {
-      await this.clearNonPersistentData();
-    }
-
     let tags = getTags(aStr);
 
     // If we don't find any tags there will be no changes to the string so return.
@@ -1161,9 +1173,6 @@ export class QuicktextParser {
 
     // Replace all tags with there right contents
     for (let i = 0; i < tags.length; i++) {
-      // Save state.
-      await this.saveState();
-
       let value = "";
       let variable_limit = -1;
       switch (tags[i].tagName.toLowerCase()) {
@@ -1202,10 +1211,6 @@ export class QuicktextParser {
       if (typeof this["get_" + tags[i].tagName.toLowerCase()] == "function" && variable_limit >= 0 && tags[i].variables.length >= variable_limit) {
         value = await this["get_" + tags[i].tagName.toLowerCase()](tags[i].variables);
       }
-
-      // Save state.
-      await this.saveState();
-
       aStr = utils.replaceText(tags[i].tag, value, aStr, { collapseLineBreaks: collapsingTags.includes(tags[i].tagName) });
     }
 

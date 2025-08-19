@@ -214,9 +214,7 @@ async function getQuicktextParser({ tabId }) {
   let templates = await storage.getTemplates();
   let scripts = await storage.getScripts();
 
-  let qParser = new QuicktextParser(tabId, templates, scripts);
-  await qParser.loadState();
-  return qParser;
+  return new QuicktextParser(tabId, templates, scripts);
 }
 
 
@@ -226,12 +224,9 @@ export async function insertTemplate(tabId, groupIdx, textIdx) {
   let text = qParser.templates.texts[groupIdx][textIdx];
 
   await qParser.clearNonPersistentData();
-  qParser.keepStates = true;
   await insertSubject({ qParser, subject: text.subject });
   await insertAttachments({ qParser, attachments: text.attachments });
-  await insertVariable({ qParser, variable: `TEXT=${group.name}|${text.name}` });
-  qParser.keepStates = false;
-  await qParser.clearNonPersistentData();
+  await insertVariable({ qParser, variable: `TEXT=${group.name}|${text.name}`, clearStates: false });
 }
 
 export async function parseVariable({ tabId, variable, qParser }) {
@@ -242,9 +237,12 @@ export async function parseVariable({ tabId, variable, qParser }) {
   return qParser.parse("[[" + variable + "]]");
 }
 
-export async function insertVariable({ tabId, variable, qParser }) {
+export async function insertVariable({ tabId, variable, qParser, clearStates = true }) {
   if (!qParser) {
     qParser = await getQuicktextParser({ tabId })
+  }
+  if (clearStates) {
+    await qParser.clearNonPersistentData();
   }
 
   let parsed = await parseVariable({ tabId, variable, qParser })
