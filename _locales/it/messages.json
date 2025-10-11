@@ -1,6 +1,6 @@
 {
     "deprecated_attachment_field": {
-        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+        "message": "Questo campo di input è obsoleto. Utilizzare invece [[ATTACHMENT=FILE|<percorso>]] direttamente nel corpo del modello."
     },
     "altKey": {
         "message": "Alt"
