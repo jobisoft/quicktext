@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Avançado"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "g"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "r"
     },
     "quicktext.accesskey.help": {
         "message": "u"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Selecionar armazenamento"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Pasta"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Arquivo"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Adicionar grupo"
@@ -181,7 +199,7 @@
         "message": "Data/Tempo"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importar na inicialização"
+        "message": "Importar modelos e scripts ao iniciar (somente leitura)"
     },
     "quicktext.displayname.label": {
         "message": "Nome em Exibição"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Scripts da comunidade"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Ir para a página inicial"
     },
     "quicktext.group.label": {
         "message": "Grupo"
@@ -314,6 +329,15 @@
     },
     "quicktext.other.label": {
         "message": "Outros"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Local de armazenamento de modelos e scripts"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "Alterar o local de armazenamento de modelos e scripts salvará sua lista atual de locais e reiniciará o Quicktext para carregar os arquivos do novo local. Quaisquer outras configurações não salvas serão perdidas."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Armazenamento interno (padrão)"
     },
     "quicktext.remove.label": {
         "message": "Remover"

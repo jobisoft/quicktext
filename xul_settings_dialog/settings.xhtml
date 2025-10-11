@@ -6,9 +6,9 @@
   xmlns="http://www.w3.org/1999/xhtml"
   xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
   xmlns:html="http://www.w3.org/1999/xhtml"
-  persist="width height screenX screenY sizemode"
-  width="600"
-  height="400">
+  persist="screenX screenY"
+  width="750"
+  height="600">
 
   <head>
     <title>__MSG_quicktext.settings.title__</title>
@@ -38,8 +38,9 @@
             <tab label="__MSG_quicktext.general.label__" accesskey="__MSG_quicktext.accesskey.general__"/>
             <tab label="__MSG_quicktext.templates.label__" accesskey="__MSG_quicktext.accesskey.templates__"/>
             <tab label="__MSG_quicktext.scripts.label__" accesskey="__MSG_quicktext.accesskey.scripts__"/>
+            <tab label="__MSG_quicktext.advanced.label__" accesskey="__MSG_quicktext.accesskey.advanced__"/>
           </tabs>
-          <tabpanels flex="1" style="margin: 0px; padding: 0px">
+          <tabpanels id="tabpanels-main" flex="1" style="margin: 0px; padding: 0px">
             <tabpanel id="tab-general">
               <hbox flex="1">
                 <vbox flex="1">
@@ -85,7 +86,14 @@
                   <fieldset>
                     <vbox flex="1">
                       <hbox><legend class="insideTab">__MSG_quicktext.defaultImport.label__</legend></hbox>
-                      <hbox class="input-container"><html:input id="text-defaultImport" oninput="settingsDialog.checkForGeneralChanges(5);" /></hbox>
+                      <hbox flex="1">
+                        <richlistbox id="box-defaultImport"/>
+                      </hbox>
+                      <hbox>
+                        <button id="defaultImport_addFileItem" label="__MSG_quicktext.buttons.addFile.label__" disabled="true" />
+                        <button id="defaultImport_addUrlItem" label="__MSG_quicktext.buttons.addUrl.label__" disabled="true" />
+                        <button id="defaultImport_remove" label="-" disabled="true" />
+                      </hbox>
                     </vbox>
                   </fieldset>
                 </vbox>
@@ -206,6 +214,8 @@
                               <menupopup>
                                 <menuitem label="__MSG_quicktext.filename.label__" oncommand="settingsDialog.insertVariable('ATT=name');" />
                                 <menuitem label="__MSG_quicktext.filenameAndSize.label__" oncommand="settingsDialog.insertVariable('ATT=full');" />
+                                <menuseparator/>
+                                <menuitem label="__MSG_attachmentFile__" oncommand="settingsDialog.insertAttachmentVariable();" />
                               </menupopup>
                             </menu>
                             <menu label="__MSG_quicktext.dateTime.label__">
@@ -304,7 +314,7 @@
                       </html:tr>
 
                       <html:tr showfor="text">
-                        <html:td width="80">
+                        <html:td width="80" valign="top">
                           <label align="center" value="__MSG_quicktext.attachments.label__:" control="text-attachments" style="margin-top: 6px" />
                         </html:td>
                         <html:td>
@@ -312,8 +322,11 @@
                             <html:input id="text-attachments" disabled="true" flex="1" candisable="true" oninput="settingsDialog.checkForTextChanges(6);"/>
                             <button id="button-attachments" label="__MSG_quicktext.browse.label__" oncommand="settingsDialog.browseAttachment();" disabled="true" candisable="true"/>
                           </hbox>
+                          <hbox id="deprecated_attachment" style="display:none">
+                            <description style="margin-top: 6px; color:red;">__MSG_deprecated_attachment_field__</description>
+                          </hbox>
                         </html:td>
-                      </html:tr>                
+                      </html:tr>
                     </html:table>
                   </vbox>
                 </fieldset>
@@ -329,7 +342,9 @@
                     <hbox flex="1">
                       <richlistbox id="script-list" onselect="settingsDialog.pickScript();"/>
                     </hbox>
-                    <hbox><button id="script-button-remove" label="__MSG_quicktext.remove.label__" flex="1" oncommand="settingsDialog.removeScript();" accesskey="__MSG_quicktext.accesskey.remove__"/></hbox>
+                    <hbox>
+                      <button id="script-button-remove" label="__MSG_quicktext.remove.label__" flex="1" oncommand="settingsDialog.removeScript();" accesskey="__MSG_quicktext.accesskey.remove__"/>
+                    </hbox>
                   </vbox>
                 </fieldset>
 
@@ -374,6 +389,25 @@
                 </fieldset>
               </vbox>
             </tabpanel>
+            <tabpanel id="tab-advanced">
+              <hbox flex="1">
+                <vbox flex="1">
+                  <fieldset>
+                    <vbox flex="1">
+                      <hbox><legend class="insideTab">__MSG_quicktext.storageLocations.label__</legend></hbox>
+                      <description style="margin-top: 6px;">__MSG_quicktext.storageLocations.description__</description>
+                      <richlistbox id="box-storageLocations"/>
+                      <hbox>
+                        <button id="storageLocations_addFolderItem" label="__MSG_quicktext.buttons.addFolder.label__" disabled="true" />
+                        <button id="storageLocations_remove" label="-" disabled="true" />
+                        <spacer flex="1"/>
+                        <button id="storageLocations_select" label="__MSG_quicktext.buttons.selectStorage.label__" disabled="true" />
+                      </hbox>
+                    </vbox>
+                  </fieldset>
+                </vbox>
+              </hbox>
+            </tabpanel>
           </tabpanels>
         </tabbox>
       </vbox>
@@ -381,7 +415,7 @@
 
     <hbox style="margin: 5px">
       <div flex="1"></div>
-      <button id="scripthelpbutton" label="__MSG_quicktext.scripthelp.label__?" style="display:none"/>
+      <button id="scripthelpbutton" label="__MSG_quicktext.scripthelp.label__?" />
       <button id="helpbutton" label="__MSG_quicktext.help.label__"/>
       <button id="savebutton" label="__MSG_quicktext.save.label__"/>
       <button id="closebutton" label="__MSG_quicktext.close.label__"/>

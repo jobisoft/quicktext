@@ -38,6 +38,31 @@
           {
             "name": "aFilePath",
             "type": "string"
+          },
+          {
+            "name": "aBasePath",
+            "type": "string",
+            "optional": true
+          }
+        ]
+      },
+      {
+        "name": "writeTextFile",
+        "type": "function",
+        "async": true,
+        "parameters": [
+          {
+            "name": "aFilePath",
+            "type": "string"
+          },
+          {
+            "name": "aData",
+            "type": "string"
+          },
+          {
+            "name": "aBasePath",
+            "type": "string",
+            "optional": true
           }
         ]
       }

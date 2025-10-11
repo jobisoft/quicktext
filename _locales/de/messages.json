@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "Dieses Eingabefeld ist veraltet. Verwenden Sie stattdessen [[ATTACHMENT=FILE|<Pfad>]] direkt im Vorlagentext."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Erweitert"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "w"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "a"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "w"
     },
     "quicktext.accesskey.help": {
         "message": "h"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Speicher auswählen"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Ordner"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Datei"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Gruppe hinzufügen"
@@ -181,7 +199,7 @@
         "message": "Datum/Zeit"
     },
     "quicktext.defaultImport.label": {
-        "message": "Beim Start importieren"
+        "message": "Vorlagen & Skripte beim Start importieren (schreibgeschützt)"
     },
     "quicktext.displayname.label": {
         "message": "Anzeigename"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Gemeinsame Skripte"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Zur Website"
     },
     "quicktext.group.label": {
         "message": "Gruppe"
@@ -314,6 +329,15 @@
     },
     "quicktext.other.label": {
         "message": "Andere"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Speicherort für Vorlagen und Skripte"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "Das Ändern des Speicherorts für Vorlagen und Skripte speichert Ihre aktuelle Liste der Speicherorte und startet Quicktext neu, um die Dateien vom neuen Speicherort zu laden. Alle anderen nicht gespeicherten Einstellungen gehen verloren."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Interner Speicher (Standard)"
     },
     "quicktext.remove.label": {
         "message": "Entfernen"

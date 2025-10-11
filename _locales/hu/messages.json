@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -66,6 +69,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Haladó"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -89,9 +98,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "n"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "h"
     },
     "quicktext.accesskey.help": {
         "message": "g"
@@ -128,6 +134,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Tároló kiválasztása"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Mappa"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Fájl"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Csoport hozzáadása"
@@ -184,7 +202,7 @@
         "message": "Dátum/idő"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importálás indításkor"
+        "message": "Sablonok és szkriptek indításkor importálása (csak olvasható)"
     },
     "quicktext.displayname.label": {
         "message": "Megjelenítendő név"
@@ -242,9 +260,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Közösségi parancsfájlok"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Ugrás a honlapra"
     },
     "quicktext.group.label": {
         "message": "Csoport"
@@ -317,6 +332,15 @@
     },
     "quicktext.other.label": {
         "message": "Más"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Tárolási hely a sablonokhoz és szkriptekhez"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "A sablonok és szkriptek tárolási helyének megváltoztatása elmenti a tárolási helyek aktuális listáját, majd újraindítja a Quicktextet, hogy betöltse a fájlokat az új helyről. Minden egyéb nem mentett beállítás elvész."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Belső tároló (alapértelmezett)"
     },
     "quicktext.remove.label": {
         "message": "Eltávolítás"

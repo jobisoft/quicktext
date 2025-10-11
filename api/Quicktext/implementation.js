@@ -63,8 +63,17 @@
           async readBinaryFile(aFilePath) {
             return IOUtils.read(aFilePath);
           },
-          async readTextFile(aFilePath) {
+          async readTextFile(aFilePath, aBasePath) {
+            if (aBasePath) {
+              aFilePath =  PathUtils.join(aBasePath, aFilePath)
+            }
             return IOUtils.readUTF8(aFilePath);
+          },
+          async writeTextFile(aFilePath, aData, aBasePath) {
+            if (aBasePath) {
+              aFilePath =  PathUtils.join(aBasePath, aFilePath)
+            }
+            return IOUtils.writeUTF8(aFilePath, aData)
           },
         },
       };

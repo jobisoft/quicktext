@@ -40,17 +40,36 @@ export async function parseDisplayName(addr) {
     }
 }
 
-export function replaceText(tag, value, text) {
-    var replaceRegExp;
-    if (value != "")
-        replaceRegExp = new RegExp(escapeRegExp(tag), 'g');
-    else
-        replaceRegExp = new RegExp("( )?" + escapeRegExp(tag), 'g');
-    return text.replace(replaceRegExp, value);
+export function replaceText(tag, value, text, { collapseLineBreaks }) {
+    const escapedTag = escapeRegExp(tag);
+
+    if (value != "") {
+        return text.replace(new RegExp(escapedTag, 'g'), value);
+    }
+
+    // If value is "", we collapse a leading spaces and optionally linebreaks. Do not use global mode
+    // here, but force this function to be called on each tag (even if used multiple times), so the
+    // fallback regexp can cleanup a line until it is matching the single tag regexp and correctly
+    // removes the entire line.
+    if (collapseLineBreaks) {
+        // Match lines with a single empty tag and optional whitespaces.
+        const singleTagRegExp = new RegExp(`(^|\\r?\\n)( )*${escapedTag}( )*(\\r?\\n|$)`, 'm');
+        const collapsed = text.replace(singleTagRegExp, (match, leadingLB, leadingWSP, trailingWSP, trailingLB, offset, fullText) => {
+            // leadingLB and trailingLB are either "" or a line break. If we're matching two
+            // line breaks (one before, one after), preserve one.
+            return leadingLB && trailingLB ? leadingLB : "";
+        });
+        if (collapsed !== text) {
+            return collapsed;
+        }
+    }
+
+    // Match empty tags anywhere with optional single space before the tag.
+    return text.replace(new RegExp(`( )?${escapedTag}`, ''), value);
 }
 
 function escapeRegExp(aStr) {
-    return aStr.replace(/([\^\$\_\.\\\[\]\(\)\|\+\?])/g, "\\$1");
+    return aStr.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 export function removeBadHTML(aStr) {

@@ -49,8 +49,6 @@ var gQuicktext = {
   get viewToolbar() { return this.mViewToolbar; },
   set viewToolbar(aViewToolbar) {
     this.mViewToolbar = aViewToolbar;
-
-    notifyTools.notifyBackground({ command: "setPref", pref: "toolbar", value: aViewToolbar });
     this.notifyObservers("updatetoolbar", "");
 
     return this.mViewToolbar;
@@ -58,15 +56,11 @@ var gQuicktext = {
   get viewPopup() { return this.mViewPopup; },
   set viewPopup(aViewPopup) {
     this.mViewPopup = aViewPopup;
-    notifyTools.notifyBackground({ command: "setPref", pref: "popup", value: aViewPopup });
-
     return this.mViewPopup;
   },
   get collapseGroup() { return this.mCollapseGroup; },
   set collapseGroup(aCollapseGroup) {
     this.mCollapseGroup = aCollapseGroup;
-    notifyTools.notifyBackground({ command: "setPref", pref: "menuCollapse", value: aCollapseGroup });
-
     this.notifyObservers("updatesettings", "");
 
     return this.mCollapseGroup;
@@ -74,29 +68,26 @@ var gQuicktext = {
   get defaultImport() { return this.mDefaultImport; },
   set defaultImport(aDefaultImport) {
     this.mDefaultImport = aDefaultImport;
-    notifyTools.notifyBackground({ command: "setPref", pref: "defaultImport", value: aDefaultImport });
-
     return this.mDefaultImport;
+  },
+  get storageLocations() { return this.mStorageLocations; },
+  set storageLocations(aStorageLocations) {
+    this.mStorageLocations = aStorageLocations;
+    return this.mStorageLocations;
   },
   get keywordKey() { return this.mKeywordKey; },
   set keywordKey(aKeywordKey) {
     this.mKeywordKey = aKeywordKey;
-    notifyTools.notifyBackground({ command: "setPref", pref: "keywordKey", value: aKeywordKey });
-
     return this.mKeywordKey;
   },
   get shortcutModifier() { return this.mShortcutModifier; },
   set shortcutModifier(aShortcutModifier) {
     this.mShortcutModifier = aShortcutModifier;
-    notifyTools.notifyBackground({ command: "setPref", pref: "shortcutModifier", value: aShortcutModifier });
-
     return this.mShortcutModifier;
   },
   get collapseState() { return this.mCollapseState; },
   set collapseState(aCollapseState) {
     this.mCollapseState = aCollapseState;
-    notifyTools.notifyBackground({ command: "setPref", pref: "collapseState", value: aCollapseState });
-
     return this.mCollapseState;
   },
   get shortcutTypeAdv() {
@@ -107,8 +98,6 @@ var gQuicktext = {
   },
   set shortcutTypeAdv(aShortcutTypeAdv) {
     this.mShortcutTypeAdv = aShortcutTypeAdv;
-    notifyTools.notifyBackground({ command: "setPref", pref: "shortcutTypeAdv", value: aShortcutTypeAdv });
-
     return this.mShortcutTypeAdv;
   },
   loadSettings: async function () {
@@ -141,7 +130,6 @@ var gQuicktext = {
       { pref: "keywordKey", elemId: "select-keywordKey", m: this.mKeywordKey },
       { pref: "shortcutTypeAdv", elemId: "checkbox-shortcutTypeAdv", m: this.mShortcutTypeAdv },
       { pref: "shortcutModifier", elemId: "select-shortcutModifier", m: this.mShortcutModifier },
-      { pref: "defaultImport", elemId: "text-defaultImport", m: this.mDefaultImport },
     ]) {
       const { value, isManaged } = await notifyTools.notifyBackground({
         command: "getPrefWithManagedInfo",
@@ -197,6 +185,7 @@ var gQuicktext = {
     await notifyTools.notifyBackground({ command: "setPref", pref: "shortcutModifier", value: this.mShortcutModifier });
     await notifyTools.notifyBackground({ command: "setPref", pref: "collapseState", value: this.mCollapseState });
     await notifyTools.notifyBackground({ command: "setPref", pref: "defaultImport", value: this.mDefaultImport });
+    await notifyTools.notifyBackground({ command: "setPref", pref: "storageLocations", value: this.mStorageLocations });
 
     // Save templates and scripts.
     this.endEditing();
@@ -405,11 +394,14 @@ var gQuicktext = {
   },
 
   /*
-   * FILE FUNCTIONS
+   * FILE FUNCTIONS (will be replaced by picker from the planned vfs API)
    */
   async pickFile(aTypes, aMode, aTitle) {
     let filePicker = Components.classes["@mozilla.org/filepicker;1"].createInstance(Components.interfaces.nsIFilePicker);
     switch (aMode) {
+      case 2: // modeGetFolder
+        filePicker.init(window.browsingContext, aTitle, filePicker.modeGetFolder);
+        break;
       case 1: // save
         filePicker.init(window.browsingContext, aTitle, filePicker.modeSave);
         break;
@@ -498,6 +490,232 @@ var gQuicktext = {
   }
 }
 
+class SourceListBox {
+  #listBox
+  #loadCallback
+  #updateCallback
+  #selectCallback
+  #canRemoveCallback
+  #canSelectCallback
+  #buttonDefinitions
+
+  constructor({ listBoxId, loadCallback, updateCallback, selectCallback, canRemoveCallback, canSelectCallback, buttonDefinitions }) {
+    this.#listBox = document.getElementById(listBoxId);
+    this.#loadCallback = loadCallback;
+    this.#updateCallback = updateCallback;
+    this.#selectCallback = selectCallback;
+    this.#canRemoveCallback = canRemoveCallback;
+    this.#canSelectCallback = canSelectCallback;
+    this.#buttonDefinitions = buttonDefinitions;
+  }
+
+  get defaultUrlValue() {
+    return "https://";
+  }
+
+  get listBox() {
+    return this.#listBox;
+  }
+
+  async load() {
+    const {
+      entries,
+      activeIdx,
+    } = await this.#loadCallback();
+
+
+    for (let [elementId, definition] of Object.entries(this.#buttonDefinitions)) {
+      if (!definition.isManaged) {
+        document.getElementById(elementId).removeAttribute("disabled");
+      }
+      document.getElementById(elementId).addEventListener("command", () => this[definition.callback](), false);
+    }
+
+    for (let i = 0; i < entries.length; i++) {
+      const item = await this.addItem(entries[i]);
+      if (i == activeIdx) {
+        item.dataset.active = "true";
+        this.listBox.selectedIndex = i;
+      }
+    }
+    this.listBox.addEventListener("select", () => this.checkButtons());
+    this.checkButtons();
+  }
+
+  checkButtons() {
+    if (this.#canRemoveCallback) {
+      const canRemove = this.#canRemoveCallback(this.listBox.selectedIndex, this.activeIdx);
+      let btns = Object.entries(this.#buttonDefinitions).filter(e => e[1].callback == "removeItem");
+      for (let [btnId, definition] of btns) {
+        if (definition.isManaged) {
+          continue;
+        }
+
+        if (canRemove) {
+          document.getElementById(btnId).removeAttribute("disabled");
+        } else {
+          document.getElementById(btnId).setAttribute("disabled", "true");
+        }
+      }
+    }
+    if (this.#canSelectCallback) {
+      const canSelect = this.#canSelectCallback(this.listBox.selectedIndex, this.activeIdx);
+      let btns = Object.entries(this.#buttonDefinitions).filter(e => e[1].callback == "selectItem");
+      for (let [btnId, definition] of btns) {
+        if (definition.isManaged) {
+          continue;
+        }
+
+        if (canSelect) {
+          document.getElementById(btnId).removeAttribute("disabled");
+        } else {
+          document.getElementById(btnId).setAttribute("disabled", "true");
+        }
+      }
+    }
+  }
+
+  get activeIdx() {
+    const childrenArray = Array.from(this.listBox.children);
+    const activeIdx = childrenArray.findIndex(e => e.dataset.active === "true");
+    return activeIdx;
+  }
+
+  get value() {
+    let entries = [];
+    for (let child of this.listBox.children) {
+      entries.push({
+        source: child.dataset.source,
+        data: child.dataset.data,
+      })
+    }
+    return entries;
+  }
+
+  async update() {
+    if (this.#updateCallback) {
+      await this.#updateCallback(this.value, this.activeIdx);
+    }
+    this.checkButtons();
+  }
+
+  getLabel(entry) {
+    return entry.source.toLowerCase() == "internal"
+      ? extension.localeData.localizeMessage(`quicktext.storage.internal.${entry.data.toLowerCase()}.label`)
+      : entry.data
+  }
+
+  async addItem(entry) {
+    let newItem = document.createXULElement("richlistitem");
+    newItem.dataset.source = entry.source;
+    newItem.dataset.data = entry.data;
+
+    const ICONS = {
+      "url": "🌎",
+      "file": "💻", // 🗎
+      "internal": "📦", // 🏠,📦
+    }
+
+    let newItemType = document.createXULElement("label");
+    newItemType.value = ICONS[entry.source.toLowerCase()] ?? "⚠️";
+    newItemType.style.width = "16px";
+    newItemType.style.display = "block";
+    newItemType.style.textAlign = "center";
+    newItem.appendChild(newItemType);
+
+    let newItemLabel = document.createXULElement("label");
+    newItemLabel.value = this.getLabel(entry);
+    if (entry.source.toLowerCase() == "url") {
+      newItem.addEventListener("dblclick", () => {
+        let input = document.createElement("input");
+        input.value = newItemLabel.value;
+        input.dataset.originalValue = newItemLabel.value;
+        newItemLabel.parentNode.replaceChild(input, newItemLabel);
+        input.focus();
+
+        // commit value on Enter
+        const commit = (data) => {
+          newItemLabel.value = data;
+          input.parentNode.replaceChild(newItemLabel, input);
+          newItem.dataset.data = data;
+        };
+
+        input.addEventListener("blur", (e) => {
+          commit(input.value);
+          this.update();
+        });
+        input.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") {
+            commit(input.value);
+            this.update();
+          }
+          if (e.key === "Escape") {
+            if (input.dataset.originalValue == this.defaultUrlValue) {
+              this.listBox.removeChild(newItem);
+            } else {
+              commit(input.dataset.originalValue);
+            }
+            this.update();
+          }
+        }, true);
+
+      });
+    }
+    newItem.appendChild(newItemLabel);
+
+    this.listBox.appendChild(newItem);
+    return newItem;
+  }
+
+  async addUrlItem() {
+    const item = await this.addItem({
+      source: "URL",
+      data: this.defaultUrlValue,
+    });
+    await this.update();
+    item.dispatchEvent(new MouseEvent("dblclick", {
+      bubbles: true,
+      cancelable: true,
+      view: window,
+      detail: 2
+    }));
+  }
+
+  async addFileItem() {
+    const file = await gQuicktext.pickFile([5, 3], 0, extension.localeData.localizeMessage("importFile"));
+    if (!file) return;
+    await this.addItem({
+      source: "FILE",
+      data: file.path,
+    });
+    await this.update();
+  }
+
+  async addFolderItem() {
+    const folder = await gQuicktext.pickFile([], 2, "select folder");
+    if (!folder) return;
+    await this.addItem({
+      source: "FILE",
+      data: folder.path,
+    });
+    await this.update();
+  }
+
+  async selectItem() {
+    if (this.#selectCallback) {
+      await this.#selectCallback(this.listBox.selectedIndex);
+    }
+  }
+
+  async removeItem() {
+    let item = this.listBox.getItemAtIndex(this.listBox.selectedIndex);
+    if (item) {
+      this.listBox.removeChild(item);
+    }
+    await this.update();
+  }
+}
+
 var settingsDialog = {
   mChangesMade: false,
   mTextChangesMade: [],
@@ -530,6 +748,9 @@ var settingsDialog = {
     }
 
     document.getElementById('tabbox-main').selectedIndex = 1;
+    document.getElementById('tabpanels-main').addEventListener("select", function (e) {
+      document.getElementById('scripthelpbutton').dataset.selectedTabIndex = document.getElementById('tabbox-main').selectedIndex;
+    }, false);
 
     document.getElementById('text-keyword').addEventListener("keypress", function (e) { settingsDialog.noSpaceForKeyword(e); }, false);
 
@@ -543,6 +764,110 @@ var settingsDialog = {
     let scriptListElem = document.getElementById('script-list');
     let elementHeight = scriptListElem.getBoundingClientRect().height;
     boxHeightOffset = window.innerHeight - elementHeight;
+
+    // Load defaultImport
+    {
+      const {
+        value: defaultImportEntries,
+        isManaged: defaultImportEntriesManaged,
+      } = await notifyTools.notifyBackground({
+        command: "getPrefWithManagedInfo",
+        pref: "defaultImport"
+      });
+
+      const defaultImportUI = new SourceListBox({
+        listBoxId: "box-defaultImport",
+        loadCallback: async () => {
+          document.getElementById("box-defaultImport").dataset.value = defaultImportEntries;
+          return {
+            entries: JSON.parse(defaultImportEntries),
+          }
+        },
+        updateCallback: (updatedEntries, activeIdx) => {
+          document.getElementById("box-defaultImport").dataset.value = JSON.stringify(updatedEntries);
+          settingsDialog.checkForGeneralChanges(5);
+        },
+        buttonDefinitions: {
+          "defaultImport_remove": { callback: "removeItem", isManaged: defaultImportEntriesManaged },
+          "defaultImport_addUrlItem": { callback: "addUrlItem", isManaged: defaultImportEntriesManaged },
+          "defaultImport_addFileItem": { callback: "addFileItem", isManaged: defaultImportEntriesManaged },
+        }
+      })
+      await defaultImportUI.load();
+    }
+
+    // Storage location
+    {
+      const {
+        value: storageLocationEntries,
+        isManaged: storageLocationsManaged,
+      } = await notifyTools.notifyBackground({
+        command: "getPrefWithManagedInfo",
+        pref: "storageLocations"
+      });
+      const {
+        value: activeStorageLocationIdx,
+        isManaged: activeStorageLocationIdxManaged,
+      } = await notifyTools.notifyBackground({
+        command: "getPrefWithManagedInfo",
+        pref: "activeStorageLocationIdx"
+      });
+
+      const storageLocationsUI = new SourceListBox({
+        listBoxId: "box-storageLocations",
+        loadCallback: async () => {
+          const entries = JSON.parse(storageLocationEntries);
+          if (!(
+            entries.some(e => e.source.toLowerCase() == "internal") &&
+            entries.some(e => e.data.toLowerCase() == "local")
+          )) {
+            entries.unshift({
+              source: "INTERNAL",
+              data: "local",
+            })
+          }
+          document.getElementById("box-storageLocations").dataset.value = storageLocationEntries;
+          document.getElementById("box-storageLocations").dataset.activeIdx = activeStorageLocationIdx;
+          return {
+            entries,
+            activeIdx: activeStorageLocationIdx,
+          }
+        },
+        updateCallback: async (updatedEntries, activeIdx) => {
+          document.getElementById("box-storageLocations").dataset.value = JSON.stringify(updatedEntries);
+          document.getElementById("box-storageLocations").dataset.activeIdx = activeIdx;
+          settingsDialog.checkForGeneralChanges(6);
+        },
+        selectCallback: async (idx) => {
+          // Save the current list of storage entries.
+          await notifyTools.notifyBackground({
+            command: "setPref",
+            pref: "storageLocations",
+            value: document.getElementById("box-storageLocations").dataset.value
+          });
+          await notifyTools.notifyBackground({
+            command: "setPref",
+            pref: "activeStorageLocationIdx",
+            value: idx
+          });
+          notifyTools.notifyBackground({
+            command: "reload",
+          });
+        },
+        canRemoveCallback: (idx, activeIdx) => {
+          return idx > 0 && idx != activeIdx
+        },
+        canSelectCallback: (idx, activeIdx) => {
+          return idx > -1 && idx != activeIdx
+        },
+        buttonDefinitions: {
+          "storageLocations_remove": { callback: "removeItem", isManaged: storageLocationsManaged || activeStorageLocationIdxManaged},
+          "storageLocations_addFolderItem": { callback: "addFolderItem", isManaged: storageLocationsManaged || activeStorageLocationIdxManaged},
+          "storageLocations_select": { callback: "selectItem", isManaged: activeStorageLocationIdxManaged },
+        }
+      })
+      await storageLocationsUI.load();
+    }
   },
   unload: function () {
     gQuicktext.removeObserver(this);
@@ -558,7 +883,7 @@ var settingsDialog = {
     this.saveText();
     this.saveScript();
 
-    if (this.mChangesMade) {
+    if (this.anyChangesMade()) {
       promptService = Services.prompt;
       if (promptService) {
         result = promptService.confirmEx(window,
@@ -595,8 +920,10 @@ var settingsDialog = {
 
     if (document.getElementById("checkbox-viewPopup"))
       gQuicktext.viewPopup = document.getElementById("checkbox-viewPopup").checked;
-    if (document.getElementById("text-defaultImport"))
-      gQuicktext.defaultImport = document.getElementById("text-defaultImport").value;
+    if (document.getElementById("box-defaultImport"))
+      gQuicktext.defaultImport = document.getElementById("box-defaultImport").dataset.value;
+    if (document.getElementById("box-storageLocations"))
+      gQuicktext.storageLocations = document.getElementById("box-storageLocations").dataset.value;
     if (document.getElementById("select-shortcutModifier"))
       gQuicktext.shortcutModifier = document.getElementById("select-shortcutModifier").value;
     if (document.getElementById("checkbox-shortcutTypeAdv"))
@@ -692,14 +1019,16 @@ var settingsDialog = {
     }
   },
   checkForGeneralChanges: function (aIndex) {
-    var ids = ['checkbox-viewPopup', 'checkbox-collapseGroup', 'select-shortcutModifier', 'checkbox-shortcutTypeAdv', 'select-keywordKey', 'text-defaultImport'];
-    var type = ['checked', 'checked', 'value', 'checked', 'value', 'value'];
-    var keys = ['viewPopup', 'collapseGroup', 'shortcutModifier', 'shortcutTypeAdv', 'keywordKey', 'defaultImport'];
+    const ids = ['checkbox-viewPopup', 'checkbox-collapseGroup', 'select-shortcutModifier', 'checkbox-shortcutTypeAdv', 'select-keywordKey', 'box-defaultImport', 'box-storageLocations'];
+    const type = ['checked', 'checked', 'value', 'checked', 'value', 'dataset', 'dataset'];
+    const keys = ['viewPopup', 'collapseGroup', 'shortcutModifier', 'shortcutTypeAdv', 'keywordKey', 'defaultImport', 'storageLocations'];
 
     if (typeof ids[aIndex] == 'undefined')
       return;
 
-    var value = document.getElementById(ids[aIndex])[type[aIndex]];
+    const value = (type[aIndex] === "dataset")
+      ? document.getElementById(ids[aIndex]).dataset.value
+      : document.getElementById(ids[aIndex])[type[aIndex]];
 
     if (gQuicktext[keys[aIndex]] != value)
       this.generalChangeMade(aIndex);
@@ -742,6 +1071,9 @@ var settingsDialog = {
       case 4:
         value = value.replace(/[\s]/g, '');
         element.value = value;
+        break;
+      case 6:
+        document.getElementById("deprecated_attachment").style.display = document.getElementById('text-attachments').value ? "" : "none"
         break;
     }
 
@@ -919,8 +1251,6 @@ var settingsDialog = {
       elem.checked = gQuicktext.shortcutTypeAdv;
       this.shortcutModifierChange();
     }
-    if (document.getElementById("text-defaultImport"))
-      document.getElementById("text-defaultImport").value = gQuicktext.defaultImport;
     if (document.getElementById("select-keywordKey"))
       document.getElementById("select-keywordKey").value = gQuicktext.keywordKey;
 
@@ -1340,6 +1670,13 @@ var settingsDialog = {
     this.enableSave();
   },
   // TODO: Hardcoding files is no longer possible in pure WebExt, either Exp only or gallery.
+  insertAttachmentVariable: async function () {
+    if ((file = await gQuicktext.pickFile([2], 0, extension.localeData.localizeMessage("attachmentFile"))) != null) {
+      this.insertVariable('ATTACHMENT=FILE|' + file.path);
+    }
+    this.enableSave();
+  },
+  // TODO: Hardcoding files is no longer possible in pure WebExt, either Exp only or gallery.
   insertFileVariable: async function () {
     if ((file = await gQuicktext.pickFile([2], 0, extension.localeData.localizeMessage("insertFile"))) != null) {
       this.insertVariable('FILE=' + file.path);
@@ -1349,7 +1686,7 @@ var settingsDialog = {
   // TODO: Hardcoding files is no longer possible in pure WebExt, either Exp only or gallery.
   insertImageVariable: async function () {
     if ((file = await gQuicktext.pickFile([4], 0, extension.localeData.localizeMessage("insertImage"))) != null) {
-      this.insertVariable('IMAGE=' + file.path);
+      this.insertVariable('IMAGE=FILE|' + file.path);
     }
     this.enableSave();
   },
@@ -1455,10 +1792,10 @@ var settingsDialog = {
       document.getElementById('script-button-remove').removeAttribute("disabled");
 
     if (isIncompatibleScript(script)) {
-      document.getElementById('scripthelpbutton').style.display = "block";
+      document.getElementById('scripthelpbutton').dataset.isIncompatible = "true";
       document.getElementById('scriptwarning').style.display = "block";
     } else {
-      document.getElementById('scripthelpbutton').style.display = "none";
+      document.getElementById('scripthelpbutton').dataset.isIncompatible = "false";
       document.getElementById('scriptwarning').style.display = "none";
     }
 
@@ -1494,6 +1831,7 @@ var settingsDialog = {
       document.getElementById('text-keyword').value = text.keyword;
       document.getElementById('text-subject').value = text.subject;
       document.getElementById('text-attachments').value = text.attachments;
+      document.getElementById("deprecated_attachment").style.display = text.attachments ? "" : "none"
 
       document.getElementById('label-shortcutModifier').value = extension.localeData.localizeMessage(document.getElementById('select-shortcutModifier').value + "Key") + "+";
 
@@ -1530,6 +1868,7 @@ var settingsDialog = {
       document.getElementById("text-keyword").value = "";
       document.getElementById("text-subject").value = "";
       document.getElementById("text-attachments").value = "";
+      document.getElementById("deprecated_attachment").style.display = "none";
     }
 
     var disabled = false;
@@ -1759,6 +2098,7 @@ var settingsDialog = {
         else {
           this.mScriptIndex = null;
           selectedIndex = -1;
+          document.getElementById('scriptwarning').style.display = "none";
         }
 
         document.getElementById('script-list').selectedIndex = selectedIndex;

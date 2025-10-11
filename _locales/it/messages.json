@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -66,6 +69,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Avanzate"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -89,9 +98,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "g"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "h"
     },
     "quicktext.accesskey.help": {
         "message": "p"
@@ -128,6 +134,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Seleziona archivio"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Cartella"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ File"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Aggiungi gruppo"
@@ -184,7 +202,7 @@
         "message": "Data/Ora"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importa all'avvio"
+        "message": "Importa modelli e script all’avvio (sola lettura)"
     },
     "quicktext.displayname.label": {
         "message": "Nome visualizzato"
@@ -242,9 +260,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Script della community"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Vai alla homepage"
     },
     "quicktext.group.label": {
         "message": "Gruppo"
@@ -318,8 +333,17 @@
     "quicktext.other.label": {
         "message": "Altro"
     },
+    "quicktext.storageLocations.label": {
+        "message": "Posizione di archiviazione per modelli e script"
+    },
     "quicktext.remove.label": {
         "message": "Rimuovi"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "La modifica della posizione di archiviazione di modelli e script salverà l’elenco attuale delle posizioni di archiviazione e riavvierà Quicktext per caricare i file dalla nuova posizione. Tutte le altre impostazioni non salvate andranno perse."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Archiviazione interna (predefinita)"
     },
     "quicktext.resetcounter.label": {
         "message": "Azzera il contatore"

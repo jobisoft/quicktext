@@ -115,30 +115,40 @@ if (scripts != cleanedScripts) {
 }
 
 // Startup import.
-const defaultImport = await storage.getPref("defaultImport");
-if (defaultImport) {
-  const defaultImports = defaultImport.split(";").map(e => e.trim()).reverse();
-  for (let path of defaultImports) {
-    if (!path.match(/^(http|https):\/\//)) {
-      browser.notifications.create("qt-deprecate-default-file-import", {
-        type: "basic",
-        title: "Quicktext v6",
-        message: `Default imports from the local file system have been replaced by managed storage.\n(click for details)`,
-      });
-      continue;
+let defaultImports = JSON.parse(await storage.getPref("defaultImport"));;
+if (Array.isArray(defaultImports) && defaultImports.length > 0) {
+  for (let defaultImportEntry of defaultImports) {
+    let data;
+    switch (defaultImportEntry.source.toLowerCase()) {
+      case "file":
+        try {
+          // Import XML or JSON config data from the local file system.
+          data = await browser.Quicktext.readTextFile(defaultImportEntry.data);
+        } catch (ex) {
+          console.error("Failed to read file", ex);
+        }
+        break;
+      case "url":
+        try {
+          // Import XML or JSON config data from remote server.
+          data = await utils.fetchFileAsText(defaultImportEntry.data);
+        } catch (ex) {
+          console.error("Failed to read url", ex);
+        }
+        break;
     }
-    try {
-      // Import XML or JSON config data from remote server.
-      const data = await utils.fetchFileAsText(path);
-      const imports = await quicktext.parseConfigFileData(data);
-      if (imports.templates) {
-        quicktext.mergeTemplates(templates, imports.templates, true);
+    if (data) {
+      try {
+        const imports = await quicktext.parseConfigFileData(data);
+        if (imports.templates) {
+          quicktext.mergeTemplates(templates, imports.templates, true);
+        }
+        if (imports.scripts) {
+          quicktext.mergeScripts(scripts, imports.scripts, true);
+        }
+      } catch (ex) {
+        console.error("Failed to parse data", ex);
       }
-      if (imports.scripts) {
-        quicktext.mergeScripts(scripts, imports.scripts, true);
-      }
-    } catch (e) {
-      console.error(e);
     }
   }
   await storage.setTemplates(templates);
@@ -164,6 +174,8 @@ try {
 // NotifyTools needed by Experiment code to access WebExtension code.
 messenger.NotifyTools.onNotifyBackground.addListener(async (info) => {
   switch (info.command) {
+    case "reload":
+      browser.runtime.reload();
     case "setPref":
       return storage.setPref(info.pref, info.value);
     case "getPref":

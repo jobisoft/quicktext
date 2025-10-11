@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Дополнительно"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "Д"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "Г"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "д"
     },
     "quicktext.accesskey.help": {
         "message": "П"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "м"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Выбрать хранилище"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Папка"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Файл"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Добавить группу"
@@ -181,7 +199,7 @@
         "message": "Дата/Время"
     },
     "quicktext.defaultImport.label": {
-        "message": "Импорт при запуске"
+        "message": "Импорт шаблонов и скриптов при запуске (только для чтения)"
     },
     "quicktext.displayname.label": {
         "message": "Отображаемое имя"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Скрипты сообщества"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "На домашнюю страницу"
     },
     "quicktext.group.label": {
         "message": "Группа"
@@ -314,6 +329,15 @@
     },
     "quicktext.other.label": {
         "message": "Прочее"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Место хранения шаблонов и скриптов"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "Изменение места хранения шаблонов и скриптов сохранит текущий список мест хранения и перезапустит Quicktext для загрузки файлов из нового места. Все остальные несохранённые настройки будут потеряны."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Внутреннее хранилище (по умолчанию)"
     },
     "quicktext.remove.label": {
         "message": "Удалить"

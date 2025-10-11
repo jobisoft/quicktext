@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Avancé"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "g"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "w"
     },
     "quicktext.accesskey.help": {
         "message": "d"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Sélectionner le stockage"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Dossier"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Fichier"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Ajouter un groupe"
@@ -181,7 +199,7 @@
         "message": "Date/Heure"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importé au démarrage"
+        "message": "Importer les modèles et scripts au démarrage (lecture seule)"
     },
     "quicktext.displayname.label": {
         "message": "Nom à afficher"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Scripts partagés"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Visiter le site Web"
     },
     "quicktext.group.label": {
         "message": "Groupe"
@@ -314,6 +329,15 @@
     },
     "quicktext.other.label": {
         "message": "Autres"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Emplacement de stockage des modèles et scripts"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "La modification de l’emplacement de stockage des modèles et scripts enregistrera votre liste actuelle d’emplacements, puis redémarrera Quicktext pour charger les fichiers depuis le nouvel emplacement. Tout autre paramètre non enregistré sera perdu."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Stockage interne (par défaut)"
     },
     "quicktext.remove.label": {
         "message": "Supprimer"

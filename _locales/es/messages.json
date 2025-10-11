@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Avanzado"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "g"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "h"
     },
     "quicktext.accesskey.help": {
         "message": "y"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Seleccionar almacenamiento"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Carpeta"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Archivo"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Agregar grupo"
@@ -181,7 +199,7 @@
         "message": "Fecha/Hora"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importar al arrancar"
+        "message": "Importar plantillas y scripts al iniciar (solo lectura)"
     },
     "quicktext.displayname.label": {
         "message": "Nombre mostrado"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Community Scripts"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Ir a la página de inicio"
     },
     "quicktext.group.label": {
         "message": "Grupo"
@@ -314,6 +329,15 @@
     },
     "quicktext.other.label": {
         "message": "Otro"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Ubicación de almacenamiento de plantillas y scripts"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "Al cambiar la ubicación de almacenamiento de plantillas y scripts, se guardará la lista actual de ubicaciones y Quicktext se reiniciará para cargar los archivos desde la nueva ubicación. Cualquier otra configuración no guardada se perderá."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Almacenamiento interno (predeterminado)"
     },
     "quicktext.remove.label": {
         "message": "Eliminar"

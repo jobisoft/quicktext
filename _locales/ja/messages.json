@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "詳細設定"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "g"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "h"
     },
     "quicktext.accesskey.help": {
         "message": "p"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "ストレージを選択"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "＋フォルダー"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "＋ファイル"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "＋URL"
     },
     "quicktext.addGroup.label": {
         "message": "グループを追加"
@@ -181,7 +199,7 @@
         "message": "日付と時間"
     },
     "quicktext.defaultImport.label": {
-        "message": "起動時にインポート"
+        "message": "起動時にテンプレートとスクリプトを読み込む（読み取り専用）"
     },
     "quicktext.displayname.label": {
         "message": "表示名"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "コミュニティスクリプト"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "ホームページへ移動"
     },
     "quicktext.group.label": {
         "message": "グループ"
@@ -315,8 +330,17 @@
     "quicktext.other.label": {
         "message": "その他"
     },
+    "quicktext.storageLocations.label": {
+        "message": "テンプレートとスクリプトの保存場所"
+    },
     "quicktext.remove.label": {
         "message": "削除"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "テンプレートとスクリプトの保存場所を変更すると、現在の保存場所リストが保存され、Quicktext が再起動して新しい場所からファイルを読み込みます。その他の未保存の設定は失われます。"
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "内部ストレージ（デフォルト)"
     },
     "quicktext.resetcounter.label": {
         "message": "カウンターをリセット"

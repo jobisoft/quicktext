@@ -5,12 +5,12 @@
 dialog[OS=WINNT] legend.insideTab {
   padding-right: 5px;
   padding-left: 5px;
-  margin-bottom:5px;
+  margin-bottom: 5px;
   background-color: -moz-Field !important;
 }
 
 .textarea-container {
-  margin:4px;
+  margin: 4px;
   overflow: hidden;
 }
 
@@ -19,12 +19,31 @@ textarea {
   resize: none;
 }
 
-#text-defaultImport:disabled {
-  background-color: #ccc;
-}
-
 #script-list {
   overflow-y: auto;
   height: 100%;
   width: 100%
+}
+
+#scripthelpbutton {
+  display: none;
+}
+
+#scripthelpbutton[data-selected-tab-index="2"][data-is-incompatible="true"] {
+  display: block;
+}
+
+#box-defaultImport {
+  overflow-y: auto;
+  height: 120px;
+  width: 100%
+}
+
+#box-storageLocations {
+  overflow-y: auto;
+  height: 120px;
+}
+
+#box-storageLocations richlistitem[data-active] {
+  background-color: skyblue
 }

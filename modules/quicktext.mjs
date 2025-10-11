@@ -211,46 +211,25 @@ export function mergeScripts(scripts, importedScripts, forceProtected = false) {
 // ---- INSERT
 
 async function getQuicktextParser({ tabId }) {
-  let templates = await storage.getTemplates();
-  let scripts = await storage.getScripts();
-
-  let qParser = new QuicktextParser(tabId, templates, scripts);
-  await qParser.loadState();
-  return qParser;
+  const templates = await storage.getTemplates();
+  const scripts = await storage.getScripts();
+  return new QuicktextParser(tabId, templates, scripts);
 }
-
 
 export async function insertTemplate(tabId, groupIdx, textIdx) {
-  let qParser = await getQuicktextParser({ tabId });
-  let group = qParser.templates.groups[groupIdx];
-  let text = qParser.templates.texts[groupIdx][textIdx];
-
+  const qParser = await getQuicktextParser({ tabId });
+  const group = qParser.templates.groups[groupIdx];
+  const text = qParser.templates.texts[groupIdx][textIdx];
   await qParser.clearNonPersistentData();
-  qParser.keepStates = true;
   await insertSubject({ qParser, subject: text.subject });
   await insertAttachments({ qParser, attachments: text.attachments });
-  await insertVariable({ qParser, variable: `TEXT=${group.name}|${text.name}` });
-  qParser.keepStates = false;
+  await qParser.parseAndInsert(`[[TEXT=${group.name}|${text.name}]]`);
+}
+
+export async function insertVariable({ tabId, variable }) {
+  const qParser = await getQuicktextParser({ tabId })
   await qParser.clearNonPersistentData();
-}
-
-export async function parseVariable({ tabId, variable, qParser }) {
-  if (!qParser) {
-    qParser = await getQuicktextParser({ tabId })
-  }
-
-  return qParser.parse("[[" + variable + "]]");
-}
-
-export async function insertVariable({ tabId, variable, qParser }) {
-  if (!qParser) {
-    qParser = await getQuicktextParser({ tabId })
-  }
-
-  let parsed = await parseVariable({ tabId, variable, qParser })
-  if (parsed) {
-    await qParser.insertBody(parsed, { extraSpace: false });
-  }
+  await qParser.parseAndInsert(`[[${variable}]]`);
 }
 
 async function insertSubject({ qParser, subject }) {
@@ -265,7 +244,8 @@ async function insertSubject({ qParser, subject }) {
 }
 
 async function insertAttachments({ qParser, attachments }) {
-  for (let attachment of attachments.split(";")) {
+  let parsedAttachments = await qParser.parse(attachments);
+  for (let attachment of parsedAttachments.split(";")) {
     if (!attachment) {
       continue;
     }

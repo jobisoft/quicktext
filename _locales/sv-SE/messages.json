@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Avancerat"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "g"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "w"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "h"
     },
     "quicktext.accesskey.help": {
         "message": "p"
@@ -125,6 +131,9 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Välj lagring"
     },
     "quicktext.addGroup.label": {
         "message": "Lägg till grupp"
@@ -181,7 +190,7 @@
         "message": "Datum/Tid"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importeras vid uppstart"
+        "message": "Importera mallar och skript vid start (endast läsning)"
     },
     "quicktext.displayname.label": {
         "message": "Kortnamn"
@@ -239,9 +248,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Community Scripts"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Gå till hemsidan"
     },
     "quicktext.group.label": {
         "message": "Grupp"
@@ -314,6 +320,15 @@
     },
     "quicktext.other.label": {
         "message": "Övrigt"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Lagringsplats för mallar och skript"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "Att ändra lagringsplatsen för mallar och skript sparar din aktuella lista över lagringsplatser och startar om Quicktext för att ladda filerna från den nya platsen. Alla andra osparade inställningar kommer att gå förlorade."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Internt lagringsutrymme (standard)"
     },
     "quicktext.remove.label": {
         "message": "Ta bort"

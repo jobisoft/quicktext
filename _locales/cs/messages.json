@@ -1,4 +1,7 @@
 {
+    "deprecated_attachment_field": {
+        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+    },
     "altKey": {
         "message": "Alt"
     },
@@ -63,6 +66,12 @@
     "quicktext.HTML.label": {
         "message": "HTML"
     },
+    "quicktext.advanced.label": {
+        "message": "Pokročilé"
+    },
+    "quicktext.accesskey.advanced": {
+        "message": "a"
+    },
     "quicktext.accesskey.addGroup": {
         "message": "p"
     },
@@ -86,9 +95,6 @@
     },
     "quicktext.accesskey.general": {
         "message": "g"
-    },
-    "quicktext.accesskey.goToHomepage": {
-        "message": "w"
     },
     "quicktext.accesskey.help": {
         "message": "p"
@@ -125,6 +131,18 @@
     },
     "quicktext.accesskeyTemplate.import": {
         "message": "i"
+    },
+    "quicktext.buttons.selectStorage.label": {
+        "message": "Vyberte úložiště"
+    },
+    "quicktext.buttons.addFolder.label": {
+        "message": "+ Složka"
+    },
+    "quicktext.buttons.addFile.label": {
+        "message": "+ Soubor"
+    },
+    "quicktext.buttons.addUrl.label": {
+        "message": "+ URL"
     },
     "quicktext.addGroup.label": {
         "message": "Přidat skupinu"
@@ -181,7 +199,7 @@
         "message": "Datum/čas"
     },
     "quicktext.defaultImport.label": {
-        "message": "Importovat po spuštění"
+        "message": "Importovat šablony a skripty při spuštění (pouze ke čtení)"
     },
     "quicktext.displayname.label": {
         "message": "Zobrazované jméno"
@@ -239,9 +257,6 @@
     },
     "quicktext.getScript.label": {
         "message": "Komunitní skripty"
-    },
-    "quicktext.goToHomepage.label": {
-        "message": "Přejít na webové stránky"
     },
     "quicktext.group.label": {
         "message": "Skupina"
@@ -314,6 +329,15 @@
     },
     "quicktext.other.label": {
         "message": "Ostatní"
+    },
+    "quicktext.storageLocations.label": {
+        "message": "Umístění úložiště pro šablony a skripty"
+    },
+    "quicktext.storageLocations.description": {
+        "message": "Změna umístění úložiště pro šablony a skripty uloží aktuální seznam umístění úložišť a restartuje Quicktext, aby načetl soubory z nového umístění. Všechna ostatní neuložená nastavení budou ztracena."
+    },
+    "quicktext.storage.internal.local.label": {
+        "message": "Interní úložiště (výchozí)"
     },
     "quicktext.remove.label": {
         "message": "Odstranit"
