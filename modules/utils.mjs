@@ -261,11 +261,17 @@ export async function openPopup(tabId, config) {
     let lastFocusedWindow = parentId;
 
     const dimension = ({ top, left, width, height }) => {
+        // On Linux, skip centering if window is at origin (likely tiling WM: Hyprland, i3, sway, etc.)
+        // Windows/macOS always center since tiling WMs are rare/non-existent on those platforms
+        if (navigator.userAgent.includes('Linux') && top === 0 && left === 0) {
+            return {};
+        }
+
         const excessWidth = 100;
         const excessHeight = 100;
         return {
-            top: top + Math.round(0.5 * excessWidth),
-            left: left + Math.round(0.5 * excessHeight),
+            top: top + Math.round(0.5 * excessHeight),
+            left: left + Math.round(0.5 * excessWidth),
             width: width - excessWidth,
             height: height - excessHeight,
         }
