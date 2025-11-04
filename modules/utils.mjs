@@ -309,8 +309,13 @@ export async function openPopup(tabId, config) {
 
     };
     const onMessageListener = (info, sender, sendResponse) => {
+        // Validate windowId for all actions, allow first config request to set popupId to resolve race condition
         if (sender.tab.windowId != popupId) {
-            return false;
+            if (info?.action === "config" && !popupId) {
+                popupId = sender.tab.windowId;
+            } else {
+                return false;
+            }
         }
 
         switch (info?.action) {
