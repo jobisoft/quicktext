@@ -1,6 +1,6 @@
 {
     "deprecated_attachment_field": {
-        "message": "This input field is deprecated. Use [[ATTACHMENT=FILE|<path>]] directly in the body of the template instead."
+        "message": "Cette zone de saisie est obsolète. Utilisez plutôt [[ATTACHMENT=FILE|<chemin>]] directement dans le corps du modèle."
     },
     "altKey": {
         "message": "Alt"
