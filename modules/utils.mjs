@@ -258,7 +258,6 @@ export async function openPopup(tabId, config) {
     let popup = Promise.withResolvers();
     let popupId;
     let parentId = await browser.tabs.get(tabId).then(tab => tab.windowId);
-    let lastFocusedWindow = parentId;
 
     const dimension = ({ top, left, width, height }) => {
         // On Linux, skip centering for wayland compatability
@@ -283,31 +282,36 @@ export async function openPopup(tabId, config) {
             popup.resolve();
         }
     };
-    const onFocusChangedListener = async windowId => {
+	// ### START OF FIX ###
+	//
+	// The logic has been greatly simplified to stop the "focus fight"
+	// and the resulting flickering.
+
+	const onFocusChangedListener = async windowId => {
         if (status != "active") {
             return;
         }
+        
+	// GOAL: We only want to handle one scenario:
+    // If the parent window (parentId) receives focus,
+    // we must immediately refocus the popup (popupId)
+ 	// to maintain its "modal" state.
 
-        let currentlyFocusedWindow = lastFocusedWindow;
-        lastFocusedWindow = windowId;
-
-        // GOAL: Force our popup window to always be directly above the parent.
-        if (windowId == popupId && currentlyFocusedWindow != parentId) {
-            await browser.windows.update(parentId, {
-                focused: true
-            });
-        }
-
-        // GOAL: We want to allow switching away from the popup to a different
-        // window, but if the parent is focused, bring us back in front.
         if (windowId == parentId) {
-            await browser.windows.update(popupId, {
-                focused: true,
-                ...dimension(await browser.windows.get(parentId))
-            });
+    try {
+				// Try to refocus the popup
+			await browser.windows.update(popupId, {
+				focused: true,
+				...dimension(await browser.windows.get(parentId))
+			});
+		} catch (e) {
+			// The popup might have been closed in the meantime.
+			console.warn("Could not refocus popup, it might be closing.", e.message);
+		}
         }
 
     };
+    // ### END OF FIX ###
     const onMessageListener = (info, sender, sendResponse) => {
         // Validate windowId for all actions, allow first config request to set popupId to resolve race condition
         if (sender.tab.windowId != popupId) {
