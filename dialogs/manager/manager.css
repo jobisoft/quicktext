@@ -178,6 +178,10 @@ fieldset legend {
 .sidebar { width: max(220px, 23vw); flex-shrink: 0; }
 .detail { flex: 1; min-width: 0; }
 
+#template-tree, #script-list {
+  max-width: max(195px, calc(23vw - 25px));
+}
+
 .flex-fieldset {
   display: flex;
   flex-direction: column;
@@ -218,7 +222,7 @@ fieldset legend {
 .tree-template:hover { background: var(--bg-hover); }
 .tree-template.selected { background: var(--bg-selected); }
 .tree-template.drag-over { outline: 2px dashed var(--accent); }
-.tree-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: max(170px, calc(23vw - 50px)); }
+.tree-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .tree-shortcut { font-size: 0.85em; color: var(--text-subtle); flex-shrink: 0; margin-left: 4px; }
 
 /* Detail area */
