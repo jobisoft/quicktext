@@ -223,10 +223,7 @@
     "message": "Allmänt"
   },
   "quicktext.getScript.label": {
-    "message": "Community Scripts"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "Hur man skapar skript"
+    "message": "Installera community-skript"
   },
   "quicktext.header.label": {
     "message": "Header (To, Cc, Bcc)"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Övrigt"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Infoga fil"
   },
   "quicktext.storageLocations.label": {
     "message": "Lagringsplats för mallar och skript"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Response from URL"
   },
-  "quicktext.variables.label": {
-    "message": "Variabler"
+  "quicktext.insertVariable.label": {
+    "message": "Infoga variabel"
   },
   "quicktext.version.label": {
     "message": "Thunderbird version"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Läs från fjärr-URL"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Mallar och skript"
+  "quicktext.insertTag.label": {
+    "message": "Infoga tagg"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Variabler"
   }
 }

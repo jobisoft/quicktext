@@ -223,10 +223,7 @@
     "message": "Geral"
   },
   "quicktext.getScript.label": {
-    "message": "Scripts da comunidade"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "Como criar scripts"
+    "message": "Instalar scripts da comunidade"
   },
   "quicktext.header.label": {
     "message": "Cabeçalho (To, Cc, Bcc)"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Outros"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Inserir arquivo"
   },
   "quicktext.storageLocations.label": {
     "message": "Local de armazenamento de modelos e scripts"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Resposta da URL"
   },
-  "quicktext.variables.label": {
-    "message": "Variáveis"
+  "quicktext.insertVariable.label": {
+    "message": "Inserir variável"
   },
   "quicktext.version.label": {
     "message": "Versão do Thunderbird"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Ler de URL remota"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Modelos e scripts"
+  "quicktext.insertTag.label": {
+    "message": "Inserir tag"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Variáveis"
   }
 }

@@ -4,11 +4,15 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+const COMMUNITY_SCRIPTS_ID = "quicktext.scripts@community.jobisoft.de";
+
 import * as quicktext from "/modules/quicktext.mjs";
 import * as storage from "/modules/storage.mjs";
 import * as utils from "/modules/utils.mjs";
+import * as menus from "/modules/menus.mjs";
+
 import { localizeDocument } from "/vendor/i18n.mjs";
-import { getStaticVariablesMenuStructure } from "/modules/menuStructure.mjs";
+import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 const { computePosition, flip, shift } = FloatingUIDOM;
 
 const i18n = (key, subs) => browser.i18n.getMessage(key, subs) || key;
@@ -113,21 +117,26 @@ function markSaved() {
 
 // ---------- Tab management ----------
 
-let _activeTab = "";
-
 function switchTab(tabName) {
-  _activeTab = tabName;
   for (const btn of document.querySelectorAll(".tab-btn")) {
     btn.classList.toggle("active", btn.dataset.tab === tabName);
   }
   for (const panel of document.querySelectorAll(".tab-panel")) {
     panel.hidden = panel.id !== `panel-${tabName}`;
   }
+  browser.menus.update("managerInsertTagMenu", { visible: false });
   updateScriptHelpButton();
+  updateCommunityScriptsButton();
+}
+
+function updateCommunityScriptsButton() {
+  const activeTab = document.querySelector(".tab-btn.active")?.dataset.tab;
+  const show = ["scripts", "templates"].includes(activeTab) && !state.communityScriptsInstalled;
+  document.getElementById("btn-community-scripts").hidden = !show;
 }
 
 function updateScriptHelpButton() {
-  const onScriptsTab = _activeTab === "scripts";
+  const onScriptsTab = document.querySelector(".tab-btn.active")?.dataset.tab === "scripts";
   const hasIncompatible = onScriptsTab && state.selectedScriptIdx !== -1 &&
     isIncompatibleScript(state.scripts[state.selectedScriptIdx]);
   document.getElementById("btn-script-help").hidden = !hasIncompatible;
@@ -160,11 +169,12 @@ function renderGeneral() {
     state.prefs.shortcutModifier = selModifier.value;
     updateShortcutAdvAvailability();
     markChanged();
+    refreshShortcutUI();
   });
 
   const chkShortcutAdv = document.getElementById("chk-shortcut-adv");
   chkShortcutAdv.checked = state.prefs.shortcutTypeAdv;
-  chkShortcutAdv.addEventListener("change", () => { state.prefs.shortcutTypeAdv = chkShortcutAdv.checked; markChanged(); });
+  chkShortcutAdv.addEventListener("change", () => { state.prefs.shortcutTypeAdv = chkShortcutAdv.checked; markChanged(); refreshShortcutUI(); });
   updateShortcutAdvAvailability();
 
   const selKeyword = document.getElementById("sel-keyword");
@@ -368,7 +378,9 @@ function renderTemplateDetail() {
     document.getElementById("detail-caption").textContent = i18n("quicktext.group.label");
     setTemplateFieldsVisible(false);
     setTemplateFieldsEnabled(false);
+    browser.menus.update("managerInsertTagMenu", { enabled: false });
     document.getElementById("text-title").value = "";
+    document.getElementById("text-body").value = "";
     return;
   }
 
@@ -378,11 +390,13 @@ function renderTemplateDetail() {
   document.getElementById("detail-caption").textContent = i18n(isGroup ? "quicktext.group.label" : "quicktext.template.label");
   setTemplateFieldsVisible(!isGroup);
   setTemplateFieldsEnabled(!isGroup && !prot);
+  browser.menus.update("managerInsertTagMenu", { enabled: !isGroup && !prot });
   // When a group is selected, only the title field is relevant — enable it for renaming.
   if (isGroup) document.getElementById("text-title").disabled = prot;
 
   if (isGroup) {
     document.getElementById("text-title").value = state.groups[gi].name;
+    document.getElementById("text-body").value = "";
   } else {
     const tmpl = state.texts[gi][ti];
     document.getElementById("text-title").value = tmpl.name;
@@ -404,7 +418,7 @@ function setTemplateFieldsVisible(show) {
 
 function setTemplateFieldsEnabled(enabled) {
   for (const id of ["text-title", "text-body", "sel-type", "sel-shortcut",
-    "text-shortcut-adv", "text-keyword", "text-subject", "text-attachments", "btn-variables", "btn-templates-scripts"]) {
+    "text-shortcut-adv", "text-keyword", "text-subject", "text-attachments", "btn-insert-tag"]) {
     const el = document.getElementById(id);
     if (el) el.disabled = !enabled;
   }
@@ -413,6 +427,14 @@ function setTemplateFieldsEnabled(enabled) {
 function isShortcutAdvForced() {
   const ua = navigator.userAgent.toLowerCase();
   return ua.includes("mac") || (ua.includes("win") && state.prefs.shortcutModifier === "alt");
+}
+
+function refreshShortcutUI() {
+  const gi = state.selectedGroupIdx;
+  const ti = state.selectedTextIdx;
+  if (gi !== -1 && ti !== -1) {
+    renderShortcutUI(state.texts[gi][ti].shortcut || "");
+  }
 }
 
 function renderShortcutUI(shortcut) {
@@ -777,10 +799,9 @@ async function selectStorage() {
   browser.runtime.reload();
 }
 
-// ---------- Variables nested menu ----------
-
-function buildVariablesMenu() {
-  const menu = document.getElementById("variables-menu");
+async function buildInsertTagMenu() {
+  const menuCollapse = await storage.getPref("menuCollapse");
+  const menu = document.getElementById("insert-tag-menu");
   menu.innerHTML = "";
 
   const makeItem = (label, val) => {
@@ -798,7 +819,7 @@ function buildVariablesMenu() {
     return sep;
   };
 
-  const makeGrp = (label, pairs) => {
+  const makeGrp = (label, children) => {
     const grp = document.createElement("div");
     grp.className = "var-group";
     const lbl = document.createElement("span");
@@ -808,118 +829,45 @@ function buildVariablesMenu() {
     grp.appendChild(lbl);
     const sub = document.createElement("div");
     sub.className = "var-submenu";
-    for (const entry of pairs) {
-      if (entry === null) sub.appendChild(makeSeparator());
-      else if (entry instanceof Element) sub.appendChild(entry);
-      else sub.appendChild(makeItem(entry[0], entry[1]));
-    }
+    for (const child of children) sub.appendChild(child);
     grp.appendChild(sub);
     return grp;
   };
 
-  const now = new Date();
-
-  const getDateTimeLabel = node => {
-    switch (node.format) {
-      case "date-short":     return i18n("quicktext.date.label", [now.toLocaleDateString()]);
-      case "date-long":      return i18n("quicktext.date.label", [now.toLocaleDateString(undefined, { dateStyle: "full" })]);
-      case "date-monthname": return now.toLocaleDateString(undefined, { month: "long" });
-      case "time-noseconds": return i18n("quicktext.time.label", [now.toLocaleTimeString(undefined, { timeStyle: "short" })]);
-      case "time-seconds":   return i18n("quicktext.time.label", [now.toLocaleTimeString(undefined, { timeStyle: "medium" })]);
-      default: return node.id;
-    }
-  };
-
+  const now = Date.now();
   const nodeToElement = node => {
     if (node.type === "separator") return makeSeparator();
     const label = node.type === "dateTime"
-      ? getDateTimeLabel(node)
-      : i18n(node.localeKey || `quicktext.${node.id}.label`);
+      ? getDateTimeMenuTitle(node.format, now)
+      : node.title ?? i18n(node.localeKey || `quicktext.${node.id}.label`);
     if (node.type === "group") return makeGrp(label, node.children.map(nodeToElement));
-    return makeItem(label, node.value);
+    const el = makeItem(label, node.value);
+    if (node.description) el.title = node.description;
+    if (node.type === "dateTime") el.dataset.format = node.format;
+    return el;
   };
 
-  for (const node of getStaticVariablesMenuStructure()) {
-    menu.appendChild(nodeToElement(node));
+  const structure = await getTagsMenuStructure();
+  if (menuCollapse) {
+    const templatesSection = structure.find(n => n.id === "templates");
+    if (templatesSection) {
+      templatesSection.children = templatesSection.children.flatMap(grp =>
+        grp.type === "group" && grp.children.length === 1 ? grp.children : [grp]
+      );
+    }
   }
+  for (const node of structure) menu.appendChild(nodeToElement(node));
 }
 
-function buildTemplatesScriptsMenu() {
-  const menu = document.getElementById("templates-scripts-menu");
-  menu.innerHTML = "";
-
-  const makeItem = (label, val) => {
-    const btn = document.createElement("button");
-    btn.className = "var-item";
-    btn.textContent = label;
-    btn.title = label;
-    btn.dataset.val = val;
-    return btn;
-  };
-
-  const makeSeparator = () => {
-    const sep = document.createElement("div");
-    sep.className = "var-separator";
-    return sep;
-  };
-
-  const makeGrp = (label, pairs) => {
-    const grp = document.createElement("div");
-    grp.className = "var-group";
-    const lbl = document.createElement("span");
-    lbl.className = "var-group-label";
-    lbl.textContent = label;
-    lbl.title = label;
-    grp.appendChild(lbl);
-    const sub = document.createElement("div");
-    sub.className = "var-submenu";
-    for (const entry of pairs) {
-      if (entry === null) sub.appendChild(makeSeparator());
-      else if (entry instanceof Element) sub.appendChild(entry);
-      else sub.appendChild(makeItem(entry[0], entry[1]));
-    }
-    grp.appendChild(sub);
-    return grp;
-  };
-
-  const makeSectionLabel = label => {
-    const div = document.createElement("div");
-    div.className = "var-section-label";
-    div.textContent = label;
-    div.title = label;
-    return div;
-  };
-
-  let hasContent = false;
-
-  // Templates
-  const templatePairs = [];
-  for (let gi = 0; gi < state.groups.length; gi++) {
-    const tmpls = (state.texts[gi] || []).map(t => [t.name, `TEXT=${state.groups[gi].name}|${t.name}`]);
-    if (tmpls.length > 0) {
-      templatePairs.push([state.groups[gi].name, tmpls]);
-    }
+function updateDateTimeFlyOutMenus() {
+  const menu = document.getElementById("insert-tag-menu");
+  const now = Date.now();
+  for (const el of menu.querySelectorAll(".var-item[data-format]")) {
+    const title = getDateTimeMenuTitle(el.dataset.format, now);
+    el.textContent = title;
+    el.title = title;
   }
-  if (templatePairs.length > 0) {
-    menu.appendChild(makeSectionLabel(i18n("quicktext.templates.label")));
-    for (const [groupName, tmpls] of templatePairs) {
-      menu.appendChild(makeGrp(groupName, tmpls.map(([label, val]) => makeItem(label, val))));
-    }
-    hasContent = true;
-  }
-
-  // Scripts
-  if (state.scripts.length > 0) {
-    if (hasContent) menu.appendChild(makeSeparator());
-    menu.appendChild(makeSectionLabel(i18n("quicktext.scripts.label")));
-    for (const s of state.scripts) {
-      menu.appendChild(makeItem(s.name, `SCRIPT=${s.name}`));
-    }
-    hasContent = true;
-  }
-
 }
-
 
 function insertVariable(varStr) {
   const subjectEl = document.getElementById("text-subject");
@@ -1041,6 +989,23 @@ async function init() {
     },
   });
 
+  new storage.StorageListener(
+    {
+      watchedPrefs: ["templates", "scripts", "popup", "menuCollapse"],
+      listener: async (_changes) => {
+        buildInsertTagMenu();
+      }
+    }
+  );
+
+  // Rebuild when external script add-ons register/unregister.
+  browser.storage.onChanged.addListener((changes, areaName) => {
+    if (areaName === "session" && "externalScripts" in changes) {
+      buildInsertTagMenu();
+    }
+  });
+
+
   // Template tab buttons
   document.getElementById("btn-add-group").addEventListener("click", addGroup);
   document.getElementById("btn-add-template").addEventListener("click", addTemplate);
@@ -1062,18 +1027,16 @@ async function init() {
     markChanged();
   });
 
-  // Templates & Scripts menu
-  buildTemplatesScriptsMenu();
+  buildInsertTagMenu();
 
-  document.getElementById("btn-templates-scripts").addEventListener("click", e => {
-    const menu = document.getElementById("templates-scripts-menu");
-    document.getElementById("variables-menu").hidden = true;
-    if (menu.hidden) buildTemplatesScriptsMenu();
+  document.getElementById("btn-insert-tag").addEventListener("click", e => {
+    const menu = document.getElementById("insert-tag-menu");
+    if (menu.hidden) updateDateTimeFlyOutMenus();
     menu.hidden = !menu.hidden;
     e.stopPropagation();
   });
 
-  document.getElementById("templates-scripts-menu").addEventListener("mouseover", e => {
+  document.getElementById("insert-tag-menu").addEventListener("mouseover", e => {
     const grp = e.target.closest(".var-group");
     const lbl = grp?.querySelector(":scope > .var-group-label");
     const sub = grp?.querySelector(":scope > .var-submenu");
@@ -1087,42 +1050,10 @@ async function init() {
     });
   });
 
-  document.getElementById("templates-scripts-menu").addEventListener("click", e => {
+  document.getElementById("insert-tag-menu").addEventListener("click", async e => {
     const btn = e.target.closest(".var-item");
     if (!btn) return;
-    document.getElementById("templates-scripts-menu").hidden = true;
-    insertVariable(btn.dataset.val);
-  });
-
-  // Variables nested menu
-  buildVariablesMenu();
-
-  document.getElementById("btn-variables").addEventListener("click", e => {
-    const menu = document.getElementById("variables-menu");
-    document.getElementById("templates-scripts-menu").hidden = true;
-    if (menu.hidden) buildVariablesMenu();
-    menu.hidden = !menu.hidden;
-    e.stopPropagation();
-  });
-
-  document.getElementById("variables-menu").addEventListener("mouseover", e => {
-    const grp = e.target.closest(".var-group");
-    const lbl = grp?.querySelector(":scope > .var-group-label");
-    const sub = grp?.querySelector(":scope > .var-submenu");
-    if (!lbl || !sub) return;
-    computePosition(lbl, sub, {
-      placement: "left-start",
-      middleware: [flip(), shift({ padding: 4 })],
-    }).then(({ x, y }) => {
-      sub.style.left = `${x}px`;
-      sub.style.top = `${y}px`;
-    });
-  });
-
-  document.getElementById("variables-menu").addEventListener("click", async e => {
-    const btn = e.target.closest(".var-item");
-    if (!btn) return;
-    document.getElementById("variables-menu").hidden = true;
+    document.getElementById("insert-tag-menu").hidden = true;
     const val = btn.dataset.val;
 
     if (val.includes("<path>")) {
@@ -1151,17 +1082,33 @@ async function init() {
   });
 
   document.addEventListener("click", () => {
-    document.getElementById("variables-menu").hidden = true;
-    document.getElementById("templates-scripts-menu").hidden = true;
+    document.getElementById("insert-tag-menu").hidden = true;
+  });
+
+  // Show/Hide the "Insert Tag" menu when right-clicking in the template detail
+  // textarea.
+  messenger.menus.onShown.addListener(async (info) => {
+    const element = info.targetElementId ? browser.menus.getTargetElement(info.targetElementId) : null; 
+    if (
+      element?.id === "text-body" && 
+      document.querySelector(".tab-btn.active")?.dataset.tab === "templates" && 
+      state.selectedTextIdx !== -1
+    ) {
+      browser.menus.update("managerInsertTagMenu", { visible: true });
+      messenger.menus.refresh();
+      await menus.updateDateTimeWebExtMenus("managerInsertTagMenu.variables.dateTime");
+      messenger.menus.refresh();
+    }
+  });
+  messenger.menus.onHidden.addListener(() => {
+    browser.menus.update("managerInsertTagMenu", { visible: false });
   });
 
   // Script tab
   document.getElementById("btn-add-script").addEventListener("click", addScript);
   document.getElementById("btn-remove-script").addEventListener("click", removeScript);
   document.getElementById("btn-community-scripts").addEventListener("click", () =>
-    browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/Community-scripts"));
-  document.getElementById("btn-script-docs").addEventListener("click", () =>
-    browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/WebExtension-script-support"));
+    messenger.tabs.create({ url: "https://addons.thunderbird.net/addon/quicktext-community-scripts/" }));
   document.getElementById("script-title").addEventListener("input", onScriptTitleInput);
   document.getElementById("script-body").addEventListener("input", markChanged);
 
@@ -1176,8 +1123,42 @@ async function init() {
   // Keyboard
   document.addEventListener("keydown", e => {
     if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); doSave(); }
-    if (e.key === "Escape") onClose();
+    if (e.key === "Escape") {
+      const menu = document.getElementById("insert-tag-menu");
+      if (!menu.hidden) { menu.hidden = true; return; }
+      onClose();
+    }
   });
+
+  // Context menu insertions from background.
+  browser.runtime.onMessage.addListener(({ command, variable }) => {
+    if (command === "insertTag") {
+      insertVariable(variable);
+    } else if (command === "promptInsertTag") {
+      const url = prompt(i18n("quicktext.prompt.addUrl.label"), "https://");
+      if (url) insertVariable(variable.replace("<url>", url));
+    }
+  });
+
+  // Check if community scripts add-on is already installed
+  state.communityScriptsInstalled = await messenger.management.get(COMMUNITY_SCRIPTS_ID)
+    .then(() => true, () => false);
+  messenger.management.onInstalled.addListener(addon => {
+    if (addon.id === COMMUNITY_SCRIPTS_ID) {
+      state.communityScriptsInstalled = true;
+      updateCommunityScriptsButton();
+    }
+  });
+  messenger.management.onUninstalled.addListener(addon => {
+    if (addon.id === COMMUNITY_SCRIPTS_ID) {
+      state.communityScriptsInstalled = false;
+      updateCommunityScriptsButton();
+    }
+  });
+
+  // Pre-select first entries
+  if (state.groups.length > 0) state.selectedGroupIdx = 0;
+  if (state.scripts.length > 0) state.selectedScriptIdx = 0;
 
   // Initial render
   renderTree();

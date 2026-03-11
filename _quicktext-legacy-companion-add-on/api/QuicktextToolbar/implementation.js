@@ -87,6 +87,25 @@
     return window.document.documentElement.appendChild(element);
   };
 
+  const removeEverything = function (extension) {
+    for (const window of Services.wm.getEnumerator("msgcompose")) {
+      if (window) {
+        let elements = Array.from(
+          window.document.querySelectorAll(
+            '[data-extension-injected="' + extension.id + '"]'
+          )
+        );
+        for (let element of elements) {
+          element.remove();
+        }
+        if (window.quicktextToolbar) {
+          window.quicktextToolbar.unload();
+          window.quicktextToolbar = null;
+        }
+      }
+    }
+  }
+
   // Listeners registered via the onCommand EventManager.
   var commandListeners = new Set();
 
@@ -124,11 +143,11 @@
     <html:div id="quicktext-templates-toolbar" />
     <spacer flex="1" />
     <hbox>
-      <button type="menu" id="quicktext-variables" label="__MSG_quicktext.variables.label__" tabindex="-1">
-        <menupopup id="quicktext-variables-popup" />
+      <button type="menu" id="quicktext-insert-variable" label="__MSG_quicktext.insertVariable.label__" tabindex="-1">
+        <menupopup id="quicktext-insert-variable-popup" />
       </button>
-      <button type="menu" id="quicktext-other" label="__MSG_quicktext.other.label__" tabindex="-1">
-        <menupopup id="quicktext-other-popup" />
+      <button type="menu" id="quicktext-insert-file" label="__MSG_quicktext.insertStaticFile.label__" tabindex="-1">
+        <menupopup id="quicktext-insert-file-popup" />
       </button>
     </hbox>
   </toolbar>`, labels
@@ -141,6 +160,9 @@
             if (window.quicktextToolbar) {
               window.quicktextToolbar.update();
             }
+          },
+          async removeLegacyToolbar() {
+            removeEverything(context.extension);
           }
         },
       };
@@ -167,25 +189,7 @@
       }
 
       Services.obs.removeObserver(this.commandObserver, "QuicktextToolbarCommand");
-
-      const { extension } = this;
-      for (const window of Services.wm.getEnumerator("msgcompose")) {
-        if (window) {
-          let elements = Array.from(
-            window.document.querySelectorAll(
-              '[data-extension-injected="' + extension.id + '"]'
-            )
-          );
-          for (let element of elements) {
-            element.remove();
-          }
-          if (window.quicktextToolbar) {
-            window.quicktextToolbar.unload();
-            window.quicktextToolbar = null;
-          }
-        }
-      }
-
+      removeEverything(this.extension);
       Services.obs.notifyObservers(null, "startupcache-invalidate");
     }
   };

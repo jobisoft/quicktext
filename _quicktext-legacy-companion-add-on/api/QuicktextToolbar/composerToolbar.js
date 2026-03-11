@@ -27,21 +27,21 @@ var quicktextToolbar = {
       "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}"
     );
     await this.update();
-    document.getElementById("quicktext-variables-popup").addEventListener(
+    document.getElementById("quicktext-insert-variable-popup").addEventListener(
       "popupshowing",
       async (event) => {
         // Only rebuild when the root variables popup opens, not when a submenu opens.
-        if (event.target.id !== "quicktext-variables-popup") return;
-        const popup = document.getElementById("quicktext-variables-popup");
+        if (event.target.id !== "quicktext-insert-variable-popup") return;
+        const popup = document.getElementById("quicktext-insert-variable-popup");
         const menuStructure = await this.notify({ command: "getVariablesMenuStructure" });
-        this.buildVariablesMenu(popup, menuStructure);
+        this.buildInsertVariableMenu(popup, menuStructure);
       },
       true
     );
   },
   unload() {
   },
-  buildVariablesMenu(container, items) {
+  buildInsertVariableMenu(container, items) {
     while (container.firstChild) container.removeChild(container.firstChild);
     for (const item of items) {
       switch (item.type) {
@@ -49,7 +49,7 @@ var quicktextToolbar = {
           const menu = document.createXULElement("menu");
           menu.setAttribute("label", item.label);
           const popup = menu.appendChild(document.createXULElement("menupopup"));
-          this.buildVariablesMenu(popup, item.children);
+          this.buildInsertVariableMenu(popup, item.children);
           container.appendChild(menu);
           break;
         }
@@ -79,7 +79,47 @@ var quicktextToolbar = {
       }
     }
   },
-  buildOtherMenu(container, items) {
+  buildTemplatesMenu(toolbar, nodes, shortcutModifier, menuCollapse) {
+    for (const node of nodes) {
+      let t = document.createXULElement("button");
+      t.setAttribute("tabindex", "-1");
+      if (node.children.length == 1 && menuCollapse) {
+        // Collapsed single-template group, promoted directly to the toolbar.
+        toolbar.appendChild(t);
+        t.setAttribute("label", node.children[0].title);
+        t.setAttribute("i", node.children[0].groupIndex);
+        t.setAttribute("j", node.children[0].textIndex);
+        t.setAttribute("class", "customEventListenerForDynamicMenu");
+        if (node.shortcut != "" && typeof this.mShortcuts[node.shortcut] == "undefined")
+          this.mShortcuts[node.shortcut] = [node.groupIndex, node.textIndex];
+        if (node.keyword != "" && typeof this.mKeywords[node.keyword] == "undefined")
+          this.mKeywords[node.keyword] = [node.groupIndex, node.textIndex];
+      } else {
+        t.setAttribute("type", "menu");
+        toolbar.appendChild(t);
+        t.setAttribute("label", node.title);
+        const menupopup = t.appendChild(document.createXULElement("menupopup"));
+        for (const child of node.children) {
+          const mi = document.createXULElement("menuitem");
+          mi.setAttribute("label", child.title);
+          mi.setAttribute("i", child.groupIndex);
+          mi.setAttribute("j", child.textIndex);
+          mi.setAttribute("class", "customEventListenerForDynamicMenu");
+          if (child.shortcut != "") {
+            let shortcut = child.shortcut;
+            if (shortcut == 10) shortcut = 0;
+            mi.setAttribute("acceltext", `${this.getPrettyKeyName(shortcutModifier)} + ${shortcut}`);
+          }
+          if (child.shortcut != "" && typeof this.mShortcuts[child.shortcut] == "undefined")
+            this.mShortcuts[child.shortcut] = [child.groupIndex, child.textIndex];
+          if (child.keyword != "" && typeof this.mKeywords[child.keyword] == "undefined")
+            this.mKeywords[child.keyword] = [child.groupIndex, child.textIndex];
+          menupopup.appendChild(mi);
+        }
+      }
+    }
+  },
+  buildInsertFileMenu(container, items) {
     while (container.firstChild) container.removeChild(container.firstChild);
     for (const item of items) {
       const mi = document.createXULElement("menuitem");
@@ -89,18 +129,17 @@ var quicktextToolbar = {
     }
   },
   async update() {
-    const variablesPopup = document.getElementById("quicktext-variables-popup");
-    if (variablesPopup) {
+    const insertVariablePopup = document.getElementById("quicktext-insert-variable-popup");
+    if (insertVariablePopup) {
       const menuStructure = await this.notify({ command: "getVariablesMenuStructure" });
-      this.buildVariablesMenu(variablesPopup, menuStructure);
+      this.buildInsertVariableMenu(insertVariablePopup, menuStructure);
     }
-    const otherPopup = document.getElementById("quicktext-other-popup");
-    if (otherPopup) {
-      const otherStructure = await this.notify({ command: "getOtherMenuStructure" });
-      if (otherStructure) this.buildOtherMenu(otherPopup, otherStructure);
+    const insertFilePopup = document.getElementById("quicktext-insert-file-popup");
+    if (insertFilePopup) {
+      const insertFileStructure = await this.notify({ command: "getInsertFileMenuStructure" });
+      if (insertFileStructure) this.buildInsertFileMenu(insertFilePopup, insertFileStructure);
     }
 
-    // Empty all shortcuts and keywords ?????
     this.mShortcuts = {};
     this.mKeywords = {};
 
@@ -115,64 +154,10 @@ var quicktextToolbar = {
       }
 
       // Rebuild template groups (the leftmost entries)
-      const templates = await this.notify({ command: "getTemplates" });
-      const collapseGroup = await this.notify({ command: "getPref", pref: "menuCollapse" });
+      const templateNodes = await this.notify({ command: "getTemplatesMenuStructure" });
       const shortcutModifier = await this.notify({ command: "getPref", pref: "shortcutModifier" });
-
-      var groupLength = templates.groups.length;
-      for (var i = 0; i < groupLength; i++) {
-        var textLength = templates.texts[i].length;
-        if (textLength) {
-          var toolbarbuttonGroup;
-          let t = document.createXULElement("button");
-
-          t.setAttribute("tabindex", "-1");
-
-          if (textLength == 1 && collapseGroup) {
-            toolbarbuttonGroup = toolbar.appendChild(t);
-            toolbarbuttonGroup.setAttribute("label", templates.texts[i][0].name);
-            toolbarbuttonGroup.setAttribute("i", i);
-            toolbarbuttonGroup.setAttribute("j", 0);
-            toolbarbuttonGroup.setAttribute("class", "customEventListenerForDynamicMenu");
-          }
-          else {
-            t.setAttribute("type", "menu");
-            toolbarbuttonGroup = toolbar.appendChild(t);
-            toolbarbuttonGroup.setAttribute("label", templates.groups[i].name);
-            var menupopup = toolbarbuttonGroup.appendChild(document.createXULElement("menupopup"));
-
-            for (var j = 0; j < textLength; j++) {
-              var text = templates.texts[i][j];
-
-              var toolbarbutton = document.createXULElement("menuitem");
-              toolbarbutton.setAttribute("label", text.name);
-              toolbarbutton.setAttribute("i", i);
-              toolbarbutton.setAttribute("j", j);
-              toolbarbutton.setAttribute("class", "customEventListenerForDynamicMenu");
-
-              var shortcut = text.shortcut;
-              if (shortcut != "") {
-                if (shortcut == 10) shortcut = 0;
-                toolbarbutton.setAttribute("acceltext", `${this.getPrettyKeyName(shortcutModifier)} + ${shortcut}`);
-              }
-
-              menupopup.appendChild(toolbarbutton);
-            }
-          }
-          toolbarbuttonGroup = null;
-
-          for (var j = 0; j < textLength; j++) {
-            var text = templates.texts[i][j];
-            var shortcut = text.shortcut;
-            if (shortcut != "" && typeof this.mShortcuts[shortcut] == "undefined")
-              this.mShortcuts[shortcut] = [i, j];
-
-            var keyword = text.keyword;
-            if (keyword != "" && typeof this.mKeywords[keyword] == "undefined")
-              this.mKeywords[keyword] = [i, j];
-          }
-        }
-      }
+      const menuCollapse = await this.notify({ command: "getPref", pref: "menuCollapse" });
+      this.buildTemplatesMenu(toolbar, templateNodes, shortcutModifier, menuCollapse);
     }
 
     // Add event listeners.

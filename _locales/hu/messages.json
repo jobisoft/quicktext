@@ -223,10 +223,7 @@
     "message": "Általános"
   },
   "quicktext.getScript.label": {
-    "message": "Közösségi parancsfájlok"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "Hogyan hozzon létre szkripteket"
+    "message": "Közösségi parancsfájlok telepítése"
   },
   "quicktext.header.label": {
     "message": "Fejléc (Címzett [To], Másolat [Cc], Rejtett másolat [Bcc])"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Más"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Fájl beszúrása"
   },
   "quicktext.storageLocations.label": {
     "message": "Tárolási hely a sablonokhoz és szkriptekhez"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Válasz az URL-címtől"
   },
-  "quicktext.variables.label": {
-    "message": "Változók"
+  "quicktext.insertVariable.label": {
+    "message": "Változó beszúrása"
   },
   "quicktext.version.label": {
     "message": "Thunderbird verzió"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Olvasás távoli URL-ről"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Sablonok és szkriptek"
+  "quicktext.insertTag.label": {
+    "message": "Tag beszúrása"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Változók"
   }
 }

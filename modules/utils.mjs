@@ -30,18 +30,6 @@ export async function openSettingsDialog() {
   });
 }
 
-export async function registerExternalScriptAddon(id, name, scripts) {
-    let externalScripts = await browser.storage.session
-        .get({ externalScripts: [] })
-        .then(rv => rv.externalScripts.filter(e => e.id != id));
-    externalScripts.push({
-        id,
-        name,
-        scripts,
-    });
-    await browser.storage.session.set({ externalScripts });
-    console.log("registered external scripts", externalScripts)
-}
 
 export function getDateTimeFormat(format, timeStamp) {
     let options = {};

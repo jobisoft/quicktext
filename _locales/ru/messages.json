@@ -223,10 +223,7 @@
     "message": "Главное"
   },
   "quicktext.getScript.label": {
-    "message": "Скрипты сообщества"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "Как создавать скрипты"
+    "message": "Установить скрипты сообщества"
   },
   "quicktext.header.label": {
     "message": "Header (To, Cc, Bcc)"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Прочее"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Вставить файл"
   },
   "quicktext.storageLocations.label": {
     "message": "Место хранения шаблонов и скриптов"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Ответ из URL"
   },
-  "quicktext.variables.label": {
-    "message": "Переменные"
+  "quicktext.insertVariable.label": {
+    "message": "Вставить переменную"
   },
   "quicktext.version.label": {
     "message": "Версия Thunderbird"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Читать с удалённого URL"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Шаблоны и скрипты"
+  "quicktext.insertTag.label": {
+    "message": "Вставить тег"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Переменные"
   }
 }

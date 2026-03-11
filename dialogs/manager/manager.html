@@ -91,7 +91,7 @@
       <div class="split-pane">
         <div class="sidebar">
           <fieldset class="flex-fieldset">
-            <legend id="lbl-template-title" data-i18n-content="quicktext.title.label"></legend>
+            <legend id="lbl-template-title" data-i18n-content="quicktext.templates.label"></legend>
             <div class="btn-row">
               <button id="btn-add-group" data-i18n-content="quicktext.addGroup.label" data-i18n-accesskey="quicktext.accesskey.addGroup"></button>
               <button id="btn-add-template" disabled data-i18n-content="quicktext.addTemplate.label" data-i18n-accesskey="quicktext.accesskey.addTemplate"></button>
@@ -114,12 +114,8 @@
             <div class="template-only var-row">
               <div style="flex:1"></div>
               <div id="tmpl-menu-wrap">
-                <button id="btn-templates-scripts" disabled data-i18n-content="quicktext.templatesScripts.label"></button>
-                <div id="templates-scripts-menu" hidden></div>
-              </div>
-              <div id="var-menu-wrap">
-                <button id="btn-variables" disabled data-i18n-content="quicktext.variables.label"></button>
-                <div id="variables-menu" hidden></div>
+                <button id="btn-insert-tag" disabled data-i18n-content="quicktext.insertTag.label"></button>
+                <div id="insert-tag-menu" hidden></div>
               </div>
             </div>
             <div class="template-only body-row">
@@ -133,24 +129,26 @@
                     <option value="text/plain" id="opt-text" data-i18n-content="quicktext.text.label"></option>
                     <option value="text/html" id="opt-html" data-i18n-content="quicktext.HTML.label"></option>
                   </select>
-                  <span class="shortcut-row">
-                    <span id="lbl-shortcut" data-i18n-content="quicktext.shortcut.label"></span>
-                    <span id="label-modifier"></span>
-                    <select id="sel-shortcut" disabled>
-                      <option value="" id="opt-none" data-i18n-content="quicktext.none.label"></option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="0">0</option>
-                    </select>
-                    <input type="text" id="text-shortcut-adv" disabled hidden style="width:50px">
-                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td class="detail-label" id="lbl-shortcut" data-i18n-content="quicktext.shortcut.label"></td>
+                <td>
+                  <span id="label-modifier"></span>
+                  <select id="sel-shortcut" disabled>
+                    <option value="" id="opt-none" data-i18n-content="quicktext.none.label"></option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="0">0</option>
+                  </select>
+                  <input type="text" id="text-shortcut-adv" disabled hidden style="width:50px">
                 </td>
               </tr>
               <tr>
@@ -179,11 +177,9 @@
       <div class="split-pane">
         <div class="sidebar">
           <fieldset class="flex-fieldset">
-            <legend id="lbl-script-title" data-i18n-content="quicktext.title.label"></legend>
+            <legend id="lbl-script-title" data-i18n-content="quicktext.scripts.label"></legend>
             <div class="btn-row">
               <button id="btn-add-script" data-i18n-content="quicktext.addScript.label" data-i18n-accesskey="quicktext.accesskey.addScript"></button>
-              <button id="btn-community-scripts" data-i18n-content="quicktext.getScript.label" data-i18n-accesskey="quicktext.accesskey.communityScripts"></button>
-              <button id="btn-script-docs" data-i18n-content="quicktext.scriptDocs.label"></button>
             </div>
             <ul id="script-list" class="source-list flex-list"></ul>
             <div class="btn-row">
@@ -227,6 +223,7 @@
 
     <!-- Bottom bar -->
     <div id="bottom-bar">
+      <button id="btn-community-scripts" hidden data-i18n-content="quicktext.getScript.label" data-i18n-accesskey="quicktext.accesskey.communityScripts"></button>
       <div style="flex:1"></div>
       <button id="btn-script-help" hidden data-i18n-content="quicktext.scripthelp.label"></button>
       <button id="btn-help" data-i18n-content="quicktext.help.label" data-i18n-accesskey="quicktext.accesskey.help"></button>

@@ -223,10 +223,7 @@
     "message": "Obecné"
   },
   "quicktext.getScript.label": {
-    "message": "Komunitní skripty"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "Jak vytvářet skripty"
+    "message": "Nainstalovat komunitní skripty"
   },
   "quicktext.header.label": {
     "message": "Přidat záhlaví (komu, kopie, skrytá kopie)"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Ostatní"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Vložit soubor"
   },
   "quicktext.storageLocations.label": {
     "message": "Umístění úložiště pro šablony a skripty"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Odpověď z URL"
   },
-  "quicktext.variables.label": {
-    "message": "Proměnné"
+  "quicktext.insertVariable.label": {
+    "message": "Vložit proměnnou"
   },
   "quicktext.version.label": {
     "message": "Verze Thunderbirdu"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Číst ze vzdálené URL"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Šablony a skripty"
+  "quicktext.insertTag.label": {
+    "message": "Vložit tag"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Proměnné"
   }
 }

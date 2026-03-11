@@ -3,9 +3,9 @@
     "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}": {
       "updates": [
         {
-          "version": "6.4.7",
+          "version": "6.5.3",
           "update_info_url": "https://github.com/jobisoft/quicktext/releases",
-          "update_link": "https://github.com/jobisoft/quicktext/releases/download/v6.4.7/quicktext_6_4_7.xpi",
+          "update_link": "https://github.com/jobisoft/quicktext/releases/download/v6.5.3/quicktext_6_5_3.xpi",
           "applications": {
             "gecko": {
               "strict_min_version": "128.0"
@@ -13,6 +13,20 @@
           }
         }
       ]
-    }
+    },
+    "quicktext-legacy@jobisoft.de": {
+      "updates": [
+        {
+          "version": "1.0.3",
+          "update_info_url": "https://github.com/jobisoft/quicktext/releases",
+          "update_link": "https://github.com/jobisoft/quicktext/releases/download/v6.5.3/quicktext_legacy_companion_1_0_3.xpi",
+          "applications": {
+            "gecko": {
+              "strict_min_version": "128.0"
+            }
+          }
+        }
+      ]
+    }    
   }
 }

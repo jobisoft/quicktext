@@ -22,3 +22,16 @@ browser.runtime.onMessageExternal.addListener((info, sender) => {
 browser.QuicktextToolbar.onCommand.addListener(async info => {
   return browser.runtime.sendMessage(MAIN_ADDON_ID, info);
 });
+
+
+// Auto-unload if the main add-on is disabled or uninstalled
+browser.management.onDisabled.addListener(async addon => {
+  if (addon.id === MAIN_ADDON_ID) {
+    await browser.QuicktextToolbar.removeLegacyToolbar();
+  }
+});
+browser.management.onUninstalled.addListener(async addon => {
+  if (addon.id === MAIN_ADDON_ID) {
+    await browser.QuicktextToolbar.removeLegacyToolbar();
+  }
+});

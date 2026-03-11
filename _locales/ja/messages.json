@@ -223,10 +223,7 @@
     "message": "全般"
   },
   "quicktext.getScript.label": {
-    "message": "コミュニティスクリプト"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "スクリプトの作成方法"
+    "message": "コミュニティスクリプトをインストール"
   },
   "quicktext.header.label": {
     "message": "ヘッダー (To, Cc, Bcc)"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "その他"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "ファイルを挿入"
   },
   "quicktext.storageLocations.label": {
     "message": "テンプレートとスクリプトの保存場所"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "URLからの応答"
   },
-  "quicktext.variables.label": {
-    "message": "タグ"
+  "quicktext.insertVariable.label": {
+    "message": "変数を挿入"
   },
   "quicktext.version.label": {
     "message": "Thunderbird のバージョン"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "リモートURLから読み込む"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "テンプレートとスクリプト"
+  "quicktext.insertTag.label": {
+    "message": "タグを挿入"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "変数"
   }
 }

@@ -34,7 +34,7 @@ export class QuicktextParser {
     this.mScripts = scripts;
     this.mStaticDetails = null;
 
-    //TODO: Evaluate if these these values SHOULD be preserved (as getters/setters
+    //TODO: Evaluate if these values SHOULD be preserved (as getters/setters
     //      into local storage)
 
     // Insert the content as text/plain into an html composer (verbatim).
@@ -1071,7 +1071,7 @@ export class QuicktextParser {
     let emailAddresses = Array.isArray(details.to) ? details.to : [details.to];
 
     for (let i = 0; i < emailAddresses.length; i++) {
-      // TODO: Add code for getting info about all people in a mailing list
+      // TODO: Add code for getting info about all people in a mailing list.
 
       let contactData = await utils.parseDisplayName(emailAddresses[i]);
       let k = states['TO'].data['email'].length;

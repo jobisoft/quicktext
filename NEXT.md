@@ -27,9 +27,11 @@
 
 [ ] add gallery for attachments, images and text files, which are currently
     references via file system paths, which will not work as a pure webextension
+    We might use the leftover locale `quicktext.browse.label` ("Browse").
 
 [ ] URL prompt for ATTACHMENT=URL and IMAGE=URL variables is currently shown via
     executeScript/window.prompt() bound to the compose tab. Revisit once the
     Thunderbird team introduces popover support for the entire compose window —
     a custom WebExtension popup would then be the cleaner solution.
 
+[ ] use script UUIDs

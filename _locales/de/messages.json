@@ -223,10 +223,7 @@
     "message": "Allgemein"
   },
   "quicktext.getScript.label": {
-    "message": "Gemeinsame Skripte"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "Skripte erstellen"
+    "message": "Community-Skripte installieren"
   },
   "quicktext.header.label": {
     "message": "Kopfzeile (To, Cc, Bcc) hinzufügen"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Andere"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Datei einfügen"
   },
   "quicktext.storageLocations.label": {
     "message": "Speicherort für Vorlagen und Skripte"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Rückgabewert einer URL-Anfrage"
   },
-  "quicktext.variables.label": {
-    "message": "Variablen"
+  "quicktext.insertVariable.label": {
+    "message": "Variable einfügen"
   },
   "quicktext.version.label": {
     "message": "Thunderbird-Version"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Von externer URL lesen"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Vorlagen & Skripte"
+  "quicktext.insertTag.label": {
+    "message": "Tag einfügen"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Variablen"
   }
 }

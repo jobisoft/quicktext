@@ -41,6 +41,12 @@
             "type": "integer"
           }
         ]
+      },
+      {
+        "name": "removeLegacyToolbar",
+        "type": "function",
+        "async": true,
+        "parameters": []
       }
     ]
   }

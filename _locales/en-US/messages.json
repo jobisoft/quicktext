@@ -223,10 +223,7 @@
     "message": "General"
   },
   "quicktext.getScript.label": {
-    "message": "Community scripts"
-  },
-  "quicktext.scriptDocs.label": {
-    "message": "How to create scripts"
+    "message": "Install Community Scripts"
   },
   "quicktext.header.label": {
     "message": "Add header (To, Cc, Bcc)"
@@ -293,6 +290,9 @@
   },
   "quicktext.other.label": {
     "message": "Other"
+  },
+  "quicktext.insertStaticFile.label": {
+    "message": "Insert File"
   },
   "quicktext.storageLocations.label": {
     "message": "Storage location for templates and scripts"
@@ -366,8 +366,8 @@
   "quicktext.url.label": {
     "message": "Response from URL"
   },
-  "quicktext.variables.label": {
-    "message": "Variables"
+  "quicktext.insertVariable.label": {
+    "message": "Insert Variable"
   },
   "quicktext.version.label": {
     "message": "Thunderbird version"
@@ -420,7 +420,10 @@
   "quicktext.mode.url.label": {
     "message": "Read from remote URL"
   },
-  "quicktext.templatesScripts.label": {
-    "message": "Templates & Scripts"
+  "quicktext.insertTag.label": {
+    "message": "Insert Tag"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Variables"
   }
 }
