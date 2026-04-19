@@ -8,7 +8,7 @@ const alternatives = {
     "Enter": ["NumpadEnter"]
 }
 
-let keywords, keywordKey, shortcutTypeAdv, shortcutModifier, shortcuts;
+let keywords, keywordKey, keywordCaseinsensitive, shortcutTypeAdv, shortcutModifier, shortcuts;
 let advShortcutModifierIsDown = false;
 let advShortcutString = "";
 let popoverShown = false;
@@ -146,7 +146,10 @@ function keywordListener(e) {
         // selection/cursor. We assume the keyword is not split between two nodes.
         let range = initialSelectionRange.cloneRange();
         range.setStart(range.startContainer, 0);
-        let lastWord = range.toString().split(" ").pop().toLocaleLowerCase();
+        let lastWord = range.toString().split(" ").pop();
+        if (keywordCaseinsensitive) {
+            lastWord = lastWord.toLocaleLowerCase();
+        }
 
         if (!lastWord || !keywords.hasOwnProperty(lastWord)) {
             return;
@@ -213,6 +216,7 @@ async function getLatestPrefs() {
     keywordKey = await storage.getPref("keywordKey");
     shortcutTypeAdv = await storage.getPref("shortcutTypeAdv");
     shortcutModifier = await storage.getPref("shortcutModifier");
+    keywordCaseinsensitive = await storage.getPref("keywordCaseinsensitive");
 
     let rv = await messenger.runtime.sendMessage({ command: "getKeywordsAndShortcuts" });
     keywords = rv.keywords;

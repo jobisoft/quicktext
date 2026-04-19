@@ -8,6 +8,9 @@
   "quicktext.controlledViaManagedStorage.label": {
     "message": "Controlled via managed storage"
   },
+  "quicktext.caseinsensitive.label": {
+    "message": "Keywords are Case-insensitive"
+  },
   "quicktext.date.label": {
     "message": "Date ($P1$)",
     "placeholders": {

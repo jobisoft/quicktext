@@ -8,6 +8,9 @@
   "quicktext.controlledViaManagedStorage.label": {
     "message": "Über verwalteten Speicher gesteuert"
   },
+  "quicktext.caseinsensitive.label": {
+    "message": "Ignoriere groß/kleinschreibung bei Schlüsselwortern"
+  },
   "quicktext.date.label": {
     "message": "Datum ($P1$)",
     "placeholders": {

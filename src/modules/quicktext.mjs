@@ -277,6 +277,7 @@ export async function processTag({ tabId, tag, variables }) {
 // without further logic to return a Promise.
 export async function getKeywordsAndShortcuts() {
   let bundles = await storage.getActiveStorageEntries();
+  let keywordCaseinsensitive = await storage.getPref("keywordCaseinsensitive");
   let keywords = {};
   let shortcuts = {};
 
@@ -291,8 +292,11 @@ export async function getKeywordsAndShortcuts() {
           shortcuts[shortcut] = [bundle.storageUuid, i, j];
         }
 
-        let keyword = text.keyword.toLocaleLowerCase();
+        let keyword = text.keyword;
         if (keyword != "" && typeof keywords[keyword] == "undefined")
+          if(keywordCaseinsensitive) {
+            keyword = keyword.toLowerCase();
+          }
           keywords[keyword] = [bundle.storageUuid, i, j];
       }
     }
