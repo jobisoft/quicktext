@@ -291,7 +291,7 @@ export async function getKeywordsAndShortcuts() {
           shortcuts[shortcut] = [bundle.storageUuid, i, j];
         }
 
-        let keyword = text.keyword;
+        let keyword = text.keyword.toLocaleLowerCase();
         if (keyword != "" && typeof keywords[keyword] == "undefined")
           keywords[keyword] = [bundle.storageUuid, i, j];
       }

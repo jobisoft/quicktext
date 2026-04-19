@@ -146,7 +146,7 @@ function keywordListener(e) {
         // selection/cursor. We assume the keyword is not split between two nodes.
         let range = initialSelectionRange.cloneRange();
         range.setStart(range.startContainer, 0);
-        let lastWord = range.toString().split(" ").pop();
+        let lastWord = range.toString().split(" ").pop().toLocaleLowerCase();
 
         if (!lastWord || !keywords.hasOwnProperty(lastWord)) {
             return;
