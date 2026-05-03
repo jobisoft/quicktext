@@ -303,6 +303,7 @@ const defaultPrefs = {
   "toolbar": true,
   "popup": true,
   "keywordKey": "Tab",
+  "keywordCaseinsensitive": false,
   "shortcutModifier": "alt",
   "shortcutTypeAdv": false,
   "collapseState": "",
@@ -313,6 +314,7 @@ const managedPrefs = [
   "menuCollapse",
   "popup",
   "keywordKey",
+  "keywordCaseinsensitive",
   "shortcutModifier",
   "shortcutTypeAdv",
 ];

@@ -133,7 +133,7 @@ async function _refreshVfsProviders() {
 async function loadAll() {
   const prefNames = [
     "popup", "menuCollapse", "shortcutModifier", "shortcutTypeAdv",
-    "keywordKey", "counter", "defaultImport",
+    "keywordKey", "keywordCaseinsensitive", "counter", "defaultImport",
   ];
   for (const pref of prefNames) {
     const { value, isManaged } = await storage.getPrefWithManagedInfo(pref);
@@ -280,6 +280,7 @@ async function saveAll() {
   await storage.setPref("shortcutModifier", state.prefs.shortcutModifier);
   await storage.setPref("shortcutTypeAdv", state.prefs.shortcutTypeAdv);
   await storage.setPref("keywordKey", state.prefs.keywordKey);
+  await storage.setPref("keywordCaseinsensitive", state.prefs.keywordCaseinsensitive);
   await storage.setPref("defaultImport", state.prefs.defaultImport);
   // The storage list (including enabled flags, type, name and
   // ordering) is part of the regular Save flow. Storage-list edits
@@ -391,6 +392,11 @@ function renderGeneral() {
   selKeyword.value = state.prefs.keywordKey;
   applyManaged(selKeyword, managed("keywordKey"));
   selKeyword.addEventListener("change", () => { state.prefs.keywordKey = selKeyword.value; markChanged(); });
+
+  const chkKeywordCI = document.getElementById("chk-keyword-ci");
+  chkKeywordCI.checked = state.prefs.keywordCaseinsensitive;
+  applyManaged(chkKeywordCI, managed("keywordCaseinsensitive"));
+  chkKeywordCI.addEventListener("change", () => { state.prefs.keywordCaseinsensitive = chkKeywordCI.checked; markChanged(); });
 
   document.getElementById("btn-reset-counter").addEventListener("click", () => {
     state.prefs.counter = 0;
