@@ -23,7 +23,7 @@
     "message": "Lägg till bilaga"
   },
   "quicktext.controlledViaManagedStorage.label": {
-    "message": "Styrs via hanterat lagringsutrymme"
+    "message": "Styrs via hanterad lagring"
   },
   "quicktext.date.label": {
     "message": "Datum ($P1$)",
@@ -45,7 +45,7 @@
     }
   },
   "quicktext.insertImage.label": {
-    "message": "Choose image file to insert"
+    "message": "Välj bildfil att infoga"
   },
   "quicktext.newGroup.label": {
     "message": "Ny grupp"
@@ -189,7 +189,7 @@
     "message": "i"
   },
   "quicktext.storageList.confirmDiscard.label": {
-    "message": "Any unsaved changes in the \"$1\" storage will be discarded. Continue?"
+    "message": "Alla osparade ändringar i lagringen ”$1” kommer att kasseras. Fortsätt?"
   },
   "quicktext.buttons.addConfig.label": {
     "message": "Lägg till"
@@ -219,13 +219,13 @@
     "message": "Stäng"
   },
   "quicktext.collapseSetting.label": {
-    "message": "Collapse group when it only contains one template"
+    "message": "Fäll ihop gruppen när den bara innehåller en mall"
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
   },
   "quicktext.counter.label": {
-    "message": "Counter"
+    "message": "Räknare"
   },
   "quicktext.cursor.label": {
     "message": "Markörposition"
@@ -243,7 +243,7 @@
     "message": "Övrigt 4"
   },
   "quicktext.dateTime.label": {
-    "message": "Datum/Tid"
+    "message": "Datum/tid"
   },
   "quicktext.defaultImport.label": {
     "message": "Importer"
@@ -267,7 +267,7 @@
     "message": "Ange en giltig http(s)-URL."
   },
   "quicktext.defaultImport.duplicate.label": {
-    "message": "Denna import-URL finns redan i listan som \"$1\"."
+    "message": "Den här import-URL:en finns redan i listan som ”$1”."
   },
   "quicktext.defaultImport.columns.name": {
     "message": "Namn"
@@ -315,7 +315,7 @@
     "message": "Filnamn"
   },
   "quicktext.filenameAndSize.label": {
-    "message": "Filnamn and storlek"
+    "message": "Filnamn och storlek"
   },
   "quicktext.firstname.label": {
     "message": "Förnamn"
@@ -324,7 +324,7 @@
     "message": "Från"
   },
   "quicktext.fullname.label": {
-    "message": "Fullständiga namnet"
+    "message": "Fullständigt namn"
   },
   "quicktext.general.label": {
     "message": "Allmänt"
@@ -333,7 +333,7 @@
     "message": "Installera community-skript"
   },
   "quicktext.header.label": {
-    "message": "Header (To, Cc, Bcc)"
+    "message": "Meddelandehuvud (Till, Kopia, Hemlig kopia)"
   },
   "quicktext.help.label": {
     "message": "Hjälp"
@@ -348,7 +348,7 @@
     "message": "Import"
   },
   "quicktext.input.label": {
-    "message": "Input value from user prompt"
+    "message": "Fråga användaren efter ett värde"
   },
   "quicktext.insertAs.label": {
     "message": "Infoga som"
@@ -363,7 +363,7 @@
     "message": "Infoga text-/HTML-innehåll"
   },
   "quicktext.jobtitle.label": {
-    "message": "Arbetstitel"
+    "message": "Befattning"
   },
   "quicktext.keyword.label": {
     "message": "Nyckelord"
@@ -390,10 +390,10 @@
     "message": "Inget"
   },
   "quicktext.orgatt.label": {
-    "message": "Original attachment info"
+    "message": "Information om ursprungliga bilagor"
   },
   "quicktext.orgheader.label": {
-    "message": "Original header info"
+    "message": "Information om ursprungligt meddelandehuvud"
   },
   "quicktext.other.label": {
     "message": "Övrigt"
@@ -411,10 +411,10 @@
     "message": "Hanterad lagring"
   },
   "quicktext.storage.providerUnavailable.label": {
-    "message": "Leverantör inte tillgänglig"
+    "message": "Leverantören är inte tillgänglig"
   },
   "quicktext.storage.connectionUnavailable.label": {
-    "message": "Anslutning otillgänglig"
+    "message": "Anslutningen är inte tillgänglig"
   },
   "quicktext.storageList.columns.name": {
     "message": "Namn"
@@ -459,7 +459,7 @@
     "message": "Ange det nya räknarvärdet:"
   },
   "quicktext.showToolbarLabel.label": {
-    "message": "Show Quicktext label in toolbar button"
+    "message": "Visa Quicktext-etiketten på knappen i verktygsfältet"
   },
   "quicktext.showContextMenu.label": {
     "message": "Visa Quicktext-menyn vid högerklick"
@@ -474,7 +474,7 @@
     "message": "Skript"
   },
   "quicktext.selection.label": {
-    "message": "Selection"
+    "message": "Markering"
   },
   "quicktext.settings.label": {
     "message": "Inställningar"
@@ -513,13 +513,13 @@
     "message": "Infoga variabel"
   },
   "quicktext.version.label": {
-    "message": "Thunderbird version"
+    "message": "Thunderbird-version"
   },
   "quicktext.workphone.label": {
     "message": "Jobbnummer"
   },
   "quicktext.confirmRemove.label": {
-    "message": "Är du säker på att du vill tabort ”$P1$”?",
+    "message": "Är du säker på att du vill ta bort ”$P1$”?",
     "placeholders": {
       "P1": {
         "content": "$1"
@@ -527,10 +527,10 @@
     }
   },
   "quicktext.scriptError.label": {
-    "message": "There was an error in your Quicktext script:"
+    "message": "Ett fel uppstod i ditt Quicktext-skript:"
   },
   "quicktext.scriptNotFound.label": {
-    "message": "Quicktext script “$P1$” not found!",
+    "message": "Quicktext-skriptet ”$P1$” hittades inte!",
     "placeholders": {
       "P1": {
         "content": "$1"
@@ -552,13 +552,13 @@
     "message": "Ange URL:"
   },
   "quicktext.advanced.description": {
-    "message": "Quicktext kan komma åt mallar och skript från ytterligare lagringsbackends (till exempel WebDAV-servrar eller din lokala hemmapp) via VFS-leverantörstillägg. Alla installerade VFS-leverantörer kan användas när du lägger till en ny lagringsplats."
+    "message": "Quicktext kan komma åt mallar och skript från ytterligare lagringsbakändar (till exempel WebDAV-servrar eller din lokala hemmapp) via VFS-leverantörstillägg. Alla installerade VFS-leverantörer kan användas när du lägger till en ny lagringsplats."
   },
   "quicktext.buttons.searchVfsProviders.label": {
     "message": "Sök efter VFS-leverantörer"
   },
   "extensionDescription": {
-    "message": "Adds a toolbar with unlimited number of text to quickly insert. It is also possible to use variables like [[TO=firstname]]. With settings for everything."
+    "message": "Lägger till ett verktygsfält med obegränsat antal texter som snabbt kan infogas. Det går även att använda variabler som [[TO=firstname]]. Omfattande inställningsmöjligheter finns."
   },
   "quicktext.mode.file.label": {
     "message": "Läs från lokal fil"
@@ -579,7 +579,7 @@
     "message": "Lägg till import"
   },
   "migration.pageTitle": {
-    "message": "Quicktext v$VERSION$ migrering",
+    "message": "Migrering av Quicktext v$VERSION$",
     "placeholders": {
       "version": {
         "content": "$1"
@@ -587,7 +587,7 @@
     }
   },
   "migration.intro.p1": {
-    "message": "Detta är det sista steget i en lång uppdateringsprocess för att konvertera Quicktext till en modern WebExtension. Quicktext kommer snart inte längre att förlita sig på äldre API:er och obegränsad åtkomst till din dator, utan fungerar helt inom det moderna WebExtension-ramverket - utan att kräva en uppdatering för varje ny version av Thunderbird."
+    "message": "Detta är det sista steget i en lång uppdateringsprocess för att konvertera Quicktext till en modern WebExtension. Quicktext kommer snart inte längre att förlita sig på äldre API:er och obegränsad åtkomst till din dator, utan fungerar helt inom det moderna WebExtension-ramverket – utan att kräva en uppdatering för varje ny version av Thunderbird."
   },
   "migration.intro.quote": {
     "message": "Tack till alla mina betatestare för ert fortsatta stöd och tålamod som har gjort denna övergång möjlig. Er feedback har varit ovärderlig!"
@@ -618,7 +618,7 @@
     }
   },
   "migration.intro.p3.linkText": {
-    "message": "lagringsbackends"
+    "message": "lagringsbakändar"
   },
   "migration.section.autoMigration": {
     "message": "Automatisk migrering"
@@ -664,7 +664,7 @@
     "message": "Föråldrad filsystemåtkomst"
   },
   "migration.filesystem.description": {
-    "message": "Dessa mallar och skript refererar till filer på ditt lokala filsystem, som inte längre är direkt åtkomligt för WebExtensions. De refererade filerna behöver kopieras till Quicktext-lagringen och mallarna behöver justeras därefter. Se $LINK$ för detaljer.",
+    "message": "Dessa mallar och skript refererar till filer i ditt lokala filsystem, som WebExtensions inte längre kan komma åt direkt. De refererade filerna måste kopieras till Quicktext-lagringen och mallarna justeras därefter. Mer information finns i $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
@@ -678,7 +678,7 @@
     "message": "Följande konfigurationskällor förlitade sig på direkt filsystemåtkomst, som inte längre är tillgänglig i moderna WebExtensions."
   },
   "migration.dropped.description": {
-    "message": "Om du tidigare använde en lokal mapp för att lagra dina mallar eller dela dem mellan datorer kan du installera en $VFSLINK$ som ersättning - till exempel $WEBDAVLINK$ för att lagra mallar på en WebDAV-server (ownCloud, Nextcloud, etc.), eller $HOMEFOLDERLINK$ för att fortsätta använda en mapp på din dator.",
+    "message": "Om du tidigare använde en lokal mapp för att lagra dina mallar eller dela dem mellan datorer kan du installera en $VFSLINK$ som ersättning – till exempel $WEBDAVLINK$ för att lagra mallar på en WebDAV-server (ownCloud, Nextcloud osv.) eller $HOMEFOLDERLINK$ för att fortsätta använda en mapp på din dator.",
     "placeholders": {
       "vfslink": {
         "content": "$1"
@@ -692,7 +692,7 @@
     }
   },
   "migration.dropped.linkVfs": {
-    "message": "VFS-lagringsbackend"
+    "message": "VFS-lagringsbakände"
   },
   "migration.dropped.linkWebdav": {
     "message": "WebDAV-leverantör"
@@ -779,7 +779,7 @@
     }
   },
   "migration.error.allFailed": {
-    "message": "$FAILED$ fil(er) kunde inte kopieras. De berörda mallarna lämnades oförändrade.",
+    "message": "Antal filer som inte kunde kopieras: $FAILED$. De berörda mallarna lämnades oförändrade.",
     "placeholders": {
       "failed": {
         "content": "$1"
@@ -787,7 +787,7 @@
     }
   },
   "migration.error.partialFailed": {
-    "message": "$MIGRATED$ objekt migrerade, men $FAILED$ fil(er) kunde inte kopieras. De berörda mallarna lämnades oförändrade.",
+    "message": "Migrerade objekt: $MIGRATED$. Antal filer som inte kunde kopieras: $FAILED$. De berörda mallarna lämnades oförändrade.",
     "placeholders": {
       "migrated": {
         "content": "$1"
