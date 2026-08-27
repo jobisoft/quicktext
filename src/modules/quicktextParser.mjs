@@ -1227,7 +1227,23 @@ export class QuicktextParser {
       includeRemote: false,
       searchString: states['TO'].data['email'][aIndex].toLowerCase()
     })
-    let card = cards.find(c => c.type == "contact");
+
+    let email = states['TO'].data['email'][aIndex].toLowerCase();
+    
+    // Prefer an exact email address match.
+    // Thunderbird's quickSearch() may return contacts with similar email addresses, so using the first result can select the wrong contact.
+    let card = cards.find(c =>
+      c.type == "contact" &&
+      (
+        c.properties.PrimaryEmail?.toLowerCase() == email ||
+        c.properties.SecondEmail?.toLowerCase() == email
+      )
+    );
+
+    // Fall back to the previous behavior if no exact match is available.
+    if (!card) {
+      card = cards.find(c => c.type == "contact");
+    }
 
     if (card != null) {
       // Get directly stored props first.
