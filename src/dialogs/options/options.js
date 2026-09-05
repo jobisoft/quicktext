@@ -309,6 +309,28 @@ function crc32(data) {
 }
 
 /** @param {Array<{name: string, data: Uint8Array}>} entries */
+/**
+ * A moment in the two 16-bit fields a zip entry carries for it.
+ *
+ * The date packs year-1980 in bits 15-9, the month in 8-5 and the day in
+ * 4-0; the time packs hours in 15-11, minutes in 10-5 and two-second steps
+ * in 4-0. Months and days count from one, so a zeroed field is not a date
+ * that exists, and readers left to guess print anything from 1979 to 2159.
+ *
+ * The entries here are assembled in memory rather than read off disk, so
+ * the moment the archive is built is the only honest answer for them.
+ */
+function dosDateTime(when) {
+  const d = when instanceof Date && !Number.isNaN(when.getTime()) ? when : new Date();
+  const year = d.getFullYear();
+  if (year < 1980) return { date: (1 << 5) | 1, time: 0 };
+  if (year > 2107) return { date: (127 << 9) | (12 << 5) | 31, time: (23 << 11) | (59 << 5) | 29 };
+  return {
+    date: ((year - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate(),
+    time: (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1),
+  };
+}
+
 function buildZip(entries) {
   const enc = new TextEncoder();
   const u16 = (v, dv, o) => dv.setUint16(o, v, true);
@@ -318,6 +340,8 @@ function buildZip(entries) {
   const centralParts = [];
   let dataOffset = 0;
 
+  const stamp = dosDateTime(new Date());
+
   for (const { name, data } of entries) {
     const nameBytes = enc.encode(name);
     const crc = crc32(data);
@@ -325,6 +349,8 @@ function buildZip(entries) {
     const local = new Uint8Array(30 + nameBytes.length);
     const lv = new DataView(local.buffer);
     u32(0x04034b50, lv, 0);
+    u16(stamp.time, lv, 10); // mod time
+    u16(stamp.date, lv, 12); // mod date
     u16(20, lv, 4);
     u16(0, lv, 8); // STORE
     u32(crc, lv, 14);
@@ -340,6 +366,8 @@ function buildZip(entries) {
     u16(20, cv, 4);
     u16(20, cv, 6);
     u16(0, cv, 10); // STORE
+    u16(stamp.time, cv, 12); // mod time
+    u16(stamp.date, cv, 14); // mod date
     u32(crc, cv, 16);
     u32(data.length, cv, 20);
     u32(data.length, cv, 24);
