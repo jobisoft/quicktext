@@ -25,7 +25,7 @@ Common features:
 - Create folders, add local files (toolbar button only enabled when provider supports it)
 - **Multi-select:** Ctrl/Cmd+click to toggle, Shift+click for range, Ctrl+A to select all
 - Rename, cut, copy, paste, move, delete - all supporting single and multi-select
-- **Save as:** download a file to the local filesystem (right-click → "Save as…")
+- **Save as:** download a file to the local filesystem (right-click → "Save as…"). Requires the `downloads` permission.
 - Provider dropdown in the location bar when multiple providers are available
 - File type filter dropdown and filename filter input in the toolbar
 - Storage usage shown in the footer
