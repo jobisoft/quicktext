@@ -114,7 +114,7 @@ await toolbar.init();
 // "" for both browser_action and compose_action, so the user-set "show
 // label" pref is opt-in and must be applied here on every startup.
 function _applyToolbarLabel(enabled) {
-  const label = enabled ? "Quicktext" : "";
+  const label = enabled ? browser.i18n.getMessage("quicktext.label") : "";
   browser.browserAction.setLabel({ label });
   browser.composeAction.setLabel({ label });
 }
