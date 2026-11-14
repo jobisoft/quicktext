@@ -1,0 +1,159 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/* Styles for the shadow root of /scripts/composeToast.js. The host sits in the
+   message editor document, so it must not inherit anything from it. */
+
+:host {
+  all: initial;
+  position: fixed !important;
+  right: 16px !important;
+  bottom: 16px !important;
+  width: max-content !important;
+  max-width: min(420px, calc(100vw - 32px)) !important;
+  z-index: 2147483000 !important;
+  color-scheme: light dark;
+  font: 14px/1.5 system-ui, sans-serif;
+  color: light-dark(#25272b, #e4e8ee);
+}
+:host([data-expanded]) {
+  width: min(75vw, 720px) !important;
+  max-width: calc(100vw - 32px) !important;
+}
+* {
+  box-sizing: border-box;
+}
+[hidden] {
+  display: none !important;
+}
+
+.bubble {
+  background: light-dark(#fff5f5, #3a2a2e);
+  border: 1px solid light-dark(#e0a8ae, #8c4f59);
+  border-left: 4px solid light-dark(#c4313d, #ff7b86);
+  border-radius: 10px;
+  box-shadow: 0 5px 22px #23384f30;
+  overflow: hidden;
+  max-height: 80vh;
+}
+
+summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 76px 10px 14px;
+  min-height: 52px;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+summary::-webkit-details-marker {
+  display: none;
+}
+summary:hover {
+  background: light-dark(#fde9ea, #45323a);
+}
+summary:focus-visible,
+button:focus-visible {
+  outline: 2px solid #3d8bd2;
+  outline-offset: -3px;
+}
+
+.brand {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+.heading {
+  flex: 1;
+  min-width: 0;
+}
+.title,
+.summary-text {
+  display: block;
+}
+.title {
+  font-weight: 600;
+  color: light-dark(#a42e35, #ffadb3);
+}
+.summary-text {
+  font-size: 13px;
+}
+
+summary .header-control {
+  position: absolute;
+  top: 14px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 5px;
+  color: light-dark(#596777, #b4c9df);
+}
+summary .close {
+  right: 12px;
+  background: light-dark(#f1e4e5, #4a383e);
+  border: 1px solid light-dark(#dcc4c6, #6e535b);
+  cursor: pointer;
+}
+summary .close:hover {
+  background: light-dark(#e8d3d5, #5a434a);
+}
+.close svg {
+  width: 12px;
+  height: 12px;
+}
+summary .chevron {
+  right: 42px;
+}
+.chevron svg {
+  width: 16px;
+  height: 16px;
+}
+[open] .chevron svg {
+  transform: rotate(90deg);
+}
+
+.panel {
+  padding: 0 16px 14px 50px;
+  max-height: calc(80vh - 60px);
+  overflow-y: auto;
+}
+.details {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.details li {
+  padding: 6px 0;
+  border-top: 1px solid light-dark(#efd5d7, #54414a);
+  font: 13px/1.5 ui-monospace, Consolas, monospace;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+button.link {
+  margin-top: 10px;
+  padding: 5px 12px;
+  font: inherit;
+  font-size: 13px;
+  border: 1px solid light-dark(#bcc5d1, #697b90);
+  border-radius: 5px;
+  background: light-dark(white, #303b49);
+  color: inherit;
+  cursor: pointer;
+}
+button.link:hover {
+  background: light-dark(#edf2f7, #405064);
+}
+
+@media (max-width: 500px) {
+  .panel {
+    padding-left: 16px;
+  }
+}

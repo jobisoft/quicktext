@@ -10,6 +10,7 @@ import * as toolbar from "../modules/toolbar.mjs";
 import * as compose from "../modules/compose.mjs";
 import * as menus from "../modules/menus.mjs";
 import * as escripts from "../modules/escripts.mjs";
+import * as composeToast from "../modules/composeToast.mjs";
 import * as vfs from "../vendor/vfs-client/vfs-client.mjs";
 
 // Install the external-script handshake listener as early as possible, before
@@ -19,6 +20,7 @@ import * as vfs from "../vendor/vfs-client/vfs-client.mjs";
 // arrives, the handshake is silently dropped and the script add-on's entry
 // never appears in the Insert Tag flyout until it is disabled+re-enabled.
 escripts.init();
+composeToast.init();
 
 browser.runtime.onInstalled.addListener(details => {
   let manifest = browser.runtime.getManifest();

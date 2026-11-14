@@ -144,6 +144,17 @@ export class QuicktextParser {
       .set({ [`QuicktextStateData_${this.mTabId}`]: value });
   }
 
+  // Uses of tags that are no longer supported (the FILE modes) are collected
+  // per tab in session storage, not on the parser: script getTag/processTag
+  // calls run on a fresh parser, and only the tab connects them to the
+  // template being inserted. insertTemplate() reads and clears the list.
+  async recordUnsupportedTag(tag) {
+    const key = `QuicktextUnsupportedTags_${this.mTabId}`;
+    const { [key]: entries = [] } = await browser.storage.session.get({ [key]: [] });
+    entries.push({ tag, storageName: this.activeBundle?.storageName ?? "" });
+    await browser.storage.session.set({ [key]: entries });
+  }
+
   async clearNonPersistentData() {
     let stateData = await this.getStateData();
     for (let key of Object.keys(stateData)) {
@@ -548,20 +559,10 @@ export class QuicktextParser {
     return this.process_file(aVariables);
   }
   async process_file(aVariables) {
+    // Reading local files is no longer supported. Record the usage so the
+    // caller can tell the user, and insert nothing.
     if (aVariables.length > 0 && aVariables[0] != "") {
-      // Tries to open the file and returning the content.
-      try {
-        let content = await browser.FileSystemAccess.readTextFile(aVariables[0]);
-        let insertMode = aVariables.length > 1 && aVariables[1].includes("force_as_text")
-          ? "text/plain"
-          : "text/html";
-        let stripHtmlComments = aVariables.length > 1 && aVariables[1].includes("strip_html_comments");
-
-        return this.process_file_content(content, {
-          insertMode,
-          stripHtmlComments
-        });
-      } catch (e) { console.error(e); }
+      await this.recordUnsupportedTag(`[[FILE=${aVariables.join("|")}]]`);
     }
     return "";
   }
@@ -628,11 +629,8 @@ export class QuicktextParser {
             break;
           }
           case "file": {
-            let bytes = await browser.FileSystemAccess.readBinaryFile(source);
-            let leafName = utils.getLeafName(source);
-            let type = utils.getTypeFromExtension(leafName);
-            let binContent = utils.uint8ArrayToBase64(bytes);
-            src = "data:" + type + ";filename=" + leafName + ";base64," + binContent;
+            // Reading local files is no longer supported.
+            await this.recordUnsupportedTag(`[[IMAGE=FILE|${source}]]`);
             break;
           }
           case "vfs": {
@@ -958,11 +956,8 @@ export class QuicktextParser {
         break;
       }
       case "file": {
-        let bytes = await browser.FileSystemAccess.readBinaryFile(source);
-        let leafName = name ?? utils.getLeafName(source);
-        let type = utils.getTypeFromExtension(leafName);
-        let file = new File([bytes], leafName, { type });
-        await this.addAttachment(file);
+        // Reading local files is no longer supported.
+        await this.recordUnsupportedTag(`[[ATTACHMENT=FILE|${source}]]`);
         break;
       }
       case "vfs": {

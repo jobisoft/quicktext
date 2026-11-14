@@ -6,6 +6,7 @@
 
 import * as storage from "/modules/storage.mjs";
 import * as utils from "/modules/utils.mjs";
+import * as composeToast from "/modules/composeToast.mjs";
 import { QuicktextParser, STORAGE_STATE } from "/modules/quicktextParser.mjs";
 
 // Helper
@@ -181,9 +182,45 @@ export async function insertTemplate(tabId, storageUuid, groupIdx, textIdx) {
   });
   const group = bundle.templates.groups[groupIdx];
   const text = bundle.templates.texts[groupIdx][textIdx];
-  await qParser.clearNonPersistentData();
-  await insertSubject({ qParser, subject: text.subject });
-  await qParser.parseAndInsert(`[[TEXT=${group.name}|${text.name}]]`);
+  const unsupportedKey = `QuicktextUnsupportedTags_${tabId}`;
+  await browser.storage.session.remove(unsupportedKey);
+  try {
+    await qParser.clearNonPersistentData();
+    await insertSubject({ qParser, subject: text.subject });
+    await qParser.parseAndInsert(`[[TEXT=${group.name}|${text.name}]]`);
+  } finally {
+    const { [unsupportedKey]: unsupported = [] } = await browser.storage.session.get({ [unsupportedKey]: [] });
+    await browser.storage.session.remove(unsupportedKey);
+    if (unsupported.length > 0) {
+      await showUnsupportedTagsToast(tabId, `${group.name} › ${text.name}`, unsupported);
+    }
+  }
+}
+
+// Tell the user which tags of the just inserted template were skipped,
+// because they are no longer supported (see recordUnsupportedTag()).
+async function showUnsupportedTagsToast(tabId, templateName, entries) {
+  const i18n = (key, subs) => messenger.i18n.getMessage(key, subs);
+  try {
+    await composeToast.show(tabId, {
+      title: i18n("composeToast.unsupported.title", [templateName]),
+      summary: i18n("composeToast.unsupported.summary", [String(entries.length)]),
+      details: entries.map(({ tag, storageName }) => storageName
+        ? i18n("composeToast.unsupported.detailInStorage", [tag, storageName])
+        : tag),
+      link: {
+        label: i18n("composeToast.unsupported.linkLabel"),
+        url: "https://github.com/jobisoft/quicktext/wiki/Storage-locations#adding-files-to-a-storage-location",
+      },
+      labels: {
+        expand: i18n("composeToast.expand"),
+        collapse: i18n("composeToast.collapse"),
+        close: i18n("composeToast.close"),
+      },
+    });
+  } catch (ex) {
+    console.error("[Quicktext] Could not show the compose toast", ex, entries);
+  }
 }
 
 export async function insertVariable({ tabId, variable, storageRef }) {

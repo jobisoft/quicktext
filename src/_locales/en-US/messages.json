@@ -811,5 +811,44 @@
   },
   "migration.alert.managerOpen": {
     "message": "Please close the Quicktext Manager before starting the migration."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: \"$TEMPLATE$\" was inserted incompletely",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ tag(s) tried to read a local file, which is no longer supported. They were skipped.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.detailInStorage": {
+    "message": "$TAG$ (in \"$STORAGE$\")",
+    "placeholders": {
+      "tag": {
+        "content": "$1"
+      },
+      "storage": {
+        "content": "$2"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "How to add files to a storage location"
+  },
+  "composeToast.expand": {
+    "message": "Show details"
+  },
+  "composeToast.collapse": {
+    "message": "Hide details"
+  },
+  "composeToast.close": {
+    "message": "Close"
   }
 }
