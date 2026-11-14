@@ -20,6 +20,7 @@
   },
   "web_accessible_resources": [
     "scripts/composeToast.css",
+    "scripts/composeToolbar.css",
     "assets/icon.png"
   ],
   "options_ui": {

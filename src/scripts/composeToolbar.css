@@ -1,0 +1,164 @@
+/*
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+/* Styles for the shadow root of /scripts/composeToolbar.js. The host sits in
+   the message editor document, so it must not inherit anything from it. */
+
+:host {
+  all: initial;
+  display: block !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 2147482000 !important;
+  /* Match the editor document, not the system: the message area can be
+     light while Thunderbird itself is dark, or the other way round. */
+  color-scheme: inherit;
+  font: 13px/1.4 system-ui, sans-serif;
+  color: light-dark(#1f2328, #e6e8eb);
+  user-select: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.bar {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 4px 6px;
+  background: light-dark(#f3f4f6, #2b2d32);
+  border-bottom: 1px solid light-dark(#d4d7dc, #44474e);
+}
+
+.entries {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tools {
+  display: flex;
+  gap: 4px;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.entry {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  max-width: 220px;
+  padding: 2px 8px;
+  border: 1px solid light-dark(#c9cdd3, #50545c);
+  border-radius: 4px;
+  background: light-dark(#ffffff, #33363c);
+}
+.entry .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.entry:hover,
+.entry.open {
+  background: light-dark(#e7eef8, #3c4656);
+  border-color: light-dark(#9fb6d4, #5d7290);
+}
+.entry svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.entry.disabled {
+  cursor: default;
+  font-style: italic;
+  opacity: 0.55;
+  background: transparent;
+}
+
+.tool {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: transparent;
+  opacity: 0.75;
+}
+.tool:hover {
+  opacity: 1;
+  background: light-dark(#e7eef8, #3c4656);
+}
+.tool svg {
+  width: 16px;
+  height: 16px;
+}
+
+.section {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 4px;
+  border: 1px solid light-dark(#d4d7dc, #4a4d55);
+  border-radius: 5px;
+}
+.section-label {
+  font-size: 11px;
+  opacity: 0.65;
+  margin: 0 2px;
+}
+.section.disabled {
+  opacity: 0.55;
+  font-style: italic;
+}
+
+.menu {
+  position: fixed;
+  z-index: 1;
+  min-width: 180px;
+  max-width: min(420px, calc(100vw - 8px));
+  overflow-y: auto;
+  padding: 4px 0;
+  background: light-dark(#ffffff, #2f3237);
+  border: 1px solid light-dark(#c9cdd3, #50545c);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px #0003;
+}
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 24px;
+  width: 100%;
+  padding: 5px 12px;
+  border: 0;
+  background: none;
+  text-align: start;
+}
+.item:hover {
+  background: light-dark(#e7eef8, #3c4656);
+}
+.item .label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.hint {
+  flex-shrink: 0;
+  font-size: 12px;
+  opacity: 0.6;
+}
