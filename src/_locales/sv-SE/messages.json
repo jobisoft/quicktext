@@ -588,12 +588,7 @@
     "message": "Borttagna konfigurationskällor"
   },
   "migrationReport.pageTitle": {
-    "message": "Quicktext v$VERSION$ migreringsrapport",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
+    "message": "Quicktext kompatibilitetsrapport"
   },
   "migrationReport.intro": {
     "message": "Quicktext är nu en modern WebExtension. Det har inte längre direkt åtkomst till filerna på din dator och stöder inte längre skript-API:t från Quicktext v5. Mallarna, skripten och inställningarna nedan är fortfarande beroende av dessa funktioner och behöver din uppmärksamhet."
@@ -619,6 +614,9 @@
   },
   "migrationReport.filesystem.oldVersion.linkText": {
     "message": "listan över äldre versioner"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "Bläddra i lagringsplats"
   },
   "migration.incompatible.title": {
     "message": "Inkompatibla skript"

@@ -588,12 +588,7 @@
     "message": "削除された設定ソース"
   },
   "migrationReport.pageTitle": {
-    "message": "Quicktext v$VERSION$ 移行レポート",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
+    "message": "Quicktext 互換性レポート"
   },
   "migrationReport.intro": {
     "message": "Quicktext は最新の WebExtension になりました。お使いのコンピューター上のファイルに直接アクセスできなくなり、Quicktext v5 のスクリプト API もサポートされなくなりました。以下に示すテンプレート、スクリプト、設定はまだこれらの機能に依存しており、対応が必要です。"
@@ -619,6 +614,9 @@
   },
   "migrationReport.filesystem.oldVersion.linkText": {
     "message": "旧バージョンの一覧"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "保存場所を参照"
   },
   "migration.incompatible.title": {
     "message": "互換性のないスクリプト"

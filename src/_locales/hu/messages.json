@@ -588,12 +588,7 @@
     "message": "Eltávolított konfigurációs források"
   },
   "migrationReport.pageTitle": {
-    "message": "Quicktext v$VERSION$ migrációs jelentés",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
+    "message": "Quicktext kompatibilitási jelentés"
   },
   "migrationReport.intro": {
     "message": "A Quicktext mostantól egy modern WebExtension. Már nem fér hozzá közvetlenül a számítógépén lévő fájlokhoz, és már nem támogatja a Quicktext v5 szkript API-t. Az alább felsorolt sablonok, szkriptek és beállítások még ezekre a funkciókra támaszkodnak, és figyelmet igényelnek."
@@ -619,6 +614,9 @@
   },
   "migrationReport.filesystem.oldVersion.linkText": {
     "message": "korábbi verziók listája"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "Tárolóhely tallózása"
   },
   "migration.incompatible.title": {
     "message": "Nem kompatibilis szkriptek"

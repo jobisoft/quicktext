@@ -10,6 +10,7 @@
 
 import * as storage from "/modules/storage.mjs";
 import * as utils from "/modules/utils.mjs";
+import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import { localizeDocument } from "/vendor/i18n.mjs";
 
 const i18n = (key, subs) => browser.i18n.getMessage(key, subs) || key;
@@ -17,6 +18,9 @@ const i18n = (key, subs) => browser.i18n.getMessage(key, subs) || key;
 // The last version which still has the migration wizard, which copies the
 // referenced files and adjusts the tags automatically.
 const WIZARD_VERSION = "6.9.5";
+// Storage of the first listed FILE finding, opened by "Browse storage".
+let browseStorageUuid = null;
+
 const WIZARD_VERSION_URL = `https://addons.thunderbird.net/addon/quicktext/versions/#version-${WIZARD_VERSION}`;
 
 function renderItem(container, location, lines) {
@@ -183,6 +187,7 @@ async function render() {
 
   // Deprecated filesystem access
   const fsCount = deprecatedFs.templates.length + deprecatedFs.scripts.length;
+  browseStorageUuid = deprecatedFs.templates[0]?.storageUuid ?? deprecatedFs.scripts[0]?.storageUuid ?? null;
   showSection("manual-filesystem", fsCount > 0);
   if (fsCount > 0) {
     _buildLinkedParagraph("filesystem-description",
@@ -261,6 +266,26 @@ async function render() {
   }
 }
 
+// Open the storage browser (same picker as the manager's "Browse" button) in
+// the folder of the config file, which is where the suggested paths point.
+// Prefer the storage of the listed findings, else the first writable one.
+async function browseStorage() {
+  const vfsEntries = (await storage.getAllStorageEntries()).filter(e => e.type === "vfs");
+  const entry = vfsEntries.find(e => e.uuid === browseStorageUuid)
+    ?? vfsEntries.find(e => !e.isReadOnly)
+    ?? vfsEntries[0];
+  if (!entry) return;
+  try {
+    await vfs.showBrowseFilePicker({
+      startIn: utils.getConfigDir(entry.path) || "/",
+      storageRef: entry.storageRef,
+      opfsStorageName: storage.OPFS_STORAGE_NAME,
+    });
+  } catch (ex) {
+    console.log(ex);
+  }
+}
+
 // Remember what was reported, so the report opens again at startup only if
 // something new shows up.
 async function dismissReport() {
@@ -279,16 +304,20 @@ async function dismissReport() {
 document.addEventListener("DOMContentLoaded", async () => {
   localizeDocument();
 
-  const version = browser.runtime.getManifest().version;
-  const title = i18n("migrationReport.pageTitle", [version]);
+  const title = i18n("migrationReport.pageTitle");
   document.title = title;
   document.getElementById("page-title").textContent = title;
 
-  // Intercept all link clicks to open in the default browser.
+  // Intercept all link clicks. Add-on pages on ATN open in a Thunderbird tab,
+  // so the add-on can be installed from there directly. Everything else opens
+  // in the default browser.
   document.addEventListener("click", e => {
     const a = e.target.closest("a[href]");
-    if (a?.href?.startsWith("http")) {
-      e.preventDefault();
+    if (!a?.href?.startsWith("http")) return;
+    e.preventDefault();
+    if (new URL(a.href).hostname === "addons.thunderbird.net") {
+      browser.tabs.create({ url: a.href });
+    } else {
       browser.windows.openDefaultBrowser(a.href);
     }
   });
@@ -298,6 +327,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.getElementById("btn-open-manager").addEventListener("click", () => {
     utils.openSettingsDialog();
   });
+
+  document.getElementById("btn-browse-storage").addEventListener("click", browseStorage);
 
   document.getElementById("btn-wiki-storage").addEventListener("click", () => {
     browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/Storage-locations");

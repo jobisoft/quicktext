@@ -588,12 +588,7 @@
     "message": "Removed configuration sources"
   },
   "migrationReport.pageTitle": {
-    "message": "Quicktext v$VERSION$ Migration Report",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
+    "message": "Quicktext Compatibility Report"
   },
   "migrationReport.intro": {
     "message": "Quicktext is now a modern WebExtension. It no longer has direct access to the files on your computer and no longer supports the Quicktext v5 script API. The templates, scripts and settings listed below still depend on these features and need your attention."
@@ -619,6 +614,9 @@
   },
   "migrationReport.filesystem.oldVersion.linkText": {
     "message": "list of older versions"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "Browse storage"
   },
   "migration.incompatible.title": {
     "message": "Incompatible scripts"

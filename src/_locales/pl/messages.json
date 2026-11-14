@@ -588,12 +588,7 @@
     "message": "Usunięto źródła konfiguracji"
   },
   "migrationReport.pageTitle": {
-    "message": "Raport migracji Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
+    "message": "Raport zgodności Quicktext"
   },
   "migrationReport.intro": {
     "message": "Quicktext jest teraz nowoczesnym rozszerzeniem WebExtension. Nie ma już bezpośredniego dostępu do plików na Twoim komputerze i nie obsługuje już API skryptów Quicktext v5. Wymienione poniżej szablony, skrypty i ustawienia nadal zależą od tych funkcji i wymagają Twojej uwagi."
@@ -619,6 +614,9 @@
   },
   "migrationReport.filesystem.oldVersion.linkText": {
     "message": "listy starszych wersji"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "Przeglądaj miejsce przechowywania"
   },
   "migration.incompatible.title": {
     "message": "Niekompatybilne skrypty"

@@ -588,12 +588,7 @@
     "message": "Odstraněné zdroje konfigurace"
   },
   "migrationReport.pageTitle": {
-    "message": "Zpráva o migraci Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
+    "message": "Zpráva o kompatibilitě Quicktext"
   },
   "migrationReport.intro": {
     "message": "Quicktext je nyní moderní WebExtension. Již nemá přímý přístup k souborům ve vašem počítači a již nepodporuje skriptovací API Quicktext v5. Níže uvedené šablony, skripty a nastavení na těchto funkcích stále závisí a vyžadují vaši pozornost."
@@ -619,6 +614,9 @@
   },
   "migrationReport.filesystem.oldVersion.linkText": {
     "message": "seznamu starších verzí"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "Procházet úložiště"
   },
   "migration.incompatible.title": {
     "message": "Nekompatibilní skripty"
