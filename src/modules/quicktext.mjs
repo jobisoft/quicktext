@@ -205,9 +205,7 @@ async function showUnsupportedTagsToast(tabId, templateName, entries) {
     await composeToast.show(tabId, {
       title: i18n("composeToast.unsupported.title", [templateName]),
       summary: i18n("composeToast.unsupported.summary", [String(entries.length)]),
-      details: entries.map(({ tag, storageName }) => storageName
-        ? i18n("composeToast.unsupported.detailInStorage", [tag, storageName])
-        : tag),
+      details: entries,
       link: {
         label: i18n("composeToast.unsupported.linkLabel"),
         url: "https://github.com/jobisoft/quicktext/wiki/Storage-locations#adding-files-to-a-storage-location",

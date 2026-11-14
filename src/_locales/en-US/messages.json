@@ -828,17 +828,6 @@
       }
     }
   },
-  "composeToast.unsupported.detailInStorage": {
-    "message": "$TAG$ (in \"$STORAGE$\")",
-    "placeholders": {
-      "tag": {
-        "content": "$1"
-      },
-      "storage": {
-        "content": "$2"
-      }
-    }
-  },
   "composeToast.unsupported.linkLabel": {
     "message": "How to add files to a storage location"
   },

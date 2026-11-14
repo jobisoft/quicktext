@@ -151,7 +151,7 @@ export class QuicktextParser {
   async recordUnsupportedTag(tag) {
     const key = `QuicktextUnsupportedTags_${this.mTabId}`;
     const { [key]: entries = [] } = await browser.storage.session.get({ [key]: [] });
-    entries.push({ tag, storageName: this.activeBundle?.storageName ?? "" });
+    entries.push(tag);
     await browser.storage.session.set({ [key]: entries });
   }
 
