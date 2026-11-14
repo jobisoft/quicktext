@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Пожалуйста, закройте Менеджер Quicktext перед началом миграции."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: «$TEMPLATE$» вставлен не полностью",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "Пропущено тегов, пытавшихся прочитать локальный файл (это больше не поддерживается): $COUNT$.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Как добавить файлы в место хранения"
+  },
+  "composeToast.expand": {
+    "message": "Показать подробности"
+  },
+  "composeToast.collapse": {
+    "message": "Скрыть подробности"
+  },
+  "composeToast.close": {
+    "message": "Закрыть"
   }
 }

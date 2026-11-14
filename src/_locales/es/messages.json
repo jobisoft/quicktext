@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Por favor, cierre el Gestor de Quicktext antes de iniciar la migración."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: «$TEMPLATE$» se insertó de forma incompleta",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ etiqueta(s) intentaron leer un archivo local, lo cual ya no es compatible. Se omitieron.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Cómo añadir archivos a una ubicación de almacenamiento"
+  },
+  "composeToast.expand": {
+    "message": "Mostrar detalles"
+  },
+  "composeToast.collapse": {
+    "message": "Ocultar detalles"
+  },
+  "composeToast.close": {
+    "message": "Cerrar"
   }
 }

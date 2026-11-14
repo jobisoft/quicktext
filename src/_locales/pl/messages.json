@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Przed rozpoczęciem migracji należy zamknąć program Quicktext Manager."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: szablon „$TEMPLATE$” został wstawiony niekompletnie",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "Liczba pominiętych znaczników, które próbowały odczytać plik lokalny (nie jest to już obsługiwane): $COUNT$.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Jak dodać pliki do miejsca przechowywania"
+  },
+  "composeToast.expand": {
+    "message": "Pokaż szczegóły"
+  },
+  "composeToast.collapse": {
+    "message": "Ukryj szczegóły"
+  },
+  "composeToast.close": {
+    "message": "Zamknij"
   }
 }

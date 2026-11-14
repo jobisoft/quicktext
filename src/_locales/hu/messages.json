@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Kérjük, zárja be a Quicktext-kezelőt a migráció megkezdése előtt."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: a(z) „$TEMPLATE$” hiányosan lett beszúrva",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ címke helyi fájlt próbált olvasni, ami már nem támogatott. Ezek ki lettek hagyva.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Fájlok hozzáadása egy tárolóhelyhez"
+  },
+  "composeToast.expand": {
+    "message": "Részletek megjelenítése"
+  },
+  "composeToast.collapse": {
+    "message": "Részletek elrejtése"
+  },
+  "composeToast.close": {
+    "message": "Bezárás"
   }
 }

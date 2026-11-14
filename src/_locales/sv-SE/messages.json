@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Stäng Quicktext-hanteraren innan du startar migreringen."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: \"$TEMPLATE$\" infogades ofullständigt",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ tagg(ar) försökte läsa en lokal fil, vilket inte längre stöds. De hoppades över.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Så lägger du till filer på en lagringsplats"
+  },
+  "composeToast.expand": {
+    "message": "Visa detaljer"
+  },
+  "composeToast.collapse": {
+    "message": "Dölj detaljer"
+  },
+  "composeToast.close": {
+    "message": "Stäng"
   }
 }

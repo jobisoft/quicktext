@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "移行を開始する前に Quicktext マネージャーを閉じてください。"
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: 「$TEMPLATE$」は不完全に挿入されました",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ 個のタグがローカルファイルを読み込もうとしましたが、これはサポートされなくなりました。これらはスキップされました。",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "保存場所にファイルを追加する方法"
+  },
+  "composeToast.expand": {
+    "message": "詳細を表示"
+  },
+  "composeToast.collapse": {
+    "message": "詳細を非表示"
+  },
+  "composeToast.close": {
+    "message": "閉じる"
   }
 }

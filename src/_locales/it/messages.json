@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Chiudere il Gestore Quicktext prima di avviare la migrazione."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: \"$TEMPLATE$\" è stato inserito in modo incompleto",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ tag hanno tentato di leggere un file locale, cosa non più supportata. Sono stati ignorati.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Come aggiungere file a una posizione di archiviazione"
+  },
+  "composeToast.expand": {
+    "message": "Mostra dettagli"
+  },
+  "composeToast.collapse": {
+    "message": "Nascondi dettagli"
+  },
+  "composeToast.close": {
+    "message": "Chiudi"
   }
 }

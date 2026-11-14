@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Před spuštěním migrace prosím zavřete Správce Quicktext."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: „$TEMPLATE$“ byla vložena neúplně",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "Počet značek, které se pokusily číst místní soubor, což již není podporováno: $COUNT$. Byly přeskočeny.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Jak přidat soubory do úložiště"
+  },
+  "composeToast.expand": {
+    "message": "Zobrazit podrobnosti"
+  },
+  "composeToast.collapse": {
+    "message": "Skrýt podrobnosti"
+  },
+  "composeToast.close": {
+    "message": "Zavřít"
   }
 }

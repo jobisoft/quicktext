@@ -811,5 +811,33 @@
   },
   "migration.alert.managerOpen": {
     "message": "Bitte schließen Sie den Quicktext-Manager, bevor Sie die Migration starten."
+  },
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: \"$TEMPLATE$\" wurde unvollständig eingefügt",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "$COUNT$ Tag(s) wollten eine lokale Datei lesen, was nicht mehr unterstützt wird. Sie wurden übersprungen.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Wie man Dateien zu einem Speicherort hinzufügt"
+  },
+  "composeToast.expand": {
+    "message": "Details anzeigen"
+  },
+  "composeToast.collapse": {
+    "message": "Details ausblenden"
+  },
+  "composeToast.close": {
+    "message": "Schließen"
   }
 }
