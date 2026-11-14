@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "インポートを追加"
   },
-  "migration.pageTitle": {
-    "message": "Quicktext v$VERSION$ 移行",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "これは、Quicktext を最新の WebExtension に変換するための長い更新プロセスの最終段階です。Quicktext はまもなくレガシー API やコンピューターへの無制限アクセスに依存しなくなり、最新の WebExtension フレームワーク内で完全に動作するようになります。Thunderbird の新しいバージョンごとに更新する必要がなくなります。"
-  },
   "migration.intro.quote": {
     "message": "この移行を実現するために、継続的なサポートと忍耐をもって協力してくださったすべてのベータテスターの皆様に感謝いたします。皆様からのフィードバックは非常に貴重でした！"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling、Quicktext 開発者"
   },
-  "migration.intro.p2": {
-    "message": "最新の WebExtension はファイルシステムに直接アクセスできなくなりました。そのため、$ITEMTYPE$の定義は Quicktext の内部ストレージに保存されるようになり、テンプレートが参照するすべての添付ファイルや画像もそのストレージにコピーする必要があります。",
+  "migration.section.droppedSources": {
+    "message": "削除された設定ソース"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Quicktext v$VERSION$ 移行レポート",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "テンプレート"
+  "migrationReport.intro": {
+    "message": "Quicktext は最新の WebExtension になりました。お使いのコンピューター上のファイルに直接アクセスできなくなり、Quicktext v5 のスクリプト API もサポートされなくなりました。以下に示すテンプレート、スクリプト、設定はまだこれらの機能に依存しており、対応が必要です。"
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "テンプレートとスクリプト"
-  },
-  "migration.intro.p3": {
-    "message": "移行後、追加の$LINK$をインストールして、Quicktext の設定全体を例えば WebDAV サーバーに移動できます。",
+  "migrationReport.filesystem.description": {
+    "message": "これらのテンプレートとスクリプトは、お使いのコンピューター上のファイルを参照しています。このようなタグは現在スキップされます。ファイルは挿入も添付もされず、代わりに Quicktext が作成ウィンドウに通知を表示します。修正するには、ファイルを Quicktext の保存場所にコピーし、以下の提案に従ってタグを変更してください。詳しくは$LINK$をご覧ください。",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "ストレージバックエンド"
-  },
-  "migration.section.autoMigration": {
-    "message": "自動移行"
-  },
-  "migration.section.manualMigration": {
-    "message": "手動移行が必要"
-  },
-  "migration.section.droppedSources": {
-    "message": "削除された設定ソース"
-  },
-  "migration.auto.intro": {
-    "message": "以下のテンプレートは自動的に移行できます。ローカルファイルは Quicktext の内部ストレージにコピーされ、これらのファイルを参照するテンプレート内のすべてのタグが調整されます。"
-  },
-  "migration.btn.startMigration": {
-    "message": "テンプレートの移行を開始"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "移行を開始（$COUNT$ 項目）",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "または、$LINK$から Quicktext $VERSION$ をインストールしてください。このバージョンには移行ウィザードがまだ含まれており、ファイルのコピーとタグの変更を自動で行います。Thunderbird の再起動直後にウィザードを実行し、その後 Quicktext を再度更新してください。",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "以下の項目は自動的に移行できないため、手動で対応する必要があります。"
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "旧バージョンの一覧"
   },
   "migration.incompatible.title": {
     "message": "互換性のないスクリプト"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "非推奨のファイルシステムアクセス"
-  },
-  "migration.filesystem.description": {
-    "message": "これらのテンプレートとスクリプトは、WebExtension からは直接アクセスできなくなったローカルファイルシステム上のファイルを参照しています。参照されているファイルを Quicktext ストレージにコピーし、テンプレートをそれに応じて調整する必要があります。詳細は$LINK$をご覧ください。",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "保存場所ガイド"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "これらの項目の一部はエンタープライズポリシーを通じて提供されています。更新については、管理者にお問い合わせください。"
   },
-  "migration.progress.preparing": {
-    "message": "移行を準備中…"
-  },
-  "migration.progress.backingUp": {
-    "message": "$FILENAME$ をバックアップ中…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "$FILENAME$ をコピー中（$CURRENT$/$TOTAL$）…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "タグを書き換え中…"
-  },
-  "migration.progress.saving": {
-    "message": "変更を保存中…"
-  },
-  "migration.progress.updating": {
-    "message": "検出結果を更新中…"
-  },
-  "migration.success": {
-    "message": "移行が完了しました。$COUNT$ 項目が移行されました。",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "$FAILED$ 個のファイルのコピーに失敗しました。影響を受けたテンプレートは変更されませんでした。",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "$MIGRATED$ 項目が移行されましたが、$FAILED$ 個のファイルのコピーに失敗しました。影響を受けたテンプレートは変更されませんでした。",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "閉じる"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "保存場所の説明"
   },
   "migration.btn.learnJourney": {
     "message": "WebExtensionへの道のり"
-  },
-  "migration.alert.managerOpen": {
-    "message": "移行を開始する前に Quicktext マネージャーを閉じてください。"
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: 「$TEMPLATE$」は不完全に挿入されました",

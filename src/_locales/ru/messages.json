@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Добавить импорт"
   },
-  "migration.pageTitle": {
-    "message": "Миграция Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Это последний этап длительного процесса обновления для преобразования Quicktext в современное WebExtension. Quicktext вскоре перестанет зависеть от устаревших API и неограниченного доступа к вашему компьютеру, а будет полностью работать в рамках современной платформы WebExtension - без необходимости обновления для каждой новой версии Thunderbird."
-  },
   "migration.intro.quote": {
     "message": "Спасибо всем моим бета-тестерам за вашу постоянную поддержку и терпение, которые сделали этот переход возможным. Ваши отзывы были бесценны!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, разработчик Quicktext"
   },
-  "migration.intro.p2": {
-    "message": "Современные WebExtension больше не могут напрямую обращаться к файловой системе. В результате определения ваших $ITEMTYPE$ теперь хранятся во внутреннем хранилище Quicktext, и все вложения и изображения, на которые ссылаются ваши шаблоны, также должны быть скопированы в это хранилище.",
+  "migration.section.droppedSources": {
+    "message": "Удалённые источники конфигурации"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Отчёт о миграции Quicktext v$VERSION$",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "шаблонов"
+  "migrationReport.intro": {
+    "message": "Quicktext теперь является современным расширением WebExtension. У него больше нет прямого доступа к файлам на вашем компьютере, и он больше не поддерживает API скриптов Quicktext v5. Перечисленные ниже шаблоны, скрипты и настройки всё ещё зависят от этих возможностей и требуют вашего внимания."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "шаблонов и скриптов"
-  },
-  "migration.intro.p3": {
-    "message": "После миграции вы можете установить дополнительные $LINK$ и перенести всю конфигурацию Quicktext, например, на сервер WebDAV.",
+  "migrationReport.filesystem.description": {
+    "message": "Эти шаблоны и скрипты ссылаются на файлы на вашем компьютере. Такие теги теперь пропускаются: файлы больше не вставляются и не прикрепляются, а Quicktext вместо этого показывает уведомление в окне написания сообщения. Чтобы исправить это, скопируйте файлы в место хранения Quicktext и измените теги, как предложено ниже. Подробнее см. в $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "бэкенды хранилищ"
-  },
-  "migration.section.autoMigration": {
-    "message": "Автоматическая миграция"
-  },
-  "migration.section.manualMigration": {
-    "message": "Требуется ручная миграция"
-  },
-  "migration.section.droppedSources": {
-    "message": "Удалённые источники конфигурации"
-  },
-  "migration.auto.intro": {
-    "message": "Следующие шаблоны могут быть мигрированы автоматически. Локальные файлы будут скопированы во внутреннее хранилище Quicktext, и все теги в ваших шаблонах, ссылающиеся на эти файлы, будут скорректированы."
-  },
-  "migration.btn.startMigration": {
-    "message": "Начать миграцию шаблонов"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Начать миграцию ($COUNT$ элементов)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Кроме того, можно установить Quicktext $VERSION$ из $LINK$. Эта версия ещё содержит мастер миграции, который автоматически копирует файлы и изменяет теги. Запустите мастер сразу после перезапуска Thunderbird, а затем снова обновите Quicktext.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Перечисленные ниже элементы не могут быть мигрированы автоматически и требуют ручного вмешательства."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "списка предыдущих версий"
   },
   "migration.incompatible.title": {
     "message": "Несовместимые скрипты"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Устаревший доступ к файловой системе"
-  },
-  "migration.filesystem.description": {
-    "message": "Эти шаблоны и скрипты ссылаются на файлы в вашей локальной файловой системе, которая больше недоступна напрямую для WebExtension. Файлы, на которые имеются ссылки, необходимо скопировать в хранилище Quicktext, а шаблоны соответственно скорректировать. Подробности см. в $LINK$.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "руководстве по местам хранения"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Некоторые из этих элементов предоставлены через корпоративную политику. Обратитесь к вашему администратору для их обновления."
   },
-  "migration.progress.preparing": {
-    "message": "Подготовка миграции…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Резервное копирование $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Копирование $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Перезапись тегов…"
-  },
-  "migration.progress.saving": {
-    "message": "Сохранение изменений…"
-  },
-  "migration.progress.updating": {
-    "message": "Обновление результатов обнаружения…"
-  },
-  "migration.success": {
-    "message": "Миграция завершена. Мигрировано элементов: $COUNT$.",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "Не удалось скопировать файлов: $FAILED$. Затронутые шаблоны не были изменены.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "Мигрировано элементов: $MIGRATED$, но не удалось скопировать файлов: $FAILED$. Затронутые шаблоны не были изменены.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Закрыть"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Расположения хранилищ"
   },
   "migration.btn.learnJourney": {
     "message": "Путь к WebExtension"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Пожалуйста, закройте Менеджер Quicktext перед началом миграции."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: «$TEMPLATE$» вставлен не полностью",

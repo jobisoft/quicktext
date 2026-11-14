@@ -41,22 +41,6 @@ h2 {
   margin: 0 0 8px;
 }
 
-.auto-intro {
-  border: 1px solid #2a2;
-  border-radius: 6px;
-  background: rgba(34, 170, 68, 0.06);
-  color: #2a8a2a;
-  padding: 8px 14px;
-  margin-bottom: 10px;
-  max-width: 640px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-@media (prefers-color-scheme: dark) {
-  .auto-intro { color: #5cba5c; }
-}
-
 .manual-intro {
   border: 1px solid #c44;
   border-radius: 6px;
@@ -209,12 +193,6 @@ p[id$="-readonly-note"] {
   justify-content: center;
 }
 
-#auto-actions {
-  margin-top: 10px;
-  max-width: 640px;
-  text-align: center;
-}
-
 button.secondary {
   padding: 8px 20px;
   background: transparent;
@@ -229,34 +207,13 @@ button.secondary:hover {
   background: rgba(42, 127, 212, 0.08);
 }
 
-#btn-migrate {
-  padding: 8px 20px;
-  background: #2a7fd4;
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-#btn-migrate:hover:not(:disabled) {
-  background: #1a6abf;
-}
-
-#btn-migrate:disabled {
-  opacity: 0.5;
-  cursor: default;
-}
-
-
-#dropped-actions {
+#report-actions {
   margin-top: 12px;
   max-width: 640px;
   text-align: center;
 }
 
-#btn-dropped-ok {
+#btn-dismiss {
   padding: 8px 20px;
   background: transparent;
   color: #2a7fd4;
@@ -266,112 +223,4 @@ button.secondary:hover {
   cursor: pointer;
 }
 
-#btn-dropped-ok:hover { background: rgba(42, 127, 212, 0.08); }
-
-.popover-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 200;
-}
-
-.popover-box {
-  background: var(--bg-panel, #fff);
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 6px;
-  padding: 16px;
-  min-width: 280px;
-  max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  text-align: center;
-}
-
-.popover-box p {
-  margin: 0 0 12px;
-  line-height: 1.5;
-}
-
-.popover-btn {
-  padding: 6px 20px;
-  background: #2a7fd4;
-  color: #fff;
-  border: none;
-  border-radius: 4px;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.popover-btn:hover { background: #1a6abf; }
-
-.progress-box {
-  min-width: 320px;
-}
-
-.progress-status {
-  margin: 0 0 12px;
-  font-size: 13px;
-}
-
-.spinner {
-  width: 40px;
-  height: 40px;
-  margin: 0 auto 12px;
-  border: 3px solid rgba(42, 127, 212, 0.2);
-  border-top-color: #2a7fd4;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.success-check {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  border-radius: 50%;
-  background: #2a2;
-  color: #fff;
-  font-size: 28px;
-  line-height: 48px;
-  text-align: center;
-  font-weight: bold;
-}
-
-.progress-warning {
-  color: #c44;
-  font-size: 12px;
-  margin: 4px 0 8px;
-}
-
-.error-icon {
-  width: 48px;
-  height: 48px;
-  margin: 0 auto 12px;
-  border-radius: 50%;
-  background: #c44;
-  color: #fff;
-  font-size: 28px;
-  line-height: 48px;
-  text-align: center;
-  font-weight: bold;
-}
-
-@media (prefers-color-scheme: dark) {
-  .popover-box {
-    background: #1e2837;
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-  .popover-btn { background: #1a6abf; }
-  .popover-btn:hover { background: #2a7fd4; }
-}
-
-@media (prefers-color-scheme: dark) {
-  #btn-migrate { background: #1a6abf; }
-  #btn-migrate:hover:not(:disabled) { background: #2a7fd4; }
-  #status.success { color: #5cba5c; border-color: #5cba5c; }
-}
+#btn-dismiss:hover { background: rgba(42, 127, 212, 0.08); }

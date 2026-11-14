@@ -20,17 +20,13 @@
     <button id="btn-wiki-journey" class="secondary" data-i18n-content="migration.btn.learnJourney"></button>
   </div>
 
-  <h2 id="auto-header" class="section-header" hidden data-i18n-content="migration.section.autoMigration"></h2>
-  <div id="auto-intro" class="auto-intro" hidden data-i18n-content="migration.auto.intro"></div>
-  <section id="auto-section" class="card" hidden>
-    <div id="auto-list"></div>
+  <section id="manual-filesystem" class="card" hidden>
+    <h3 data-i18n-content="migration.filesystem.title"></h3>
+    <p id="filesystem-description"></p>
+    <p id="filesystem-old-version"></p>
+    <div id="manual-filesystem-list"></div>
+    <p id="manual-filesystem-readonly-note" hidden></p>
   </section>
-  <div id="auto-actions" hidden>
-    <button id="btn-migrate" disabled data-i18n-content="migration.btn.startMigration"></button>
-  </div>
-
-  <h2 id="manual-header" class="section-header" hidden data-i18n-content="migration.section.manualMigration"></h2>
-  <div id="manual-intro" class="manual-intro" hidden data-i18n-content="migration.manual.intro"></div>
 
   <section id="manual-incompatible" class="card" hidden>
     <h3 data-i18n-content="migration.incompatible.title"></h3>
@@ -39,21 +35,15 @@
     <p id="manual-incompatible-readonly-note" hidden></p>
   </section>
 
-  <section id="manual-filesystem" class="card" hidden>
-    <h3 data-i18n-content="migration.filesystem.title"></h3>
-    <p id="filesystem-description"></p>
-    <div id="manual-filesystem-list"></div>
-    <p id="manual-filesystem-readonly-note" hidden></p>
-  </section>
-
   <h2 id="dropped-header" class="section-header" hidden data-i18n-content="migration.section.droppedSources"></h2>
   <div id="dropped-intro" class="manual-intro" hidden data-i18n-content="migration.dropped.intro"></div>
   <section id="dropped-section" class="card" hidden>
     <div id="dropped-list"></div>
     <p id="dropped-description"></p>
   </section>
-  <div id="dropped-actions" hidden>
-    <button id="btn-dropped-ok" data-i18n-content="migration.btn.dontShowAgain"></button>
+
+  <div id="report-actions">
+    <button id="btn-dismiss" data-i18n-content="migration.btn.dontShowAgain"></button>
   </div>
 </body>
 

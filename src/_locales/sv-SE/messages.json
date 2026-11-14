@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Lägg till import"
   },
-  "migration.pageTitle": {
-    "message": "Migrering av Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Detta är det sista steget i en lång uppdateringsprocess för att konvertera Quicktext till en modern WebExtension. Quicktext kommer snart inte längre att förlita sig på äldre API:er och obegränsad åtkomst till din dator, utan fungerar helt inom det moderna WebExtension-ramverket – utan att kräva en uppdatering för varje ny version av Thunderbird."
-  },
   "migration.intro.quote": {
     "message": "Tack till alla mina betatestare för ert fortsatta stöd och tålamod som har gjort denna övergång möjlig. Er feedback har varit ovärderlig!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, Quicktext-utvecklare"
   },
-  "migration.intro.p2": {
-    "message": "Moderna WebExtensions kan inte längre direkt komma åt ditt filsystem. Som ett resultat lagras dina $ITEMTYPE$-definitioner nu i en intern Quicktext-lagring, och alla bilagor och bilder som dina mallar refererar till behöver kopieras till den lagringen också.",
+  "migration.section.droppedSources": {
+    "message": "Borttagna konfigurationskällor"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Quicktext v$VERSION$ migreringsrapport",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "mall"
+  "migrationReport.intro": {
+    "message": "Quicktext är nu en modern WebExtension. Det har inte längre direkt åtkomst till filerna på din dator och stöder inte längre skript-API:t från Quicktext v5. Mallarna, skripten och inställningarna nedan är fortfarande beroende av dessa funktioner och behöver din uppmärksamhet."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "mall- och skript"
-  },
-  "migration.intro.p3": {
-    "message": "Efter migreringen kan du installera ytterligare $LINK$ och flytta hela din Quicktext-konfiguration, till exempel till en WebDAV-server.",
+  "migrationReport.filesystem.description": {
+    "message": "Dessa mallar och skript hänvisar till filer på din dator. Sådana taggar hoppas nu över: filerna infogas eller bifogas inte längre, och Quicktext visar i stället ett meddelande i skrivfönstret. Åtgärda detta genom att kopiera filerna till en lagringsplats för Quicktext och ändra taggarna enligt förslagen nedan. Mer information finns i $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "lagringsbakändar"
-  },
-  "migration.section.autoMigration": {
-    "message": "Automatisk migrering"
-  },
-  "migration.section.manualMigration": {
-    "message": "Manuell migrering krävs"
-  },
-  "migration.section.droppedSources": {
-    "message": "Borttagna konfigurationskällor"
-  },
-  "migration.auto.intro": {
-    "message": "Följande mallar kan migreras automatiskt. Lokala filer kopieras till den interna Quicktext-lagringen, och alla taggar i dina mallar som refererar till dessa filer kommer att justeras."
-  },
-  "migration.btn.startMigration": {
-    "message": "Starta mallmigrering"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Starta migrering ($COUNT$ objekt)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Du kan också installera Quicktext $VERSION$ från $LINK$. Den versionen innehåller fortfarande migreringsguiden, som kopierar filerna och ändrar taggarna automatiskt. Kör guiden direkt efter att Thunderbird har startats om och uppdatera sedan Quicktext igen.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Objekten nedan kan inte migreras automatiskt och kräver manuell hantering."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "listan över äldre versioner"
   },
   "migration.incompatible.title": {
     "message": "Inkompatibla skript"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Föråldrad filsystemåtkomst"
-  },
-  "migration.filesystem.description": {
-    "message": "Dessa mallar och skript refererar till filer i ditt lokala filsystem, som WebExtensions inte längre kan komma åt direkt. De refererade filerna måste kopieras till Quicktext-lagringen och mallarna justeras därefter. Mer information finns i $LINK$.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "guiden för lagringsplatser"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Vissa av dessa objekt tillhandahålls genom en företagspolicy. Kontakta din administratör för att få dem uppdaterade."
   },
-  "migration.progress.preparing": {
-    "message": "Förbereder migrering…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Säkerhetskopierar $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Kopierar $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Skriver om taggar…"
-  },
-  "migration.progress.saving": {
-    "message": "Sparar ändringar…"
-  },
-  "migration.progress.updating": {
-    "message": "Uppdaterar detektionsresultat…"
-  },
-  "migration.success": {
-    "message": "Migrering klar. $COUNT$ objekt migrerade.",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "Antal filer som inte kunde kopieras: $FAILED$. De berörda mallarna lämnades oförändrade.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "Migrerade objekt: $MIGRATED$. Antal filer som inte kunde kopieras: $FAILED$. De berörda mallarna lämnades oförändrade.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Stäng"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Lagringsplatser förklarade"
   },
   "migration.btn.learnJourney": {
     "message": "Vägen till WebExtension"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Stäng Quicktext-hanteraren innan du startar migreringen."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: \"$TEMPLATE$\" infogades ofullständigt",

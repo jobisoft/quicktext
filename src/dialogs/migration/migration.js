@@ -4,44 +4,20 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
+// Migration report: lists templates, scripts and configuration sources which
+// still depend on features Quicktext no longer has (direct file system access,
+// the Quicktext v5 script API). It only reports, nothing is changed.
+
 import * as storage from "/modules/storage.mjs";
 import * as utils from "/modules/utils.mjs";
-import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import { localizeDocument } from "/vendor/i18n.mjs";
 
-const MANAGER_URL = browser.runtime.getURL("/dialogs/manager/manager.html");
 const i18n = (key, subs) => browser.i18n.getMessage(key, subs) || key;
 
-function showAlert(message) {
-  return new Promise(resolve => {
-    const overlay = document.createElement("div");
-    overlay.className = "popover-overlay";
-    const box = document.createElement("div");
-    box.className = "popover-box";
-    const msg = document.createElement("p");
-    msg.textContent = message;
-    box.appendChild(msg);
-    const btn = document.createElement("button");
-    btn.textContent = i18n("migration.btn.ok");
-    btn.className = "popover-btn";
-    btn.addEventListener("click", () => { overlay.remove(); resolve(); });
-    box.appendChild(btn);
-    overlay.appendChild(box);
-    overlay.addEventListener("click", e => { if (e.target === overlay) { overlay.remove(); resolve(); } });
-    document.body.appendChild(overlay);
-    btn.focus();
-  });
-}
-
-async function isManagerOpen() {
-  const windows = await browser.windows.getAll({ populate: true });
-  for (const w of windows) {
-    for (const tab of w.tabs ?? []) {
-      if (tab.url === MANAGER_URL) return true;
-    }
-  }
-  return false;
-}
+// The last version which still has the migration wizard, which copies the
+// referenced files and adjusts the tags automatically.
+const WIZARD_VERSION = "6.9.5";
+const WIZARD_VERSION_URL = `https://addons.thunderbird.net/addon/quicktext/versions/#version-${WIZARD_VERSION}`;
 
 function renderItem(container, location, lines) {
   const div = document.createElement("div");
@@ -66,7 +42,6 @@ function _sourceLabel(entry) {
 }
 
 function classifyFindings(results, entries, bundles) {
-  const auto = { templates: [], scripts: [] };
   const incompatibleScripts = [];
   const deprecatedFs = { templates: [], scripts: [] };
 
@@ -78,68 +53,19 @@ function classifyFindings(results, entries, bundles) {
     else if (b.type === "managed") sourceMap.set(b.storageUuid, i18n("migration.source.enterprisePolicy"));
   }
 
-  for (const t of results.templates ?? []) {
-    const source = sourceMap.get(t.storageUuid) ?? null;
-    const autoTags = source ? [] : t.tags.filter(tag => tag.migration === "auto");
-    const manualTags = source ? t.tags : t.tags.filter(tag => tag.migration === "manual");
-    if (autoTags.length) auto.templates.push({ ...t, tags: autoTags });
-    if (manualTags.length) deprecatedFs.templates.push({ ...t, tags: manualTags, source });
+  for (const t of results?.templates ?? []) {
+    deprecatedFs.templates.push({ ...t, source: sourceMap.get(t.storageUuid) ?? null });
   }
 
-  for (const s of results.scripts ?? []) {
+  for (const s of results?.scripts ?? []) {
     const source = sourceMap.get(s.storageUuid) ?? null;
     const apiDetails = s.details.filter(d => d.type === "deprecated-api");
-    const tagAutoDetails = source ? [] : s.details.filter(d => d.type === "deprecated-tag" && d.migration === "auto");
-    const tagManualDetails = source
-      ? s.details.filter(d => d.type === "deprecated-tag")
-      : s.details.filter(d => d.type === "deprecated-tag" && d.migration === "manual");
-    if (tagAutoDetails.length) auto.scripts.push({ ...s, details: tagAutoDetails });
-    if (tagManualDetails.length) deprecatedFs.scripts.push({ ...s, details: tagManualDetails, source });
+    const tagDetails = s.details.filter(d => d.type === "deprecated-tag");
+    if (tagDetails.length) deprecatedFs.scripts.push({ ...s, details: tagDetails, source });
     if (apiDetails.length) incompatibleScripts.push({ ...s, details: apiDetails, source });
   }
 
-  return { auto, incompatibleScripts, deprecatedFs };
-}
-
-function previewVfsPath(tag, configDir) {
-  return utils.getVfsTargetPath(configDir, tag.tag, tag.path);
-}
-
-function renderAutoItems(container, templates, scripts, configDirMap) {
-  container.innerHTML = "";
-  for (const t of templates) {
-    const configDir = configDirMap.get(t.storageUuid) ?? "";
-    const lines = t.tags.flatMap(tag => {
-      const vfsPath = previewVfsPath(tag, configDir);
-      return [
-        { className: "item-tag", text: tag.tag },
-        { className: "item-target", text: `→ ${utils.rewriteTagPreview(tag.tag, vfsPath)}` },
-      ];
-    });
-    renderItem(container,
-      `${t.storageName} › ${t.group} › ${t.template} (template)`,
-      [{ className: "item-reason", text: i18n("migration.reason.deprecatedFilesystem") }, ...lines]);
-  }
-  for (const s of scripts) {
-    const configDir = configDirMap.get(s.storageUuid) ?? "";
-    const lines = [];
-    for (const d of s.details) {
-      if (d.type === "deprecated-api") {
-        lines.push({ className: "item-tag", text: d.keyword });
-      } else {
-        lines.push({ className: "item-tag", text: d.call });
-        if (d.path) {
-          const vfsPath = utils.getVfsTargetPath(configDir, d.call, d.path);
-          lines.push({ className: "item-target", text: `→ ${utils.rewriteScriptCallPreview(d.call, d.path, vfsPath)}` });
-        }
-      }
-    }
-    const reason = s.issues.includes("deprecated-api")
-      ? i18n("migration.reason.deprecatedApi") : i18n("migration.reason.deprecatedFilesystem");
-    renderItem(container,
-      `${s.storageName} › ${s.script} (script)`,
-      [{ className: "item-reason", text: reason }, ...lines]);
-  }
+  return { incompatibleScripts, deprecatedFs };
 }
 
 function _renderReadonlyNote(elementId, sources) {
@@ -163,12 +89,13 @@ function showSection(id, hasItems) {
   document.getElementById(id).hidden = !hasItems;
 }
 
-// Build a paragraph where $1 in the message is replaced by a link.
-function _buildLinkedParagraph(elementId, messageKey, linkTextKey, href) {
+// Build a paragraph where $1 in the message is replaced by a link. Further
+// substitutions are passed as $2, $3, ...
+function _buildLinkedParagraph(elementId, messageKey, linkTextKey, href, subs = []) {
   const el = document.getElementById(elementId);
   el.innerHTML = "";
   const linkText = i18n(linkTextKey);
-  const msg = i18n(messageKey, [linkText]);
+  const msg = i18n(messageKey, [linkText, ...subs]);
   const parts = msg.split(linkText);
   el.appendChild(document.createTextNode(parts[0]));
   el.appendChild(_makeLink(href, linkText));
@@ -207,28 +134,13 @@ function _makeLink(href, text) {
   return a;
 }
 
-function renderIntro({ hasScripts }) {
+function renderIntro() {
   const el = document.getElementById("intro");
   el.innerHTML = "";
 
-  const p1 = document.createElement("p");
-  p1.textContent = i18n("migration.intro.p1");
-  el.appendChild(p1);
-
-  const p2 = document.createElement("p");
-  const itemType = hasScripts
-    ? i18n("migration.intro.itemType.templateAndScript")
-    : i18n("migration.intro.itemType.template");
-  p2.textContent = i18n("migration.intro.p2", [itemType]);
-  el.appendChild(p2);
-
-  const p3El = document.createElement("p");
-  p3El.id = "intro-p3";
-  el.appendChild(p3El);
-  _buildLinkedParagraph("intro-p3",
-    "migration.intro.p3",
-    "migration.intro.p3.linkText",
-    "https://addons.thunderbird.net/search/?q=VFS");
+  const p = document.createElement("p");
+  p.textContent = i18n("migrationReport.intro");
+  el.appendChild(p);
 
   const quote = document.getElementById("author-quote");
   quote.textContent = i18n("migration.intro.quote");
@@ -239,15 +151,27 @@ function renderIntro({ hasScripts }) {
   quote.hidden = false;
 }
 
+// The tag as it would look after copying the file into the storage location,
+// as a hint for converting it by hand. Only for plain paths, not for paths
+// built from other tags.
+function rewriteHint(configDir, tagOrCall, path, isScript) {
+  if (!path || path.includes("[[")) return null;
+  const vfsPath = utils.getVfsTargetPath(configDir, tagOrCall, path);
+  const rewritten = isScript
+    ? utils.rewriteScriptCallPreview(tagOrCall, path, vfsPath)
+    : utils.rewriteTagPreview(tagOrCall, vfsPath);
+  return { className: "item-target", text: `→ ${rewritten}` };
+}
+
 async function render() {
-  const { deprecatedUsages: results } = await browser.storage.local.get({
+  const { deprecatedUsages: results, droppedFileEntries } = await browser.storage.local.get({
     deprecatedUsages: null,
+    droppedFileEntries: null,
   });
-  if (!results) return null;
 
   const entries = await storage.getAllStorageEntries();
   const bundles = await storage.getActiveStorageEntries();
-  const { auto, incompatibleScripts, deprecatedFs } = classifyFindings(results, entries, bundles);
+  const { incompatibleScripts, deprecatedFs } = classifyFindings(results, entries, bundles);
 
   // Map storageUuid → config directory (parent of the config file path).
   const configDirMap = new Map();
@@ -255,32 +179,51 @@ async function render() {
     configDirMap.set(e.uuid, utils.getConfigDir(e.path));
   }
 
-  const autoCount = auto.templates.length + auto.scripts.length;
-  const incompatibleCount = incompatibleScripts.length;
+  renderIntro();
+
+  // Deprecated filesystem access
   const fsCount = deprecatedFs.templates.length + deprecatedFs.scripts.length;
-  const manualCount = incompatibleCount + fsCount;
-
-  const hasScripts = (auto.scripts.length + incompatibleScripts.length
-    + deprecatedFs.scripts.length) > 0;
-  renderIntro({ hasScripts });
-
-  // Auto section
-  showSection("auto-header", autoCount > 0);
-  showSection("auto-intro", autoCount > 0);
-  showSection("auto-section", autoCount > 0);
-  showSection("auto-actions", autoCount > 0);
-  if (autoCount > 0) {
-    renderAutoItems(document.getElementById("auto-list"), auto.templates, auto.scripts, configDirMap);
-    const btn = document.getElementById("btn-migrate");
-    btn.textContent = i18n("migration.btn.startMigrationCount", [autoCount]);
-    btn.disabled = false;
+  showSection("manual-filesystem", fsCount > 0);
+  if (fsCount > 0) {
+    _buildLinkedParagraph("filesystem-description",
+      "migrationReport.filesystem.description",
+      "migration.filesystem.linkText",
+      "https://github.com/jobisoft/quicktext/wiki/Storage-locations#adding-files-to-a-storage-location");
+    _buildLinkedParagraph("filesystem-old-version",
+      "migrationReport.filesystem.oldVersion",
+      "migrationReport.filesystem.oldVersion.linkText",
+      WIZARD_VERSION_URL,
+      [WIZARD_VERSION]);
+    const list = document.getElementById("manual-filesystem-list");
+    list.innerHTML = "";
+    for (const t of deprecatedFs.templates) {
+      const typeLabel = t.source ? `${t.source} template` : "template";
+      const configDir = configDirMap.get(t.storageUuid) ?? "";
+      const lines = t.tags.flatMap(tag => {
+        const hint = rewriteHint(configDir, tag.tag, tag.path, false);
+        return hint ? [{ className: "item-tag", text: tag.tag }, hint] : [{ className: "item-tag", text: tag.tag }];
+      });
+      renderItem(list, `${t.storageName} › ${t.group} › ${t.template} (${typeLabel})`,
+        [{ className: "item-reason", text: i18n("migration.reason.deprecatedFilesystem") }, ...lines]);
+    }
+    for (const s of deprecatedFs.scripts) {
+      const typeLabel = s.source ? `${s.source} script` : "script";
+      const configDir = configDirMap.get(s.storageUuid) ?? "";
+      const lines = s.details.flatMap(d => {
+        const hint = rewriteHint(configDir, d.call, d.path, true);
+        return hint ? [{ className: "item-tag", text: d.call }, hint] : [{ className: "item-tag", text: d.call }];
+      });
+      renderItem(list, `${s.storageName} › ${s.script} (${typeLabel})`,
+        [{ className: "item-reason", text: i18n("migration.reason.deprecatedFilesystem") }, ...lines]);
+    }
+    _renderReadonlyNote("manual-filesystem-readonly-note", [
+      ...deprecatedFs.templates.map(t => t.source),
+      ...deprecatedFs.scripts.map(s => s.source),
+    ]);
   }
 
-  // Manual sections
-  showSection("manual-header", manualCount > 0);
-  showSection("manual-intro", manualCount > 0);
-
   // Incompatible scripts
+  const incompatibleCount = incompatibleScripts.length;
   showSection("manual-incompatible", incompatibleCount > 0);
   if (incompatibleCount > 0) {
     _buildLinkedParagraph("incompatible-description",
@@ -298,49 +241,11 @@ async function render() {
     _renderReadonlyNote("manual-incompatible-readonly-note", incompatibleScripts.map(s => s.source));
   }
 
-  // Deprecated filesystem access
-  showSection("manual-filesystem", fsCount > 0);
-  if (fsCount > 0) {
-    _buildLinkedParagraph("filesystem-description",
-      "migration.filesystem.description",
-      "migration.filesystem.linkText",
-      "https://github.com/jobisoft/quicktext/wiki/Storage-locations#adding-files-to-a-storage-location");
-    const list = document.getElementById("manual-filesystem-list");
-    list.innerHTML = "";
-    for (const t of deprecatedFs.templates) {
-      const typeLabel = t.source ? `${t.source} template` : "template";
-      const configDir = configDirMap.get(t.storageUuid) ?? "";
-      const lines = t.tags.flatMap(tag => {
-        const result = [{ className: "item-tag", text: tag.tag }];
-        const vfsPath = utils.getVfsTargetPath(configDir, tag.tag, tag.path);
-        result.push({ className: "item-target", text: `→ ${utils.rewriteTagPreview(tag.tag, vfsPath)}` });
-        return result;
-      });
-      renderItem(list, `${t.storageName} › ${t.group} › ${t.template} (${typeLabel})`,
-        [{ className: "item-reason", text: i18n("migration.reason.deprecatedFilesystem") }, ...lines]);
-    }
-    for (const s of deprecatedFs.scripts) {
-      const typeLabel = s.source ? `${s.source} script` : "script";
-      const lines = s.details.map(d => ({ className: "item-tag", text: d.keyword || d.call }));
-      renderItem(list, `${s.storageName} › ${s.script} (${typeLabel})`,
-        [{ className: "item-reason", text: i18n("migration.reason.deprecatedFilesystem") }, ...lines]);
-    }
-    const allSources = [
-      ...deprecatedFs.templates.map(t => t.source),
-      ...deprecatedFs.scripts.map(s => s.source),
-    ];
-    _renderReadonlyNote("manual-filesystem-readonly-note", allSources);
-  }
-
   // Dropped FILE-based configuration sources
-  const { droppedFileEntries } = await browser.storage.local.get({
-    droppedFileEntries: null,
-  });
   const droppedCount = droppedFileEntries?.length ?? 0;
   showSection("dropped-header", droppedCount > 0);
   showSection("dropped-intro", droppedCount > 0);
   showSection("dropped-section", droppedCount > 0);
-  showSection("dropped-actions", droppedCount > 0);
   if (droppedCount > 0) {
     _buildDroppedDescription();
     const list = document.getElementById("dropped-list");
@@ -354,197 +259,30 @@ async function render() {
         [{ className: "item-reason", text: desc }]);
     }
   }
-
-  return { auto, hasOtherSections: autoCount > 0 || manualCount > 0 };
 }
 
-async function backupConfigFile(entry) {
-  const storageRef = entry.storageRef ?? null;
-  const origPath = entry.path;
-
-  const now = new Date();
-  const ts = [
-    now.getFullYear(),
-    String(now.getMonth() + 1).padStart(2, "0"),
-    String(now.getDate()).padStart(2, "0"),
-    "_",
-    String(now.getHours()).padStart(2, "0"),
-    String(now.getMinutes()).padStart(2, "0"),
-    String(now.getSeconds()).padStart(2, "0"),
-    String(now.getMilliseconds()).padStart(3, "0"),
-  ].join("");
-  const dot = origPath.lastIndexOf(".");
-  const backupPath = dot !== -1
-    ? `${origPath.slice(0, dot)}_backup_${ts}${origPath.slice(dot)}`
-    : `${origPath}_backup_${ts}`;
-
-  const origFile = await vfs.readFile({ path: origPath, storageRef });
-  const origContent = await origFile.text();
-  if (!origContent) {
-    throw new Error(`Backup aborted: config file ${origPath} is empty.`);
-  }
-
-  await vfs.writeFile({ path: backupPath, storageRef }, origFile, { overwrite: true });
-
-  const verifyFile = await vfs.readFile({ path: backupPath, storageRef });
-  const verifyContent = await verifyFile.text();
-  if (verifyContent !== origContent) {
-    throw new Error(`Backup verification failed for ${origPath}: backup content does not match original.`);
-  }
-
-  console.log(`[Migration] Backed up ${origPath} → ${backupPath} (${origContent.length} bytes verified)`);
-}
-
-function showProgressPopover() {
-  const overlay = document.createElement("div");
-  overlay.className = "popover-overlay";
-  const box = document.createElement("div");
-  box.className = "popover-box progress-box";
-
-  const spinner = document.createElement("div");
-  spinner.className = "spinner";
-  box.appendChild(spinner);
-
-  const statusLine = document.createElement("p");
-  statusLine.className = "progress-status";
-  statusLine.textContent = i18n("migration.progress.preparing");
-  box.appendChild(statusLine);
-
-  overlay.appendChild(box);
-  document.body.appendChild(overlay);
-
-  return {
-    update(text) { statusLine.textContent = text; },
-    showSuccess(count, warning) {
-      return new Promise(resolve => {
-        spinner.remove();
-        const check = document.createElement("div");
-        check.className = "success-check";
-        check.textContent = "✓";
-        box.insertBefore(check, statusLine);
-        statusLine.textContent = i18n("migration.success", [count]);
-        if (warning) {
-          const warn = document.createElement("p");
-          warn.className = "progress-warning";
-          warn.textContent = warning;
-          box.insertBefore(warn, null);
-        }
-        const btn = document.createElement("button");
-        btn.className = "popover-btn";
-        btn.textContent = i18n("migration.btn.close");
-        btn.addEventListener("click", () => { overlay.remove(); resolve(); });
-        box.appendChild(btn);
-        btn.focus();
-      });
-    },
-    showError(message) {
-      spinner.remove();
-      const icon = document.createElement("div");
-      icon.className = "error-icon";
-      icon.textContent = "✗";
-      box.insertBefore(icon, statusLine);
-      statusLine.textContent = message;
-      statusLine.style.color = "#c44";
-      const btn = document.createElement("button");
-      btn.className = "popover-btn";
-      btn.textContent = i18n("migration.btn.close");
-      btn.addEventListener("click", () => overlay.remove());
-      box.appendChild(btn);
-      btn.focus();
-    },
-  };
-}
-
-async function runMigration(auto) {
-  const btn = document.getElementById("btn-migrate");
-  btn.disabled = true;
-
-  await browser.storage.session.set({ migrationRunning: true });
-  const progress = showProgressPopover();
-
-  try {
-    const entries = await storage.getAllStorageEntries();
-    const vfsEntries = entries.filter(e => e.type === "vfs" && !e.isReadOnly);
-    const bundles = await Promise.all(
-      vfsEntries.map(e =>
-        storage.readBundleForEntry(e).then(b => ({ entry: e, bundle: b }))
-      )
-    );
-
-    let totalMigrated = 0;
-    let totalFailed = 0;
-    for (const { entry, bundle } of bundles) {
-      const templateFindings = auto.templates.filter(t => t.storageUuid === entry.uuid);
-      const scriptFindings = auto.scripts.filter(s => s.storageUuid === entry.uuid);
-      if (templateFindings.length === 0 && scriptFindings.length === 0) continue;
-
-      progress.update(i18n("migration.progress.backingUp", [utils.getLeafName(entry.path)]));
-      await backupConfigFile(entry);
-
-      const result = await utils.runAutoMigration(
-        entry, bundle,
-        { templates: templateFindings, scripts: scriptFindings },
-        vfs,
-        ({ phase, file, current, total }) => {
-          if (phase === "copy") {
-            progress.update(i18n("migration.progress.copying", [file, current, total]));
-          } else if (phase === "rewrite") {
-            progress.update(i18n("migration.progress.rewriting"));
-          }
-        }
-      );
-      if (result.migrated > 0) {
-        progress.update(i18n("migration.progress.saving"));
-        await storage.setBundleForStorage(entry.uuid, {
-          templates: bundle.templates,
-          scripts: bundle.scripts,
-        });
-      }
-      totalMigrated += result.migrated;
-      totalFailed += result.failed;
-    }
-
-    progress.update(i18n("migration.progress.updating"));
-    const allBundles = await storage.getActiveStorageEntries();
-    const freshResults = await utils.detectDeprecatedUsages(allBundles);
-
-    if (totalFailed > 0) {
-      progress.showError(
-        totalMigrated > 0
-          ? i18n("migration.error.partialFailed", [totalMigrated, totalFailed])
-          : i18n("migration.error.allFailed", [totalFailed])
-      );
-    } else {
-      await progress.showSuccess(totalMigrated);
-    }
-
-    const { droppedFileEntries: droppedAfter } = await browser.storage.local.get({
-      droppedFileEntries: null,
-    });
-    const hasRemaining = (freshResults.templates?.length > 0)
-      || (freshResults.scripts?.length > 0)
-      || (droppedAfter?.length > 0);
-    if (!hasRemaining) {
-      await browser.storage.session.set({ migrationRunning: false });
-      const tab = await browser.tabs.getCurrent();
-      if (tab) browser.tabs.remove(tab.id);
-      return;
-    }
-  } catch (ex) {
-    console.error("[Migration] Error:", ex);
-    progress.showError(ex.message);
-  } finally {
-    await browser.storage.session.set({ migrationRunning: false });
-  }
+// Remember what was reported, so the report opens again at startup only if
+// something new shows up.
+async function dismissReport() {
+  const { deprecatedUsages, droppedFileEntries } = await browser.storage.local.get({
+    deprecatedUsages: null,
+    droppedFileEntries: null,
+  });
+  await browser.storage.local.set({
+    migrationReportDismissed: utils.getMigrationReportIds(deprecatedUsages, droppedFileEntries),
+  });
+  await browser.storage.local.remove("droppedFileEntries");
+  const tab = await browser.tabs.getCurrent();
+  if (tab) browser.tabs.remove(tab.id);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
   localizeDocument();
 
   const version = browser.runtime.getManifest().version;
-  const wizardTitle = i18n("migration.pageTitle", [version]);
-  document.title = wizardTitle;
-  document.getElementById("page-title").textContent = wizardTitle;
+  const title = i18n("migrationReport.pageTitle", [version]);
+  document.title = title;
+  document.getElementById("page-title").textContent = title;
 
   // Intercept all link clicks to open in the default browser.
   document.addEventListener("click", e => {
@@ -555,7 +293,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  let state = await render();
+  await render();
 
   document.getElementById("btn-open-manager").addEventListener("click", () => {
     utils.openSettingsDialog();
@@ -569,23 +307,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/Quicktext's-journey-from-a-legacy-Add%E2%80%90on-to-a-modern-WebExtension");
   });
 
-  document.getElementById("btn-migrate").addEventListener("click", async () => {
-    if (!state?.auto) return;
-    if (await isManagerOpen()) {
-      await showAlert(i18n("migration.alert.managerOpen"));
-      return;
-    }
-    await runMigration(state.auto);
-    state = await render();
-  });
-
-  document.getElementById("btn-dropped-ok").addEventListener("click", async () => {
-    await browser.storage.local.remove("droppedFileEntries");
-    if (!state?.hasOtherSections) {
-      const tab = await browser.tabs.getCurrent();
-      if (tab) browser.tabs.remove(tab.id);
-      return;
-    }
-    state = await render();
-  });
+  document.getElementById("btn-dismiss").addEventListener("click", dismissReport);
 });

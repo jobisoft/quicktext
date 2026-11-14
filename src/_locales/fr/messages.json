@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Ajouter un import"
   },
-  "migration.pageTitle": {
-    "message": "Migration Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Ceci est la dernière étape d'un long processus de mise à jour pour convertir Quicktext en une WebExtension moderne. Quicktext ne s'appuiera bientôt plus sur des API héritées et un accès illimité à votre ordinateur, mais fonctionnera entièrement dans le cadre moderne des WebExtensions - ne nécessitant plus de mise à jour pour chaque nouvelle version de Thunderbird."
-  },
   "migration.intro.quote": {
     "message": "Merci à tous mes bêta-testeurs pour votre soutien continu et votre patience qui ont rendu cette transition possible. Vos retours ont été inestimables !"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, développeur de Quicktext"
   },
-  "migration.intro.p2": {
-    "message": "Les WebExtensions modernes ne peuvent plus accéder directement à votre système de fichiers. Par conséquent, vos définitions de $ITEMTYPE$ sont désormais stockées dans un stockage interne Quicktext, et toutes les pièces jointes et images référencées par vos modèles doivent également être copiées dans ce stockage.",
+  "migration.section.droppedSources": {
+    "message": "Sources de configuration supprimées"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Rapport de migration de Quicktext v$VERSION$",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "modèle"
+  "migrationReport.intro": {
+    "message": "Quicktext est désormais une WebExtension moderne. Il n'a plus d'accès direct aux fichiers de votre ordinateur et ne prend plus en charge l'API de scripts de Quicktext v5. Les modèles, scripts et paramètres listés ci-dessous dépendent encore de ces fonctionnalités et nécessitent votre attention."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "modèle et script"
-  },
-  "migration.intro.p3": {
-    "message": "Après la migration, vous pouvez installer des $LINK$ supplémentaires et déplacer l'intégralité de votre configuration Quicktext, par exemple vers un serveur WebDAV.",
+  "migrationReport.filesystem.description": {
+    "message": "Ces modèles et scripts font référence à des fichiers de votre ordinateur. Ces balises sont désormais ignorées : les fichiers ne sont plus insérés ni joints, et Quicktext affiche un avis dans la fenêtre de rédaction à la place. Pour corriger cela, copiez les fichiers dans un emplacement de stockage Quicktext et modifiez les balises comme suggéré ci-dessous. Consultez le $LINK$ pour plus de détails.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "backends de stockage"
-  },
-  "migration.section.autoMigration": {
-    "message": "Migration automatique"
-  },
-  "migration.section.manualMigration": {
-    "message": "Migration manuelle requise"
-  },
-  "migration.section.droppedSources": {
-    "message": "Sources de configuration supprimées"
-  },
-  "migration.auto.intro": {
-    "message": "Les modèles suivants peuvent être migrés automatiquement. Les fichiers locaux seront copiés dans le stockage interne de Quicktext et toutes les balises de vos modèles référençant ces fichiers seront ajustées."
-  },
-  "migration.btn.startMigration": {
-    "message": "Démarrer la migration des modèles"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Démarrer la migration ($COUNT$ éléments)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Vous pouvez aussi installer Quicktext $VERSION$ depuis la $LINK$. Cette version contient encore l'assistant de migration, qui copie les fichiers et modifie les balises automatiquement. Lancez l'assistant juste après le redémarrage de Thunderbird, puis mettez à nouveau Quicktext à jour.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Les éléments listés ci-dessous ne peuvent pas être migrés automatiquement et nécessitent une intervention manuelle."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "liste des anciennes versions"
   },
   "migration.incompatible.title": {
     "message": "Scripts incompatibles"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Accès au système de fichiers obsolète"
-  },
-  "migration.filesystem.description": {
-    "message": "Ces modèles et scripts référencent des fichiers sur votre système de fichiers local, qui n'est plus directement accessible aux WebExtensions. Les fichiers référencés doivent être copiés dans le stockage Quicktext et les modèles doivent être ajustés en conséquence. Consultez le $LINK$ pour plus de détails.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "guide des emplacements de stockage"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Certains de ces éléments sont fournis via une politique d'entreprise. Veuillez contacter votre administrateur pour les faire mettre à jour."
   },
-  "migration.progress.preparing": {
-    "message": "Préparation de la migration…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Sauvegarde de $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Copie de $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Réécriture des balises…"
-  },
-  "migration.progress.saving": {
-    "message": "Enregistrement des modifications…"
-  },
-  "migration.progress.updating": {
-    "message": "Mise à jour des résultats de détection…"
-  },
-  "migration.success": {
-    "message": "Migration terminée. $COUNT$ élément(s) migré(s).",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "$FAILED$ fichier(s) n'ont pas pu être copiés. Les modèles concernés n'ont pas été modifiés.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "$MIGRATED$ élément(s) migré(s), mais $FAILED$ fichier(s) n'ont pas pu être copiés. Les modèles concernés n'ont pas été modifiés.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Fermer"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Emplacements de stockage"
   },
   "migration.btn.learnJourney": {
     "message": "La route vers WebExtension"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Veuillez fermer le Gestionnaire Quicktext avant de démarrer la migration."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext : « $TEMPLATE$ » a été inséré de manière incomplète",

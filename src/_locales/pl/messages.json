@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Dodaj import"
   },
-  "migration.pageTitle": {
-    "message": "Migracja Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Jest to ostatni etap długiego procesu aktualizacji mającego na celu przekształcenie Quicktext w nowoczesne rozszerzenie WebExtension. Wkrótce Quicktext nie będzie już korzystał ze starszych interfejsów API ani nie będzie wymagał nieograniczonego dostępu do komputera, lecz będzie w pełni działał w ramach nowoczesnej struktury WebExtension – dzięki czemu nie będzie już konieczna aktualizacja przy każdej nowej wersji Thunderbirda."
-  },
   "migration.intro.quote": {
     "message": "Dziękuję wszystkim moim beta-testerom za nieustające wsparcie i cierpliwość, dzięki którym ta zmiana stała się możliwa. Wasze opinie były nieocenione!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, twórca Quicktext"
   },
-  "migration.intro.p2": {
-    "message": "Nowoczesne rozszerzenia WebExtensions nie mają już bezpośredniego dostępu do systemu plików. W związku z tym definicje $ITEMTYPE$ są teraz przechowywane w wewnętrznej pamięci Quicktext, a wszystkie załączniki i obrazy, do których odwołują się szablony, również muszą zostać skopiowane do tej pamięci.",
+  "migration.section.droppedSources": {
+    "message": "Usunięto źródła konfiguracji"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Raport migracji Quicktext v$VERSION$",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "szablon"
+  "migrationReport.intro": {
+    "message": "Quicktext jest teraz nowoczesnym rozszerzeniem WebExtension. Nie ma już bezpośredniego dostępu do plików na Twoim komputerze i nie obsługuje już API skryptów Quicktext v5. Wymienione poniżej szablony, skrypty i ustawienia nadal zależą od tych funkcji i wymagają Twojej uwagi."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "szablon i skrypt"
-  },
-  "migration.intro.p3": {
-    "message": "Po migracji można zainstalować dodatkowe pliki $LINK$ oraz przenieść całą konfigurację Quicktext, na przykład na serwer WebDAV.",
+  "migrationReport.filesystem.description": {
+    "message": "Te szablony i skrypty odwołują się do plików na Twoim komputerze. Takie znaczniki są teraz pomijane: pliki nie są już wstawiane ani załączane, a zamiast tego Quicktext wyświetla komunikat w oknie tworzenia wiadomości. Aby to naprawić, skopiuj pliki do miejsca przechowywania Quicktext i zmień znaczniki zgodnie z poniższą sugestią. Więcej informacji: $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "systemy pamięci masowej"
-  },
-  "migration.section.autoMigration": {
-    "message": "Automatyczna migracja"
-  },
-  "migration.section.manualMigration": {
-    "message": "Konieczna jest ręczna migracja"
-  },
-  "migration.section.droppedSources": {
-    "message": "Usunięto źródła konfiguracji"
-  },
-  "migration.auto.intro": {
-    "message": "Następujące szablony można przenieść automatycznie. Pliki lokalne zostaną skopiowane do wewnętrznej pamięci Quicktext, a wszystkie tagi w szablonach odwołujące się do tych plików zostaną odpowiednio dostosowane."
-  },
-  "migration.btn.startMigration": {
-    "message": "Rozpocznij migrację szablonów"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Rozpocznij migrację ($COUNT$ elementów)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Możesz też zainstalować Quicktext $VERSION$ z $LINK$. Ta wersja nadal zawiera kreator migracji, który automatycznie kopiuje pliki i zmienia znaczniki. Uruchom kreator zaraz po ponownym uruchomieniu Thunderbirda, a następnie ponownie zaktualizuj Quicktext.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Wymienione poniżej elementy nie mogą zostać przeniesione automatycznie i wymagają ręcznej interwencji."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "listy starszych wersji"
   },
   "migration.incompatible.title": {
     "message": "Niekompatybilne skrypty"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Przestarzały sposób dostępu do systemu plików"
-  },
-  "migration.filesystem.description": {
-    "message": "Te szablony i skrypty odwołują się do plików znajdujących się w lokalnym systemie plików, do którego rozszerzenia WebExtensions nie mają już bezpośredniego dostępu. Pliki, do których się odwołują, należy skopiować do magazynu Quicktext, a szablony odpowiednio dostosować. Szczegółowe informacje można znaleźć pod adresem $LINK$.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "przewodnik po miejscach przechowywania"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Niektóre z tych elementów są udostępniane w ramach polityki firmowej. Aby je zaktualizować, skontaktuj się z administratorem."
   },
-  "migration.progress.preparing": {
-    "message": "Przygotowywanie migracji…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Tworzenie kopii zapasowej $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Kopiowanie $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Przepisywanie tagów…"
-  },
-  "migration.progress.saving": {
-    "message": "Zapisywanie zmian…"
-  },
-  "migration.progress.updating": {
-    "message": "Aktualizacja wyników wykrywania…"
-  },
-  "migration.success": {
-    "message": "Migracja zakończona. Przeniesiono $COUNT$ element(ów).",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "$FAILED$ Nie udało się skopiować plików. Dotyczy to szablonów, które pozostały bez zmian.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "Przeniesiono $MIGRATED$ elementów, ale nie udało się skopiować $FAILED$ plików. Szablony, których to dotyczyło, pozostały bez zmian.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Zamknij"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Wyjaśnienie lokalizacji pamięci masowej"
   },
   "migration.btn.learnJourney": {
     "message": "Droga do WebExtension"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Przed rozpoczęciem migracji należy zamknąć program Quicktext Manager."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: szablon „$TEMPLATE$” został wstawiony niekompletnie",

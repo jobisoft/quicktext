@@ -12,8 +12,8 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 export const OPFS_STORAGE_NAME = "Quicktext Storage";
 
 // Record a dropped FILE-based entry (import or storage location) so the
-// migration wizard can inform the user. Appended to local storage, deduplicated
-// by type+path. Never automatically cleared - the user dismisses via the wizard.
+// migration report can inform the user. Appended to local storage, deduplicated
+// by type+path. Never automatically cleared - the user dismisses via the report.
 async function _recordDroppedFileEntry(type, path) {
   const { droppedFileEntries = [] } = await browser.storage.local.get({
     droppedFileEntries: [],
@@ -234,7 +234,7 @@ async function writeConfigFile(config, combined) {
 
 async function _migrateToConfigFile() {
   // Modern `storageLocations` is a uuid-keyed array. Legacy `{source, data}`
-  // shapes and on-disk XML configs are migrated into the modern layout.
+  // shapes are migrated into the modern layout.
   const { storageLocations: raw } = await browser.storage.local.get({ storageLocations: null });
 
   // Already in the modern format - short-circuit.
@@ -256,8 +256,6 @@ async function _migrateToConfigFile() {
     }
   }
 
-  const isFreshInstall = raw == null;
-
   const { templates: rawT, scripts: rawS } = await browser.storage.local.get({
     templates: null,
     scripts: null,
@@ -265,19 +263,6 @@ async function _migrateToConfigFile() {
   let templates = rawT ? (typeof rawT === "string" ? JSON.parse(rawT) : rawT) : null;
   let scripts = rawS ? (typeof rawS === "string" ? JSON.parse(rawS) : rawS) : null;
   let source = templates != null || scripts != null ? "local storage" : null;
-
-  if (isFreshInstall && templates == null) {
-    try {
-      templates = (await quicktext.readLegacyXmlTemplateFile())?.templates ?? null;
-      if (templates != null) source = "profile folder (XML)";
-    } catch { /* no XML file */ }
-  }
-  if (isFreshInstall && scripts == null) {
-    try {
-      scripts = (await quicktext.readLegacyXmlScriptFile())?.scripts ?? null;
-      if (scripts != null) source = source ?? "profile folder (XML)";
-    } catch { /* no XML file */ }
-  }
   console.log(`Quicktext migration to VFS from: ${source ?? "none"}`);
 
   // Write the config file BEFORE persisting the modern storageLocations, so
@@ -297,7 +282,6 @@ async function _migrateToConfigFile() {
 
 const defaultPrefs = {
   "counter": 0,
-  "templateFolder": "",
   "defaultImport": [],
   "menuCollapse": true,
   "toolbar": true,
@@ -444,7 +428,7 @@ function _normalizeDefaultImports(raw) {
           });
         } else {
           // Legacy local file path - record it so the migration
-          // wizard can inform the user.
+          // report can inform the user.
           _recordDroppedFileEntry("import", part);
         }
       }
@@ -506,7 +490,7 @@ function _normalizeDefaultImports(raw) {
       continue;
     }
     // FILE entries are no longer supported - record them so the
-    // migration wizard can inform the user.
+    // migration report can inform the user.
     if (entry.source?.toUpperCase() === "FILE" && entry.data) {
       _recordDroppedFileEntry("import", entry.data);
     }
@@ -955,9 +939,8 @@ export async function migrate() {
   }
 
   // Migrate legacy local storage (browser.storage.local.templates + .scripts)
-  // or legacy XML files on disk into the combined quicktext.json on OPFS, and
-  // upgrade storageLocations to the new VFS config shape. Requires vfs.init()
-  // to have run.
+  // into the combined quicktext.json on OPFS, and upgrade storageLocations to
+  // the new VFS config shape. Requires vfs.init() to have run.
   await _migrateToConfigFile();
 
   // Backfill the `type` field on every storageLocations entry and

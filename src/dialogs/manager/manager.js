@@ -3054,13 +3054,6 @@ window.addEventListener("beforeunload", e => {
 async function init() {
   localizeDocument();
 
-  const { migrationRunning } = await browser.storage.session.get({ migrationRunning: false });
-  if (migrationRunning) {
-    await showAlert("A FILE migration is currently in progress. Please close this window and try again after the migration completes.");
-    window.close();
-    return;
-  }
-
   await loadAll();
 
   // Tab buttons

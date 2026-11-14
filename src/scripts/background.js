@@ -145,10 +145,15 @@ for (const bundle of bundles) {
   await utils.checkDuplicatedEntries(bundle.templates, bundle.scripts);
 }
 const deprecatedResults = await utils.detectDeprecatedUsages(bundles);
-const { droppedFileEntries } = await browser.storage.local.get({ droppedFileEntries: null });
-if (deprecatedResults.templates.length > 0
-    || deprecatedResults.scripts.length > 0
-    || droppedFileEntries?.length > 0) {
+const { droppedFileEntries, migrationReportDismissed } = await browser.storage.local.get({
+  droppedFileEntries: null,
+  migrationReportDismissed: [],
+});
+// Open the migration report, unless the user dismissed it and nothing new
+// showed up since.
+const dismissedReportIds = new Set(migrationReportDismissed);
+if (utils.getMigrationReportIds(deprecatedResults, droppedFileEntries)
+    .some(id => !dismissedReportIds.has(id))) {
   browser.tabs.create({
     url: browser.runtime.getURL("/dialogs/migration/migration.html"),
   });

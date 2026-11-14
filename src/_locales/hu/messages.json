@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Import hozzáadása"
   },
-  "migration.pageTitle": {
-    "message": "Quicktext v$VERSION$ migráció",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Ez a Quicktext modern WebExtensionné alakításának hosszú frissítési folyamatának utolsó lépése. A Quicktext hamarosan nem fog többé régi API-kra és korlátlan hozzáférésre támaszkodni a számítógépéhez, hanem teljes mértékben a modern WebExtension keretrendszeren belül fog működni - többé nem igényel frissítést a Thunderbird minden új verziójához."
-  },
   "migration.intro.quote": {
     "message": "Köszönöm minden béta tesztelőmnek a folyamatos támogatást és türelmet, amellyel lehetővé tették ezt az átállást. A visszajelzéseitek felbecsülhetetlen értékűek voltak!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, Quicktext-fejlesztő"
   },
-  "migration.intro.p2": {
-    "message": "A modern WebExtensionök többé nem férhetnek hozzá közvetlenül a fájlrendszeréhez. Ennek következtében a(z) $ITEMTYPE$ definícióit mostantól a Quicktext belső tárhelyén tároljuk, és a sablonjai által hivatkozott összes mellékletet és képet is ebbe a tárhelybe kell másolni.",
+  "migration.section.droppedSources": {
+    "message": "Eltávolított konfigurációs források"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Quicktext v$VERSION$ migrációs jelentés",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "sablon"
+  "migrationReport.intro": {
+    "message": "A Quicktext mostantól egy modern WebExtension. Már nem fér hozzá közvetlenül a számítógépén lévő fájlokhoz, és már nem támogatja a Quicktext v5 szkript API-t. Az alább felsorolt sablonok, szkriptek és beállítások még ezekre a funkciókra támaszkodnak, és figyelmet igényelnek."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "sablon és szkript"
-  },
-  "migration.intro.p3": {
-    "message": "A migráció után további $LINK$ telepíthet, és áthelyezheti a teljes Quicktext-konfigurációját, például egy WebDAV szerverre.",
+  "migrationReport.filesystem.description": {
+    "message": "Ezek a sablonok és szkriptek a számítógépén lévő fájlokra hivatkoznak. Az ilyen címkéket a Quicktext mostantól kihagyja: a fájlokat már nem szúrja be és nem csatolja, helyette értesítést jelenít meg a levélíró ablakban. A javításhoz másolja a fájlokat egy Quicktext tárolóhelyre, és módosítsa a címkéket az alábbi javaslat szerint. További részletek: $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "tárolási háttérrendszereket"
-  },
-  "migration.section.autoMigration": {
-    "message": "Automatikus migráció"
-  },
-  "migration.section.manualMigration": {
-    "message": "Kézi migráció szükséges"
-  },
-  "migration.section.droppedSources": {
-    "message": "Eltávolított konfigurációs források"
-  },
-  "migration.auto.intro": {
-    "message": "Az alábbi sablonok automatikusan migrálhatók. A helyi fájlok a Quicktext belső tárhelyébe másolódnak, és a sablonjaiban lévő, ezekre a fájlokra hivatkozó címkék módosulnak."
-  },
-  "migration.btn.startMigration": {
-    "message": "Sablonmigráció indítása"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Migráció indítása ($COUNT$ elem)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Másik lehetőségként telepítse a Quicktext $VERSION$ verzióját innen: $LINK$. Ez a verzió még tartalmazza a migrációs varázslót, amely automatikusan átmásolja a fájlokat és módosítja a címkéket. Futtassa a varázslót közvetlenül a Thunderbird újraindítása után, majd frissítse ismét a Quicktextet.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Az alább felsorolt elemek nem migrálhatók automatikusan, és kézi beavatkozást igényelnek."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "korábbi verziók listája"
   },
   "migration.incompatible.title": {
     "message": "Nem kompatibilis szkriptek"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Elavult fájlrendszer-hozzáférés"
-  },
-  "migration.filesystem.description": {
-    "message": "Ezek a sablonok és szkriptek a helyi fájlrendszeren lévő fájlokra hivatkoznak, amelyek a WebExtensionök számára többé nem érhetők el közvetlenül. A hivatkozott fájlokat a Quicktext tárhelybe kell másolni, és a sablonokat ennek megfelelően kell módosítani. Részletekért lásd a(z) $LINK$.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "tárolóhelyek útmutatója"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Ezen elemek egy részét vállalati szabályzat biztosítja. Kérjük, lépjen kapcsolatba a rendszergazdájával a frissítésük érdekében."
   },
-  "migration.progress.preparing": {
-    "message": "Migráció előkészítése…"
-  },
-  "migration.progress.backingUp": {
-    "message": "$FILENAME$ biztonsági mentése…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "$FILENAME$ másolása ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Címkék újraírása…"
-  },
-  "migration.progress.saving": {
-    "message": "Változtatások mentése…"
-  },
-  "migration.progress.updating": {
-    "message": "Észlelési eredmények frissítése…"
-  },
-  "migration.success": {
-    "message": "A migráció befejeződött. $COUNT$ elem migrálva.",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "$FAILED$ fájl másolása sikertelen. Az érintett sablonok változatlanul maradtak.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "$MIGRATED$ elem migrálva, de $FAILED$ fájl másolása sikertelen. Az érintett sablonok változatlanul maradtak.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Bezárás"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Tárolási helyek ismertetése"
   },
   "migration.btn.learnJourney": {
     "message": "Az út a WebExtension felé"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Kérjük, zárja be a Quicktext-kezelőt a migráció megkezdése előtt."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: a(z) „$TEMPLATE$” hiányosan lett beszúrva",

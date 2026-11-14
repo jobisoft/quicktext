@@ -63,21 +63,5 @@
     "scripts": [
       "scripts/background.js"
     ]
-  },
-  "experiment_apis": {
-    "FileSystemAccess": {
-      "schema": "api/FileSystemAccess/schema.json",
-      "parent": {
-        "scopes": [
-          "addon_parent"
-        ],
-        "paths": [
-          [
-            "FileSystemAccess"
-          ]
-        ],
-        "script": "api/FileSystemAccess/implementation.js"
-      }
-    }
   }
 }

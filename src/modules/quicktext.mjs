@@ -11,20 +11,6 @@ import { QuicktextParser, STORAGE_STATE } from "/modules/quicktextParser.mjs";
 
 // Helper
 
-export async function readLegacyXmlTemplateFile() {
-  let templateFolder = await storage.getPref("templateFolder");
-  let { templateFilePath } = await browser.FileSystemAccess.getQuicktextFilePaths(templateFolder);
-  let xmlData = await browser.FileSystemAccess.readTextFile(templateFilePath);
-  return parseLegacyXmlData(xmlData);
-}
-
-export async function readLegacyXmlScriptFile() {
-  let templateFolder = await storage.getPref("templateFolder");
-  let { scriptFilePath } = await browser.FileSystemAccess.getQuicktextFilePaths(templateFolder);
-  let xmlData = await browser.FileSystemAccess.readTextFile(scriptFilePath);
-  return parseLegacyXmlData(xmlData);
-}
-
 export async function parseLegacyXmlData(xmlData) {
   const domParser = new DOMParser();
   const dom = domParser.parseFromString(xmlData, "text/xml");

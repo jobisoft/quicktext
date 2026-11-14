@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Přidat import"
   },
-  "migration.pageTitle": {
-    "message": "Migrace Quicktext v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Toto je poslední krok dlouhého procesu aktualizace pro převod Quicktext na moderní WebExtension. Quicktext se brzy nebude spoléhat na zastaralá API a neomezený přístup k vašemu počítači, ale bude plně fungovat v rámci moderního frameworku WebExtension - bez nutnosti aktualizace pro každou novou verzi Thunderbirdu."
-  },
   "migration.intro.quote": {
     "message": "Děkuji všem svým beta testerům za vaši neustálou podporu a trpělivost, díky nimž byl tento přechod možný. Vaše zpětná vazba byla neocenitelná!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, vývojář Quicktext"
   },
-  "migration.intro.p2": {
-    "message": "Moderní WebExtensions již nemohou přímo přistupovat k vašemu souborovému systému. Proto jsou vaše definice $ITEMTYPE$ nyní uloženy ve vnitřním úložišti Quicktext a všechny přílohy a obrázky, na které vaše šablony odkazují, musí být také zkopírovány do tohoto úložiště.",
+  "migration.section.droppedSources": {
+    "message": "Odstraněné zdroje konfigurace"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Zpráva o migraci Quicktext v$VERSION$",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "šablon"
+  "migrationReport.intro": {
+    "message": "Quicktext je nyní moderní WebExtension. Již nemá přímý přístup k souborům ve vašem počítači a již nepodporuje skriptovací API Quicktext v5. Níže uvedené šablony, skripty a nastavení na těchto funkcích stále závisí a vyžadují vaši pozornost."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "šablon a skriptů"
-  },
-  "migration.intro.p3": {
-    "message": "Po migraci můžete nainstalovat další $LINK$ a přesunout celou konfiguraci Quicktext, například na server WebDAV.",
+  "migrationReport.filesystem.description": {
+    "message": "Tyto šablony a skripty odkazují na soubory ve vašem počítači. Takové značky se nyní přeskakují: soubory se již nevkládají ani nepřipojují a Quicktext místo toho zobrazí upozornění v okně psaní zprávy. Chcete-li to napravit, zkopírujte soubory do úložiště Quicktext a upravte značky podle níže uvedeného návrhu. Podrobnosti najdete v $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "backendy úložišť"
-  },
-  "migration.section.autoMigration": {
-    "message": "Automatická migrace"
-  },
-  "migration.section.manualMigration": {
-    "message": "Vyžadována ruční migrace"
-  },
-  "migration.section.droppedSources": {
-    "message": "Odstraněné zdroje konfigurace"
-  },
-  "migration.auto.intro": {
-    "message": "Následující šablony lze migrovat automaticky. Lokální soubory budou zkopírovány do vnitřního úložiště Quicktext a všechny tagy ve vašich šablonách odkazující na tyto soubory budou upraveny."
-  },
-  "migration.btn.startMigration": {
-    "message": "Spustit migraci šablon"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Spustit migraci ($COUNT$ položek)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Případně si nainstalujte Quicktext $VERSION$ ze $LINK$. Tato verze ještě obsahuje průvodce migrací, který soubory zkopíruje a značky upraví automaticky. Spusťte průvodce hned po restartu Thunderbirdu a poté Quicktext znovu aktualizujte.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Níže uvedené položky nelze migrovat automaticky a vyžadují ruční zásah."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "seznamu starších verzí"
   },
   "migration.incompatible.title": {
     "message": "Nekompatibilní skripty"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Zastaralý přístup k souborovému systému"
-  },
-  "migration.filesystem.description": {
-    "message": "Tyto šablony a skripty odkazují na soubory ve vašem lokálním souborovém systému, ke kterému WebExtensions již nemají přímý přístup. Odkazované soubory je nutné zkopírovat do úložiště Quicktext a šablony odpovídajícím způsobem upravit. Podrobnosti najdete v $LINK$.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "průvodci úložišti"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Některé z těchto položek jsou poskytovány prostřednictvím podnikové zásady. Kontaktujte prosím svého administrátora, aby je aktualizoval."
   },
-  "migration.progress.preparing": {
-    "message": "Příprava migrace…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Zálohování $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Kopírování $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Přepisování tagů…"
-  },
-  "migration.progress.saving": {
-    "message": "Ukládání změn…"
-  },
-  "migration.progress.updating": {
-    "message": "Aktualizace výsledků detekce…"
-  },
-  "migration.success": {
-    "message": "Migrace dokončena. $COUNT$ položek migrováno.",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "$FAILED$ soubor(ů) se nepodařilo zkopírovat. Dotčené šablony nebyly změněny.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "$MIGRATED$ položek migrováno, ale $FAILED$ soubor(ů) se nepodařilo zkopírovat. Dotčené šablony nebyly změněny.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Zavřít"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Vysvětlení umístění úložišť"
   },
   "migration.btn.learnJourney": {
     "message": "Cesta k WebExtension"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Před spuštěním migrace prosím zavřete Správce Quicktext."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: „$TEMPLATE$“ byla vložena neúplně",

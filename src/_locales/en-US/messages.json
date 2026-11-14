@@ -578,73 +578,47 @@
   "quicktext.dialog.addImport.label": {
     "message": "Add Import"
   },
-  "migration.pageTitle": {
-    "message": "Quicktext v$VERSION$ Migration",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "This is the final step of a long update process to convert Quicktext into a modern WebExtension. Quicktext will soon no longer rely on legacy APIs and unrestricted access to your computer, but fully work within the modern WebExtension framework - no longer requiring an update for each new version of Thunderbird."
-  },
   "migration.intro.quote": {
     "message": "Thank you to all my beta testers for your ongoing support and patience in making this transition possible. Your feedback has been invaluable!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, Quicktext developer"
   },
-  "migration.intro.p2": {
-    "message": "Modern WebExtensions can no longer directly access your file system. As a result, your $ITEMTYPE$ definitions are now stored inside an internal Quicktext storage, and all attachments and images your templates reference need to be copied into that storage as well.",
+  "migration.section.droppedSources": {
+    "message": "Removed configuration sources"
+  },
+  "migrationReport.pageTitle": {
+    "message": "Quicktext v$VERSION$ Migration Report",
     "placeholders": {
-      "itemtype": {
+      "version": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.itemType.template": {
-    "message": "template"
+  "migrationReport.intro": {
+    "message": "Quicktext is now a modern WebExtension. It no longer has direct access to the files on your computer and no longer supports the Quicktext v5 script API. The templates, scripts and settings listed below still depend on these features and need your attention."
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "template and script"
-  },
-  "migration.intro.p3": {
-    "message": "After migration, you may install additional $LINK$ and move your complete Quicktext configuration, for example to a WebDAV server.",
+  "migrationReport.filesystem.description": {
+    "message": "These templates and scripts reference files on your computer. Such tags are now skipped: the files are no longer inserted or attached, and Quicktext shows a notice in the compose window instead. To fix this, copy the files into a Quicktext storage location and change the tags as suggested below. See the $LINK$ for details.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "storage backends"
-  },
-  "migration.section.autoMigration": {
-    "message": "Automatic migration"
-  },
-  "migration.section.manualMigration": {
-    "message": "Manual migration required"
-  },
-  "migration.section.droppedSources": {
-    "message": "Removed configuration sources"
-  },
-  "migration.auto.intro": {
-    "message": "The following templates can be migrated automatically. Local files will be copied into the internal Quicktext storage, and all tags in your templates referencing these files will be adjusted."
-  },
-  "migration.btn.startMigration": {
-    "message": "Start template migration"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Start migration ($COUNT$ items)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Alternatively, install Quicktext $VERSION$ from the $LINK$. It still includes the migration wizard, which copies the files and changes the tags automatically. Run the wizard right after restarting Thunderbird, then update Quicktext again.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "The items listed below cannot be migrated automatically and require manual attention."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "list of older versions"
   },
   "migration.incompatible.title": {
     "message": "Incompatible scripts"
@@ -662,14 +636,6 @@
   },
   "migration.filesystem.title": {
     "message": "Deprecated filesystem access"
-  },
-  "migration.filesystem.description": {
-    "message": "These templates and scripts reference files on your local filesystem, which is no longer directly accessible to WebExtensions. The referenced files need to be copied into the Quicktext storage and the templates need to be adjusted accordingly. See the $LINK$ for details.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "storage locations guide"
@@ -736,81 +702,11 @@
   "migration.readonlyNote.managed": {
     "message": "Some of these items are provided through an enterprise policy. Please contact your administrator to have them updated."
   },
-  "migration.progress.preparing": {
-    "message": "Preparing migration…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Backing up $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Copying $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Rewriting tags…"
-  },
-  "migration.progress.saving": {
-    "message": "Saving changes…"
-  },
-  "migration.progress.updating": {
-    "message": "Updating detection results…"
-  },
-  "migration.success": {
-    "message": "Migration complete. $COUNT$ item(s) migrated.",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "$FAILED$ file(s) failed to copy. The affected templates were left unchanged.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "$MIGRATED$ item(s) migrated, but $FAILED$ file(s) failed to copy. The affected templates were left unchanged.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Close"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Storage locations explained"
   },
   "migration.btn.learnJourney": {
     "message": "The road to WebExtension"
-  },
-  "migration.alert.managerOpen": {
-    "message": "Please close the Quicktext Manager before starting the migration."
   },
   "composeToast.unsupported.title": {
     "message": "Quicktext: \"$TEMPLATE$\" was inserted incompletely",
