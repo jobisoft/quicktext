@@ -13,7 +13,7 @@ export const OPFS_STORAGE_NAME = "Quicktext Storage";
 
 // Record a dropped FILE-based entry (import or storage location) so the
 // migration report can inform the user. Appended to local storage, deduplicated
-// by type+path. Never automatically cleared - the user dismisses via the report.
+// by type+path. Never cleared - the report lists these entries whenever it opens.
 async function _recordDroppedFileEntry(type, path) {
   const { droppedFileEntries = [] } = await browser.storage.local.get({
     droppedFileEntries: [],

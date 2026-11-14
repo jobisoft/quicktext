@@ -207,20 +207,43 @@ button.secondary:hover {
   background: rgba(42, 127, 212, 0.08);
 }
 
-#report-actions {
-  margin-top: 12px;
-  max-width: 640px;
-  text-align: center;
-}
-
-#btn-dismiss {
+button.primary {
   padding: 8px 20px;
-  background: transparent;
-  color: #2a7fd4;
+  background: #2a7fd4;
+  color: #fff;
   border: 1px solid #2a7fd4;
   border-radius: 5px;
   font-size: 13px;
   cursor: pointer;
 }
 
-#btn-dismiss:hover { background: rgba(42, 127, 212, 0.08); }
+button.primary:hover {
+  background: #1a6abf;
+  border-color: #1a6abf;
+}
+
+@media (prefers-color-scheme: dark) {
+  button.primary { background: #1a6abf; border-color: #1a6abf; }
+  button.primary:hover { background: #2a7fd4; border-color: #2a7fd4; }
+}
+
+#report-tools {
+  margin-top: 16px;
+  max-width: 640px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+#report-actions {
+  margin-top: 12px;
+  max-width: 640px;
+  font-size: 13px;
+}
+
+#report-actions label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}

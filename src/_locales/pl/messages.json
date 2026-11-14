@@ -591,7 +591,7 @@
     "message": "Raport zgodności Quicktext"
   },
   "migrationReport.intro": {
-    "message": "Quicktext jest teraz nowoczesnym rozszerzeniem WebExtension. Nie ma już bezpośredniego dostępu do plików na Twoim komputerze i nie obsługuje już API skryptów Quicktext v5. Wymienione poniżej szablony, skrypty i ustawienia nadal zależą od tych funkcji i wymagają Twojej uwagi."
+    "message": "Quicktext jest teraz nowoczesnym rozszerzeniem WebExtension. Pozostanie zgodny z przyszłymi wersjami Thunderbirda bez konieczności aktualizacji przy każdym nowym wydaniu. W związku z tym nie ma już bezpośredniego dostępu do plików na Twoim komputerze i nie obsługuje już API skryptów Quicktext v5. Wymienione poniżej szablony, skrypty i ustawienia nadal zależą od tych funkcji i wymagają Twojej uwagi."
   },
   "migrationReport.filesystem.description": {
     "message": "Te szablony i skrypty odwołują się do plików na Twoim komputerze. Takie znaczniki są teraz pomijane: pliki nie są już wstawiane ani załączane, a zamiast tego Quicktext wyświetla komunikat w oknie tworzenia wiadomości. Aby to naprawić, skopiuj pliki do miejsca przechowywania Quicktext i zmień znaczniki zgodnie z poniższą sugestią. Więcej informacji: $LINK$.",
@@ -616,7 +616,10 @@
     "message": "listy starszych wersji"
   },
   "migrationReport.btn.browseStorage": {
-    "message": "Przeglądaj miejsce przechowywania"
+    "message": "Otwórz magazyn Quicktext"
+  },
+  "migrationReport.btn.openManager": {
+    "message": "Otwórz menedżera Quicktext"
   },
   "migration.incompatible.title": {
     "message": "Niekompatybilne skrypty"

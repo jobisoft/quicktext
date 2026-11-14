@@ -591,7 +591,7 @@
     "message": "Quicktext 互換性レポート"
   },
   "migrationReport.intro": {
-    "message": "Quicktext は最新の WebExtension になりました。お使いのコンピューター上のファイルに直接アクセスできなくなり、Quicktext v5 のスクリプト API もサポートされなくなりました。以下に示すテンプレート、スクリプト、設定はまだこれらの機能に依存しており、対応が必要です。"
+    "message": "Quicktext は最新の WebExtension になりました。Thunderbird のリリースごとに更新しなくても、今後のバージョンとの互換性が保たれます。その結果、お使いのコンピューター上のファイルに直接アクセスできなくなり、Quicktext v5 のスクリプト API もサポートされなくなりました。以下に示すテンプレート、スクリプト、設定はまだこれらの機能に依存しており、対応が必要です。"
   },
   "migrationReport.filesystem.description": {
     "message": "これらのテンプレートとスクリプトは、お使いのコンピューター上のファイルを参照しています。このようなタグは現在スキップされます。ファイルは挿入も添付もされず、代わりに Quicktext が作成ウィンドウに通知を表示します。修正するには、ファイルを Quicktext の保存場所にコピーし、以下の提案に従ってタグを変更してください。詳しくは$LINK$をご覧ください。",
@@ -616,7 +616,10 @@
     "message": "旧バージョンの一覧"
   },
   "migrationReport.btn.browseStorage": {
-    "message": "保存場所を参照"
+    "message": "Quicktext の保存場所を開く"
+  },
+  "migrationReport.btn.openManager": {
+    "message": "Quicktext マネージャーを開く"
   },
   "migration.incompatible.title": {
     "message": "互換性のないスクリプト"

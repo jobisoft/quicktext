@@ -15,8 +15,6 @@
   <blockquote id="author-quote" class="author-quote" hidden></blockquote>
 
   <div id="top-actions">
-    <button id="btn-open-manager" class="secondary" data-i18n-content="quicktext.settings.title"></button>
-    <button id="btn-browse-storage" class="secondary" data-i18n-content="migrationReport.btn.browseStorage"></button>
     <button id="btn-wiki-storage" class="secondary" data-i18n-content="migration.btn.learnStorage"></button>
     <button id="btn-wiki-journey" class="secondary" data-i18n-content="migration.btn.learnJourney"></button>
   </div>
@@ -44,7 +42,15 @@
   </section>
 
   <div id="report-actions">
-    <button id="btn-dismiss" data-i18n-content="migration.btn.dontShowAgain"></button>
+    <label>
+      <input type="checkbox" id="chk-dismiss" />
+      <span data-i18n-content="migration.btn.dontShowAgain"></span>
+    </label>
+  </div>
+
+  <div id="report-tools">
+    <button id="btn-browse-storage" class="primary" data-i18n-content="migrationReport.btn.browseStorage"></button>
+    <button id="btn-open-manager" class="primary" data-i18n-content="migrationReport.btn.openManager"></button>
   </div>
 </body>
 

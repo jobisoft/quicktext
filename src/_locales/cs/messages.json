@@ -591,7 +591,7 @@
     "message": "Zpráva o kompatibilitě Quicktext"
   },
   "migrationReport.intro": {
-    "message": "Quicktext je nyní moderní WebExtension. Již nemá přímý přístup k souborům ve vašem počítači a již nepodporuje skriptovací API Quicktext v5. Níže uvedené šablony, skripty a nastavení na těchto funkcích stále závisí a vyžadují vaši pozornost."
+    "message": "Quicktext je nyní moderní WebExtension. Zůstane kompatibilní s budoucími verzemi Thunderbirdu, aniž by potřeboval aktualizaci pro každé nové vydání. V důsledku toho již nemá přímý přístup k souborům ve vašem počítači a již nepodporuje skriptovací API Quicktext v5. Níže uvedené šablony, skripty a nastavení na těchto funkcích stále závisí a vyžadují vaši pozornost."
   },
   "migrationReport.filesystem.description": {
     "message": "Tyto šablony a skripty odkazují na soubory ve vašem počítači. Takové značky se nyní přeskakují: soubory se již nevkládají ani nepřipojují a Quicktext místo toho zobrazí upozornění v okně psaní zprávy. Chcete-li to napravit, zkopírujte soubory do úložiště Quicktext a upravte značky podle níže uvedeného návrhu. Podrobnosti najdete v $LINK$.",
@@ -616,7 +616,10 @@
     "message": "seznamu starších verzí"
   },
   "migrationReport.btn.browseStorage": {
-    "message": "Procházet úložiště"
+    "message": "Otevřít úložiště Quicktext"
+  },
+  "migrationReport.btn.openManager": {
+    "message": "Otevřít správce Quicktext"
   },
   "migration.incompatible.title": {
     "message": "Nekompatibilní skripty"

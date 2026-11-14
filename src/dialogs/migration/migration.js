@@ -286,19 +286,31 @@ async function browseStorage() {
   }
 }
 
-// Remember what was reported, so the report opens again at startup only if
-// something new shows up.
-async function dismissReport() {
-  const { deprecatedUsages, droppedFileEntries } = await browser.storage.local.get({
-    deprecatedUsages: null,
-    droppedFileEntries: null,
+// "Don't show this report again": remembers what is listed now, so the report
+// opens again at startup only if something new shows up. Unchecking it forgets
+// that again. The page itself stays open either way.
+async function initDismissCheckbox() {
+  const checkbox = document.getElementById("chk-dismiss");
+  const getIds = async () => {
+    const { deprecatedUsages, droppedFileEntries } = await browser.storage.local.get({
+      deprecatedUsages: null,
+      droppedFileEntries: null,
+    });
+    return utils.getMigrationReportIds(deprecatedUsages, droppedFileEntries);
+  };
+
+  const { migrationReportDismissed } = await browser.storage.local.get({ migrationReportDismissed: null });
+  const dismissed = new Set(migrationReportDismissed ?? []);
+  checkbox.checked = migrationReportDismissed != null
+    && (await getIds()).every(id => dismissed.has(id));
+
+  checkbox.addEventListener("change", async () => {
+    if (checkbox.checked) {
+      await browser.storage.local.set({ migrationReportDismissed: await getIds() });
+    } else {
+      await browser.storage.local.remove("migrationReportDismissed");
+    }
   });
-  await browser.storage.local.set({
-    migrationReportDismissed: utils.getMigrationReportIds(deprecatedUsages, droppedFileEntries),
-  });
-  await browser.storage.local.remove("droppedFileEntries");
-  const tab = await browser.tabs.getCurrent();
-  if (tab) browser.tabs.remove(tab.id);
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -338,5 +350,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     browser.windows.openDefaultBrowser("https://github.com/jobisoft/quicktext/wiki/Quicktext's-journey-from-a-legacy-Add%E2%80%90on-to-a-modern-WebExtension");
   });
 
-  document.getElementById("btn-dismiss").addEventListener("click", dismissReport);
+  await initDismissCheckbox();
 });

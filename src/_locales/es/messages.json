@@ -591,7 +591,7 @@
     "message": "Informe de compatibilidad de Quicktext"
   },
   "migrationReport.intro": {
-    "message": "Quicktext es ahora una WebExtension moderna. Ya no tiene acceso directo a los archivos de su equipo y ya no admite la API de scripts de Quicktext v5. Las plantillas, scripts y ajustes que se enumeran a continuación aún dependen de estas funciones y requieren su atención."
+    "message": "Quicktext es ahora una WebExtension moderna. Seguirá siendo compatible con las futuras versiones de Thunderbird sin necesitar una actualización para cada nueva versión. En consecuencia, ya no tiene acceso directo a los archivos de su equipo y ya no admite la API de scripts de Quicktext v5. Las plantillas, scripts y ajustes que se enumeran a continuación aún dependen de estas funciones y requieren su atención."
   },
   "migrationReport.filesystem.description": {
     "message": "Estas plantillas y scripts hacen referencia a archivos de su equipo. Estas etiquetas ahora se omiten: los archivos ya no se insertan ni se adjuntan, y en su lugar Quicktext muestra un aviso en la ventana de redacción. Para solucionarlo, copie los archivos en una ubicación de almacenamiento de Quicktext y cambie las etiquetas como se sugiere a continuación. Consulte la $LINK$ para más detalles.",
@@ -616,7 +616,10 @@
     "message": "lista de versiones anteriores"
   },
   "migrationReport.btn.browseStorage": {
-    "message": "Explorar almacenamiento"
+    "message": "Abrir el almacenamiento de Quicktext"
+  },
+  "migrationReport.btn.openManager": {
+    "message": "Abrir el administrador de Quicktext"
   },
   "migration.incompatible.title": {
     "message": "Scripts incompatibles"

@@ -591,7 +591,7 @@
     "message": "Quicktext kompatibilitási jelentés"
   },
   "migrationReport.intro": {
-    "message": "A Quicktext mostantól egy modern WebExtension. Már nem fér hozzá közvetlenül a számítógépén lévő fájlokhoz, és már nem támogatja a Quicktext v5 szkript API-t. Az alább felsorolt sablonok, szkriptek és beállítások még ezekre a funkciókra támaszkodnak, és figyelmet igényelnek."
+    "message": "A Quicktext mostantól egy modern WebExtension. Kompatibilis marad a Thunderbird jövőbeli verzióival anélkül, hogy minden új kiadáshoz frissíteni kellene. Ennek következtében már nem fér hozzá közvetlenül a számítógépén lévő fájlokhoz, és már nem támogatja a Quicktext v5 szkript API-t. Az alább felsorolt sablonok, szkriptek és beállítások még ezekre a funkciókra támaszkodnak, és figyelmet igényelnek."
   },
   "migrationReport.filesystem.description": {
     "message": "Ezek a sablonok és szkriptek a számítógépén lévő fájlokra hivatkoznak. Az ilyen címkéket a Quicktext mostantól kihagyja: a fájlokat már nem szúrja be és nem csatolja, helyette értesítést jelenít meg a levélíró ablakban. A javításhoz másolja a fájlokat egy Quicktext tárolóhelyre, és módosítsa a címkéket az alábbi javaslat szerint. További részletek: $LINK$.",
@@ -616,7 +616,10 @@
     "message": "korábbi verziók listája"
   },
   "migrationReport.btn.browseStorage": {
-    "message": "Tárolóhely tallózása"
+    "message": "Quicktext tárolóhely megnyitása"
+  },
+  "migrationReport.btn.openManager": {
+    "message": "Quicktext kezelő megnyitása"
   },
   "migration.incompatible.title": {
     "message": "Nem kompatibilis szkriptek"
