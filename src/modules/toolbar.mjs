@@ -2,7 +2,6 @@ import { getTemplatesMenuStructure } from "./menuStructure.mjs";
 
 import * as quicktext from "../modules/quicktext.mjs";
 import * as storage from "../modules/storage.mjs";
-import * as utils from "../modules/utils.mjs";
 import * as composeToolbar from "../modules/composeToolbar.mjs";
 
 const COMPANION_ADDON_ID = "quicktext-legacy@jobisoft.de";
@@ -48,14 +47,7 @@ async function buildEditorToolbarModel() {
     }))
     : [{ entries: (isMulti ? templates[0].children : templates).map(toEntry) }];
 
-  return {
-    sections,
-    tools: [{
-      label: messenger.i18n.getMessage("quicktext.settings.title"),
-      icon: "settings",
-      action: { command: "settings" },
-    }],
-  };
+  return { sections };
 }
 
 async function updateEditorToolbar(tabId) {
@@ -81,8 +73,6 @@ async function initEditorToolbar() {
       switch (action?.command) {
         case "insertTemplate":
           return quicktext.insertTemplate(tabId, action.storageUuid, action.group, action.text);
-        case "settings":
-          return utils.openSettingsDialog();
       }
     },
   });

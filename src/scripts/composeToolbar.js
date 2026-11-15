@@ -21,6 +21,7 @@
   const menus = new WeakMap();
 
   let host = null;
+  let style = null;
   let bar = null;
   let menu = null;
   let menuButton = null;
@@ -40,7 +41,6 @@
 
   const ICONS = {
     chevron: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-    settings: `<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 5.5A2.5 2.5 0 1 0 8 10.5 2.5 2.5 0 0 0 8 5.5zm0 3.75A1.25 1.25 0 1 1 8 6.75a1.25 1.25 0 0 1 0 2.5zM14 8.6V7.4l-1.6-.4a4.6 4.6 0 0 0-.5-1.2l.9-1.4-.85-.85-1.4.9a4.6 4.6 0 0 0-1.2-.5L9 2.2H7.8l-.4 1.6a4.6 4.6 0 0 0-1.2.5l-1.4-.9-.85.85.9 1.4a4.6 4.6 0 0 0-.5 1.2L2 7.4v1.2l1.6.4c.1.43.28.83.5 1.2l-.9 1.4.85.85 1.4-.9c.37.22.77.4 1.2.5l.4 1.6H9l.4-1.6c.43-.1.83-.28 1.2-.5l1.4.9.85-.85-.9-1.4c.22-.37.4-.77.5-1.2z"/></svg>`,
   };
 
   function build() {
@@ -51,9 +51,8 @@
     host.contentEditable = "false";
     const root = host.attachShadow({ mode: "open" });
 
-    const style = el("link");
-    style.rel = "stylesheet";
-    style.href = browser.runtime.getURL("/scripts/composeToolbar.css");
+    // Filled from the show message, before the host is attached.
+    style = el("style");
     root.append(style);
 
     bar = el("div", "bar");
@@ -98,27 +97,18 @@
     for (const section of model.sections ?? []) {
       let target = main;
       if (section.label) {
-        target = el("div", section.disabled ? "section disabled" : "section");
-        target.append(el("span", "section-label", section.label));
-        main.append(target);
+        // Storage name above its buttons, as in the legacy companion toolbar.
+        const box = el("div", section.disabled ? "section disabled" : "section");
+        box.append(el("div", "section-label", section.label));
+        target = el("div", "section-entries");
+        box.append(target);
+        main.append(box);
       }
       for (const entry of section.entries ?? []) {
         target.append(renderEntry(entry));
       }
     }
     bar.append(main);
-
-    const tools = el("div", "tools");
-    for (const tool of model.tools ?? []) {
-      const button = el("button", "tool");
-      button.type = "button";
-      button.title = tool.label;
-      button.setAttribute("aria-label", tool.label);
-      button.append(svg(ICONS[tool.icon] ?? ICONS.settings));
-      actions.set(button, tool.action);
-      tools.append(button);
-    }
-    bar.append(tools);
   }
 
   function openMenu(button) {
@@ -186,8 +176,11 @@
   }, true);
   window.addEventListener("resize", closeMenu);
 
-  function show(model) {
+  function show(model, css) {
     if (!host) build();
+    if (css && style.textContent !== css) {
+      style.textContent = css;
+    }
     render(model);
     attach();
   }
@@ -202,7 +195,7 @@
   browser.runtime.onMessage.addListener(message => {
     switch (message?.composeToolbar) {
       case "show":
-        show(message.model);
+        show(message.model, message.css);
         return Promise.resolve();
       case "hide":
         hide();

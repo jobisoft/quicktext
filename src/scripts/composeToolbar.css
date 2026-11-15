@@ -43,11 +43,6 @@
   min-width: 0;
 }
 
-.tools {
-  display: flex;
-  gap: 4px;
-}
-
 button {
   font: inherit;
   color: inherit;
@@ -87,32 +82,11 @@ button {
   background: transparent;
 }
 
-.tool {
-  display: grid;
-  place-items: center;
-  width: 26px;
-  height: 24px;
-  padding: 0;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  background: transparent;
-  opacity: 0.75;
-}
-.tool:hover {
-  opacity: 1;
-  background: light-dark(#e7eef8, #3c4656);
-}
-.tool svg {
-  width: 16px;
-  height: 16px;
-}
-
 .section {
   display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 4px;
+  flex-direction: column;
+  gap: 1px;
+  padding: 2px 4px 4px;
   border: 1px solid light-dark(#d4d7dc, #4a4d55);
   border-radius: 5px;
 }
@@ -120,6 +94,12 @@ button {
   font-size: 11px;
   opacity: 0.65;
   margin: 0 2px;
+}
+.section-entries {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
 }
 .section.disabled {
   opacity: 0.55;

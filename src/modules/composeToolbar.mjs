@@ -21,7 +21,6 @@
 //         { label, disabled: true }                   // greyed-out label
 //       ],
 //     }],
-//     tools: [{ label, icon: "settings", action }],  // right-aligned buttons
 //   }
 //
 // The host lives in the editor document, which Thunderbird serializes as a
@@ -29,10 +28,21 @@
 
 const HOST_ID = "quicktext-compose-toolbar";
 const SCRIPT_FILE = "/scripts/composeToolbar.js";
+const CSS_FILE = "/scripts/composeToolbar.css";
+
+// The stylesheet is handed to the compose document as text and applied with a
+// <style> element: a <link> loads asynchronously and the host would show up
+// unstyled for a moment.
+let cssText = null;
+function getCss() {
+  cssText ??= fetch(browser.runtime.getURL(CSS_FILE)).then(r => r.text());
+  return cssText;
+}
 
 export async function show(tabId, model) {
   await browser.tabs.executeScript(tabId, { file: SCRIPT_FILE });
-  await browser.tabs.sendMessage(tabId, { composeToolbar: "show", model });
+  const css = await getCss();
+  await browser.tabs.sendMessage(tabId, { composeToolbar: "show", model, css });
 }
 
 // Removes the host by id, without depending on the toolbar script being loaded

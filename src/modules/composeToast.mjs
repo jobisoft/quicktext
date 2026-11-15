@@ -25,6 +25,16 @@
 // Keep in sync with HOST_ID in /scripts/composeToast.js.
 const HOST_ID = "quicktext-compose-toast";
 const SCRIPT_FILE = "/scripts/composeToast.js";
+const CSS_FILE = "/scripts/composeToast.css";
+
+// The stylesheet is handed to the compose document as text and applied with a
+// <style> element: a <link> loads asynchronously and the host would show up
+// unstyled for a moment.
+let cssText = null;
+function getCss() {
+  cssText ??= fetch(browser.runtime.getURL(CSS_FILE)).then(r => r.text());
+  return cssText;
+}
 
 // Links of delivered models, per tab. Only these may be opened on request of
 // the compose document.
@@ -37,7 +47,8 @@ export async function show(tabId, model) {
   } else {
     allowedLinks.delete(tabId);
   }
-  await browser.tabs.sendMessage(tabId, { composeToast: "show", model });
+  const css = await getCss();
+  await browser.tabs.sendMessage(tabId, { composeToast: "show", model, css });
 }
 
 // Removes the host by id. Does not rely on the toast script: a reopened draft

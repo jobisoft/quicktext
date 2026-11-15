@@ -53,10 +53,9 @@
   host.contentEditable = "false";
   const root = host.attachShadow({ mode: "open" });
 
-  const stylesheet = document.createElement("link");
-  stylesheet.rel = "stylesheet";
-  stylesheet.href = browser.runtime.getURL("/scripts/composeToast.css");
-  root.append(stylesheet);
+  // Filled from the show message, before the host is attached.
+  const style = document.createElement("style");
+  root.append(style);
 
   const bubble = make("details", "bubble");
   const summary = make("summary");
@@ -107,7 +106,10 @@
     updateToggleLabel();
   });
 
-  function show(model) {
+  function show(model, css) {
+    if (css && style.textContent !== css) {
+      style.textContent = css;
+    }
     labels = model.labels ?? {};
     title.textContent = model.title ?? "";
     summaryText.textContent = model.summary ?? "";
@@ -140,7 +142,7 @@
   browser.runtime.onMessage.addListener(message => {
     switch (message?.composeToast) {
       case "show":
-        show(message.model);
+        show(message.model, message.css);
         return Promise.resolve(true);
       case "hide":
         hide();
