@@ -15,7 +15,7 @@ import Squire from "/vendor/squire/squire.mjs";
 import { localizeDocument } from "/vendor/i18n.mjs";
 import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 import { showDialog, showAlert, showConfirm, showPrompt } from "./popover.js";
-const { computePosition, flip, shift } = FloatingUIDOM;
+import { openFlyoutMenu } from "./flyoutMenu.mjs";
 
 const i18n = (key, subs) => browser.i18n.getMessage(key, subs) || key;
 const applyManaged = (el, isManaged) => {
@@ -1210,16 +1210,12 @@ function _renderGroupsForBundle(bundle, container) {
 
 function selectItem(uuid, gi, ti) {
   commitTemplateEdits();
-  const storageChanged = state.selectedTemplateStorageUuid !== uuid;
   state.selectedTemplateStorageUuid = uuid;
   state.selectedGroupIdx = gi;
   state.selectedTextIdx = ti;
   _updateTemplateListSelection();
   updateTemplateButtons();
   renderTemplateDetail();
-  // The Insert Tag flyout is scoped to the selected template's
-  // storage, so rebuild it whenever the storage changes.
-  if (storageChanged) buildInsertTagMenu();
 }
 
 // Storage-header click (multi-storage mode only): selects the
@@ -1640,7 +1636,6 @@ function setupStorageDrag(el, idx) {
     renderStorageList();
     renderTemplateList();
     renderScriptList();
-    buildInsertTagMenu();
   });
 }
 
@@ -2287,7 +2282,6 @@ async function renderStorageList() {
       renderStorageList();
       renderTemplateList();
       renderScriptList();
-      buildInsertTagMenu();
     },
   });
 
@@ -2383,7 +2377,6 @@ async function renderStorageList() {
         renderScriptList();
         renderTemplateDetail();
         renderScriptDetail();
-        buildInsertTagMenu();
       })();
     });
     enabledEl.appendChild(enabledBox);
@@ -2584,7 +2577,6 @@ async function addStorageConfig() {
   renderScriptList();
   renderTemplateDetail();
   renderScriptDetail();
-  buildInsertTagMenu();
 }
 
 async function browseStorage() {
@@ -2678,7 +2670,6 @@ async function removeStorage() {
   renderScriptList();
   renderTemplateDetail();
   renderScriptDetail();
-  buildInsertTagMenu();
 }
 
 const MANAGER_URL = browser.runtime.getURL("/dialogs/manager/manager.html");
@@ -2774,52 +2765,22 @@ async function rebuildManagerContextMenu() {
   await menus.processMenuData([], [root], null);
 }
 
-async function buildInsertTagMenu() {
+// Nodes for the Insert Tag fly-out (see flyoutMenu.mjs), built on every open
+// so unsaved edits and the current date/time show up.
+async function getInsertTagMenuNodes() {
   const menuCollapse = await storage.getPref("menuCollapse");
-  const menu = document.getElementById("insert-tag-menu");
-  menu.innerHTML = "";
-
-  const makeItem = (label, val) => {
-    const btn = document.createElement("button");
-    btn.className = "var-item";
-    btn.textContent = label;
-    btn.title = label;
-    btn.dataset.val = val;
-    return btn;
-  };
-
-  const makeSeparator = () => {
-    const sep = document.createElement("div");
-    sep.className = "var-separator";
-    return sep;
-  };
-
-  const makeGrp = (label, children) => {
-    const grp = document.createElement("div");
-    grp.className = "var-group";
-    const lbl = document.createElement("span");
-    lbl.className = "var-group-label";
-    lbl.textContent = label;
-    lbl.title = label;
-    grp.appendChild(lbl);
-    const sub = document.createElement("div");
-    sub.className = "var-submenu";
-    for (const child of children) sub.appendChild(child);
-    grp.appendChild(sub);
-    return grp;
-  };
-
   const now = Date.now();
-  const nodeToElement = node => {
-    if (node.type === "separator") return makeSeparator();
+  const toNode = node => {
+    if (node.type === "separator") return { separator: true };
     const label = node.type === "dateTime"
       ? getDateTimeMenuTitle(node.format, now)
       : node.title ?? i18n(node.localeKey || `quicktext.${node.id}.label`);
-    if (node.type === "group") return makeGrp(label, node.children.map(nodeToElement));
-    const el = makeItem(label, node.value);
-    if (node.description) el.title = node.description;
-    if (node.type === "dateTime") el.dataset.format = node.format;
-    return el;
+    return {
+      label,
+      title: node.description || label,
+      value: node.value,
+      children: node.type === "group" ? node.children.map(toNode) : undefined,
+    };
   };
 
   // Scope the flyout to the currently-selected template's storage -
@@ -2853,24 +2814,16 @@ async function buildInsertTagMenu() {
       }
     }
   }
-  for (const node of structure) menu.appendChild(nodeToElement(node));
+  return structure.map(toNode);
 }
 
-function updateDateTimeFlyOutMenus() {
-  const menu = document.getElementById("insert-tag-menu");
-  const now = Date.now();
-  for (const el of menu.querySelectorAll(".var-item[data-format]")) {
-    const title = getDateTimeMenuTitle(el.dataset.format, now);
-    el.textContent = title;
-    el.title = title;
-  }
-}
-
-function insertVariable(varStr) {
+// `target` is "subject" or "body"; without it, the subject is used when it
+// has the focus. The body is the WYSIWYG for text/html templates, else the raw
+// textarea.
+function insertVariable(varStr, target) {
   const subjectEl = document.getElementById("text-subject");
-  // Subject field takes precedence when focused; otherwise the body - which is
-  // the WYSIWYG for text/html templates, else the raw textarea.
-  if (document.activeElement !== subjectEl
+  const toSubject = target ? target === "subject" : document.activeElement === subjectEl;
+  if (!toSubject
       && document.getElementById("sel-type").value === "text/html"
       && !document.getElementById("text-body-html").hidden) {
     htmlEditor.focus();
@@ -2879,13 +2832,13 @@ function insertVariable(varStr) {
     markChanged(findBundle(state.selectedTemplateStorageUuid));
     return;
   }
-  const target = document.activeElement === subjectEl ? subjectEl : document.getElementById("text-body");
-  const start = target.selectionStart;
-  const end = target.selectionEnd;
-  target.value = target.value.slice(0, start) + `[[${varStr}]]` + target.value.slice(end);
+  const field = toSubject ? subjectEl : document.getElementById("text-body");
+  const start = field.selectionStart;
+  const end = field.selectionEnd;
+  field.value = field.value.slice(0, start) + `[[${varStr}]]` + field.value.slice(end);
   const pos = start + varStr.length + 4;
-  target.setSelectionRange(pos, pos);
-  target.focus();
+  field.setSelectionRange(pos, pos);
+  field.focus();
   markChanged(findBundle(state.selectedTemplateStorageUuid));
 }
 
@@ -3094,7 +3047,6 @@ async function init() {
         state.prefs.defaultImport = await storage.getPref("defaultImport");
         _refreshImportViews();
       }
-      buildInsertTagMenu();
     }
   });
 
@@ -3123,7 +3075,6 @@ async function init() {
       renderStorageList();
       renderTemplateDetail();
       renderScriptDetail();
-      buildInsertTagMenu();
     }
   });
 
@@ -3138,7 +3089,6 @@ async function init() {
   // provider availability changes.
   browser.storage.onChanged.addListener((changes, areaName) => {
     if (areaName === "session" && "externalScripts" in changes) {
-      buildInsertTagMenu();
     }
     if (areaName === "session" && "providerAvailability" in changes) {
       state.providerAvailability = changes.providerAvailability.newValue ?? {};
@@ -3220,40 +3170,38 @@ async function init() {
   });
   document.getElementById("text-subject").addEventListener("input", markSelectedBundleChanged);
 
-  document.getElementById("btn-insert-tag").addEventListener("click", async e => {
-    const menu = document.getElementById("insert-tag-menu");
+  // Insert Tag fly-out. The insert target is taken before the button gets
+  // the focus, so a focused subject field still receives the tag.
+  const insertTagButton = document.getElementById("btn-insert-tag");
+  let insertTagMenu = null;
+  let insertTagTarget = "body";
+  // Only the subject and the body fields count; focus coming back from the
+  // menu itself keeps the previous target.
+  const rememberInsertTarget = el => {
+    if (el?.id === "text-subject") {
+      insertTagTarget = "subject";
+    } else if (el?.id === "text-body" || el?.closest?.("#text-body-html")) {
+      insertTagTarget = "body";
+    }
+  };
+  insertTagButton.addEventListener("pointerdown", () => rememberInsertTarget(document.activeElement));
+  insertTagButton.addEventListener("focus", e => rememberInsertTarget(e.relatedTarget));
+  insertTagButton.addEventListener("click", async e => {
     e.stopPropagation();
-    if (!menu.hidden) {
-      menu.hidden = true;
+    if (insertTagMenu?.isOpen) {
+      insertTagMenu.close();
       return;
     }
-    // Rebuild from live bundles every time the flyout opens, so
-    // unsaved template/script renames and additions are reflected.
-    await buildInsertTagMenu();
-    updateDateTimeFlyOutMenus();
-    menu.hidden = false;
-  });
-
-  document.getElementById("insert-tag-menu").addEventListener("mouseover", e => {
-    const grp = e.target.closest(".var-group");
-    const lbl = grp?.querySelector(":scope > .var-group-label");
-    const sub = grp?.querySelector(":scope > .var-submenu");
-    if (!lbl || !sub) return;
-    computePosition(lbl, sub, {
-      placement: "left-start",
-      middleware: [flip(), shift({ padding: 4 })],
-    }).then(({ x, y }) => {
-      sub.style.left = `${x}px`;
-      sub.style.top = `${y}px`;
+    const target = insertTagTarget;
+    const nodes = await getInsertTagMenuNodes();
+    insertTagMenu = openFlyoutMenu(insertTagButton, nodes, {
+      onSelect: node => insertTag(node.value, target),
+      onClose: () => { insertTagMenu = null; },
     });
   });
 
-  document.getElementById("insert-tag-menu").addEventListener("click", async e => {
-    const btn = e.target.closest(".var-item");
-    if (!btn) return;
-    document.getElementById("insert-tag-menu").hidden = true;
-    const val = btn.dataset.val;
-
+  async function insertTag(val, target) {
+    if (!val) return;
     if (val.includes("<vfs-path>")) {
       // The flyout is disabled for read-only templates, so the
       // selected storage is always a writable VFS entry here.
@@ -3270,18 +3218,14 @@ async function init() {
         opfsStorageName: storage.OPFS_STORAGE_NAME,
         types,
       });
-      if (picked) insertVariable(val.replace("<vfs-path>", picked.path));
+      if (picked) insertVariable(val.replace("<vfs-path>", picked.path), target);
     } else if (val.includes("<url>")) {
       const url = await showPrompt(i18n("quicktext.prompt.addUrl.label"), "https://");
-      if (url) insertVariable(val.replace("<url>", url));
+      if (url) insertVariable(val.replace("<url>", url), target);
     } else {
-      insertVariable(val);
+      insertVariable(val, target);
     }
-  });
-
-  document.addEventListener("click", () => {
-    document.getElementById("insert-tag-menu").hidden = true;
-  });
+  }
 
   // Show/Hide the "Insert Tag" menu when right-clicking in the template detail
   // textarea. Rebuild from live bundles so unsaved template/script
@@ -3321,11 +3265,7 @@ async function init() {
   // Keyboard
   document.addEventListener("keydown", e => {
     if ((e.ctrlKey || e.metaKey) && e.key === "s") { e.preventDefault(); doSave(); }
-    if (e.key === "Escape") {
-      const menu = document.getElementById("insert-tag-menu");
-      if (!menu.hidden) { menu.hidden = true; return; }
-      onClose();
-    }
+    if (e.key === "Escape") onClose();
   });
 
   // Check if community scripts add-on is already installed
