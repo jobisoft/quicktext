@@ -2702,7 +2702,8 @@ function _liveActiveBundles() {
 // compose tab the user right-clicked in), every click here inserts
 // directly into the manager dialog's own template editor via
 // `insertTag`, the same handler the Insert Tag fly-out uses - there's
-// no cross-tab messaging. The menu is only shown for #text-body.
+// no cross-tab messaging. The menu is shown in the template body, the
+// textarea (#text-body) or the HTML editor (#text-body-html).
 function _buildManagerMenuData(nodes, now) {
   return nodes.flatMap(node => {
     if (node.type === "separator") return [{ type: "separator" }];
@@ -3223,13 +3224,13 @@ async function init() {
     });
   });
 
-  // Show/Hide the "Insert Tag" menu when right-clicking in the template detail
-  // textarea. Rebuild from live bundles so unsaved template/script
+  // Show/Hide the "Insert Tag" menu when right-clicking in the template body
+  // (textarea or HTML editor). Rebuild from live bundles so unsaved template/script
   // edits (new items, renames) show up in the context menu.
   messenger.menus.onShown.addListener(async (info) => {
     const element = info.targetElementId ? browser.menus.getTargetElement(info.targetElementId) : null;
     if (
-      element?.id === "text-body" &&
+      (element?.id === "text-body" || element?.closest?.("#text-body-html")) &&
       document.querySelector(".tab-btn.active")?.dataset.tab === "templates" &&
       state.selectedTextIdx !== -1
     ) {
