@@ -97,7 +97,7 @@
     for (const section of model.sections ?? []) {
       let target = main;
       if (section.label) {
-        // Storage name above its buttons, as in the legacy companion toolbar.
+        // Storage name above its buttons.
         const box = el("div", section.disabled ? "section disabled" : "section");
         box.append(el("div", "section-label", section.label));
         target = el("div", "section-entries");

@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Закрыть"
+  },
+  "composeToast.companion.summary": {
+    "message": "Дополнение Quicktext Legacy Companion больше не нужно"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext теперь показывает свою панель инструментов внутри редактора сообщений."
+  },
+  "composeToast.companion.details2": {
+    "message": "Вы можете удалить дополнение в меню Инструменты › Дополнения и темы."
   }
 }

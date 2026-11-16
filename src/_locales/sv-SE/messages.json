@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Stäng"
+  },
+  "composeToast.companion.summary": {
+    "message": "Tillägget Quicktext Legacy Companion behövs inte längre"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext visar nu sitt verktygsfält i meddelanderedigeraren."
+  },
+  "composeToast.companion.details2": {
+    "message": "Du kan ta bort tillägget under Verktyg › Tillägg och teman."
   }
 }

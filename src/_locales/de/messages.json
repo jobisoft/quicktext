@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Schließen"
+  },
+  "composeToast.companion.summary": {
+    "message": "Das Add-on „Quicktext Legacy Companion“ wird nicht mehr benötigt"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext zeigt seine Symbolleiste jetzt direkt im Nachrichteneditor an."
+  },
+  "composeToast.companion.details2": {
+    "message": "Sie können den Companion unter Extras › Add-ons und Themes entfernen."
   }
 }

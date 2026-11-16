@@ -28,9 +28,8 @@ async function unregisterIfKnown(id) {
 
 export async function init() {
   browser.runtime.onMessageExternal.addListener(({ register_script_addon, available_scripts }, { id }) => {
-    // Only claim handshake messages. Returning undefined for everything else
-    // lets other onMessageExternal listeners (e.g. the legacy companion's
-    // toolbar commands in toolbar.mjs) respond instead.
+    // Only claim handshake messages. Returning false for everything else
+    // lets other onMessageExternal listeners respond instead.
     if (!register_script_addon || !available_scripts) return false;
     // If available_scripts is an array, it is the old list-of-names format.
     // Convert it to the new format with extended information.

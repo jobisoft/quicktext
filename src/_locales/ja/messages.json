@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "閉じる"
+  },
+  "composeToast.companion.summary": {
+    "message": "Quicktext Legacy Companion アドオンは不要になりました"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext のツールバーはメッセージエディター内に表示されるようになりました。"
+  },
+  "composeToast.companion.details2": {
+    "message": "コンパニオンは [ツール] › [アドオンとテーマ] から削除できます。"
   }
 }

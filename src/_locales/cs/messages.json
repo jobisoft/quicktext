@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Zavřít"
+  },
+  "composeToast.companion.summary": {
+    "message": "Doplněk Quicktext Legacy Companion již není potřeba"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext nyní zobrazuje svou lištu přímo v editoru zprávy."
+  },
+  "composeToast.companion.details2": {
+    "message": "Doplněk můžete odebrat v nabídce Nástroje › Doplňky a vzhledy."
   }
 }

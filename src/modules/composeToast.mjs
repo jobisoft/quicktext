@@ -10,6 +10,7 @@
 //
 //   {
 //     title:   "Quicktext",
+//     tone:    "success",   // optional, default is red (warning)
 //     summary: "one line, shown collapsed and expanded",
 //     details: ["one entry per line", ...],
 //     link:    { label, url },   // optional, opened in the default browser

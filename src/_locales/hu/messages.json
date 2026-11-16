@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Bezárás"
+  },
+  "composeToast.companion.summary": {
+    "message": "A Quicktext Legacy Companion kiegészítőre már nincs szükség"
+  },
+  "composeToast.companion.details1": {
+    "message": "A Quicktext eszköztára mostantól az üzenetszerkesztőben jelenik meg."
+  },
+  "composeToast.companion.details2": {
+    "message": "A kiegészítőt az Eszközök › Kiegészítők és témák menüben távolíthatja el."
   }
 }

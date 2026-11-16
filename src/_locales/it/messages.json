@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Chiudi"
+  },
+  "composeToast.companion.summary": {
+    "message": "Il componente aggiuntivo Quicktext Legacy Companion non è più necessario"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext ora mostra la sua barra degli strumenti all’interno dell’editor dei messaggi."
+  },
+  "composeToast.companion.details2": {
+    "message": "Puoi rimuovere il companion da Strumenti › Componenti aggiuntivi e temi."
   }
 }

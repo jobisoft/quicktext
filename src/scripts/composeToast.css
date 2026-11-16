@@ -18,6 +18,28 @@
   color-scheme: light dark;
   font: 14px/1.5 system-ui, sans-serif;
   color: light-dark(#25272b, #e4e8ee);
+
+  /* Tone colours, red by default (warnings). */
+  --tone-bg: light-dark(#fff5f5, #3a2a2e);
+  --tone-border: light-dark(#e0a8ae, #8c4f59);
+  --tone-accent: light-dark(#c4313d, #ff7b86);
+  --tone-title: light-dark(#a42e35, #ffadb3);
+  --tone-hover: light-dark(#fde9ea, #45323a);
+  --tone-control-bg: light-dark(#f1e4e5, #4a383e);
+  --tone-control-border: light-dark(#dcc4c6, #6e535b);
+  --tone-control-hover: light-dark(#e8d3d5, #5a434a);
+  --tone-divider: light-dark(#efd5d7, #54414a);
+}
+:host([data-tone="success"]) {
+  --tone-bg: light-dark(#f2fbf4, #24342a);
+  --tone-border: light-dark(#a6d8b2, #4f7f5c);
+  --tone-accent: light-dark(#2e8b47, #6fd18a);
+  --tone-title: light-dark(#23703a, #9be3ae);
+  --tone-hover: light-dark(#e3f5e8, #2d4033);
+  --tone-control-bg: light-dark(#e2efe5, #34483a);
+  --tone-control-border: light-dark(#c1dbc8, #557060);
+  --tone-control-hover: light-dark(#d1e7d7, #3f5646);
+  --tone-divider: light-dark(#d3ebd9, #3d5244);
 }
 :host([data-expanded]) {
   width: min(75vw, 720px) !important;
@@ -31,9 +53,9 @@
 }
 
 .bubble {
-  background: light-dark(#fff5f5, #3a2a2e);
-  border: 1px solid light-dark(#e0a8ae, #8c4f59);
-  border-left: 4px solid light-dark(#c4313d, #ff7b86);
+  background: var(--tone-bg);
+  border: 1px solid var(--tone-border);
+  border-left: 4px solid var(--tone-accent);
   border-radius: 10px;
   box-shadow: 0 5px 22px #23384f30;
   overflow: hidden;
@@ -55,7 +77,7 @@ summary::-webkit-details-marker {
   display: none;
 }
 summary:hover {
-  background: light-dark(#fde9ea, #45323a);
+  background: var(--tone-hover);
 }
 summary:focus-visible,
 button:focus-visible {
@@ -78,7 +100,7 @@ button:focus-visible {
 }
 .title {
   font-weight: 600;
-  color: light-dark(#a42e35, #ffadb3);
+  color: var(--tone-title);
 }
 .summary-text {
   font-size: 13px;
@@ -97,12 +119,12 @@ summary .header-control {
 }
 summary .close {
   right: 12px;
-  background: light-dark(#f1e4e5, #4a383e);
-  border: 1px solid light-dark(#dcc4c6, #6e535b);
+  background: var(--tone-control-bg);
+  border: 1px solid var(--tone-control-border);
   cursor: pointer;
 }
 summary .close:hover {
-  background: light-dark(#e8d3d5, #5a434a);
+  background: var(--tone-control-hover);
 }
 .close svg {
   width: 12px;
@@ -131,7 +153,7 @@ summary .chevron {
 }
 .details li {
   padding: 6px 0;
-  border-top: 1px solid light-dark(#efd5d7, #54414a);
+  border-top: 1px solid var(--tone-divider);
   font: 13px/1.5 ui-monospace, Consolas, monospace;
   white-space: pre-wrap;
   overflow-wrap: anywhere;

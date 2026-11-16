@@ -739,5 +739,14 @@
   },
   "composeToast.close": {
     "message": "Zamknij"
+  },
+  "composeToast.companion.summary": {
+    "message": "Dodatek Quicktext Legacy Companion nie jest już potrzebny"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext wyświetla teraz swój pasek narzędzi w edytorze wiadomości."
+  },
+  "composeToast.companion.details2": {
+    "message": "Możesz usunąć dodatek w menu Narzędzia › Dodatki i motywy."
   }
 }

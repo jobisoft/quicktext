@@ -110,6 +110,11 @@
     if (css && style.textContent !== css) {
       style.textContent = css;
     }
+    if (model.tone) {
+      host.dataset.tone = model.tone;
+    } else {
+      delete host.dataset.tone;
+    }
     labels = model.labels ?? {};
     title.textContent = model.title ?? "";
     summaryText.textContent = model.summary ?? "";

@@ -9,7 +9,7 @@ import * as utils from "/modules/utils.mjs";
 import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 
 // Abstract menu structure shared across the compose action menu,
-// the manager flyout menu, and the legacy toolbar companion.
+// the manager flyout menu, and the toolbar in the message editor.
 //
 // Each node:
 //   { type: "group",     id, localeKey?, title?, children }

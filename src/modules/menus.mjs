@@ -10,37 +10,13 @@ import * as utils from "/modules/utils.mjs";
 import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import { getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 
-// Dispatch a menu action. Shared by the compose body context menu
-// (structureToMenuData onclick handlers) and the legacy toolbar bridge
-// (toolbar.mjs menuAction command). `action` carries:
+// Dispatch a menu action of the compose body context menu (structureToMenuData
+// onclick handlers). `action` carries:
 //   value      - the menu item's tag value (may contain placeholders)
 //   insertMode - "text/html" or "text/plain" (for content insertion)
-//   file       - pre-picked File (companion's XUL picker for <path>)
-//   url        - pre-prompted URL (companion's window.prompt for <url>)
-// When `file` or `url` is present the corresponding placeholder is
-// already resolved; otherwise the function handles picking/prompting.
+// Placeholders are resolved here by picking a file or prompting for a URL.
 export async function handleMenuAction(tabId, action) {
     const { value, insertMode } = action;
-
-    if (action.file) {
-        if (value.startsWith("IMAGE="))
-            return quicktext.insertImageFile(tabId, action.file);
-        if (value.startsWith("ATTACHMENT="))
-            return quicktext.insertAttachmentFile(tabId, action.file);
-        const content = await utils.getTextFileContent(action.file);
-        if (content) return quicktext.insertFileContent(tabId, content, insertMode);
-        return;
-    }
-
-    if (action.url) {
-        if (value.startsWith("IMAGE="))
-            return quicktext.insertImageFile(tabId, await utils.fetchFileAsFile(action.url));
-        if (value.startsWith("ATTACHMENT="))
-            return quicktext.insertAttachmentFile(tabId, await utils.fetchFileAsFile(action.url));
-        const content = await utils.fetchFileAsText(action.url);
-        if (content) return quicktext.insertFileContent(tabId, content, insertMode);
-        return;
-    }
 
     if (value?.includes("<path>")) {
         if (value.startsWith("IMAGE=")) {
