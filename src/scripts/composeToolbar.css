@@ -13,9 +13,9 @@
   position: sticky !important;
   top: 0 !important;
   z-index: 2147482000 !important;
-  /* Match the editor document, not the system: the message area can be
-     light while Thunderbird itself is dark, or the other way round. */
-  color-scheme: inherit;
+  /* Follow the theme. The editor document sets no color-scheme of its own,
+     so inheriting it would always pick the light colours. */
+  color-scheme: light dark;
   font: 13px/1.4 system-ui, sans-serif;
   color: light-dark(#1f2328, #e6e8eb);
   user-select: none;
