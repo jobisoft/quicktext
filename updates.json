@@ -3,9 +3,9 @@
     "{8845E3B3-E8FB-40E2-95E9-EC40294818C4}": {
       "updates": [
         {
-          "version": "6.9.5",
+          "version": "7.0.0",
           "update_info_url": "https://github.com/jobisoft/quicktext/releases",
-          "update_link": "https://github.com/jobisoft/quicktext/releases/download/v6.9.5/quicktext_6_9_5_beta.xpi",
+          "update_link": "https://github.com/jobisoft/quicktext/releases/download/v7.0.0/quicktext_7_0_0_beta.xpi",
           "applications": {
             "gecko": {
               "strict_min_version": "148.0"
