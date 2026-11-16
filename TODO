@@ -4,15 +4,14 @@
 
 # QT v7
 
-- [ ] deprecate optional type and make it required
-- [ ] remove support for FILE usage
-- [ ] remove migration and Experiment
+- [x] remove support for FILE usage
+- [x] remove migration and Experiment (migration wizard is now the compatibility report)
+- [x] WYSIWYG editor for html mode
+- [x] remove the legacy companion add-on (toolbar is now inside the message editor)
 
-- [-] export could include all used files (users can use vfs zip export)
-
-- [ ] have the variables menu actually show what is being inserted, at least in the composer
+- [ ] deprecate optional type and make it required (IMAGE/ATTACHMENT without a type still default to FILE, which is no longer supported)
 - [ ] install buttons should bring the tab to front
 - [ ] picker close should bring manager to front
 - [ ] vfs storage should update when pushed remotely (common change detection)
 - [ ] implement cache for read (?)
-- [ ] WYSIWYG editor for html mode
+- [ ] remove the companion entry from updates.json once its users have moved on
