@@ -2700,8 +2700,9 @@ function _liveActiveBundles() {
 // `menus.processMenuData` for the WebExtension context menu. Unlike
 // the compose/toolbar menus (which dispatch clicks to whichever
 // compose tab the user right-clicked in), every click here inserts
-// directly into the manager dialog's own template editor via the
-// local `insertVariable` helper - there's no cross-tab messaging.
+// directly into the manager dialog's own template editor via
+// `insertTag`, the same handler the Insert Tag fly-out uses - there's
+// no cross-tab messaging. The menu is only shown for #text-body.
 function _buildManagerMenuData(nodes, now) {
   return nodes.flatMap(node => {
     if (node.type === "separator") return [{ type: "separator" }];
@@ -2711,14 +2712,7 @@ function _buildManagerMenuData(nodes, now) {
     else if (node.localeKey) entry.title = i18n(node.localeKey);
     else if (node.type === "dateTime") entry.title = getDateTimeMenuTitle(node.format, now);
 
-    if (node.value?.includes("<url>")) {
-      entry.onclick = async () => {
-        const url = await showPrompt(i18n("quicktext.prompt.addUrl.label"), "https://");
-        if (url) insertVariable(node.value.replace("<url>", url));
-      };
-    } else if (node.value) {
-      entry.onclick = () => insertVariable(node.value);
-    }
+    if (node.value) entry.onclick = () => insertTag(node.value, "body");
 
     if (node.children) entry.children = _buildManagerMenuData(node.children, now);
     return [entry];
@@ -2840,6 +2834,35 @@ function insertVariable(varStr, target) {
   field.setSelectionRange(pos, pos);
   field.focus();
   markChanged(findBundle(state.selectedTemplateStorageUuid));
+}
+
+// Insert a tag picked from one of the Insert Tag menus (fly-out or context
+// menu): `<vfs-path>` opens the storage file picker, `<url>` asks for a URL.
+async function insertTag(val, target) {
+  if (!val) return;
+  if (val.includes("<vfs-path>")) {
+    // The Insert Tag menus are disabled for read-only templates, so the
+    // selected storage is always a writable VFS entry here.
+    const entry = state.storageEntries.find(
+      e => e.uuid === state.selectedTemplateStorageUuid);
+    if (!entry || entry.type !== "vfs") return;
+    const types = val.startsWith("IMAGE=")
+      ? [{ description: i18n("quicktext.insertImage.label"),
+           accept: { "image/*": [".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"] } }]
+      : null;
+    const [picked] = await vfs.showSelectFilePicker({
+      storageRef: entry.storageRef ?? null,
+      lockStorage: "soft",
+      opfsStorageName: storage.OPFS_STORAGE_NAME,
+      types,
+    });
+    if (picked) insertVariable(val.replace("<vfs-path>", picked.path), target);
+  } else if (val.includes("<url>")) {
+    const url = await showPrompt(i18n("quicktext.prompt.addUrl.label"), "https://");
+    if (url) insertVariable(val.replace("<url>", url), target);
+  } else {
+    insertVariable(val, target);
+  }
 }
 
 // ---------- Import / Export ----------
@@ -3199,33 +3222,6 @@ async function init() {
       onClose: () => { insertTagMenu = null; },
     });
   });
-
-  async function insertTag(val, target) {
-    if (!val) return;
-    if (val.includes("<vfs-path>")) {
-      // The flyout is disabled for read-only templates, so the
-      // selected storage is always a writable VFS entry here.
-      const entry = state.storageEntries.find(
-        e => e.uuid === state.selectedTemplateStorageUuid);
-      if (!entry || entry.type !== "vfs") return;
-      const types = val.startsWith("IMAGE=")
-        ? [{ description: i18n("quicktext.insertImage.label"),
-             accept: { "image/*": [".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg"] } }]
-        : null;
-      const [picked] = await vfs.showSelectFilePicker({
-        storageRef: entry.storageRef ?? null,
-        lockStorage: "soft",
-        opfsStorageName: storage.OPFS_STORAGE_NAME,
-        types,
-      });
-      if (picked) insertVariable(val.replace("<vfs-path>", picked.path), target);
-    } else if (val.includes("<url>")) {
-      const url = await showPrompt(i18n("quicktext.prompt.addUrl.label"), "https://");
-      if (url) insertVariable(val.replace("<url>", url), target);
-    } else {
-      insertVariable(val, target);
-    }
-  }
 
   // Show/Hide the "Insert Tag" menu when right-clicking in the template detail
   // textarea. Rebuild from live bundles so unsaved template/script
