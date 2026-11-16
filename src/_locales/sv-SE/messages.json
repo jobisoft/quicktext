@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Ange URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Bilagans namn:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext kan komma åt mallar och skript från ytterligare lagringsbakändar (till exempel WebDAV-servrar eller din lokala hemmapp) via VFS-leverantörstillägg. Alla installerade VFS-leverantörer kan användas när du lägger till en ny lagringsplats."
   },

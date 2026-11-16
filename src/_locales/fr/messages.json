@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Entrer l'URL :"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Nom de la pièce jointe :"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext peut accéder aux modèles et aux scripts depuis des backends de stockage supplémentaires (par exemple des serveurs WebDAV ou votre dossier personnel local) via des modules complémentaires de fournisseur VFS. Tout fournisseur VFS installé peut être utilisé lors de l'ajout d'un nouvel emplacement de stockage."
   },

@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "URLを入力:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "添付ファイル名:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext は VFS プロバイダーのアドオンを介して、追加のストレージバックエンド（例えば WebDAV サーバーやローカルのホームフォルダー）からテンプレートとスクリプトにアクセスできます。新しいストレージの場所を追加する際に、インストール済みのどの VFS プロバイダーでも使用できます。"
   },

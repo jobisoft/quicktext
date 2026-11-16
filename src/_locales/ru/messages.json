@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Введите URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Имя вложения:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext может получать доступ к шаблонам и скриптам из дополнительных хранилищ (например, серверов WebDAV или вашей локальной домашней папки) через дополнения VFS-провайдеров. Любой установленный VFS-провайдер можно использовать при добавлении нового места хранения."
   },

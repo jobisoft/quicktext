@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "URL megadása:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Melléklet neve:"
+  },
   "quicktext.advanced.description": {
     "message": "A Quicktext VFS-szolgáltató kiegészítőkön keresztül további tárolási háttérrendszerekből (például WebDAV-kiszolgálókról vagy a helyi saját mappájából) is elérheti a sablonokat és a szkripteket. Új tárolóhely hozzáadásakor bármely telepített VFS-szolgáltató használható."
   },

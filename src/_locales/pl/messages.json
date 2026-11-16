@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Wpisz adres URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Nazwa załącznika:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext może uzyskiwać dostęp do szablonów i skryptów z dodatkowych systemów przechowywania danych (na przykład serwerów WebDAV lub lokalnego folderu domowego) za pośrednictwem dodatków dostarczających obsługę VFS. Podczas dodawania nowej lokalizacji przechowywania danych można skorzystać z dowolnego zainstalowanego dostawcy VFS."
   },

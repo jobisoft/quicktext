@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Introducir URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Nombre del adjunto:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext puede acceder a plantillas y scripts desde backends de almacenamiento adicionales (por ejemplo servidores WebDAV o su carpeta personal local) mediante complementos de proveedor VFS. Cualquier proveedor VFS instalado se puede utilizar al añadir una nueva ubicación de almacenamiento."
   },

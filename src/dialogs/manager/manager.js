@@ -1326,7 +1326,8 @@ function setTemplateFieldsVisible(show) {
 
 function setTemplateFieldsEnabled(enabled) {
   for (const id of ["text-title", "text-body", "sel-type", "sel-shortcut",
-    "text-shortcut-adv", "text-keyword", "text-subject", "btn-insert-tag"]) {
+    "text-shortcut-adv", "text-keyword", "text-subject", "btn-insert-tag",
+    "btn-add-attachment"]) {
     const el = document.getElementById(id);
     if (el) el.disabled = !enabled;
   }
@@ -2837,10 +2838,33 @@ function insertVariable(varStr, target) {
   markChanged(findBundle(state.selectedTemplateStorageUuid));
 }
 
+// Default attachment name of a URL: the last path segment, without query.
+function getUrlLeafName(url) {
+  try {
+    const leaf = utils.getLeafName(new URL(url).pathname);
+    if (leaf) return decodeURIComponent(leaf);
+  } catch {
+    // Not a valid URL, use the plain leaf name below.
+  }
+  return utils.getLeafName(url);
+}
+
+// Complete an ATTACHMENT tag with the name the attachment should get.
+// Returns null if the user cancelled.
+async function completeAttachmentTag(tag, defaultName) {
+  const input = await showPrompt(i18n("quicktext.prompt.attachmentName.label"), defaultName);
+  if (input === null) return null;
+  // "|", "[" and "]" would break the tag syntax.
+  const name = input.replace(/[|[\]]/g, "").trim();
+  return name ? `${tag}|${name}` : tag;
+}
+
 // Insert a tag picked from one of the Insert Tag menus (fly-out or context
-// menu): `<vfs-path>` opens the storage file picker, `<url>` asks for a URL.
+// menu) or the Add attachment button: `<vfs-path>` opens the storage file
+// picker, `<url>` asks for a URL, attachments also ask for a name.
 async function insertTag(val, target) {
   if (!val) return;
+  const isAttachment = val.startsWith("ATTACHMENT=");
   if (val.includes("<vfs-path>")) {
     // The Insert Tag menus are disabled for read-only templates, so the
     // selected storage is always a writable VFS entry here.
@@ -2857,10 +2881,22 @@ async function insertTag(val, target) {
       opfsStorageName: storage.OPFS_STORAGE_NAME,
       types,
     });
-    if (picked) insertVariable(val.replace("<vfs-path>", picked.path), target);
+    if (!picked) return;
+    let tag = val.replace("<vfs-path>", picked.path);
+    if (isAttachment) {
+      tag = await completeAttachmentTag(tag, utils.getLeafName(picked.path));
+      if (tag === null) return;
+    }
+    insertVariable(tag, target);
   } else if (val.includes("<url>")) {
     const url = await showPrompt(i18n("quicktext.prompt.addUrl.label"), "https://");
-    if (url) insertVariable(val.replace("<url>", url), target);
+    if (!url) return;
+    let tag = val.replace("<url>", url);
+    if (isAttachment) {
+      tag = await completeAttachmentTag(tag, getUrlLeafName(url));
+      if (tag === null) return;
+    }
+    insertVariable(tag, target);
   } else {
     insertVariable(val, target);
   }
@@ -3208,6 +3244,10 @@ async function init() {
       insertTagTarget = "body";
     }
   };
+  // Quick access to the most used tag: an attachment from the storage.
+  document.getElementById("btn-add-attachment").addEventListener("click", () =>
+    insertTag("ATTACHMENT=VFS|<vfs-path>", "body"));
+
   insertTagButton.addEventListener("pointerdown", () => rememberInsertTarget(document.activeElement));
   insertTagButton.addEventListener("focus", e => rememberInsertTarget(e.relatedTarget));
   insertTagButton.addEventListener("click", async e => {

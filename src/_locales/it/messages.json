@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Inserisci URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Nome dell'allegato:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext può accedere a modelli e script da backend di archiviazione aggiuntivi (ad esempio server WebDAV o la tua cartella home locale) tramite componenti aggiuntivi provider VFS. Qualsiasi provider VFS installato può essere utilizzato quando si aggiunge una nuova posizione di archiviazione."
   },

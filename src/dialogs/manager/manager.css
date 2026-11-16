@@ -447,8 +447,8 @@ fieldset legend {
 #sel-shortcut, #text-shortcut-adv { width: auto; }
 
 /* Insert-Tag button lives at the right end of the WYSIWYG toolbar. */
-#tmpl-menu-wrap { position: relative; display: inline-block; }
-#btn-insert-tag { height: 24px; padding: 0 6px; }
+#tmpl-menu-wrap { position: relative; display: inline-flex; gap: 4px; }
+#btn-insert-tag, #btn-add-attachment { height: 24px; padding: 0 6px; }
 #btn-insert-tag::after { content: " ▾"; }
 
 /* Insert Tag fly-out (flyoutMenu.mjs): one popover per level, positioned by

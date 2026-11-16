@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "URL eingeben:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Name des Anhangs:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext kann über VFS-Provider-Add-ons auf Vorlagen und Skripte aus zusätzlichen Speicher-Backends zugreifen (zum Beispiel WebDAV-Server oder Ihr lokaler Benutzerordner). Beim Hinzufügen eines neuen Speicherorts kann jeder installierte VFS-Provider verwendet werden."
   },

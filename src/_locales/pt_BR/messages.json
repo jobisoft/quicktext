@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Digite a URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Nome do anexo:"
+  },
   "quicktext.advanced.description": {
     "message": "O Quicktext pode acessar modelos e scripts de backends de armazenamento adicionais (por exemplo, servidores WebDAV ou sua pasta pessoal local) por meio de complementos provedores VFS. Qualquer provedor VFS instalado pode ser usado ao adicionar um novo local de armazenamento."
   },

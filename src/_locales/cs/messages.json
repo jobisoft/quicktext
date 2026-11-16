@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Zadejte URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Název přílohy:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext může přistupovat k šablonám a skriptům z dalších úložišť (například serverů WebDAV nebo vaší místní domovské složky) prostřednictvím doplňků poskytovatelů VFS. Při přidávání nového umístění úložiště lze použít jakéhokoli nainstalovaného poskytovatele VFS."
   },

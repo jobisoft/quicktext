@@ -551,6 +551,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Enter URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Attachment name:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext can access templates and scripts from additional storage backends (for example WebDAV servers or your local home folder) via VFS provider add-ons. Any installed VFS provider can be used when adding a new storage location."
   },
