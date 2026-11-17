@@ -1,5 +1,12 @@
+/* Follow the theme. Without a color-scheme the page is always light. */
+:root {
+    color-scheme: light dark;
+}
+
 html, body {
     margin: 0;
+    background: Canvas;
+    color: CanvasText;
 }
 
 /* Content-height dialog. The window is resized to fit this content after load
