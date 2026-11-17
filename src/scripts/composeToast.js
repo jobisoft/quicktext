@@ -58,7 +58,9 @@
   root.append(style);
 
   const bubble = make("details", "bubble");
+  // No Tab stops: Tab in the compose window must not land in the toast.
   const summary = make("summary");
+  summary.tabIndex = -1;
   const icon = make("img", "brand");
   icon.src = browser.runtime.getURL("/assets/icon.png");
   icon.alt = "";
@@ -73,6 +75,7 @@
 
   const close = make("button", "close header-control");
   close.type = "button";
+  close.tabIndex = -1;
   close.append(drawIcon("m5 5 10 10M15 5 5 15", "2.4"));
   close.addEventListener("click", event => {
     event.preventDefault();
@@ -86,6 +89,7 @@
   const details = make("ul", "details");
   const link = make("button", "link");
   link.type = "button";
+  link.tabIndex = -1;
   link.addEventListener("click", () => {
     browser.runtime
       .sendMessage({ composeToast: "openLink" })

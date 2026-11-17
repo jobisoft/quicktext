@@ -33,6 +33,15 @@
     return e;
   }
 
+  // A button that is not a Tab stop: Tab from the subject must go straight
+  // into the message, not through the toolbar.
+  function makeButton(className) {
+    const b = el("button", className);
+    b.type = "button";
+    b.tabIndex = -1;
+    return b;
+  }
+
   function svg(markup) {
     const t = document.createElement("template");
     t.innerHTML = markup;
@@ -75,19 +84,18 @@
     if (entry.disabled) {
       return el("span", "entry disabled", entry.label);
     }
-    const button = el("button", "entry");
-    button.type = "button";
-    button.append(el("span", "label", entry.label));
+    const entryButton = makeButton("entry");
+    entryButton.append(el("span", "label", entry.label));
     if (entry.children) {
-      button.classList.add("has-menu");
-      button.setAttribute("aria-haspopup", "menu");
-      button.append(svg(ICONS.chevron));
-      menus.set(button, entry.children);
+      entryButton.classList.add("has-menu");
+      entryButton.setAttribute("aria-haspopup", "menu");
+      entryButton.append(svg(ICONS.chevron));
+      menus.set(entryButton, entry.children);
     } else {
-      if (entry.hint) button.title = entry.hint;
-      actions.set(button, entry.action);
+      if (entry.hint) entryButton.title = entry.hint;
+      actions.set(entryButton, entry.action);
     }
-    return button;
+    return entryButton;
   }
 
   function render(model) {
@@ -116,8 +124,7 @@
     menu = el("div", "menu");
     menu.setAttribute("role", "menu");
     for (const child of menus.get(button)) {
-      const item = el("button", "item");
-      item.type = "button";
+      const item = makeButton("item");
       item.setAttribute("role", "menuitem");
       item.append(el("span", "label", child.label));
       if (child.hint) item.append(el("span", "hint", child.hint));
