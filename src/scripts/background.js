@@ -31,7 +31,7 @@ browser.runtime.onInstalled.addListener(details => {
   if (details.reason == "update") {
     browser.notifications.create("qt-update", {
       type: "basic",
-      title: "Quicktext v6",
+      title: "Quicktext v7",
       message: `Quicktext GitHub Edition was updated to v${manifest.version}. Click for details.`,
     });
   }

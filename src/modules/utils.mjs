@@ -396,7 +396,7 @@ export async function checkBadNameEntries(templates, scripts) {
     if (badEntries > 0) {
         browser.notifications.create("qt-bad-entries", {
             type: "basic",
-            title: "Quicktext v6",
+            title: "Quicktext v7",
             message: `Some of your template, group or script names include one or more forbidden chars ("|", "[[" or "]]"). These entries will not work.`,
         });
     }
@@ -406,10 +406,10 @@ const createNotification = async message => {
     await browser.notifications.create(
         "qt-duplicated-entries", {
         type: "basic",
-        title: "Quicktext v6",
+        title: "Quicktext v7",
         message
     });
-    console.warn(`[Quicktext v6] ${message}`)
+    console.warn(`[Quicktext v7] ${message}`)
 }
 
 export async function checkDuplicatedEntries(templates, scripts) {
