@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Enter new counter value:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Show Quicktext toolbar in the message editor"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Show Quicktext label in toolbar button"
   },

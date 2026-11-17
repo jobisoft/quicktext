@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Adja meg a számláló új értékét:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Quicktext eszköztár megjelenítése az üzenetszerkesztőben"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Show Quicktext label in toolbar button"
   },

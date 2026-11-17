@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Введите новое значение счётчика:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Показывать панель Quicktext в редакторе сообщений"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Show Quicktext label in toolbar button"
   },

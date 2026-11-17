@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "新しいカウンターの値を入力してください:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "メッセージエディターに Quicktext ツールバーを表示する"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Show Quicktext label in toolbar button"
   },

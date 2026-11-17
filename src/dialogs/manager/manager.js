@@ -402,7 +402,7 @@ async function _refreshVfsProviders() {
 
 async function loadAll() {
   const prefNames = [
-    "popup", "menuCollapse", "toolbarLabel", "shortcutModifier", "shortcutTypeAdv",
+    "popup", "menuCollapse", "toolbar", "toolbarLabel", "shortcutModifier", "shortcutTypeAdv",
     "keywordKey", "counter", "defaultImport",
   ];
   for (const pref of prefNames) {
@@ -547,6 +547,7 @@ async function _fetchAndApplyImport(entry) {
 async function saveAll() {
   await storage.setPref("popup", state.prefs.popup);
   await storage.setPref("menuCollapse", state.prefs.menuCollapse);
+  await storage.setPref("toolbar", state.prefs.toolbar);
   await storage.setPref("toolbarLabel", state.prefs.toolbarLabel);
   await storage.setPref("shortcutModifier", state.prefs.shortcutModifier);
   await storage.setPref("shortcutTypeAdv", state.prefs.shortcutTypeAdv);
@@ -632,6 +633,11 @@ function updateCounterLegend() {
 
 function renderGeneral() {
   const managed = key => state.managedPrefs.has(key);
+
+  const chkToolbar = document.getElementById("chk-toolbar");
+  chkToolbar.checked = state.prefs.toolbar;
+  applyManaged(chkToolbar, managed("toolbar"));
+  chkToolbar.addEventListener("change", () => { state.prefs.toolbar = chkToolbar.checked; markChanged(); });
 
   const chkToolbarLabel = document.getElementById("chk-toolbar-label");
   chkToolbarLabel.checked = state.prefs.toolbarLabel;

@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Neuen Zählerwert eingeben:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Quicktext-Symbolleiste im Nachrichteneditor anzeigen"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Show Quicktext label in toolbar button"
   },

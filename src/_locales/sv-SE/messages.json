@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Ange det nya räknarvärdet:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Visa Quicktext-verktygsfältet i meddelanderedigeraren"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Visa Quicktext-etiketten på knappen i verktygsfältet"
   },

@@ -300,6 +300,7 @@ const defaultPrefs = {
 const managedPrefs = [
   "menuCollapse",
   "popup",
+  "toolbar",
   "toolbarLabel",
   "keywordKey",
   "shortcutModifier",

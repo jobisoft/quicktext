@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Zadejte novou hodnotu počítadla:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Zobrazit panel nástrojů Quicktext v editoru zpráv"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Show Quicktext label in toolbar button"
   },
