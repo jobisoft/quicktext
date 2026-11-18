@@ -62,6 +62,29 @@ Every call answers `{ok: true, result}` or `{ok: false, error, errorCode}`. The
 payload is under `result`. `bridge.py`'s `rpc()` raises `BridgeDown` only when
 the port is not answering at all — a refused command is data, not an exception.
 
+## Running several Thunderbirds at once (ESR and release)
+
+Each Thunderbird gets its own port: **47000 + its major version**. ESR 140
+listens on 47140, release 159 on 47159, so both bridges can be up together and
+the port is predictable. Install the helper once; every Thunderbird uses it.
+
+```sh
+python3 bridge.py instances          # what is running: version, port, pid
+python3 bridge.py --tb 140 status    # the ESR  (also QUICKTEXT_BRIDGE_TB=140)
+python3 bridge.py --port 47159 status
+```
+
+With neither option the client uses the only running bridge, and refuses to
+guess when there are several. From Python: `bridge.use(tb=140)` before `rpc()`.
+
+Two Thunderbirds with the *same* major version (two profiles, or an ESR cut at
+the release's own major) would still collide; the second reports that the port
+is in use.
+
+After updating the add-on, re-run `install.sh` once: the helper must know the
+Thunderbird version to pick its port, so an old installed helper is reported as
+stale in the options page.
+
 ## A habit worth having
 
 Don't assume the next call lands right after `reload`. The reload takes the
@@ -77,7 +100,8 @@ applies to the beta and dev XPIs and never to the ATN release (see `build.js`,
 `bridge/*` and `beta/modules/bridge.mjs` at `modules/bridge.mjs`.
 
 - `beta/bridge/quicktext_bridge_host.py` — the native helper (loopback HTTP ⇄
-  native messaging). Fixed port **47656**, token `quicktext`.
+  native messaging). Port **47000 + the Thunderbird major version**, token
+  `quicktext`.
 - `beta/bridge/quicktext_bridge_host.json` — its native-messaging manifest
   template (install.sh bakes in the absolute path).
 - `beta/bridge/bridge.py` — the client, usable as a CLI or a module.

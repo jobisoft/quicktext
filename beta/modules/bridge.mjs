@@ -39,7 +39,7 @@ const NATIVE_APP = "quicktext_bridge_host";
 /** The helper version this build expects, matching `VERSION` in
  *  quicktext_bridge_host.py. The helper is installed outside the xpi, so the
  *  two can silently disagree; a mismatch is logged rather than guessed at. */
-const EXPECTED_HELPER_VERSION = 1;
+const EXPECTED_HELPER_VERSION = 2;
 
 const ENABLED_KEY = "quicktext-bridge-enabled";
 
@@ -814,6 +814,7 @@ async function onNativeMessage(msg) {
       url: `http://127.0.0.1:${msg.port}`,
       token: msg.token ?? "",
       version,
+      appVersion: msg.appVersion ?? "",
       stale: version !== EXPECTED_HELPER_VERSION,
     };
     note(
@@ -876,6 +877,21 @@ function connect() {
     // and the user should not have to be the retry loop.
     failAndMaybeRestart(`helper app disconnected: ${p.error?.message ?? "closed"}`);
   });
+  // The helper derives its port from the Thunderbird major version (47000 +
+  // major), so it binds nothing until we tell it which Thunderbird this is.
+  // That is what lets an ESR and a release bridge run side by side.
+  browser.runtime
+    .getBrowserInfo()
+    .then((info) => info.version)
+    .catch(() => "") // the helper answers an empty version with a clear error
+    .then((appVersion) => {
+      if (port !== thisPort) return; // torn down while we were asking
+      try {
+        thisPort.postMessage({ type: "init", appVersion });
+      } catch (err) {
+        failAndMaybeRestart(`could not send init: ${err?.message ?? err}`);
+      }
+    });
   // The spawn watchdog. connectNative handing back a Port proves nothing; only
   // the helper's hello does. A spawn into a torn conduit hangs forever with no
   // error and no disconnect - that is the zombie this catches.

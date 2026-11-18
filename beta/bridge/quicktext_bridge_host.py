@@ -14,9 +14,14 @@ Message framing (Mozilla native messaging protocol):
   - Each message is preceded by a 4-byte unsigned int (native byte order)
     giving the byte length of the following UTF-8 JSON payload.
 
+  Incoming, first (add-on -> host): { "type": "init", "appVersion": str }
+                    The port is derived from it, so the host binds nothing
+                    until it arrives.
+
   Outgoing (host -> add-on):  { "requestId": str, "cmd": str, "args": {} }
                            |  { "type": "hello", "port": int, "token": str,
-                                 "version": int }
+                                 "version": int, "appVersion": str }
+                              (or { "type": "hello", "error": str })
   Incoming (add-on -> host):  { "requestId": str, "ok": true,  "result": any }
                             | { "requestId": str, "ok": false, "error": str }
 
@@ -29,16 +34,27 @@ import sys
 import json
 import struct
 import os
+import re
 import threading
 import uuid
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 # ── Configuration ──────────────────────────────────────────────────────────────
 
-# Fixed, so a caller needs nothing but this file to know where to knock. An
+# The port is 47000 + the Thunderbird major version (ESR 140 -> 47140, release
+# 159 -> 47159), so ESR and release can run their bridges side by side and a
+# caller needs nothing but the major version to know where to knock. An
 # ephemeral port would have to be published somewhere, which is more machinery
 # than a debug tool is worth.
-PORT = 47656
+#
+# Keep PORT_BASE in sync with bridge.py. Two Thunderbirds with the same major
+# (two profiles, or an ESR cut at the release's own major) still collide.
+PORT_BASE = 47000
+MAX_MAJOR = 999
+
+# Set once the add-on has told us which Thunderbird it runs in (see main()).
+PORT = None
+APP_VERSION = ''
 
 # Not a secret, and not meant to be one. Its job is to make every request a
 # *non-simple* CORS request, so a web page you visit cannot silently POST at
@@ -49,7 +65,7 @@ TOKEN = 'quicktext'
 # Bumped whenever this file changes in a way that needs reinstalling. The
 # add-on carries the version it expects and logs a mismatch, which is the only
 # way to tell a stale helper from a broken one.
-VERSION = 1
+VERSION = 2
 
 # How long an HTTP request waits for the add-on to answer, in seconds. Finite,
 # so a wedged call releases its socket instead of holding it forever.
@@ -171,7 +187,12 @@ def make_handler():
             if not self._authorized():
                 self._reply(401, {'ok': False, 'error': 'unauthorized'}, cors=True)
                 return
-            self._reply(200, {'ok': True, 'pid': os.getpid()}, cors=True)
+            self._reply(200, {
+                'ok': True,
+                'pid': os.getpid(),
+                'port': PORT,
+                'appVersion': APP_VERSION,
+            }, cors=True)
 
         def do_POST(self):
             if self.path != '/rpc':
@@ -230,26 +251,76 @@ def make_handler():
 
 # ── Entry point ────────────────────────────────────────────────────────────────
 
+def wait_for_init():
+    """Read stdin until the add-on's {"type": "init", "appVersion": str}
+    arrives; anything else before it is ignored. Returns the appVersion string,
+    or None if stdin closes first. The port depends on it, so nothing can be
+    bound before this."""
+    while True:
+        message = get_message()
+        if message is None:
+            return None
+        if isinstance(message, dict) and message.get('type') == 'init':
+            version = message.get('appVersion')
+            return version if isinstance(version, str) else ''
+
+
+def port_for_version(app_version):
+    """47000 + the major version of a Thunderbird version string such as
+    "140.5.0esr" or "159.0". None when there is no usable major."""
+    match = re.match(r'(\d+)', app_version)
+    if not match:
+        return None
+    major = int(match.group(1))
+    if not 1 <= major <= MAX_MAJOR:
+        return None
+    return PORT_BASE + major
+
+
 def main():
+    global PORT, APP_VERSION
+
+    app_version = wait_for_init()
+    if app_version is None:
+        return 0  # the add-on went away before it said anything
+    PORT = port_for_version(app_version)
+    if PORT is None:
+        # No guessing: a wrong port would silently collide with someone else's.
+        log(f'cannot derive a port from Thunderbird version {app_version!r}')
+        send_message({
+            'type': 'hello',
+            'error': f'cannot derive a port from Thunderbird version {app_version!r}',
+        })
+        return 1
+    APP_VERSION = app_version
+
     try:
         server = ThreadingHTTPServer(('127.0.0.1', PORT), make_handler())
     except OSError as err:
-        # Almost always "address already in use": a second Thunderbird profile
-        # with the bridge on, or a stale helper. Say so and stop.
+        # Almost always "address already in use": another Thunderbird with the
+        # same major version has the bridge on, or a stale helper. Say so and
+        # stop.
         log(f'could not listen on 127.0.0.1:{PORT}:', err)
-        send_message({'type': 'hello', 'error': f'port {PORT}: {err}'})
+        send_message({
+            'type': 'hello',
+            'error': f'port {PORT} (Thunderbird {app_version}): {err}',
+        })
         return 1
     server.daemon_threads = True
 
-    log(f'listening on 127.0.0.1:{PORT}')
+    log(f'listening on 127.0.0.1:{PORT} (Thunderbird {app_version})')
     server_thread = threading.Thread(target=server.serve_forever, daemon=True)
     server_thread.start()
 
     # Tell the add-on we are up, so it can log the address rather than guess.
     # Carries no requestId, which is how the add-on tells it apart from a reply.
-    send_message(
-        {'type': 'hello', 'port': PORT, 'token': TOKEN, 'version': VERSION}
-    )
+    send_message({
+        'type': 'hello',
+        'port': PORT,
+        'token': TOKEN,
+        'version': VERSION,
+        'appVersion': APP_VERSION,
+    })
 
     try:
         # Thunderbird closes the port on shutdown or reload; stdin hits EOF.
