@@ -458,6 +458,9 @@
   "quicktext.updatecounter.prompt": {
     "message": "Zadajte novú hodnotu počítadla:"
   },
+  "quicktext.showComposeToolbar.label": {
+    "message": "Zobraziť panel nástrojov Quicktextu v editore správ"
+  },
   "quicktext.showToolbarLabel.label": {
     "message": "Zobraziť popis Quicktextu na tlačidle panela nástrojov"
   },
@@ -551,6 +554,9 @@
   "quicktext.prompt.addUrl.label": {
     "message": "Zadajte adresu URL:"
   },
+  "quicktext.prompt.attachmentName.label": {
+    "message": "Názov prílohy:"
+  },
   "quicktext.advanced.description": {
     "message": "Quicktext môže pristupovať k šablónam a skriptom z ďalších úložných backendov (napríklad servery WebDAV alebo váš lokálny domovský priečinok) prostredníctvom doplnkov poskytovateľov VFS. Pri pridávaní nového umiestnenia úložiska je možné použiť ľubovoľného nainštalovaného poskytovateľa VFS."
   },
@@ -578,73 +584,48 @@
   "quicktext.dialog.addImport.label": {
     "message": "Pridať import"
   },
-  "migration.pageTitle": {
-    "message": "Migrácia Quicktextu v$VERSION$",
-    "placeholders": {
-      "version": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.intro.p1": {
-    "message": "Toto je posledný krok dlhého procesu aktualizácií, ktorého cieľom je premeniť Quicktext na moderné rozšírenie WebExtension. Quicktext sa už čoskoro nebude spoliehať na staršie API a neobmedzený prístup k vášmu počítaču, ale bude plne fungovať v rámci moderného frameworku WebExtension – už nebude potrebná aktualizácia pri každej novej verzii Thunderbirdu."
-  },
   "migration.intro.quote": {
     "message": "Ďakujem všetkým svojim beta testerom za ich neustálu podporu a trpezlivosť, vďaka ktorým bol tento prechod možný. Vaša spätná väzba bola neoceniteľná!"
   },
   "migration.intro.quoteAttribution": {
     "message": "- John Bieling, vývojár Quicktextu"
   },
-  "migration.intro.p2": {
-    "message": "Moderné WebExtensions už nemajú priamy prístup k vášmu súborovému systému. Preto sú vaše definície $ITEMTYPE$ teraz uložené vo vnútornom úložisku Quicktextu a všetky prílohy a obrázky, na ktoré sa vaše šablóny odvolávajú, je potrebné do tohto úložiska skopírovať.",
-    "placeholders": {
-      "itemtype": {
-        "content": "$1"
-      }
-    }
+  "migration.section.droppedSources": {
+    "message": "Odstránené zdroje konfigurácie"
   },
-  "migration.intro.itemType.template": {
-    "message": "šablón"
+  "migrationReport.pageTitle": {
+    "message": "Správa o kompatibilite Quicktextu"
   },
-  "migration.intro.itemType.templateAndScript": {
-    "message": "šablón a skriptov"
+  "migrationReport.intro": {
+    "message": "Quicktext je teraz moderné rozšírenie WebExtension. Zostane kompatibilný s budúcimi verziami Thunderbirdu bez toho, aby potreboval aktualizáciu pre každé vydanie. V dôsledku toho už nemá priamy prístup k súborom vo vašom počítači a už nepodporuje skriptovacie API Quicktextu v5. Nižšie uvedené šablóny, skripty a nastavenia od týchto funkcií stále závisia a vyžadujú vašu pozornosť."
   },
-  "migration.intro.p3": {
-    "message": "Po migrácii môžete nainštalovať ďalšie $LINK$ a presunúť celú svoju konfiguráciu Quicktextu, napríklad na server WebDAV.",
+  "migrationReport.filesystem.description": {
+    "message": "Tieto šablóny a skripty odkazujú na súbory vo vašom počítači. Takéto značky sa teraz preskakujú: súbory sa už nevkladajú ani nepripájajú a Quicktext namiesto toho zobrazí upozornenie v okne písania správy. Ak to chcete opraviť, skopírujte súbory do úložiska Quicktextu a zmeňte značky podľa návrhov nižšie. Podrobnosti nájdete tu: $LINK$.",
     "placeholders": {
       "link": {
         "content": "$1"
       }
     }
   },
-  "migration.intro.p3.linkText": {
-    "message": "úložné backendy"
-  },
-  "migration.section.autoMigration": {
-    "message": "Automatická migrácia"
-  },
-  "migration.section.manualMigration": {
-    "message": "Vyžaduje sa manuálna migrácia"
-  },
-  "migration.section.droppedSources": {
-    "message": "Odstránené zdroje konfigurácie"
-  },
-  "migration.auto.intro": {
-    "message": "Nasledujúce šablóny je možné migrovať automaticky. Lokálne súbory sa skopírujú do vnútorného úložiska Quicktextu a všetky značky vo vašich šablónach odkazujúce na tieto súbory sa upravia."
-  },
-  "migration.btn.startMigration": {
-    "message": "Spustiť migráciu šablón"
-  },
-  "migration.btn.startMigrationCount": {
-    "message": "Spustiť migráciu (položiek: $COUNT$)",
+  "migrationReport.filesystem.oldVersion": {
+    "message": "Prípadne si nainštalujte Quicktext $VERSION$ zo $LINK$. Ten ešte obsahuje sprievodcu migráciou, ktorý súbory skopíruje a značky zmení automaticky. Spustite sprievodcu hneď po reštartovaní Thunderbirdu a potom Quicktext znova aktualizujte.",
     "placeholders": {
-      "count": {
+      "link": {
         "content": "$1"
+      },
+      "version": {
+        "content": "$2"
       }
     }
   },
-  "migration.manual.intro": {
-    "message": "Nižšie uvedené položky sa nedajú migrovať automaticky a vyžadujú manuálny zásah."
+  "migrationReport.filesystem.oldVersion.linkText": {
+    "message": "zoznamu starších verzií"
+  },
+  "migrationReport.btn.browseStorage": {
+    "message": "Otvoriť úložisko Quicktextu"
+  },
+  "migrationReport.btn.openManager": {
+    "message": "Otvoriť Správcu Quicktextu"
   },
   "migration.incompatible.title": {
     "message": "Nekompatibilné skripty"
@@ -662,14 +643,6 @@
   },
   "migration.filesystem.title": {
     "message": "Zastaraný prístup k súborovému systému"
-  },
-  "migration.filesystem.description": {
-    "message": "Tieto šablóny a skripty odkazujú na súbory vo vašom lokálnom súborovom systéme, ku ktorému už WebExtensions nemajú priamy prístup. Odkazované súbory je potrebné skopírovať do úložiska Quicktextu a šablóny podľa toho upraviť. Podrobnosti nájdete v $LINK$.",
-    "placeholders": {
-      "link": {
-        "content": "$1"
-      }
-    }
   },
   "migration.filesystem.linkText": {
     "message": "príručke k umiestneniam úložísk"
@@ -736,80 +709,47 @@
   "migration.readonlyNote.managed": {
     "message": "Niektoré z týchto položiek sú poskytnuté prostredníctvom podnikovej politiky. Požiadajte svojho správcu o ich aktualizáciu."
   },
-  "migration.progress.preparing": {
-    "message": "Pripravuje sa migrácia…"
-  },
-  "migration.progress.backingUp": {
-    "message": "Zálohuje sa $FILENAME$…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.progress.copying": {
-    "message": "Kopíruje sa $FILENAME$ ($CURRENT$/$TOTAL$)…",
-    "placeholders": {
-      "filename": {
-        "content": "$1"
-      },
-      "current": {
-        "content": "$2"
-      },
-      "total": {
-        "content": "$3"
-      }
-    }
-  },
-  "migration.progress.rewriting": {
-    "message": "Prepisujú sa značky…"
-  },
-  "migration.progress.saving": {
-    "message": "Ukladajú sa zmeny…"
-  },
-  "migration.progress.updating": {
-    "message": "Aktualizujú sa výsledky detekcie…"
-  },
-  "migration.success": {
-    "message": "Migrácia dokončená. Počet migrovaných položiek: $COUNT$.",
-    "placeholders": {
-      "count": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.allFailed": {
-    "message": "Počet súborov, ktoré sa nepodarilo skopírovať: $FAILED$. Dotknuté šablóny zostali nezmenené.",
-    "placeholders": {
-      "failed": {
-        "content": "$1"
-      }
-    }
-  },
-  "migration.error.partialFailed": {
-    "message": "Počet migrovaných položiek: $MIGRATED$, ale počet súborov, ktoré sa nepodarilo skopírovať: $FAILED$. Dotknuté šablóny zostali nezmenené.",
-    "placeholders": {
-      "migrated": {
-        "content": "$1"
-      },
-      "failed": {
-        "content": "$2"
-      }
-    }
-  },
-  "migration.btn.close": {
-    "message": "Zavrieť"
-  },
-  "migration.btn.ok": {
-    "message": "OK"
-  },
   "migration.btn.learnStorage": {
     "message": "Vysvetlenie umiestnení úložísk"
   },
   "migration.btn.learnJourney": {
     "message": "Cesta k WebExtension"
   },
-  "migration.alert.managerOpen": {
-    "message": "Pred spustením migrácie zatvorte Správcu Quicktextu."
+  "composeToast.unsupported.title": {
+    "message": "Quicktext: šablóna „$TEMPLATE$“ bola vložená neúplne",
+    "placeholders": {
+      "template": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.summary": {
+    "message": "Počet značiek, ktoré sa pokúsili načítať lokálny súbor, čo už nie je podporované: $COUNT$. Boli preskočené.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "composeToast.unsupported.linkLabel": {
+    "message": "Ako pridať súbory do úložiska"
+  },
+  "composeToast.expand": {
+    "message": "Zobraziť podrobnosti"
+  },
+  "composeToast.collapse": {
+    "message": "Skryť podrobnosti"
+  },
+  "composeToast.close": {
+    "message": "Zavrieť"
+  },
+  "composeToast.companion.summary": {
+    "message": "Doplnok Quicktext Legacy Companion už nie je potrebný"
+  },
+  "composeToast.companion.details1": {
+    "message": "Quicktext teraz zobrazuje svoj panel nástrojov priamo v editore správ."
+  },
+  "composeToast.companion.details2": {
+    "message": "Tento doplnok môžete odstrániť v ponuke Nástroje › Doplnky a témy."
   }
 }
