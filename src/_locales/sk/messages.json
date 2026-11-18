@@ -1,0 +1,815 @@
+{
+  "quicktext.options.intro": {
+    "message": "Okrem nižšie uvedeného nastavenia súkromia je možné všetky nastavenia Quicktextu ovládať a upravovať v Správcovi Quicktextu spolu s vašimi šablónami a skriptmi."
+  },
+  "quicktext.remoteRequests.legend": {
+    "message": "Vzdialené požiadavky"
+  },
+  "quicktext.remoteRequests.label": {
+    "message": "Povoliť šablónam kontaktovať vzdialené servery a odosielať im údaje (značka URL)"
+  },
+  "quicktext.remoteRequests.description": {
+    "message": "Toto nastavenie je predvolene vypnuté. Kým je vypnuté, Quicktext blokuje každú požiadavku vytvorenú značkou URL a z vášho počítača neodchádzajú žiadne údaje. Keď ho zapnete, šablóna používajúca značku URL bude kontaktovať webovú adresu uvedenú v tejto šablóne a môže jej odoslať nasledujúce údaje, podľa toho, čo šablóna vyžaduje: príjemcov správy (Komu, Kópia, Skrytá kópia), vašu identitu odosielateľa, predmet, aktuálne vybraný text, aktuálny obsah schránky, názvy a veľkosti príloh a hlavičky a názvy príloh správy, na ktorú odpovedáte alebo ktorú preposielate. Webovú adresu určuje autor šablóny, nie Quicktext. Quicktextu ani jeho autorom sa neodosielajú žiadne údaje."
+  },
+  "quicktext.remoteBlocked.label": {
+    "message": "Quicktext zablokoval požiadavku na adresu „$P1$“.\n\nTáto šablóna používa značku URL, ktorá môže odosielať údaje z vašej správy na vzdialený server. Ak to chcete povoliť, zapnite vzdialené požiadavky v nastaveniach Quicktextu (Doplnky a témy → Quicktext → Nastavenia), kde tiež uvidíte, čo sa odosiela.",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      }
+    }
+  },
+  "quicktext.attachmentFile.label": {
+    "message": "Pridať prílohu"
+  },
+  "quicktext.controlledViaManagedStorage.label": {
+    "message": "Riadené cez spravované úložisko"
+  },
+  "quicktext.date.label": {
+    "message": "Dátum ($P1$)",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      }
+    }
+  },
+  "quicktext.group.label": {
+    "message": "Skupina"
+  },
+  "quicktext.inputText.label": {
+    "message": "Zadajte hodnotu pre $P1$",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      }
+    }
+  },
+  "quicktext.insertImage.label": {
+    "message": "Vyberte obrázkový súbor na vloženie"
+  },
+  "quicktext.newGroup.label": {
+    "message": "Nová skupina"
+  },
+  "quicktext.newScript.label": {
+    "message": "Nový skript"
+  },
+  "quicktext.newTemplate.label": {
+    "message": "Nová šablóna"
+  },
+  "quicktext.HTML.label": {
+    "message": "HTML"
+  },
+  "quicktext.editor.bold": {
+    "message": "Tučné"
+  },
+  "quicktext.editor.italic": {
+    "message": "Kurzíva"
+  },
+  "quicktext.editor.underline": {
+    "message": "Podčiarknuté"
+  },
+  "quicktext.editor.strikethrough": {
+    "message": "Prečiarknuté"
+  },
+  "quicktext.editor.ul": {
+    "message": "Odrážkový zoznam"
+  },
+  "quicktext.editor.ol": {
+    "message": "Číslovaný zoznam"
+  },
+  "quicktext.editor.indent": {
+    "message": "Zväčšiť odsadenie"
+  },
+  "quicktext.editor.outdent": {
+    "message": "Zmenšiť odsadenie"
+  },
+  "quicktext.editor.align": {
+    "message": "Zarovnanie"
+  },
+  "quicktext.editor.alignLeft": {
+    "message": "Vľavo"
+  },
+  "quicktext.editor.alignCenter": {
+    "message": "Na stred"
+  },
+  "quicktext.editor.alignRight": {
+    "message": "Vpravo"
+  },
+  "quicktext.editor.alignJustify": {
+    "message": "Do bloku"
+  },
+  "quicktext.editor.font": {
+    "message": "Písmo"
+  },
+  "quicktext.editor.fontDefault": {
+    "message": "Predvolené písmo"
+  },
+  "quicktext.editor.size": {
+    "message": "Veľkosť písma"
+  },
+  "quicktext.editor.sizeDefault": {
+    "message": "Predvolená veľkosť"
+  },
+  "quicktext.editor.textColor": {
+    "message": "Vybrať a použiť farbu textu"
+  },
+  "quicktext.editor.highlightColor": {
+    "message": "Vybrať a použiť farbu zvýraznenia"
+  },
+  "quicktext.editor.applyTextColor": {
+    "message": "Použiť naposledy použitú farbu textu"
+  },
+  "quicktext.editor.applyHighlightColor": {
+    "message": "Použiť naposledy použitú farbu zvýraznenia"
+  },
+  "quicktext.editor.link": {
+    "message": "Vložiť odkaz"
+  },
+  "quicktext.editor.unlink": {
+    "message": "Odstrániť odkaz"
+  },
+  "quicktext.editor.clear": {
+    "message": "Vymazať formátovanie"
+  },
+  "quicktext.editor.source": {
+    "message": "Zobraziť zdrojový kód HTML"
+  },
+  "quicktext.editor.linkPrompt": {
+    "message": "Zadajte adresu odkazu (URL):"
+  },
+  "quicktext.advanced.label": {
+    "message": "Úložiská"
+  },
+  "quicktext.accesskey.advanced": {
+    "message": "l"
+  },
+  "quicktext.accesskey.addGroup": {
+    "message": "p"
+  },
+  "quicktext.accesskey.addScript": {
+    "message": "r"
+  },
+  "quicktext.accesskey.addTemplate": {
+    "message": "b"
+  },
+  "quicktext.accesskey.close": {
+    "message": "z"
+  },
+  "quicktext.accesskey.communityScripts": {
+    "message": "n"
+  },
+  "quicktext.accesskey.general": {
+    "message": "v"
+  },
+  "quicktext.accesskey.help": {
+    "message": "m"
+  },
+  "quicktext.accesskey.remove": {
+    "message": "o"
+  },
+  "quicktext.accesskey.resetCounter": {
+    "message": "y"
+  },
+  "quicktext.accesskey.updateCounter": {
+    "message": "k"
+  },
+  "quicktext.accesskey.save": {
+    "message": "u"
+  },
+  "quicktext.accesskey.scripts": {
+    "message": "s"
+  },
+  "quicktext.accesskey.templates": {
+    "message": "a"
+  },
+  "quicktext.accesskey.exportTemplates": {
+    "message": "e"
+  },
+  "quicktext.accesskey.importTemplates": {
+    "message": "i"
+  },
+  "quicktext.storageList.confirmDiscard.label": {
+    "message": "Všetky neuložené zmeny v úložisku \"$1\" sa zahodia. Pokračovať?"
+  },
+  "quicktext.buttons.addConfig.label": {
+    "message": "Pridať"
+  },
+  "quicktext.addGroup.label": {
+    "message": "Pridať skupinu"
+  },
+  "quicktext.addScript.label": {
+    "message": "Pridať skript"
+  },
+  "quicktext.addTemplate.label": {
+    "message": "Pridať šablónu"
+  },
+  "quicktext.altKey.label": {
+    "message": "Alt"
+  },
+  "quicktext.attachments.label": {
+    "message": "Prílohy"
+  },
+  "quicktext.cellularnumber.label": {
+    "message": "Číslo mobilu"
+  },
+  "quicktext.clipboard.label": {
+    "message": "Schránka"
+  },
+  "quicktext.close.label": {
+    "message": "Zavrieť"
+  },
+  "quicktext.collapseSetting.label": {
+    "message": "Zbaliť skupinu, ak obsahuje iba jednu šablónu"
+  },
+  "quicktext.controlKey.label": {
+    "message": "Ctrl"
+  },
+  "quicktext.counter.label": {
+    "message": "Počítadlo"
+  },
+  "quicktext.cursor.label": {
+    "message": "Nastaviť pozíciu kurzora"
+  },
+  "quicktext.custom1.label": {
+    "message": "Vlastné 1"
+  },
+  "quicktext.custom2.label": {
+    "message": "Vlastné 2"
+  },
+  "quicktext.custom3.label": {
+    "message": "Vlastné 3"
+  },
+  "quicktext.custom4.label": {
+    "message": "Vlastné 4"
+  },
+  "quicktext.dateTime.label": {
+    "message": "Dátum/čas"
+  },
+  "quicktext.defaultImport.label": {
+    "message": "Importy"
+  },
+  "quicktext.defaultImport.legend": {
+    "message": "Importy šablón a skriptov len na čítanie"
+  },
+  "quicktext.defaultImport.description": {
+    "message": "Spravujte importy šablón a skriptov zo vzdialených serverov, ktoré sú len na čítanie. Položky poskytnuté podnikovou politikou sú označené zámkom a nemožno ich premenovať ani odstrániť."
+  },
+  "quicktext.accesskey.defaultImport": {
+    "message": "I"
+  },
+  "quicktext.defaultImport.rename.prompt": {
+    "message": "Názov tohto predvoleného importu:"
+  },
+  "quicktext.defaultImport.confirmRemove.label": {
+    "message": "Odstrániť predvolený import \"$1\"?"
+  },
+  "quicktext.defaultImport.invalidUrl.label": {
+    "message": "Zadajte platnú adresu URL (http alebo https)."
+  },
+  "quicktext.defaultImport.duplicate.label": {
+    "message": "Táto adresa importu je už v zozname ako \"$1\"."
+  },
+  "quicktext.defaultImport.columns.name": {
+    "message": "Názov"
+  },
+  "quicktext.defaultImport.columns.url": {
+    "message": "URL"
+  },
+  "quicktext.defaultImport.columns.status": {
+    "message": "Stav"
+  },
+  "quicktext.displayname.label": {
+    "message": "Zobrazované meno"
+  },
+  "quicktext.email.label": {
+    "message": "E-mail"
+  },
+  "quicktext.enterKey.label": {
+    "message": "Enter"
+  },
+  "quicktext.export.label": {
+    "message": "Exportovať"
+  },
+  "quicktext.f11Key.label": {
+    "message": "F11"
+  },
+  "quicktext.f12Key.label": {
+    "message": "F12"
+  },
+  "quicktext.f2Key.label": {
+    "message": "F2"
+  },
+  "quicktext.f4Key.label": {
+    "message": "F4"
+  },
+  "quicktext.f5Key.label": {
+    "message": "F5"
+  },
+  "quicktext.f8Key.label": {
+    "message": "F8"
+  },
+  "quicktext.faxnumber.label": {
+    "message": "Číslo faxu"
+  },
+  "quicktext.filename.label": {
+    "message": "Názov súboru"
+  },
+  "quicktext.filenameAndSize.label": {
+    "message": "Názov a veľkosť súboru"
+  },
+  "quicktext.firstname.label": {
+    "message": "Krstné meno"
+  },
+  "quicktext.from.label": {
+    "message": "Od"
+  },
+  "quicktext.fullname.label": {
+    "message": "Celé meno"
+  },
+  "quicktext.general.label": {
+    "message": "Všeobecné"
+  },
+  "quicktext.getScript.label": {
+    "message": "Inštalovať komunitné skripty"
+  },
+  "quicktext.header.label": {
+    "message": "Pridať hlavičku (Komu, Kópia, Skrytá kópia)"
+  },
+  "quicktext.help.label": {
+    "message": "Pomoc"
+  },
+  "quicktext.scripthelp.label": {
+    "message": "Nekompatibilný skript"
+  },
+  "quicktext.image.label": {
+    "message": "Vložiť obrázok (vložený do správy)"
+  },
+  "quicktext.import.label": {
+    "message": "Importovať"
+  },
+  "quicktext.input.label": {
+    "message": "Hodnota zadaná používateľom"
+  },
+  "quicktext.insertAs.label": {
+    "message": "Vložiť ako"
+  },
+  "quicktext.insertTextFromFileAsHTML.label": {
+    "message": "Vložiť súbor ako HTML"
+  },
+  "quicktext.insertTextFromFileAsText.label": {
+    "message": "Vložiť súbor ako text"
+  },
+  "quicktext.insertfile.label": {
+    "message": "Vložiť textový/HTML obsah"
+  },
+  "quicktext.jobtitle.label": {
+    "message": "Pracovná pozícia"
+  },
+  "quicktext.keyword.label": {
+    "message": "Kľúčové slovo"
+  },
+  "quicktext.keywordKeySetting.label": {
+    "message": "je kláves, ktorým chcem aktivovať kľúčové slovo"
+  },
+  "quicktext.label": {
+    "message": "Šablóny"
+  },
+  "quicktext.lastname.label": {
+    "message": "Priezvisko"
+  },
+  "quicktext.metaKey.label": {
+    "message": "Meta"
+  },
+  "quicktext.modifierSetting.label": {
+    "message": "je modifikátor, ktorý chcem používať pre klávesové skratky"
+  },
+  "quicktext.nickname.label": {
+    "message": "Prezývka"
+  },
+  "quicktext.none.label": {
+    "message": "Žiadny"
+  },
+  "quicktext.orgatt.label": {
+    "message": "Informácie o pôvodných prílohách"
+  },
+  "quicktext.orgheader.label": {
+    "message": "Informácie o pôvodnej hlavičke"
+  },
+  "quicktext.other.label": {
+    "message": "Iné"
+  },
+  "quicktext.storageLocations.label": {
+    "message": "Umiestnenia úložísk pre šablóny a skripty"
+  },
+  "quicktext.storageLocations.description": {
+    "message": "Spravujte dostupné umiestnenia úložísk a určujte, ktoré šablóny a skripty sú povolené na použitie. Úložiská len na čítanie a centrálne spravované úložisko sú označené ako zamknuté."
+  },
+  "quicktext.storage.managed.label": {
+    "message": "Spravované"
+  },
+  "quicktext.storage.managed.location": {
+    "message": "Spravované úložisko"
+  },
+  "quicktext.storage.providerUnavailable.label": {
+    "message": "Poskytovateľ nie je k dispozícii"
+  },
+  "quicktext.storage.connectionUnavailable.label": {
+    "message": "Pripojenie nie je k dispozícii"
+  },
+  "quicktext.storageList.columns.name": {
+    "message": "Názov"
+  },
+  "quicktext.storageList.columns.connection": {
+    "message": "Umiestnenie úložiska"
+  },
+  "quicktext.storageList.columns.path": {
+    "message": "Cesta"
+  },
+  "quicktext.storageList.duplicate.label": {
+    "message": "Táto konfigurácia úložiska je už v zozname ako \"$1\"."
+  },
+  "quicktext.buttons.renameStorage.label": {
+    "message": "Premenovať"
+  },
+  "quicktext.buttons.browseStorage.label": {
+    "message": "Prehľadávať"
+  },
+  "quicktext.storageList.readOnly.label": {
+    "message": "Iba na čítanie"
+  },
+  "quicktext.storageList.rename.prompt": {
+    "message": "Nový názov tejto položky úložiska:"
+  },
+  "quicktext.storageList.rename.badChars": {
+    "message": "Názov nesmie obsahovať znaky \"|\", \"[[\" ani \"]]\"."
+  },
+  "quicktext.storageList.rename.duplicate": {
+    "message": "Položka s názvom \"$1\" už existuje."
+  },
+  "quicktext.remove.label": {
+    "message": "Odstrániť"
+  },
+  "quicktext.resetcounter.label": {
+    "message": "Vynulovať počítadlo"
+  },
+  "quicktext.updatecounter.label": {
+    "message": "Aktualizovať počítadlo"
+  },
+  "quicktext.updatecounter.prompt": {
+    "message": "Zadajte novú hodnotu počítadla:"
+  },
+  "quicktext.showToolbarLabel.label": {
+    "message": "Zobraziť popis Quicktextu na tlačidle panela nástrojov"
+  },
+  "quicktext.showContextMenu.label": {
+    "message": "Zobraziť ponuku Quicktextu po kliknutí pravým tlačidlom"
+  },
+  "quicktext.save.label": {
+    "message": "Uložiť"
+  },
+  "quicktext.script.label": {
+    "message": "Skript"
+  },
+  "quicktext.scripts.label": {
+    "message": "Skripty"
+  },
+  "quicktext.selection.label": {
+    "message": "Výber"
+  },
+  "quicktext.settings.label": {
+    "message": "Nastavenia"
+  },
+  "quicktext.settings.title": {
+    "message": "Správca Quicktextu"
+  },
+  "quicktext.shortcut.label": {
+    "message": "Skratka"
+  },
+  "quicktext.shortcutTypeAdv.label": {
+    "message": "Použiť rozšírený režim pre skratky"
+  },
+  "quicktext.spaceKey.label": {
+    "message": "Medzerník"
+  },
+  "quicktext.subject.label": {
+    "message": "Predmet"
+  },
+  "quicktext.tabKey.label": {
+    "message": "Tab"
+  },
+  "quicktext.templates.label": {
+    "message": "Šablóny"
+  },
+  "quicktext.text.label": {
+    "message": "Text"
+  },
+  "quicktext.title.label": {
+    "message": "Názov"
+  },
+  "quicktext.to.label": {
+    "message": "Komu"
+  },
+  "quicktext.insertVariable.label": {
+    "message": "Vložiť premennú"
+  },
+  "quicktext.version.label": {
+    "message": "Verzia Thunderbirdu"
+  },
+  "quicktext.workphone.label": {
+    "message": "Pracovné číslo"
+  },
+  "quicktext.confirmRemove.label": {
+    "message": "Naozaj chcete odstrániť „$P1$“?",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      }
+    }
+  },
+  "quicktext.scriptError.label": {
+    "message": "Vo vašom skripte Quicktextu sa vyskytla chyba:"
+  },
+  "quicktext.scriptNotFound.label": {
+    "message": "Skript Quicktextu „$P1$“ sa nenašiel!",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      }
+    }
+  },
+  "quicktext.template.label": {
+    "message": "Šablóna"
+  },
+  "quicktext.time.label": {
+    "message": "Čas ($P1$)",
+    "placeholders": {
+      "P1": {
+        "content": "$1"
+      }
+    }
+  },
+  "quicktext.prompt.addUrl.label": {
+    "message": "Zadajte adresu URL:"
+  },
+  "quicktext.advanced.description": {
+    "message": "Quicktext môže pristupovať k šablónam a skriptom z ďalších úložných backendov (napríklad servery WebDAV alebo váš lokálny domovský priečinok) prostredníctvom doplnkov poskytovateľov VFS. Pri pridávaní nového umiestnenia úložiska je možné použiť ľubovoľného nainštalovaného poskytovateľa VFS."
+  },
+  "quicktext.buttons.searchVfsProviders.label": {
+    "message": "Hľadať poskytovateľov VFS"
+  },
+  "extensionDescription": {
+    "message": "Pridá panel nástrojov s neobmedzeným počtom textov na rýchle vloženie. Je možné používať aj premenné ako [[TO=firstname]]. S nastaveniami pre všetko."
+  },
+  "quicktext.mode.file.label": {
+    "message": "Čítať z lokálneho súboru"
+  },
+  "quicktext.mode.url.label": {
+    "message": "Čítať zo vzdialenej adresy URL"
+  },
+  "quicktext.mode.vfs.label": {
+    "message": "Čítať z úložiska"
+  },
+  "quicktext.insertTag.label": {
+    "message": "Vložiť značku"
+  },
+  "quicktext.variablesGroup.label": {
+    "message": "Premenné"
+  },
+  "quicktext.dialog.addImport.label": {
+    "message": "Pridať import"
+  },
+  "migration.pageTitle": {
+    "message": "Migrácia Quicktextu v$VERSION$",
+    "placeholders": {
+      "version": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.intro.p1": {
+    "message": "Toto je posledný krok dlhého procesu aktualizácií, ktorého cieľom je premeniť Quicktext na moderné rozšírenie WebExtension. Quicktext sa už čoskoro nebude spoliehať na staršie API a neobmedzený prístup k vášmu počítaču, ale bude plne fungovať v rámci moderného frameworku WebExtension – už nebude potrebná aktualizácia pri každej novej verzii Thunderbirdu."
+  },
+  "migration.intro.quote": {
+    "message": "Ďakujem všetkým svojim beta testerom za ich neustálu podporu a trpezlivosť, vďaka ktorým bol tento prechod možný. Vaša spätná väzba bola neoceniteľná!"
+  },
+  "migration.intro.quoteAttribution": {
+    "message": "- John Bieling, vývojár Quicktextu"
+  },
+  "migration.intro.p2": {
+    "message": "Moderné WebExtensions už nemajú priamy prístup k vášmu súborovému systému. Preto sú vaše definície $ITEMTYPE$ teraz uložené vo vnútornom úložisku Quicktextu a všetky prílohy a obrázky, na ktoré sa vaše šablóny odvolávajú, je potrebné do tohto úložiska skopírovať.",
+    "placeholders": {
+      "itemtype": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.intro.itemType.template": {
+    "message": "šablón"
+  },
+  "migration.intro.itemType.templateAndScript": {
+    "message": "šablón a skriptov"
+  },
+  "migration.intro.p3": {
+    "message": "Po migrácii môžete nainštalovať ďalšie $LINK$ a presunúť celú svoju konfiguráciu Quicktextu, napríklad na server WebDAV.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.intro.p3.linkText": {
+    "message": "úložné backendy"
+  },
+  "migration.section.autoMigration": {
+    "message": "Automatická migrácia"
+  },
+  "migration.section.manualMigration": {
+    "message": "Vyžaduje sa manuálna migrácia"
+  },
+  "migration.section.droppedSources": {
+    "message": "Odstránené zdroje konfigurácie"
+  },
+  "migration.auto.intro": {
+    "message": "Nasledujúce šablóny je možné migrovať automaticky. Lokálne súbory sa skopírujú do vnútorného úložiska Quicktextu a všetky značky vo vašich šablónach odkazujúce na tieto súbory sa upravia."
+  },
+  "migration.btn.startMigration": {
+    "message": "Spustiť migráciu šablón"
+  },
+  "migration.btn.startMigrationCount": {
+    "message": "Spustiť migráciu (položiek: $COUNT$)",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.manual.intro": {
+    "message": "Nižšie uvedené položky sa nedajú migrovať automaticky a vyžadujú manuálny zásah."
+  },
+  "migration.incompatible.title": {
+    "message": "Nekompatibilné skripty"
+  },
+  "migration.incompatible.description": {
+    "message": "Tieto skripty používajú zastarané API Quicktextu v5, ktoré už nie sú dostupné. Je potrebné ich prepísať pomocou $LINK$.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.incompatible.linkText": {
+    "message": "moderného skriptovacieho API"
+  },
+  "migration.filesystem.title": {
+    "message": "Zastaraný prístup k súborovému systému"
+  },
+  "migration.filesystem.description": {
+    "message": "Tieto šablóny a skripty odkazujú na súbory vo vašom lokálnom súborovom systéme, ku ktorému už WebExtensions nemajú priamy prístup. Odkazované súbory je potrebné skopírovať do úložiska Quicktextu a šablóny podľa toho upraviť. Podrobnosti nájdete v $LINK$.",
+    "placeholders": {
+      "link": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.filesystem.linkText": {
+    "message": "príručke k umiestneniam úložísk"
+  },
+  "migration.dropped.intro": {
+    "message": "Nasledujúce zdroje konfigurácie sa spoliehali na priamy prístup k súborovému systému, ktorý už v moderných WebExtensions nie je dostupný."
+  },
+  "migration.dropped.description": {
+    "message": "Ak ste predtým používali lokálny priečinok na ukladanie šablón alebo na ich zdieľanie medzi počítačmi, môžete ako náhradu nainštalovať $VFSLINK$ – napríklad $WEBDAVLINK$ na ukladanie šablón na server WebDAV (ownCloud, Nextcloud atď.) alebo $HOMEFOLDERLINK$ na ďalšie používanie priečinka vo vašom počítači.",
+    "placeholders": {
+      "vfslink": {
+        "content": "$1"
+      },
+      "webdavlink": {
+        "content": "$2"
+      },
+      "homefolderlink": {
+        "content": "$3"
+      }
+    }
+  },
+  "migration.dropped.linkVfs": {
+    "message": "úložný backend VFS"
+  },
+  "migration.dropped.linkWebdav": {
+    "message": "poskytovateľa WebDAV"
+  },
+  "migration.dropped.linkHomefolder": {
+    "message": "poskytovateľa lokálneho domovského priečinka"
+  },
+  "migration.btn.dontShowAgain": {
+    "message": "Túto správu už nezobrazovať"
+  },
+  "migration.reason.deprecatedFilesystem": {
+    "message": "Zastaraný priamy prístup k súborovému systému"
+  },
+  "migration.reason.deprecatedApi": {
+    "message": "Nekompatibilné API Quicktextu v5"
+  },
+  "migration.label.fileImport": {
+    "message": "Import zo súboru"
+  },
+  "migration.label.fileStorage": {
+    "message": "Úložisko v súbore"
+  },
+  "migration.desc.fileImport": {
+    "message": "Tento import pri každom spustení čítal šablóny z lokálneho súboru. WebExtensions už nemajú priamy prístup k lokálnemu súborovému systému."
+  },
+  "migration.desc.fileStorage": {
+    "message": "Šablóny a skripty sa čítali z tohto lokálneho priečinka. WebExtensions už nemajú priamy prístup k lokálnemu súborovému systému."
+  },
+  "migration.source.enterprisePolicy": {
+    "message": "podniková politika"
+  },
+  "migration.source.imported": {
+    "message": "importované"
+  },
+  "migration.readonlyNote.both": {
+    "message": "Niektoré z týchto položiek pochádzajú z importov z adries URL alebo z podnikových politík. Požiadajte príslušných správcov o ich aktualizáciu."
+  },
+  "migration.readonlyNote.imported": {
+    "message": "Niektoré z týchto položiek pochádzajú z importov z adries URL. Požiadajte správcu zdroja importu o ich aktualizáciu."
+  },
+  "migration.readonlyNote.managed": {
+    "message": "Niektoré z týchto položiek sú poskytnuté prostredníctvom podnikovej politiky. Požiadajte svojho správcu o ich aktualizáciu."
+  },
+  "migration.progress.preparing": {
+    "message": "Pripravuje sa migrácia…"
+  },
+  "migration.progress.backingUp": {
+    "message": "Zálohuje sa $FILENAME$…",
+    "placeholders": {
+      "filename": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.progress.copying": {
+    "message": "Kopíruje sa $FILENAME$ ($CURRENT$/$TOTAL$)…",
+    "placeholders": {
+      "filename": {
+        "content": "$1"
+      },
+      "current": {
+        "content": "$2"
+      },
+      "total": {
+        "content": "$3"
+      }
+    }
+  },
+  "migration.progress.rewriting": {
+    "message": "Prepisujú sa značky…"
+  },
+  "migration.progress.saving": {
+    "message": "Ukladajú sa zmeny…"
+  },
+  "migration.progress.updating": {
+    "message": "Aktualizujú sa výsledky detekcie…"
+  },
+  "migration.success": {
+    "message": "Migrácia dokončená. Počet migrovaných položiek: $COUNT$.",
+    "placeholders": {
+      "count": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.error.allFailed": {
+    "message": "Počet súborov, ktoré sa nepodarilo skopírovať: $FAILED$. Dotknuté šablóny zostali nezmenené.",
+    "placeholders": {
+      "failed": {
+        "content": "$1"
+      }
+    }
+  },
+  "migration.error.partialFailed": {
+    "message": "Počet migrovaných položiek: $MIGRATED$, ale počet súborov, ktoré sa nepodarilo skopírovať: $FAILED$. Dotknuté šablóny zostali nezmenené.",
+    "placeholders": {
+      "migrated": {
+        "content": "$1"
+      },
+      "failed": {
+        "content": "$2"
+      }
+    }
+  },
+  "migration.btn.close": {
+    "message": "Zavrieť"
+  },
+  "migration.btn.ok": {
+    "message": "OK"
+  },
+  "migration.btn.learnStorage": {
+    "message": "Vysvetlenie umiestnení úložísk"
+  },
+  "migration.btn.learnJourney": {
+    "message": "Cesta k WebExtension"
+  },
+  "migration.alert.managerOpen": {
+    "message": "Pred spustením migrácie zatvorte Správcu Quicktextu."
+  }
+}
