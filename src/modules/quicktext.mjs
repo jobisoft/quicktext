@@ -173,7 +173,9 @@ export async function insertTemplate(tabId, storageUuid, groupIdx, textIdx) {
   try {
     await qParser.clearNonPersistentData();
     await insertSubject({ qParser, subject: text.subject });
-    await qParser.parseAndInsert(`[[TEXT=${group.name}|${text.name}]]`);
+    // The empty options field keeps a name ending in "]" from closing the
+    // tag early: "[[TEXT=group|[Title]]]" would end after "[Title" (#652).
+    await qParser.parseAndInsert(`[[TEXT=${group.name}|${text.name}|]]`);
   } finally {
     const { [unsupportedKey]: unsupported = [] } = await browser.storage.session.get({ [unsupportedKey]: [] });
     await browser.storage.session.remove(unsupportedKey);

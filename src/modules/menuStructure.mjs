@@ -345,6 +345,12 @@ export async function getScriptsMenuStructure({ storageUuid, bundles } = {}) {
 // being edited. The storage hierarchy (when present) is purely
 // organisational - tags are always storage-local, so the inserted
 // `TEXT=group|text` / `SCRIPT=name` syntax carries no storage prefix.
+// A name ending in "]" would close the tag early ("[[TEXT=group|[Title]]]"),
+// an empty options field after it prevents that (#652).
+function _textTagValue(group, name) {
+  return `TEXT=${group}|${name}|`;
+}
+
 function _decorateTemplatesWithValues(templateNodes, isMulti) {
   if (!isMulti) {
     // Single-storage shape is `[{group, children: [{text}]}]`.
@@ -352,7 +358,7 @@ function _decorateTemplatesWithValues(templateNodes, isMulti) {
       ...node,
       children: node.children.map(child => ({
         ...child,
-        value: `TEXT=${node.title}|${child.title}`,
+        value: _textTagValue(node.title, child.title),
       })),
     }));
   }
@@ -363,7 +369,7 @@ function _decorateTemplatesWithValues(templateNodes, isMulti) {
       ...groupNode,
       children: groupNode.children.map(child => ({
         ...child,
-        value: `TEXT=${groupNode.title}|${child.title}`,
+        value: _textTagValue(groupNode.title, child.title),
       })),
     })),
   }));
