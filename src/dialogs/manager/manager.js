@@ -3003,7 +3003,7 @@ async function importStorage() {
     existing: bundle,
   });
   if (!result) return;
-  const importedGroups = result.templates.groups.length;
+  let importedGroups = 0;
   const importedTemplates = result.templates.texts.reduce((n, t) => n + t.length, 0);
   const importedScripts = result.scripts.length;
 
@@ -3025,7 +3025,7 @@ async function importStorage() {
         bundle.groups.push(importedGroup);
         bundle.texts.push(importedTexts);
         bundle.groupExpanded.push(true);
-      } else {
+      } else if (importedTexts.length) {
         const targetTexts = bundle.texts[existingPos] ?? [];
         for (const importedText of importedTexts) {
           const clashPos = targetTexts.findIndex(t => t.name === importedText.name);
@@ -3033,7 +3033,11 @@ async function importStorage() {
           targetTexts.push(importedText);
         }
         bundle.texts[existingPos] = targetTexts;
+      } else {
+        // An empty group that already exists: nothing to import.
+        continue;
       }
+      importedGroups++;
       changedTemplates = true;
     }
   }
