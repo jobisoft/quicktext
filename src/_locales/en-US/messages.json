@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "is the key I want to use for activating a keyword"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Case-insensitive keywords"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },

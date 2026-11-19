@@ -8,7 +8,7 @@ const alternatives = {
     "Enter": ["NumpadEnter"]
 }
 
-let keywords, keywordKey, shortcutTypeAdv, shortcutModifier, shortcuts;
+let keywords, keywordKey, keywordCaseInsensitive, shortcutTypeAdv, shortcutModifier, shortcuts;
 let advShortcutModifierIsDown = false;
 let advShortcutString = "";
 let inputPopupOpen = false;
@@ -147,8 +147,9 @@ function keywordListener(e) {
         let range = initialSelectionRange.cloneRange();
         range.setStart(range.startContainer, 0);
         let lastWord = range.toString().split(" ").pop();
+        let keyword = findKeyword(lastWord);
 
-        if (!lastWord || !keywords.hasOwnProperty(lastWord)) {
+        if (!keyword) {
             return;
         }
 
@@ -172,8 +173,24 @@ function keywordListener(e) {
         document.execCommand('delete');
         //selection.deleteFromDocument();
         //selection.getRangeAt(0).deleteContents();
-        requestInsertTemplate(keywords[lastWord])
+        requestInsertTemplate(keywords[keyword])
     }
+}
+
+// The keyword for a typed word: an exact match first, then (if enabled) one
+// that differs only in upper and lower case.
+function findKeyword(word) {
+    if (!word) {
+        return null;
+    }
+    if (keywords.hasOwnProperty(word)) {
+        return word;
+    }
+    if (keywordCaseInsensitive) {
+        const lowerWord = word.toLowerCase();
+        return Object.keys(keywords).find(k => k.toLowerCase() === lowerWord) ?? null;
+    }
+    return null;
 }
 
 function shortcutKeyDown(e) {
@@ -211,6 +228,7 @@ async function getLatestPrefs() {
     const storage = await import(browser.runtime.getURL("/modules/storage.mjs"));
 
     keywordKey = await storage.getPref("keywordKey");
+    keywordCaseInsensitive = await storage.getPref("keywordCaseInsensitive");
     shortcutTypeAdv = await storage.getPref("shortcutTypeAdv");
     shortcutModifier = await storage.getPref("shortcutModifier");
 
@@ -232,7 +250,7 @@ async function setup() {
 
     new storage.StorageListener({
         area: "auto",
-        watchedPrefs: ["templates", "managedStorage", "keywordKey", "shortcutTypeAdv", "shortcutModifier"],
+        watchedPrefs: ["templates", "managedStorage", "keywordKey", "keywordCaseInsensitive", "shortcutTypeAdv", "shortcutModifier"],
         listener: (_events) => {
             getLatestPrefs();
         }

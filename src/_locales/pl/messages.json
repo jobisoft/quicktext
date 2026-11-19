@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "czyli klucz, którego chcę użyć do aktywacji słowa kluczowego"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Ignoruj wielkość liter w słowach kluczowych"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },

@@ -403,7 +403,7 @@ async function _refreshVfsProviders() {
 async function loadAll() {
   const prefNames = [
     "popup", "menuCollapse", "toolbar", "toolbarLabel", "shortcutModifier", "shortcutTypeAdv",
-    "keywordKey", "counter", "defaultImport",
+    "keywordKey", "keywordCaseInsensitive", "counter", "defaultImport",
   ];
   for (const pref of prefNames) {
     const { value, isManaged } = await storage.getPrefWithManagedInfo(pref);
@@ -552,6 +552,7 @@ async function saveAll() {
   await storage.setPref("shortcutModifier", state.prefs.shortcutModifier);
   await storage.setPref("shortcutTypeAdv", state.prefs.shortcutTypeAdv);
   await storage.setPref("keywordKey", state.prefs.keywordKey);
+  await storage.setPref("keywordCaseInsensitive", state.prefs.keywordCaseInsensitive);
   await storage.setPref("defaultImport", state.prefs.defaultImport);
   // The storage list (including enabled flags, type, name and
   // ordering) is part of the regular Save flow. Storage-list edits
@@ -673,6 +674,11 @@ function renderGeneral() {
   selKeyword.value = state.prefs.keywordKey;
   applyManaged(selKeyword, managed("keywordKey"));
   selKeyword.addEventListener("change", () => { state.prefs.keywordKey = selKeyword.value; markChanged(); });
+
+  const chkKeywordCase = document.getElementById("chk-keyword-case");
+  chkKeywordCase.checked = state.prefs.keywordCaseInsensitive;
+  applyManaged(chkKeywordCase, managed("keywordCaseInsensitive"));
+  chkKeywordCase.addEventListener("change", () => { state.prefs.keywordCaseInsensitive = chkKeywordCase.checked; markChanged(); });
 
   document.getElementById("btn-reset-counter").addEventListener("click", () => {
     state.prefs.counter = 0;

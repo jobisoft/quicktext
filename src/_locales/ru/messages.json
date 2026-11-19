@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "клавиша для активации ключевого слова"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Не учитывать регистр в ключевых словах"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },

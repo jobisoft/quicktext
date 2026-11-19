@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "zum Aktivieren eines Schlüsselwortes verwenden"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Groß-/Kleinschreibung bei Schlüsselwörtern ignorieren"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },

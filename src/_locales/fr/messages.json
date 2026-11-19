@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "est la touche que je veux utiliser pour activer un mot-clé"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Ignorer la casse des mots-clés"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },

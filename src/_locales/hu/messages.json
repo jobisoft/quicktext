@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "billentyű a kulcsszó aktiválásához"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Kis- és nagybetűk figyelmen kívül hagyása a kulcsszavakban"
+  },
   "quicktext.label": {
     "message": "Gyorsszöveg"
   },

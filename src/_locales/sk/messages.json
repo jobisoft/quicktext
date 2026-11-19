@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "je kláves, ktorým chcem aktivovať kľúčové slovo"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Ignorovať veľké a malé písmená v kľúčových slovách"
+  },
   "quicktext.label": {
     "message": "Šablóny"
   },

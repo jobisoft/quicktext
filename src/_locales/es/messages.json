@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "es la tecla que quiero usar para activar una palabra clave"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Ignorar mayúsculas y minúsculas en las palabras clave"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },

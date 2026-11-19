@@ -371,6 +371,9 @@
   "quicktext.keywordKeySetting.label": {
     "message": "är den tangent jag vill använda för att aktivera nyckelord"
   },
+  "quicktext.keywordCaseInsensitive.label": {
+    "message": "Ignorera skiftläge i nyckelord"
+  },
   "quicktext.label": {
     "message": "Quicktext"
   },
