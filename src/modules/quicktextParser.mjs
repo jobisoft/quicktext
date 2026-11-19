@@ -77,18 +77,6 @@ export class QuicktextParser {
       uuid: null,
     };
     this.mStaticDetails = null;
-
-    //TODO: Evaluate if these values SHOULD be preserved (as getters/setters
-    //      into local storage)
-
-    // Insert the content as text/plain into an html composer (verbatim).
-    // Can only be changed by the current template or nested templates which by
-    // definition use the same QuicktextParser. This value is currently not saved
-    // nor restored.
-    this.mForceAsText = false;
-    // The template insertion type (text/html or text/plain).
-    this.mInsertType = null;
-
   }
 
   // Bind the parser to a storage context. See `STORAGE_STATE` for the allowed
@@ -116,7 +104,7 @@ export class QuicktextParser {
     let { isPlainText } = await this.getStaticDetails();
     let extraSpace = options?.extraSpace !== false;
 
-    if (isPlainText || this.mForceAsText) {
+    if (isPlainText || await this.isForceAsText()) {
       await messenger.tabs.sendMessage(this.mTabId, {
         insertText: aStr,
         extraSpace,
@@ -164,6 +152,20 @@ export class QuicktextParser {
       delete stateData[key];
     }
     await this.setStateData(stateData);
+  }
+
+  // Insert the content as text/plain into an html composer (verbatim). Set by
+  // a text/plain template, the force_as_text option or plain file content,
+  // and kept for the whole run: the entire parsed string is inserted in one
+  // go. Part of the run state, so every parser of the run sees it. The key is
+  // not a tag name and not persistent: cleared at the start of each run.
+  async setForceAsText() {
+    await this.saveStates({ _FORCE_AS_TEXT: true });
+  }
+
+  async isForceAsText() {
+    const { _FORCE_AS_TEXT } = await this.loadStates({ _FORCE_AS_TEXT: false });
+    return _FORCE_AS_TEXT;
   }
 
   async loadStates(itemsWithDefaults) {
@@ -594,7 +596,7 @@ export class QuicktextParser {
 
     let { isPlainText } = await this.getStaticDetails();
     if (insertMode == "text/plain" && isPlainText == false) {
-      this.mForceAsText = true;
+      await this.setForceAsText();
     }
 
     if (stripHtmlComments) {
@@ -710,11 +712,8 @@ export class QuicktextParser {
               (text.type == "text/plain" || (aVariables.length > 2 && aVariables[2].includes("force_as_text"))) &&
               isPlainText == false
             ) {
-              this.mForceAsText = true;
+              await this.setForceAsText();
             }
-
-            // The template insertion type (text/html or text/plain).
-            this.mInsertType = text.type;
 
             if (aVariables.length > 2 && aVariables[2].includes("strip_html_comments")) {
               content = content.replace(/<!--[\s\S]*?(?:-->)/g, '');
@@ -1068,15 +1067,15 @@ export class QuicktextParser {
     const { isPlainText } = await this.getStaticDetails();
     const data = await this.process_clipboard();
     const parameter = aVariables?.[0]?.toLowerCase?.();
+    // Auto must never paste verbatim html code into the composer: only use
+    // html if the insertion will be html (an html composer, and no plain text
+    // template loaded so far in this run).
+    const insertsHtml = !isPlainText && !(await this.isForceAsText());
 
     const getFormat = (parameter) => {
       switch (parameter) {
         case "auto":
-          // Auto should never paste verbatim html code into the composer. The
-          // insert type must be text/html and the composer must support html.
-          return (!isPlainText && this.mInsertType == "text/html")
-            ? "html"
-            : "plain";
+          return insertsHtml ? "html" : "plain";
         case "html":
           return "html";
         case "plain":

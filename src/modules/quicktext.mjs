@@ -241,6 +241,8 @@ const PARSE_INSERTED_FILE_CONTENT = false;
 // the compose-menu handlers for FILE, URL, and VFS content insertion.
 export async function insertFileContent(tabId, content, insertMode = "text/plain") {
   let qParser = await getQuicktextParser({ tabId });
+  // A new run: nothing of the previous insertion (e.g. force-as-text) applies.
+  await qParser.clearNonPersistentData();
   if (PARSE_INSERTED_FILE_CONTENT) {
     qParser.setActiveStorage({ state: STORAGE_STATE.SINGLE_VARIABLE });
     let parsedContent = await qParser.process_file_content(content, {
@@ -253,7 +255,7 @@ export async function insertFileContent(tabId, content, insertMode = "text/plain
   } else {
     let { isPlainText } = await qParser.getStaticDetails();
     if (insertMode === "text/plain" && !isPlainText) {
-      qParser.mForceAsText = true;
+      await qParser.setForceAsText();
     }
     await qParser.insertBody(content, { extraSpace: false });
   }
