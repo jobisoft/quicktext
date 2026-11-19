@@ -353,6 +353,9 @@
   "quicktext.importexport.importTitle": {
     "message": "インポートする項目を選択"
   },
+  "quicktext.importexport.legacyLocked": {
+    "message": "以前のバージョンの Quicktext でロックされています。ロックは現在サポートされていません。"
+  },
   "quicktext.importexport.replaces": {
     "message": "既存のものを置き換えます"
   },

@@ -353,6 +353,9 @@
   "quicktext.importexport.importTitle": {
     "message": "Elegir qué importar"
   },
+  "quicktext.importexport.legacyLocked": {
+    "message": "Bloqueado por una versión anterior de Quicktext. El bloqueo ya no está disponible."
+  },
   "quicktext.importexport.replaces": {
     "message": "reemplaza el existente"
   },

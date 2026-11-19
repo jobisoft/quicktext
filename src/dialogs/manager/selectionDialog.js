@@ -63,16 +63,23 @@ export async function showSelectionDialog({ title, okLabel, payload, existing })
     return leaf;
   }
 
-  function row(className, label, note) {
+  // `locked`: marked `protected` by an older Quicktext version.
+  function row(className, label, note, locked) {
     const labelEl = el("label", className);
     const checkbox = el("input");
     checkbox.type = "checkbox";
     labelEl.append(checkbox, el("span", "sel-name", label));
+    if (locked) {
+      const lock = el("span", "sel-lock", "🔒");
+      lock.title = legacyLocked;
+      labelEl.append(lock);
+    }
     if (note) labelEl.append(el("span", "sel-note", note));
     return { labelEl, checkbox };
   }
 
   const replaces = i18n("quicktext.importexport.replaces");
+  const legacyLocked = i18n("quicktext.importexport.legacyLocked");
   const sections = [];
 
   if (groups.length) {
@@ -80,7 +87,7 @@ export async function showSelectionDialog({ title, okLabel, payload, existing })
     tree.append(section.labelEl);
     const groupNodes = groups.map((group, gi) => {
       const existingPos = existing?.groups.findIndex(g => g.name === group.name) ?? -1;
-      const groupRow = row("sel-group", group.name);
+      const groupRow = row("sel-group", group.name, null, !!group.protected);
       tree.append(groupRow.labelEl);
       if (!texts[gi]?.length) {
         // An empty group is an entry of its own.
@@ -103,7 +110,7 @@ export async function showSelectionDialog({ title, okLabel, payload, existing })
     tree.append(section.labelEl);
     const scriptNodes = scripts.map(script => {
       const clash = existing?.scripts.some(s => s.name === script.name);
-      const scriptRow = row("sel-item sel-script", script.name, clash ? replaces : null);
+      const scriptRow = row("sel-item sel-script", script.name, clash ? replaces : null, !!script.protected);
       tree.append(scriptRow.labelEl);
       return makeLeaf(scriptRow.checkbox, { script });
     });

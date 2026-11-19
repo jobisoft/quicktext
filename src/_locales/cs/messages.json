@@ -353,6 +353,9 @@
   "quicktext.importexport.importTitle": {
     "message": "Vyberte, co importovat"
   },
+  "quicktext.importexport.legacyLocked": {
+    "message": "Zamčeno starší verzí Quicktextu. Zamykání již není podporováno."
+  },
   "quicktext.importexport.replaces": {
     "message": "nahradí existující"
   },

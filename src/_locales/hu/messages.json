@@ -353,6 +353,9 @@
   "quicktext.importexport.importTitle": {
     "message": "Válassza ki, mit importál"
   },
+  "quicktext.importexport.legacyLocked": {
+    "message": "Egy régebbi Quicktext-verzió zárolta. A zárolás már nem támogatott."
+  },
   "quicktext.importexport.replaces": {
     "message": "lecseréli a meglévőt"
   },

@@ -353,6 +353,9 @@
   "quicktext.importexport.importTitle": {
     "message": "Välj vad som ska importeras"
   },
+  "quicktext.importexport.legacyLocked": {
+    "message": "Låst av en äldre version av Quicktext. Låsning stöds inte längre."
+  },
   "quicktext.importexport.replaces": {
     "message": "ersätter befintlig"
   },

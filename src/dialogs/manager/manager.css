@@ -750,6 +750,10 @@ label input[type=checkbox] { flex-shrink: 0; }
   font-size: 12px;
   opacity: 0.75;
 }
+.sel-tree .sel-lock {
+  flex-shrink: 0;
+  font-size: 11px;
+}
 .sel-tree .sel-note {
   flex-shrink: 0;
   margin-left: auto;

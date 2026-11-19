@@ -2991,11 +2991,8 @@ async function importStorage() {
     await showAlert(i18n("quicktext.importexport.importNothing"));
     return;
   }
-  // Pre-refactor files may still carry `protected: true` entries.
-  // Quietly strip them so they never enter the working copy.
-  storage._stripProtectedInPlace(payload);
-
   // Let the user choose what to import, showing what would be replaced (#668).
+  // Entries marked `protected` by older versions are shown with a lock.
   result = await showSelectionDialog({
     title: i18n("quicktext.importexport.importTitle"),
     okLabel: i18n("quicktext.import.label"),
@@ -3003,6 +3000,10 @@ async function importStorage() {
     existing: bundle,
   });
   if (!result) return;
+  // Drop the legacy marker: storages drop marked entries when they are loaded.
+  for (const entry of [...result.templates.groups, ...result.scripts]) {
+    delete entry.protected;
+  }
   let importedGroups = 0;
   const importedTemplates = result.templates.texts.reduce((n, t) => n + t.length, 0);
   const importedScripts = result.scripts.length;
