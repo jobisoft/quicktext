@@ -435,7 +435,7 @@
     "message": "Autres"
   },
   "quicktext.storageLocations.label": {
-    "message": "Emplacement de stockage des modèles et scripts"
+    "message": "Emplacements de stockage des modèles et scripts"
   },
   "quicktext.storageLocations.description": {
     "message": "Gérez les emplacements de stockage disponibles et contrôlez quels modèles et scripts sont activés pour l'utilisation. Les stockages en lecture seule et le stockage géré de façon centralisée sont marqués comme verrouillés."

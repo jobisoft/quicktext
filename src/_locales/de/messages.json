@@ -435,7 +435,7 @@
     "message": "Andere"
   },
   "quicktext.storageLocations.label": {
-    "message": "Speicherort für Vorlagen und Skripte"
+    "message": "Speicherorte für Vorlagen und Skripte"
   },
   "quicktext.storageLocations.description": {
     "message": "Verwalten Sie die verfügbaren Speicherorte und legen Sie fest, welche Vorlagen und Skripte zur Verwendung aktiviert sind. Schreibgeschützte Speicher und der zentral verwaltete Speicher werden als gesperrt markiert."

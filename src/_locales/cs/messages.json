@@ -435,7 +435,7 @@
     "message": "Ostatní"
   },
   "quicktext.storageLocations.label": {
-    "message": "Umístění úložiště pro šablony a skripty"
+    "message": "Umístění úložišť pro šablony a skripty"
   },
   "quicktext.storageLocations.description": {
     "message": "Spravujte dostupná umístění úložišť a určete, které šablony a skripty jsou povolené k použití. Úložiště jen pro čtení a centrálně spravované úložiště jsou označena jako uzamčená."

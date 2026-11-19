@@ -435,7 +435,7 @@
     "message": "Otro"
   },
   "quicktext.storageLocations.label": {
-    "message": "Ubicación de almacenamiento de plantillas y scripts"
+    "message": "Ubicaciones de almacenamiento de plantillas y scripts"
   },
   "quicktext.storageLocations.description": {
     "message": "Gestione las ubicaciones de almacenamiento disponibles y controle qué plantillas y scripts están habilitados para usarse. Los almacenamientos de solo lectura y el almacenamiento gestionado de forma centralizada se marcan como bloqueados."

@@ -435,7 +435,7 @@
     "message": "Övrigt"
   },
   "quicktext.storageLocations.label": {
-    "message": "Lagringsplats för mallar och skript"
+    "message": "Lagringsplatser för mallar och skript"
   },
   "quicktext.storageLocations.description": {
     "message": "Hantera tillgängliga lagringsplatser och kontrollera vilka mallar och skript som är aktiverade för användning. Skrivskyddade lagringsplatser och den centralt hanterade lagringsplatsen markeras som låsta."

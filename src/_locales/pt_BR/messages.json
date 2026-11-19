@@ -435,7 +435,7 @@
     "message": "Outros"
   },
   "quicktext.storageLocations.label": {
-    "message": "Local de armazenamento de modelos e scripts"
+    "message": "Locais de armazenamento de modelos e scripts"
   },
   "quicktext.storageLocations.description": {
     "message": "Gerencie os locais de armazenamento disponíveis e controle quais modelos e scripts estão habilitados para uso. Armazenamentos somente leitura e o armazenamento gerenciado centralmente são marcados como bloqueados."

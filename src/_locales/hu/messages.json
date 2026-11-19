@@ -435,7 +435,7 @@
     "message": "Más"
   },
   "quicktext.storageLocations.label": {
-    "message": "Tárolási hely a sablonokhoz és szkriptekhez"
+    "message": "Tárolási helyek a sablonokhoz és szkriptekhez"
   },
   "quicktext.storageLocations.description": {
     "message": "Kezelje az elérhető tárolóhelyeket, és válassza ki, mely sablonok és szkriptek legyenek engedélyezve használatra. A csak olvasható tárolók és a központilag kezelt tároló zároltként vannak megjelölve."
