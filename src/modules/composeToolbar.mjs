@@ -26,7 +26,8 @@
 // The host lives in the editor document, which Thunderbird serializes as a
 // whole when sending, so it must be removed before sending (see init()).
 
-const HOST_ID = "quicktext-compose-toolbar";
+// Keep in sync with HOST_CLASS in /scripts/composeToolbar.js.
+const HOST_CLASS = "quicktext-compose-toolbar";
 const SCRIPT_FILE = "/scripts/composeToolbar.js";
 const CSS_FILE = "/scripts/composeToolbar.css";
 
@@ -45,12 +46,14 @@ export async function show(tabId, model) {
   await browser.tabs.sendMessage(tabId, { composeToolbar: "show", model, css });
 }
 
-// Removes the host by id, without depending on the toolbar script being loaded
-// (a reopened draft may contain an empty host from an earlier session).
+// Uses the toolbar script's hide() if it is loaded: it has to stop putting the
+// host back first. Otherwise just removes any host (a reopened draft may
+// contain an empty one from an earlier session).
 export async function hide(tabId) {
   try {
     await browser.tabs.executeScript(tabId, {
-      code: `document.getElementById(${JSON.stringify(HOST_ID)})?.remove();`,
+      code: `globalThis.QuicktextComposeToolbar?.hide();
+        for (const e of document.querySelectorAll(${JSON.stringify("." + HOST_CLASS)})) e.remove();`,
     });
   } catch {
     // Tab is gone or not a compose tab, nothing to remove.

@@ -9,10 +9,10 @@
 
 :host {
   all: initial;
-  display: block !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 2147482000 !important;
+  /* The host itself is an empty inline element in the text flow, so a caret
+     next to it is drawn where the text starts. Only the bar is fixed. */
+  display: inline !important;
+  position: static !important;
   /* Follow the theme. The editor document sets no color-scheme of its own,
      so inheriting it would always pick the light colours. */
   color-scheme: light dark;
@@ -26,6 +26,11 @@
 }
 
 .bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2147482000;
   display: flex;
   align-items: flex-start;
   gap: 6px;
@@ -108,7 +113,7 @@ button {
 
 .menu {
   position: fixed;
-  z-index: 1;
+  z-index: 2147482001;
   min-width: 180px;
   max-width: min(420px, calc(100vw - 8px));
   overflow-y: auto;

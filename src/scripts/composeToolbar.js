@@ -7,16 +7,17 @@
 // Compose-document side of /modules/composeToolbar.mjs. Injected via
 // tabs.executeScript, possibly several times, hence the guard.
 //
-// Layout "sticky": the host is placed in front of <body> and sticks to the top
-// of the editor while scrolling. It takes up its own space, so it never covers
-// any content.
+// Layout "fixed": the host is an empty inline element in <body>; the bar
+// inside it is fixed at the top of the editor. The body gets a top margin of
+// the bar's height, so the toolbar never covers any content.
 
 (() => {
   if (globalThis.QuicktextComposeToolbar) {
     return;
   }
 
-  const HOST_ID = "quicktext-compose-toolbar";
+  // Keep in sync with HOST_CLASS in /modules/composeToolbar.mjs.
+  const HOST_CLASS = "quicktext-compose-toolbar";
   const actions = new WeakMap();
   const menus = new WeakMap();
 
@@ -54,9 +55,8 @@
 
   function build() {
     // A draft saved while the toolbar was showing contains an empty host.
-    document.getElementById(HOST_ID)?.remove();
-    host = el("div");
-    host.id = HOST_ID;
+    removeCopies();
+    host = el("div", HOST_CLASS);
     host.contentEditable = "false";
     const root = host.attachShadow({ mode: "open" });
 
@@ -74,9 +74,60 @@
   }
 
   function attach() {
-    // In front of <body>, so it takes up its own space at the top.
-    if (host.parentNode !== document.documentElement || host.nextSibling !== document.body) {
-      document.documentElement.insertBefore(host, document.body);
+    // The host has no size, so where in the body it sits does not matter.
+    if (!host.isConnected) {
+      document.body.prepend(host);
+    }
+    // The body's children, and <html>'s: setting the body of an HTML message
+    // (setComposeDetails) replaces the whole <body> element.
+    removalObserver.observe(document.body, { childList: true });
+    removalObserver.observe(document.documentElement, { childList: true });
+    reserveSpace();
+  }
+
+  // The bar is fixed at the top of the editor (the host is an empty inline
+  // element). The body gets a top margin of the bar's height, so the message
+  // never goes behind it.
+  // The margin comes from a constructed style sheet: it is not part of the
+  // HTML, so it is neither sent nor saved in drafts.
+  let spaceSheet = null;
+  let bodyMarginTop = 0;
+  const resizeObserver = new ResizeObserver(() => reserveSpace());
+
+  function reserveSpace() {
+    if (!host?.isConnected) return;
+    if (!spaceSheet) {
+      bodyMarginTop = parseFloat(getComputedStyle(document.body).marginTop) || 0;
+      spaceSheet = new CSSStyleSheet();
+      document.adoptedStyleSheets = [...document.adoptedStyleSheets, spaceSheet];
+      resizeObserver.observe(bar);
+    }
+    const height = bar.getBoundingClientRect().height;
+    spaceSheet.replaceSync(`body { margin-top: ${bodyMarginTop + height}px !important; }`);
+  }
+
+  function releaseSpace() {
+    resizeObserver.disconnect();
+    if (spaceSheet) {
+      document.adoptedStyleSheets = document.adoptedStyleSheets.filter(s => s !== spaceSheet);
+      spaceSheet = null;
+    }
+  }
+
+  // Editing can remove the toolbar like any other node: Backspace at the start
+  // of a plain text message, select all + Delete, Cut. Put it straight back.
+  // Re-parsing the message (e.g. a getComposeDetails/setComposeDetails round
+  // trip) also leaves an empty copy of it behind, remove those (#667).
+  const removalObserver = new MutationObserver(() => {
+    removeCopies();
+    if (!host.isConnected) attach();
+  });
+
+  // Every toolbar element in the document except our own. A copy has no
+  // shadow root, so it is just an empty element.
+  function removeCopies() {
+    for (const e of document.querySelectorAll(`.${HOST_CLASS}`)) {
+      if (e !== host) e.remove();
     }
   }
 
@@ -194,7 +245,10 @@
 
   function hide() {
     closeMenu();
+    removalObserver.disconnect();
     host?.remove();
+    removeCopies();
+    releaseSpace();
   }
 
   globalThis.QuicktextComposeToolbar = { show, hide };
