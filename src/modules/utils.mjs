@@ -84,6 +84,40 @@ export function replaceText(tag, value, text, { collapseLineBreaks }) {
     return text.replace(new RegExp(`( )?${escapedTag}`, ''), value);
 }
 
+// In HTML templates the editor stores "<", ">" and "&" typed by the user as
+// entities. That is right for the message body, but values a tag uses as
+// plain text (a header, a URL, a path, a script argument, ...) must be
+// decoded first (#650). Only entities are replaced, never markup, so a raw
+// value such as "Tom <tom@example.com>" passes through unchanged.
+const NAMED_ENTITIES = { lt: "<", gt: ">", amp: "&", quot: '"', apos: "'", nbsp: " " };
+export function decodeEntities(str) {
+    if (typeof str !== "string") return str;
+    // One pass, so "&amp;lt;" becomes "&lt;" and not "<".
+    return str.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (match, entity) => {
+        if (entity[0] === "#") {
+            const code = entity[1] === "x" || entity[1] === "X"
+                ? parseInt(entity.slice(2), 16)
+                : parseInt(entity.slice(1), 10);
+            try {
+                return String.fromCodePoint(code);
+            } catch {
+                return match;
+            }
+        }
+        return NAMED_ENTITIES[entity.toLowerCase()] ?? match;
+    });
+}
+
+// Text to be inserted into an html message as text.
+export function escapeHtml(str) {
+    if (typeof str !== "string") return str;
+    return str
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+}
+
 export function escapeRegExp(aStr) {
     return aStr.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

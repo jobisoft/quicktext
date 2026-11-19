@@ -260,18 +260,24 @@ export class QuicktextParser {
     }
 
     let name = aVariables[0].toLowerCase();
+    // In an html template the editor stores what the user typed with
+    // entities ("<" as "&lt;", "&" as "&amp;"). In the body that displays
+    // correctly, but a header needs the typed text: Thunderbird would read
+    // "Name &lt;a@b.c&gt;" as two broken addresses (#650). Values from other
+    // tags contain no entities and pass unchanged.
+    const value = utils.decodeEntities(aVariables[1]);
     switch (name) {
       case "to":
       case "cc":
       case "bcc":
-        await this.addDetail(name, aVariables[1]);
+        await this.addDetail(name, value);
         break;
       case "reply-to":
-        await this.addDetail("replyTo", aVariables[1]);
+        await this.addDetail("replyTo", value);
         break;
       case "from":
       case "subject":
-        await this.setDetail(name, aVariables[1]);
+        await this.setDetail(name, value);
         break;
     }
 
@@ -285,6 +291,11 @@ export class QuicktextParser {
     if (aVariables.length == 0)
       return "";
 
+    // In an html template the editor stores what the user typed with
+    // entities ("&" as "&amp;"). The script must get the typed text, as in a
+    // plain text template, and the name must match the stored script name
+    // (#650).
+    aVariables = aVariables.map(utils.decodeEntities);
     let scriptName = aVariables.shift();
 
     // Looks through scripts of the currently active storage only.
@@ -423,7 +434,10 @@ export class QuicktextParser {
     if (aVariables.length < 2)
       return "";
 
-    let [extensionId, scriptName, ...scriptArgs] = aVariables;
+    // In an html template the editor stores what the user typed with
+    // entities ("&" as "&amp;"). The other add-on must get the typed text,
+    // as in a plain text template (#650).
+    let [extensionId, scriptName, ...scriptArgs] = aVariables.map(utils.decodeEntities);
     let transmission = Promise.withResolvers();
 
     try {
@@ -480,7 +494,10 @@ export class QuicktextParser {
       return "";
     }
 
-    let url = aVariables.shift();
+    // In an html template the editor stores "&" as "&amp;". Requested as
+    // is, "?a=1&amp;b=2" would send the parameter "amp;b" instead of "b"
+    // (#650).
+    let url = utils.decodeEntities(aVariables.shift());
     if (url == "") {
       return "";
     }
@@ -598,6 +615,10 @@ export class QuicktextParser {
   }
   async process_vfsfile(aVariables) {
     if (aVariables.length === 0 || aVariables[0] === "") return "";
+    // In an html template the editor stores "&" as "&amp;" (and "<" as
+    // "&lt;"). The file is stored under the typed name, so the path must be
+    // decoded to be found (#650).
+    aVariables = [utils.decodeEntities(aVariables[0]), ...aVariables.slice(1)];
     if (this.mActiveStorage.state === STORAGE_STATE.IMPORT_TEMPLATE ||
         this.mActiveStorage.state === STORAGE_STATE.MANAGED_TEMPLATE) {
       console.warn(`VFSFILE in non-VFS bundle; skipping: ${aVariables[0]}`);
@@ -644,6 +665,9 @@ export class QuicktextParser {
     if (!type) {
       type = "tag"
     }
+    // In an html template the editor stores "&" as "&amp;". A URL would
+    // send broken parameters and a VFS path would not be found (#650).
+    source = utils.decodeEntities(source);
 
     let src = "";
     if (mode && source && type) {
@@ -716,6 +740,10 @@ export class QuicktextParser {
   async process_text(aVariables) {
     if (aVariables.length < 2)
       return "";
+    // In an html template the editor stores "&" as "&amp;", but the group
+    // and template are named with the typed text: "Tom &amp; Jerry" must
+    // find the group "Tom & Jerry" (#650).
+    aVariables = [utils.decodeEntities(aVariables[0]), utils.decodeEntities(aVariables[1]), ...aVariables.slice(2)];
     // The template is looked up in the active storage first. If it is not
     // there, the other active storages are searched in storage list order
     // (#599), and the first match is resolved within its own storage.
@@ -790,8 +818,12 @@ export class QuicktextParser {
 
     if (!states[inputState].checked) {
       let rv;
-      let label = browser.i18n.getMessage("quicktext.inputText.label", [aVariables[0]]);
-      let value = aVariables[2] ?? "";
+      // In an html template the editor stores what the user typed with
+      // entities. The dialog shows plain text, so without decoding it would
+      // display "&lt;" instead of "<" (#650). Decoded before the select
+      // values are split at ";", because "&lt;" itself contains a ";".
+      let label = browser.i18n.getMessage("quicktext.inputText.label", [utils.decodeEntities(aVariables[0])]);
+      let value = utils.decodeEntities(aVariables[2] ?? "");
 
       // There are two types of input: select and text.
       if (aVariables[1] == 'select') {
@@ -825,12 +857,25 @@ export class QuicktextParser {
     return states[inputState].data;
   }
   async get_input(aVariables, options) {
-    return this.process_input(aVariables, options);
+    const answer = await this.process_input(aVariables, options);
+    // The answer is what the user typed, plain text. Inserted into an html
+    // message as is, "Tom <tom@example.com>" would be read as an html
+    // element and the address would disappear, so it is escaped (#650).
+    // Where the answer is used inside another tag (e.g. HEADER), that tag
+    // decodes it again. process_input (scripts) keeps the raw answer.
+    if (typeof answer !== "string") return answer;
+    const { isPlainText } = await this.getStaticDetails();
+    return !isPlainText && !(await this.isForceAsText())
+      ? utils.escapeHtml(answer)
+      : answer;
   }
 
   async process_alert(aVariables) {
     messenger.tabs.sendMessage(this.mTabId, {
-      alertLabel: aVariables[0],
+      // In an html template the editor stores what the user typed with
+      // entities. window.alert() shows plain text and would display "&lt;"
+      // instead of "<" (#650).
+      alertLabel: utils.decodeEntities(aVariables[0]),
     });
   }
   async get_alert(aVariables) {
@@ -998,6 +1043,11 @@ export class QuicktextParser {
       source = mode;
       mode_lc = "file";
     }
+    // In an html template the editor stores "&" as "&amp;" (and "<" as
+    // "&lt;"). A URL would send broken parameters, a VFS path would not be
+    // found, and the attachment would be named "Tom &amp; Jerry.txt" (#650).
+    source = utils.decodeEntities(source);
+    name = utils.decodeEntities(name);
 
     switch (mode_lc) {
       case "url": {
