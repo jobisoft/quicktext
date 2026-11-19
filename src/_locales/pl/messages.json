@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Import"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Wybierz, co wyeksportować"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Wybierz, co zaimportować"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "zastępuje istniejący"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Ten magazyn nie zawiera szablonów ani skryptów."
+  },
+  "quicktext.cancel.label": {
+    "message": "Anuluj"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Podsumowanie importu"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Grupy"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Zaimportowane elementy zostaną zachowane dopiero po zapisaniu."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Plik nie jest prawidłowym eksportem Quicktext."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Plik nie zawiera szablonów ani skryptów."
+  },
   "quicktext.input.label": {
     "message": "Wartość wprowadzona przez użytkownika w oknie monitu"
   },

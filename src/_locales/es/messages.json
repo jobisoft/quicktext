@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importar"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Elegir qué exportar"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Elegir qué importar"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "reemplaza el existente"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Este almacenamiento no contiene plantillas ni scripts."
+  },
+  "quicktext.cancel.label": {
+    "message": "Cancelar"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Resumen de la importación"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Grupos"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Las entradas importadas solo se conservan al guardar."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "El archivo no es una exportación válida de Quicktext."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "El archivo no contiene plantillas ni scripts."
+  },
   "quicktext.input.label": {
     "message": "Input value from user prompt"
   },

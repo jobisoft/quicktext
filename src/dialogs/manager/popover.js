@@ -8,26 +8,36 @@ const overlay = document.getElementById("dialog-overlay");
 const box = document.getElementById("dialog-box");
 const titleEl = document.getElementById("dialog-title");
 const messageEl = document.getElementById("dialog-message");
+const contentEl = document.getElementById("dialog-content");
 const fieldsEl = document.getElementById("dialog-fields");
 const errorEl = document.getElementById("dialog-error");
 const buttonsEl = document.getElementById("dialog-buttons");
 
-// showDialog({ title?, message?, fields?, buttons, onButton? })
+// showDialog({ title?, message?, content?, wide?, fields?, buttons, focus?, noEnter?, onOpen?, onButton? })
 //
 //   title    - optional heading string
 //   message  - optional body text
+//   content  - optional DOM node shown below the message
+//   wide     - optional, a wider dialog (e.g. for a list in `content`)
 //   fields   - optional array of { id, label?, type?, value?, placeholder?, required? }
 //   buttons  - array of { id, label, primary? }
+//   focus    - optional id of the button to focus initially (default: the
+//              first field, else the primary button)
+//   noEnter  - optional, Enter does nothing (not even on a focused button);
+//              for dialogs where an accidental Enter would be costly
+//   onOpen   - optional (api) => void, called once the dialog is shown
 //   onButton - optional async (buttonId, values, api) => bool
 //              return false to keep the dialog open
 //
 // Resolves with { button, values } or null on dismiss.
-export function showDialog({ title, message, fields, buttons, onButton }) {
+export function showDialog({ title, message, content, wide, fields, buttons, focus, noEnter, onOpen, onButton }) {
   return new Promise(resolve => {
     titleEl.textContent = title || "";
     titleEl.hidden = !title;
     messageEl.textContent = message || "";
     messageEl.hidden = !message;
+    contentEl.replaceChildren(...(content ? [content] : []));
+    box.classList.toggle("wide", !!wide);
     fieldsEl.innerHTML = "";
     errorEl.textContent = "";
     buttonsEl.innerHTML = "";
@@ -107,11 +117,16 @@ export function showDialog({ title, message, fields, buttons, onButton }) {
         e.preventDefault();
         close(null);
       }
+      if (e.key === "Enter" && noEnter) {
+        e.stopPropagation();
+        e.preventDefault();
+        return;
+      }
       if (e.key === "Enter" && e.target.tagName !== "BUTTON") {
         e.stopPropagation();
         e.preventDefault();
         const primary = buttonsEl.querySelector(".primary");
-        if (primary) handleButton(primary.dataset.id);
+        if (primary && !primary.disabled) handleButton(primary.dataset.id);
       }
     }
 
@@ -124,9 +139,12 @@ export function showDialog({ title, message, fields, buttons, onButton }) {
     overlay.addEventListener("click", onOverlayClick);
     document.addEventListener("keydown", onKeyDown, true);
     overlay.hidden = false;
+    onOpen?.(api);
 
     const firstInput = fieldsEl.querySelector("input");
-    if (firstInput) {
+    if (focus) {
+      buttonsEl.querySelector(`[data-id="${focus}"]`)?.focus();
+    } else if (firstInput) {
       firstInput.focus();
       firstInput.select();
     } else {

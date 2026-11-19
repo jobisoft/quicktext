@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importer"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Choisir les éléments à exporter"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Choisir les éléments à importer"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "remplace l'existant"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Ce stockage ne contient aucun modèle ni script."
+  },
+  "quicktext.cancel.label": {
+    "message": "Annuler"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Résumé de l'importation"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Groupes"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Les éléments importés ne sont conservés qu'après l'enregistrement."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Le fichier n'est pas un export Quicktext valide."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Le fichier ne contient aucun modèle ni script."
+  },
   "quicktext.input.label": {
     "message": "Entrez le texte à insérer"
   },

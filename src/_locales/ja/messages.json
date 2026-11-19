@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "インポート"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "エクスポートする項目を選択"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "インポートする項目を選択"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "既存のものを置き換えます"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "このストレージにはテンプレートもスクリプトもありません。"
+  },
+  "quicktext.cancel.label": {
+    "message": "キャンセル"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "インポートの概要"
+  },
+  "quicktext.importexport.groups": {
+    "message": "グループ"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "インポートした項目は、保存した時点で保持されます。"
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "このファイルは有効な Quicktext のエクスポートではありません。"
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "このファイルにはテンプレートもスクリプトも含まれていません。"
+  },
   "quicktext.input.label": {
     "message": "ユーザープロンプトからの入力値"
   },

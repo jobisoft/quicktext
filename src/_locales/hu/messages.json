@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importálása"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Válassza ki, mit exportál"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Válassza ki, mit importál"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "lecseréli a meglévőt"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Ez a tárhely nem tartalmaz sablonokat vagy szkripteket."
+  },
+  "quicktext.cancel.label": {
+    "message": "Mégse"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Importálás összegzése"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Csoportok"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Az importált elemek csak mentés után maradnak meg."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "A fájl nem érvényes Quicktext-exportálás."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "A fájl nem tartalmaz sablonokat vagy szkripteket."
+  },
   "quicktext.input.label": {
     "message": "Bemeneti érték a parancssorból"
   },

@@ -16,6 +16,7 @@ import { localizeDocument } from "/vendor/i18n.mjs";
 import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 import { showDialog, showAlert, showConfirm, showPrompt } from "./popover.js";
 import { openFlyoutMenu } from "./flyoutMenu.mjs";
+import { showSelectionDialog, showImportSummary, extractPayload } from "./selectionDialog.js";
 
 const i18n = (key, subs) => browser.i18n.getMessage(key, subs) || key;
 const applyManaged = (el, isManaged) => {
@@ -2943,16 +2944,25 @@ async function exportStorage() {
   const entry = _selectedStorageListEntry();
   if (!entry || entry.type === "managed") return;
 
-  // Always export the on-disk file, never the in-memory working
-  // copy. Unsaved edits in the manager are intentionally left out -
-  // users who want those edits in the export must Save first.
-  // `readBundleForEntry` already runs the protected-entry filter.
-  const source = await storage.readBundleForEntry(entry);
+  // Export what the manager shows, including unsaved edits. A disabled
+  // storage has no working copy (and cannot be edited), so its saved file is
+  // used. `readBundleForEntry` runs the protected-entry filter.
+  const bundle = _selectedStorageListBundle();
+  const source = bundle
+    ? { templates: { groups: bundle.groups, texts: bundle.texts }, scripts: bundle.scripts }
+    : await storage.readBundleForEntry(entry);
+  if (!source.templates?.groups?.length && !source.scripts?.length) {
+    await showAlert(i18n("quicktext.importexport.exportNothing"));
+    return;
+  }
 
-  const payload = {
-    templates: source.templates,
-    scripts: source.scripts,
-  };
+  // Let the user choose what to export (#668).
+  const payload = await showSelectionDialog({
+    title: i18n("quicktext.importexport.exportTitle"),
+    okLabel: i18n("quicktext.export.label"),
+    payload: { templates: source.templates, scripts: source.scripts },
+  });
+  if (!payload) return;
   const safeName = (entry.name || "quicktext").replace(/[^\w\-]+/g, "_");
   await utils.writeFileToDisc(JSON.stringify(payload, null, 2), `${safeName}.json`);
   window.focus();
@@ -2972,12 +2982,30 @@ async function importStorage() {
     result = JSON.parse(content);
   } catch (ex) {
     console.error("Failed to parse import file as JSON", ex);
+    await showAlert(i18n("quicktext.importexport.invalidFile"));
     return;
   }
-  if (!result) return;
+  // Take whatever groups, templates and scripts can be read from the file.
+  const payload = extractPayload(result);
+  if (!payload) {
+    await showAlert(i18n("quicktext.importexport.importNothing"));
+    return;
+  }
   // Pre-refactor files may still carry `protected: true` entries.
   // Quietly strip them so they never enter the working copy.
-  storage._stripProtectedInPlace(result);
+  storage._stripProtectedInPlace(payload);
+
+  // Let the user choose what to import, showing what would be replaced (#668).
+  result = await showSelectionDialog({
+    title: i18n("quicktext.importexport.importTitle"),
+    okLabel: i18n("quicktext.import.label"),
+    payload,
+    existing: bundle,
+  });
+  if (!result) return;
+  const importedGroups = result.templates.groups.length;
+  const importedTemplates = result.templates.texts.reduce((n, t) => n + t.length, 0);
+  const importedScripts = result.scripts.length;
 
   let changedTemplates = false;
   let changedScripts = false;
@@ -3020,10 +3048,12 @@ async function importStorage() {
     }
   }
 
-  if (!changedTemplates && !changedScripts) return;
-  markChanged(bundle);
-  if (changedTemplates) renderTemplateList();
-  if (changedScripts) renderScriptList();
+  if (changedTemplates || changedScripts) {
+    markChanged(bundle);
+    if (changedTemplates) renderTemplateList();
+    if (changedScripts) renderScriptList();
+  }
+  await showImportSummary({ groups: importedGroups, templates: importedTemplates, scripts: importedScripts });
 }
 
 function pickFile(accept) {

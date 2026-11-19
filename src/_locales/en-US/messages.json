@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Import"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Choose what to export"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Choose what to import"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "replaces existing"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "This storage contains no templates or scripts."
+  },
+  "quicktext.cancel.label": {
+    "message": "Cancel"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Import Summary"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Groups"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "The imported entries are only kept once you save."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "The file is not a valid Quicktext export."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "The file does not contain templates or scripts."
+  },
   "quicktext.input.label": {
     "message": "Input value from user prompt"
   },

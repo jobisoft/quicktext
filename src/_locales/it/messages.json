@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importa"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Scegli cosa esportare"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Scegli cosa importare"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "sostituisce l'esistente"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Questa archiviazione non contiene modelli né script."
+  },
+  "quicktext.cancel.label": {
+    "message": "Annulla"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Riepilogo dell'importazione"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Gruppi"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Le voci importate vengono mantenute solo dopo il salvataggio."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Il file non è un'esportazione valida di Quicktext."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Il file non contiene modelli né script."
+  },
   "quicktext.input.label": {
     "message": "Valore immesso dall'utente tramite prompt"
   },

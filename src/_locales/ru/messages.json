@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Импорт"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Выберите, что экспортировать"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Выберите, что импортировать"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "заменит существующий"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Это хранилище не содержит шаблонов или скриптов."
+  },
+  "quicktext.cancel.label": {
+    "message": "Отмена"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Итоги импорта"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Группы"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Импортированные элементы сохранятся только после сохранения изменений."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Файл не является корректным экспортом Quicktext."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Файл не содержит шаблонов или скриптов."
+  },
   "quicktext.input.label": {
     "message": "Входящее значение из приглашения пользователя"
   },

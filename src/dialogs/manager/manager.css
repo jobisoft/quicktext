@@ -691,6 +691,72 @@ label input[type=checkbox] { flex-shrink: 0; }
   line-height: 1.4;
 }
 #dialog-message:empty, #dialog-message[hidden] { display: none; }
+#dialog-box.wide {
+  width: min(560px, 90vw);
+  max-width: min(560px, 90vw);
+}
+#dialog-content:empty { display: none; }
+#dialog-content {
+  margin-bottom: 12px;
+}
+
+/* Selection of groups, templates and scripts for export/import. */
+.sel-tree {
+  max-height: 60vh;
+  overflow: auto;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 4px 0;
+}
+.sel-tree label {
+  display: flex;
+  /* Long names wrap: keep the checkbox on the first line. */
+  align-items: baseline;
+  gap: 6px;
+  padding: 2px 8px;
+  font-size: 12px;
+  cursor: default;
+}
+.sel-tree .sel-section {
+  font-weight: 600;
+  margin-top: 4px;
+}
+.sel-tree .sel-group {
+  padding-left: 24px;
+}
+.sel-tree .sel-item {
+  padding-left: 44px;
+}
+.sel-tree .sel-script {
+  padding-left: 24px;
+}
+.sel-tree .sel-name {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.import-summary-counts {
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: start;
+  column-gap: 24px;
+  row-gap: 2px;
+}
+.import-summary-count {
+  text-align: end;
+  font-variant-numeric: tabular-nums;
+}
+.import-summary-hint {
+  margin: 12px 0 0;
+  font-size: 12px;
+  opacity: 0.75;
+}
+.sel-tree .sel-note {
+  flex-shrink: 0;
+  margin-left: auto;
+  font-size: 11px;
+  opacity: 0.7;
+  font-style: italic;
+}
 #dialog-fields {
   display: flex;
   flex-direction: column;

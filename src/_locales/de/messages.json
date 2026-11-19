@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importieren"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Auswählen, was exportiert werden soll"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Auswählen, was importiert werden soll"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "ersetzt vorhandenes"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Dieser Speicher enthält keine Vorlagen oder Skripte."
+  },
+  "quicktext.cancel.label": {
+    "message": "Abbrechen"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Import-Zusammenfassung"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Gruppen"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Die importierten Einträge bleiben erst nach dem Speichern erhalten."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Die Datei ist kein gültiger Quicktext-Export."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Die Datei enthält keine Vorlagen oder Skripte."
+  },
   "quicktext.input.label": {
     "message": "Eingabewert von einer Eingabeaufforderung"
   },

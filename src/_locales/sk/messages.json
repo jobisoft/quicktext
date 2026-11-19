@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importovať"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Vyberte, čo exportovať"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Vyberte, čo importovať"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "nahradí existujúce"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Toto úložisko neobsahuje žiadne šablóny ani skripty."
+  },
+  "quicktext.cancel.label": {
+    "message": "Zrušiť"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Súhrn importu"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Skupiny"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Importované položky sa zachovajú až po uložení."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Súbor nie je platný export Quicktextu."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Súbor neobsahuje žiadne šablóny ani skripty."
+  },
   "quicktext.input.label": {
     "message": "Hodnota zadaná používateľom"
   },

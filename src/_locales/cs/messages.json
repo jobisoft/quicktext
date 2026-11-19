@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Importovat"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Vyberte, co exportovat"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Vyberte, co importovat"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "nahradí existující"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Toto úložiště neobsahuje žádné šablony ani skripty."
+  },
+  "quicktext.cancel.label": {
+    "message": "Zrušit"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Souhrn importu"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Skupiny"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "Importované položky se zachovají až po uložení."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Soubor není platný export Quicktextu."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Soubor neobsahuje žádné šablony ani skripty."
+  },
   "quicktext.input.label": {
     "message": "Vstupní hodnota zadaná uživatelem"
   },

@@ -347,6 +347,36 @@
   "quicktext.import.label": {
     "message": "Import"
   },
+  "quicktext.importexport.exportTitle": {
+    "message": "Välj vad som ska exporteras"
+  },
+  "quicktext.importexport.importTitle": {
+    "message": "Välj vad som ska importeras"
+  },
+  "quicktext.importexport.replaces": {
+    "message": "ersätter befintlig"
+  },
+  "quicktext.importexport.exportNothing": {
+    "message": "Den här lagringsplatsen innehåller inga mallar eller skript."
+  },
+  "quicktext.cancel.label": {
+    "message": "Avbryt"
+  },
+  "quicktext.importexport.importSummary": {
+    "message": "Sammanfattning av importen"
+  },
+  "quicktext.importexport.groups": {
+    "message": "Grupper"
+  },
+  "quicktext.importexport.saveHint": {
+    "message": "De importerade posterna behålls först när du sparar."
+  },
+  "quicktext.importexport.invalidFile": {
+    "message": "Filen är ingen giltig Quicktext-export."
+  },
+  "quicktext.importexport.importNothing": {
+    "message": "Filen innehåller inga mallar eller skript."
+  },
   "quicktext.input.label": {
     "message": "Fråga användaren efter ett värde"
   },
