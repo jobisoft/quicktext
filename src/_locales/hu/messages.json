@@ -252,13 +252,10 @@
     "message": "Sablonok és szkriptek csak olvasható importjai"
   },
   "quicktext.defaultImport.description": {
-    "message": "Sablonok és szkriptek csak olvasható importjainak kezelése távoli szerverekről. A vállalati szabályzat által biztosított bejegyzéseket lakat jelöli, és nem nevezhetők át vagy távolíthatók el."
+    "message": "Sablonok és szkriptek csak olvasható importjainak kezelése távoli szerverekről. A vállalati szabályzat által biztosított bejegyzéseket lakat jelöli, és nem szerkeszthetők és nem távolíthatók el."
   },
   "quicktext.accesskey.defaultImport": {
     "message": "I"
-  },
-  "quicktext.defaultImport.rename.prompt": {
-    "message": "Ennek az alapértelmezett importnak a neve:"
   },
   "quicktext.defaultImport.confirmRemove.label": {
     "message": "Eltávolítja a „$1” alapértelmezett importot?"
@@ -464,6 +461,9 @@
   "quicktext.storageList.duplicate.label": {
     "message": "Ez a tárolókonfiguráció már szerepel a listában „$1” néven."
   },
+  "quicktext.buttons.editImport.label": {
+    "message": "Szerkesztés"
+  },
   "quicktext.buttons.renameStorage.label": {
     "message": "Átnevezés"
   },
@@ -619,6 +619,9 @@
   },
   "quicktext.dialog.addImport.label": {
     "message": "Import hozzáadása"
+  },
+  "quicktext.dialog.editImport.label": {
+    "message": "Importálás szerkesztése"
   },
   "migration.intro.quote": {
     "message": "Köszönöm minden béta tesztelőmnek a folyamatos támogatást és türelmet, amellyel lehetővé tették ezt az átállást. A visszajelzéseitek felbecsülhetetlen értékűek voltak!"

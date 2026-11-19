@@ -252,13 +252,10 @@
     "message": "Importaciones de solo lectura de plantillas y scripts"
   },
   "quicktext.defaultImport.description": {
-    "message": "Gestionar importaciones de solo lectura de plantillas y scripts desde servidores remotos. Las entradas proporcionadas por una política empresarial están marcadas con un candado y no pueden renombrarse ni eliminarse."
+    "message": "Gestionar importaciones de solo lectura de plantillas y scripts desde servidores remotos. Las entradas proporcionadas por una política empresarial están marcadas con un candado y no pueden editarse ni eliminarse."
   },
   "quicktext.accesskey.defaultImport": {
     "message": "I"
-  },
-  "quicktext.defaultImport.rename.prompt": {
-    "message": "Nombre para esta importación predeterminada:"
   },
   "quicktext.defaultImport.confirmRemove.label": {
     "message": "¿Eliminar la importación predeterminada «$1»?"
@@ -464,6 +461,9 @@
   "quicktext.storageList.duplicate.label": {
     "message": "Esta configuración de almacenamiento ya está en la lista como «$1»."
   },
+  "quicktext.buttons.editImport.label": {
+    "message": "Editar"
+  },
   "quicktext.buttons.renameStorage.label": {
     "message": "Renombrar"
   },
@@ -619,6 +619,9 @@
   },
   "quicktext.dialog.addImport.label": {
     "message": "Añadir importación"
+  },
+  "quicktext.dialog.editImport.label": {
+    "message": "Editar importación"
   },
   "migration.intro.quote": {
     "message": "Gracias a todos mis beta testers por su continuo apoyo y paciencia para hacer posible esta transición. ¡Sus comentarios han sido invaluables!"

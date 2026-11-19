@@ -712,7 +712,7 @@ function updateShortcutAdvAvailability() {
 //
 // A flat list of `{name, url}` entries the add-on will fetch on
 // import (fetch/cache/integration is a follow-up pass - this tab
-// only lets the user edit the pointer list). Add/rename/remove/
+// only lets the user edit the pointer list). Add/edit/remove/
 // drag-reorder via the same patterns as the Storage Locations tab.
 
 function _selectedImportListEntry() {
@@ -735,10 +735,10 @@ function updateImportListButtons() {
     ? i18n("quicktext.controlledViaManagedStorage.label")
     : "";
   document.getElementById("btn-add-import").disabled = false;
-  const renameBtn = document.getElementById("btn-rename-import");
+  const editBtn = document.getElementById("btn-edit-import");
   const removeBtn = document.getElementById("btn-remove-import");
-  renameBtn.disabled = !selected || selectedManaged;
-  renameBtn.title = managedTooltip;
+  editBtn.disabled = !selected || selectedManaged;
+  editBtn.title = managedTooltip;
   removeBtn.disabled = !selected || selectedManaged;
   removeBtn.title = managedTooltip;
 }
@@ -867,16 +867,21 @@ function renderImportList() {
   updateImportListButtons();
 }
 
-async function addImportListEntry() {
+// The Add/Edit dialog of the import list. Checks the URL (http/https, not
+// used by another entry, reachable) and resolves with { name, url }, or
+// null on cancel. `excludeIdx` is the entry being edited: its own URL is not
+// a duplicate, and an unchanged URL is not fetched again.
+async function _showImportEntryDialog({ title, okLabel, name = "", url = "https://", excludeIdx = -1 }) {
+  const originalUrl = excludeIdx === -1 ? null : url;
   const result = await showDialog({
-    title: i18n("quicktext.dialog.addImport.label"),
+    title,
     fields: [
-      { id: "name", label: i18n("quicktext.defaultImport.columns.name"), type: "text" },
-      { id: "url", label: i18n("quicktext.defaultImport.columns.url"), type: "url", value: "https://", required: true },
+      { id: "name", label: i18n("quicktext.defaultImport.columns.name"), type: "text", value: name },
+      { id: "url", label: i18n("quicktext.defaultImport.columns.url"), type: "url", value: url, required: true },
     ],
     buttons: [
       { id: "cancel", label: i18n("quicktext.close.label") },
-      { id: "ok", label: i18n("quicktext.buttons.addConfig.label"), primary: true },
+      { id: "ok", label: okLabel, primary: true },
     ],
     onButton: async (buttonId, values, api) => {
       if (buttonId === "cancel") return true;
@@ -886,6 +891,7 @@ async function addImportListEntry() {
         api.setError(i18n("quicktext.defaultImport.invalidUrl.label"));
         return false;
       }
+      if (url === originalUrl) return true;
       let parsed;
       try {
         parsed = new URL(url);
@@ -897,7 +903,7 @@ async function addImportListEntry() {
         api.setError(i18n("quicktext.defaultImport.invalidUrl.label"));
         return false;
       }
-      const duplicate = state.prefs.defaultImport.find(e => e.url === url);
+      const duplicate = state.prefs.defaultImport.find((e, i) => i !== excludeIdx && e.url === url);
       if (duplicate) {
         api.setError(i18n("quicktext.defaultImport.duplicate.label", [duplicate.name || duplicate.url]));
         return false;
@@ -915,10 +921,28 @@ async function addImportListEntry() {
       return true;
     },
   });
-  if (!result || result.button !== "ok") return;
-  const url = result.values.url.trim();
-  const rawName = result.values.name.trim();
-  const baseName = rawName || _deriveImportListEntryName(url);
+  if (!result || result.button !== "ok") return null;
+  return { name: result.values.name.trim(), url: result.values.url.trim() };
+}
+
+// Select the import list row at `idx`.
+function _selectImportListRow(idx) {
+  const list = document.getElementById("import-list");
+  const row = list.querySelector(`li[data-idx="${idx}"]`);
+  if (!row) return;
+  list.querySelectorAll("li").forEach(el => el.classList.remove("selected"));
+  row.classList.add("selected");
+  updateImportListButtons();
+}
+
+async function addImportListEntry() {
+  const result = await _showImportEntryDialog({
+    title: i18n("quicktext.dialog.addImport.label"),
+    okLabel: i18n("quicktext.buttons.addConfig.label"),
+  });
+  if (!result) return;
+  const { url } = result;
+  const baseName = result.name || _deriveImportListEntryName(url);
   const others = state.prefs.defaultImport.map(e => e.name).filter(Boolean);
   const newEntry = {
     uuid: crypto.randomUUID(),
@@ -933,31 +957,55 @@ async function addImportListEntry() {
   state.prefs.defaultImport.push(newEntry);
   markChanged();
   _refreshImportViews();
-  const list = document.getElementById("import-list");
-  const newRow = list.querySelector(`li[data-idx="${state.prefs.defaultImport.length - 1}"]`);
-  if (newRow) {
-    list.querySelectorAll("li").forEach(el => el.classList.remove("selected"));
-    newRow.classList.add("selected");
-    updateImportListButtons();
-  }
+  _selectImportListRow(state.prefs.defaultImport.length - 1);
   _fetchAndApplyImport(newEntry);
 }
 
-async function renameImportListEntry() {
+// Edit name and URL of an import (#669). A new URL means different content:
+// the entry is replaced by a new one in the same place (as if removed and
+// added again), which is then fetched. Otherwise it is a simple rename.
+async function editImportListEntry() {
   const idx = _selectedImportListIdx();
   const entry = state.prefs.defaultImport[idx];
   if (!entry || entry.managed) return;
-  const raw = await showPrompt(i18n("quicktext.defaultImport.rename.prompt"), entry.name || "");
-  if (raw == null) return;
+  const result = await _showImportEntryDialog({
+    title: i18n("quicktext.dialog.editImport.label"),
+    okLabel: "OK",
+    name: entry.name || "",
+    url: entry.url,
+    excludeIdx: idx,
+  });
+  if (!result) return;
+  const { url } = result;
   const others = state.prefs.defaultImport
     .filter((_, i) => i !== idx)
     .map(e => e.name)
     .filter(Boolean);
-  const next = makeUnique(raw.trim() || entry.name || "", others);
-  if (!next || next === entry.name) return;
-  entry.name = next;
+  const name = makeUnique(result.name || _deriveImportListEntryName(url), others);
+
+  if (url === entry.url) {
+    if (name === entry.name) return;
+    entry.name = name;
+    markChanged();
+    _refreshImportViews();
+    return;
+  }
+
+  const newEntry = {
+    uuid: crypto.randomUUID(),
+    name,
+    url,
+    icon: null,
+    managed: false,
+    enabled: entry.enabled,
+    data: null,
+    status: null,
+  };
+  state.prefs.defaultImport.splice(idx, 1, newEntry);
   markChanged();
   _refreshImportViews();
+  _selectImportListRow(idx);
+  if (newEntry.enabled !== false) _fetchAndApplyImport(newEntry);
 }
 
 async function removeImportListEntry() {
@@ -3409,7 +3457,7 @@ async function init() {
   }
 
   document.getElementById("btn-add-import").addEventListener("click", addImportListEntry);
-  document.getElementById("btn-rename-import").addEventListener("click", renameImportListEntry);
+  document.getElementById("btn-edit-import").addEventListener("click", editImportListEntry);
   document.getElementById("btn-remove-import").addEventListener("click", removeImportListEntry);
 
   // Initial render

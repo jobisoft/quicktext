@@ -789,6 +789,10 @@ label input[type=checkbox] { flex-shrink: 0; }
   color: inherit;
   font-size: 13px;
 }
+/* Room for a typical URL. */
+#dialog-fields input[type=url] {
+  min-width: 340px;
+}
 #dialog-error {
   border: 1px solid #c44;
   border-radius: 4px;

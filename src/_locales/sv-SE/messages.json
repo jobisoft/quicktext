@@ -252,13 +252,10 @@
     "message": "Skrivskyddade importer av mallar och skript"
   },
   "quicktext.defaultImport.description": {
-    "message": "Hantera skrivskyddade importer av mallar och skript från fjärrservrar. Poster som tillhandahålls av en företagspolicy är markerade med ett lås och kan inte döpas om eller tas bort."
+    "message": "Hantera skrivskyddade importer av mallar och skript från fjärrservrar. Poster som tillhandahålls av en företagspolicy är markerade med ett lås och kan inte redigeras eller tas bort."
   },
   "quicktext.accesskey.defaultImport": {
     "message": "I"
-  },
-  "quicktext.defaultImport.rename.prompt": {
-    "message": "Namn för denna standardimport:"
   },
   "quicktext.defaultImport.confirmRemove.label": {
     "message": "Ta bort standardimporten ”$1”?"
@@ -464,6 +461,9 @@
   "quicktext.storageList.duplicate.label": {
     "message": "Den här lagringskonfigurationen finns redan i listan som ”$1”."
   },
+  "quicktext.buttons.editImport.label": {
+    "message": "Redigera"
+  },
   "quicktext.buttons.renameStorage.label": {
     "message": "Byt namn"
   },
@@ -619,6 +619,9 @@
   },
   "quicktext.dialog.addImport.label": {
     "message": "Lägg till import"
+  },
+  "quicktext.dialog.editImport.label": {
+    "message": "Redigera import"
   },
   "migration.intro.quote": {
     "message": "Tack till alla mina betatestare för ert fortsatta stöd och tålamod som har gjort denna övergång möjlig. Er feedback har varit ovärderlig!"
