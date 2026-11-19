@@ -3,3 +3,4 @@
 !.npmrc
 dist
 plans
+__pycache__/
