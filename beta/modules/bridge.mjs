@@ -349,8 +349,8 @@ const COMMANDS = {
 
   addTemplate: {
     summary: "Add a template (text) to a group. type defaults to text/plain.",
-    args: "{ group, name, text?, subject?, type?, storageUuid? }",
-    run: async ({ group, name, text, subject, type, storageUuid }) => {
+    args: "{ group, name, text?, subject?, type?, keyword?, shortcut?, storageUuid? }",
+    run: async ({ group, name, text, subject, type, keyword, shortcut, storageUuid }) => {
       if (!group || !name) throw new Error("group and name are required");
       const b = await writableBundle(storageUuid);
       const gi = groupIndex(b, group);
@@ -360,9 +360,9 @@ const COMMANDS = {
       b.templates.texts[gi].push({
         name,
         text: text ?? "",
-        shortcut: "",
+        shortcut: shortcut ?? "",
         type: type ?? "text/plain",
-        keyword: "",
+        keyword: keyword ?? "",
         subject: subject ?? "",
       });
       await saveBundle(b);
@@ -371,9 +371,9 @@ const COMMANDS = {
   },
 
   setTemplate: {
-    summary: "Modify a template's body (text), subject, type, or name.",
-    args: "{ group, name, text?, subject?, type?, newName?, storageUuid? }",
-    run: async ({ group, name, text, subject, type, newName, storageUuid }) => {
+    summary: "Modify a template's body (text), subject, type, keyword, shortcut, or name.",
+    args: "{ group, name, text?, subject?, type?, keyword?, shortcut?, newName?, storageUuid? }",
+    run: async ({ group, name, text, subject, type, keyword, shortcut, newName, storageUuid }) => {
       if (!group || !name) throw new Error("group and name are required");
       const b = await writableBundle(storageUuid);
       const gi = groupIndex(b, group);
@@ -381,6 +381,8 @@ const COMMANDS = {
       if (text !== undefined) t.text = text;
       if (subject !== undefined) t.subject = subject;
       if (type !== undefined) t.type = type;
+      if (keyword !== undefined) t.keyword = keyword;
+      if (shortcut !== undefined) t.shortcut = shortcut;
       if (newName !== undefined) t.name = newName;
       await saveBundle(b);
       return { updated: { group, name: newName ?? name }, storageUuid: b.storageUuid };
