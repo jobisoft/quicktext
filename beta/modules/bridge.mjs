@@ -30,7 +30,7 @@
  * below. Only the native helper (loopback, token-guarded) reaches `COMMANDS`.
  */
 
-import { QuicktextParser, getTags, STORAGE_STATE } from "/modules/quicktextParser.mjs";
+import { QuicktextParser, getTags, storageContextFor } from "/modules/quicktextParser.mjs";
 import * as storage from "/modules/storage.mjs";
 import * as quicktext from "/modules/quicktext.mjs";
 
@@ -143,16 +143,7 @@ const COMMANDS = {
       const parser = new QuicktextParser(boundTabId, bundles);
       // The same storage binding the compose menu sets, so get_text finds the
       // body in this bundle.
-      const stateByType = {
-        vfs: STORAGE_STATE.VFS_TEMPLATE,
-        import: STORAGE_STATE.IMPORT_TEMPLATE,
-        managed: STORAGE_STATE.MANAGED_TEMPLATE,
-      };
-      parser.setActiveStorage({
-        state: stateByType[bundle.type] ?? STORAGE_STATE.IMPORT_TEMPLATE,
-        ref: bundle.type === "vfs" ? (bundle.storageRef ?? null) : null,
-        uuid: bundle.storageUuid,
-      });
+      parser.setActiveStorage(storageContextFor(bundle));
       try {
         await parser.clearNonPersistentData();
       } catch {

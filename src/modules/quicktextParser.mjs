@@ -60,22 +60,46 @@ const persistentTags = ['COUNTER', 'ORGATT', 'ORGHEADER', 'VERSION'];
 //       to update the cache using onChange events, we could cache these and declare
 //       them as persistent tags.
 
+// The storage context of a template bundle (see `STORAGE_STATE`).
+export function storageContextFor(bundle) {
+  const stateByBundleType = {
+    vfs: STORAGE_STATE.VFS_TEMPLATE,
+    import: STORAGE_STATE.IMPORT_TEMPLATE,
+    managed: STORAGE_STATE.MANAGED_TEMPLATE,
+  };
+  return {
+    state: stateByBundleType[bundle.type] ?? STORAGE_STATE.IMPORT_TEMPLATE,
+    ref: bundle.type === "vfs" ? (bundle.storageRef ?? null) : null,
+    uuid: bundle.storageUuid,
+  };
+}
+
+// How many storage templates a TEXT reference chain may cross (#599).
+const MAX_STORAGE_CROSSINGS = 10;
+
 export class QuicktextParser {
-  constructor(aTabId, bundles) {
+  // options.activeStorage - initial storage context (default: no template
+  //                         context, see `setActiveStorage`)
+  // options.crossings     - storage templates resolved by parent parsers, for
+  //                         loop protection of cross-storage TEXT references
+  constructor(aTabId, bundles, { activeStorage, crossings } = {}) {
     this.mTabId = aTabId;
     // `bundles` is the per-storage bundle array produced by
     // storage.getActiveStorageEntries(). Each element has {storageUuid,
     // storageName, isReadOnly, templates, scripts}. TEXT and SCRIPT tag lookups
-    // are scoped to the currently active bundle - see `mActiveStorage.uuid`.
+    // start in the currently active bundle - see `mActiveStorage.uuid`. Only
+    // TEXT may continue in the other bundles (see `process_text`).
     this.mBundles = bundles || [];
-    // The storage context this parser evaluates against. Mutated via
+    // The storage context this parser evaluates against. Set via
     // `setActiveStorage` at the start of every top-level insertion
-    // (insertTemplate / insertVariable / insertFileContent).
-    this.mActiveStorage = {
+    // (insertTemplate / insertVariable / insertFileContent), or on creation
+    // for a parser resolving a template of another storage.
+    this.mActiveStorage = activeStorage ?? {
       state: STORAGE_STATE.SINGLE_VARIABLE,
       ref: null,
       uuid: null,
     };
+    this.mCrossings = crossings ?? [];
     this.mStaticDetails = null;
   }
 
@@ -692,11 +716,16 @@ export class QuicktextParser {
   async process_text(aVariables) {
     if (aVariables.length < 2)
       return "";
-    // Looks after the group and text-name within the currently active
-    // storage only. Multi-storage lookups by name are ambiguous by design:
-    // the caller's storage context must be set via setActiveStorage().
-    const templates = this.activeBundle?.templates;
-    if (!templates) return "";
+    // The template is looked up in the active storage first. If it is not
+    // there, the other active storages are searched in storage list order
+    // (#599), and the first match is resolved within its own storage.
+    const own = this.activeBundle;
+    if (!own) return "";
+    if (!findText(own, aVariables[0], aVariables[1])) {
+      const other = this.mBundles.find(b => b !== own && findText(b, aVariables[0], aVariables[1]));
+      return other ? this.resolveInStorage(other, aVariables) : "";
+    }
+    const templates = own.templates;
     for (let i = 0; i < templates.groups.length; i++) {
       if (aVariables[0] == templates.groups[i].name) {
         for (let j = 0; j < templates.texts[i].length; j++) {
@@ -729,6 +758,28 @@ export class QuicktextParser {
   }
   async get_text(aVariables) {
     return this.process_text(aVariables);
+  }
+
+  // Resolve a TEXT reference to a template of another storage. A parser
+  // bound to that storage evaluates it completely, so all of its tags (TEXT,
+  // SCRIPT, IMAGE=VFS, ...) resolve in its own storage. The run state (INPUT,
+  // COUNTER, force-as-text, ...) is per tab and therefore shared.
+  async resolveInStorage(bundle, aVariables) {
+    const [group, name, options = ""] = aVariables;
+    const key = `${bundle.storageUuid}\n${group}\n${name}`;
+    if (this.mCrossings.includes(key) || this.mCrossings.length >= MAX_STORAGE_CROSSINGS) {
+      console.warn(`[Quicktext] TEXT reference loop, skipping: ${bundle.storageName} › ${group} › ${name}`);
+      return "";
+    }
+    const child = new QuicktextParser(this.mTabId, this.mBundles, {
+      activeStorage: storageContextFor(bundle),
+      crossings: [...this.mCrossings, key],
+    });
+    child.mStaticDetails = this.mStaticDetails;
+    // The result stays masked: stray brackets of resolved values must not
+    // form tags in this parser. The trailing options field keeps a name
+    // ending in "]" from closing the tag early (#652).
+    return child.parseMasked(`[[TEXT=${group}|${name}|${options}]]`);
   }
 
   async process_input(aVariables, options) {
@@ -1280,26 +1331,31 @@ export class QuicktextParser {
 
   async parse(aStr) {
     try {
-      // Strip any pre-existing mask placeholders so a template can't smuggle one in (defensive; the
-      // masks are an internal artifact introduced/removed within this method).
-      aStr = aStr.replaceAll(MASK_OPEN, "").replaceAll(MASK_CLOSE, "");
-
-      // Reparse the text until there is no difference in the text
-      // or that we parse 100 times (so we don't make an infinitive loop)
-      let oldStr;
-      let count = 0;
-
-      do {
-        count++;
-        oldStr = aStr;
-        aStr = await this.parseText(aStr);
-      } while (aStr != oldStr && count < 20);
-
       // Restore stray brackets that were masked while resolving tag values.
-      return unmaskBrackets(aStr);
+      return unmaskBrackets(await this.parseMasked(aStr));
     } catch (ex) {
       console.log(ex);
     }
+  }
+
+  // Parse without restoring the masked stray brackets.
+  async parseMasked(aStr) {
+    // Strip any pre-existing mask placeholders so a template can't smuggle one in (defensive; the
+    // masks are an internal artifact introduced/removed within parse()).
+    aStr = aStr.replaceAll(MASK_OPEN, "").replaceAll(MASK_CLOSE, "");
+
+    // Reparse the text until there is no difference in the text
+    // or that we parse 20 times (so we don't make an infinitive loop)
+    let oldStr;
+    let count = 0;
+
+    do {
+      count++;
+      oldStr = aStr;
+      aStr = await this.parseText(aStr);
+    } while (aStr != oldStr && count < 20);
+
+    return aStr;
   }
   async parseText(aStr) {
     let tags = getTags(aStr);
@@ -1421,6 +1477,13 @@ function maskStrayBrackets(str) {
     out += str[i]; i++;
   }
   return out;
+}
+
+// The template `name` of group `group` in a bundle, or undefined.
+function findText(bundle, group, name) {
+  const templates = bundle?.templates;
+  const gi = templates?.groups?.findIndex(g => g.name == group) ?? -1;
+  return gi === -1 ? undefined : templates.texts?.[gi]?.find(t => t.name == name);
 }
 
 function unmaskBrackets(str) {

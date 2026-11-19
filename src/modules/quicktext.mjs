@@ -7,7 +7,7 @@
 import * as storage from "/modules/storage.mjs";
 import * as utils from "/modules/utils.mjs";
 import * as composeToast from "/modules/composeToast.mjs";
-import { QuicktextParser, STORAGE_STATE } from "/modules/quicktextParser.mjs";
+import { QuicktextParser, STORAGE_STATE, storageContextFor } from "/modules/quicktextParser.mjs";
 
 // Helper
 
@@ -155,17 +155,7 @@ export async function insertTemplate(tabId, storageUuid, groupIdx, textIdx) {
   // inserting a template from the wrong storage.
   if (!bundle) return;
 
-  // Bundle type maps 1:1 to a template state.
-  const stateByBundleType = {
-    vfs:     STORAGE_STATE.VFS_TEMPLATE,
-    import:  STORAGE_STATE.IMPORT_TEMPLATE,
-    managed: STORAGE_STATE.MANAGED_TEMPLATE,
-  };
-  qParser.setActiveStorage({
-    state: stateByBundleType[bundle.type] ?? STORAGE_STATE.IMPORT_TEMPLATE,
-    ref: bundle.type === "vfs" ? (bundle.storageRef ?? null) : null,
-    uuid: storageUuid,
-  });
+  qParser.setActiveStorage(storageContextFor(bundle));
   const group = bundle.templates.groups[groupIdx];
   const text = bundle.templates.texts[groupIdx][textIdx];
   const unsupportedKey = `QuicktextUnsupportedTags_${tabId}`;
