@@ -37,6 +37,24 @@ export function isShortcutAdvActive(shortcutTypeAdv, modifier) {
   return !!shortcutTypeAdv && !isShortcutAdvForced(modifier);
 }
 
+// Why a stored shortcut cannot be used with the current settings
+// ("advancedOnly" or "reserved"), or null if it can.
+export function getShortcutProblem(shortcut, modifier, advActive) {
+  const s = String(shortcut ?? "");
+  if (!s || advActive) {
+    // Advanced mode takes any digits, and is never active for a modifier with
+    // reserved keys (Command on macOS).
+    return null;
+  }
+  if (!/^[0-9]$/.test(s)) {
+    return "advancedOnly";
+  }
+  if (isShortcutKeyReserved(modifier, s)) {
+    return "reserved";
+  }
+  return null;
+}
+
 // macOS shows modifiers as symbols (menus, tooltips): ⌥1 instead of Alt+1.
 const MAC_SYMBOLS = { alt: "\u2325", control: "\u2303", meta: "\u2318" };
 

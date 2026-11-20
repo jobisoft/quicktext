@@ -13,7 +13,7 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import Squire from "/vendor/squire/squire.mjs";
 
 import { localizeDocument } from "/vendor/i18n.mjs";
-import { isMac, isShortcutAdvForced, isShortcutAdvActive, isShortcutKeyReserved, getModifierNameKey, formatShortcut } from "/modules/shortcuts.mjs";
+import { isMac, isShortcutAdvForced, isShortcutAdvActive, isShortcutKeyReserved, getShortcutProblem, getModifierNameKey, formatShortcut } from "/modules/shortcuts.mjs";
 import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 import { showDialog, showAlert, showConfirm, showPrompt } from "./popover.js";
 import { openFlyoutMenu } from "./flyoutMenu.mjs";
@@ -665,11 +665,17 @@ function renderGeneral() {
     updateShortcutAdvAvailability();
     markChanged();
     refreshShortcutUI();
+    renderTemplateList();
   });
 
   const chkShortcutAdv = document.getElementById("chk-shortcut-adv");
   chkShortcutAdv.checked = state.prefs.shortcutTypeAdv;
-  chkShortcutAdv.addEventListener("change", () => { state.prefs.shortcutTypeAdv = chkShortcutAdv.checked; markChanged(); refreshShortcutUI(); });
+  chkShortcutAdv.addEventListener("change", () => {
+    state.prefs.shortcutTypeAdv = chkShortcutAdv.checked;
+    markChanged();
+    refreshShortcutUI();
+    renderTemplateList();
+  });
   updateShortcutAdvAvailability();
 
   const selKeyword = document.getElementById("sel-keyword");
@@ -1243,7 +1249,9 @@ function _renderGroupsForBundle(bundle, container) {
 
         const shortcutEl = document.createElement("span");
         shortcutEl.className = "tree-shortcut";
-        shortcutEl.textContent = tmpl.shortcut || "";
+        const shortcutProblem = getShortcutProblemText(tmpl.shortcut);
+        shortcutEl.textContent = formatShortcutValue(String(tmpl.shortcut ?? ""), shortcutProblem);
+        shortcutEl.title = shortcutProblem;
 
         tmplEl.appendChild(nameEl);
         tmplEl.appendChild(shortcutEl);
@@ -1323,10 +1331,30 @@ function commitTemplateEdits() {
   tmpl.type = document.getElementById("sel-type").value;
   tmpl.keyword = document.getElementById("text-keyword").value.replace(/\s/g, "");
   tmpl.subject = document.getElementById("text-subject").value;
+  // The shortcut is not read back here: its controls cannot show every stored
+  // value (the basic-mode dropdown has no "12"), so it is written by their
+  // change handlers only, when the user actually picks something.
+}
+
+// The selected template and its bundle, if it can be edited.
+function getSelectedTemplate() {
+  const uuid = state.selectedTemplateStorageUuid;
+  const gi = state.selectedGroupIdx;
+  const ti = state.selectedTextIdx;
+  if (!uuid || gi === -1 || ti === -1) return null;
+  const bundle = findBundle(uuid);
+  if (!bundle || bundle.isReadOnly) return null;
+  const tmpl = bundle.texts[gi]?.[ti];
+  return tmpl ? { bundle, tmpl } : null;
+}
+
+// The tooltip for a shortcut that cannot be used with the current settings,
+// or "" if it can.
+function getShortcutProblemText(shortcut) {
   const advMode = isShortcutAdvActive(state.prefs.shortcutTypeAdv, state.prefs.shortcutModifier);
-  tmpl.shortcut = advMode
-    ? document.getElementById("text-shortcut-adv").value.replace(/\D/g, "")
-    : document.getElementById("sel-shortcut").value;
+  const problem = getShortcutProblem(shortcut, state.prefs.shortcutModifier, advMode);
+  if (!problem) return "";
+  return i18n(problem === "reserved" ? "quicktext.shortcutReserved.label" : "quicktext.shortcutAdvancedOnly.label");
 }
 
 function renderTemplateDetail() {
@@ -1409,6 +1437,7 @@ function refreshShortcutUI() {
 }
 
 function renderShortcutUI(shortcut) {
+  shortcut = String(shortcut ?? "");
   const advMode = isShortcutAdvActive(state.prefs.shortcutTypeAdv, state.prefs.shortcutModifier);
   document.getElementById("sel-shortcut").hidden = advMode;
   document.getElementById("text-shortcut-adv").hidden = !advMode;
@@ -1420,11 +1449,41 @@ function renderShortcutUI(shortcut) {
     document.getElementById("text-shortcut-adv").value = shortcut;
   } else {
     const sel = document.getElementById("sel-shortcut");
-    if (shortcut === "0") sel.selectedIndex = 10;
-    else if (shortcut && !isNaN(parseInt(shortcut))) sel.selectedIndex = parseInt(shortcut);
-    else sel.selectedIndex = 0;
+    // Undo the marking of the previous template's value.
+    sel.querySelector("option[data-temp]")?.remove();
+    for (const opt of sel.options) {
+      if (!opt.value) continue;
+      opt.textContent = opt.value;
+      opt.title = "";
+    }
     disableUsedShortcuts(shortcut);
+
+    // The entry of the stored value. A value the dropdown has no entry for
+    // (e.g. "12" from advanced mode) gets a disabled one, instead of being
+    // lost.
+    let opt = [...sel.options].find(o => o.value === shortcut);
+    if (!opt) {
+      opt = document.createElement("option");
+      opt.value = shortcut;
+      opt.disabled = true;
+      opt.dataset.temp = "true";
+      sel.appendChild(opt);
+    }
+    // A value that cannot be used with the current settings carries the
+    // warning, as it does in the template list.
+    const problem = getShortcutProblemText(shortcut);
+    if (opt.value) {
+      opt.textContent = formatShortcutValue(shortcut, problem);
+      opt.title = problem;
+    }
+    opt.selected = true;
   }
+}
+
+// A stored shortcut as shown in the list and the dropdown: the value, with a
+// warning sign if it cannot be used with the current settings.
+function formatShortcutValue(shortcut, problem) {
+  return problem ? `${shortcut} \u26A0\uFE0F` : shortcut;
 }
 
 function disableUsedShortcuts(currentShortcut) {
@@ -1439,10 +1498,10 @@ function disableUsedShortcuts(currentShortcut) {
   if (!bundle) return;
   for (let g = 0; g < bundle.groups.length; g++) {
     for (const tmpl of (bundle.texts[g] || [])) {
-      const s = tmpl.shortcut;
-      if (!s || s === currentShortcut) continue;
-      const idx = s === "0" ? 10 : parseInt(s);
-      if (sel.options[idx]) sel.options[idx].disabled = true;
+      const s = String(tmpl.shortcut ?? "");
+      if (!/^[0-9]$/.test(s) || s === currentShortcut) continue;
+      const opt = sel.querySelector(`option[value="${s}"]`);
+      if (opt) opt.disabled = true;
     }
   }
 }
@@ -3321,8 +3380,23 @@ async function init() {
   document.getElementById("text-title").addEventListener("input", onTitleInput);
   document.getElementById("text-body").addEventListener("input", markSelectedBundleChanged);
   document.getElementById("sel-type").addEventListener("change", e => { switchBodyType(e.target.value); markSelectedBundleChanged(); });
-  document.getElementById("sel-shortcut").addEventListener("change", markSelectedBundleChanged);
-  document.getElementById("text-shortcut-adv").addEventListener("input", markSelectedBundleChanged);
+  // The shortcut controls write the work state themselves, and only when the
+  // user changes them (see commitTemplateEdits).
+  document.getElementById("sel-shortcut").addEventListener("change", e => {
+    const selected = getSelectedTemplate();
+    if (!selected) return;
+    selected.tmpl.shortcut = e.target.value;
+    markChanged(selected.bundle);
+    renderShortcutUI(selected.tmpl.shortcut);
+    renderTemplateList();
+  });
+  document.getElementById("text-shortcut-adv").addEventListener("input", e => {
+    const selected = getSelectedTemplate();
+    if (!selected) return;
+    selected.tmpl.shortcut = e.target.value.replace(/\D/g, "");
+    markChanged(selected.bundle);
+    renderTemplateList();
+  });
   document.getElementById("text-keyword").addEventListener("input", e => {
     e.target.value = e.target.value.replace(/\s/g, "");
     markSelectedBundleChanged();
