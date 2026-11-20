@@ -90,20 +90,30 @@
   // never goes behind it.
   // The margin comes from a constructed style sheet: it is not part of the
   // HTML, so it is neither sent nor saved in drafts.
+  // The rule uses a selector of its own, so the sheet can be recognised: after
+  // the add-on was reloaded or updated, the sheet of the previous copy of this
+  // script is still adopted by an open composer. It must be removed before the
+  // body's own margin is read, otherwise every reload adds the bar's height.
+  const SPACE_SELECTOR = "body:not(.quicktext-compose-toolbar-space)";
   let spaceSheet = null;
   let bodyMarginTop = 0;
   const resizeObserver = new ResizeObserver(() => reserveSpace());
 
+  function isSpaceSheet(sheet) {
+    return sheet.cssRules[0]?.selectorText === SPACE_SELECTOR;
+  }
+
   function reserveSpace() {
     if (!host?.isConnected) return;
     if (!spaceSheet) {
+      document.adoptedStyleSheets = document.adoptedStyleSheets.filter(s => !isSpaceSheet(s));
       bodyMarginTop = parseFloat(getComputedStyle(document.body).marginTop) || 0;
       spaceSheet = new CSSStyleSheet();
       document.adoptedStyleSheets = [...document.adoptedStyleSheets, spaceSheet];
       resizeObserver.observe(bar);
     }
     const height = bar.getBoundingClientRect().height;
-    spaceSheet.replaceSync(`body { margin-top: ${bodyMarginTop + height}px !important; }`);
+    spaceSheet.replaceSync(`${SPACE_SELECTOR} { margin-top:${bodyMarginTop + height}px !important; }`);
   }
 
   function releaseSpace() {
