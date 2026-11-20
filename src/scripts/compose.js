@@ -11,6 +11,10 @@ const alternatives = {
 let keywords, keywordKey, keywordCaseInsensitive, shortcutTypeAdv, shortcutModifier, shortcuts;
 let advShortcutModifierIsDown = false;
 let shortcutsHelper;
+// Set when a key was used as a shortcut. On macOS, the character of an
+// Option+key combination (¡, “, …) still lands in the editor although its
+// keydown was cancelled, so it is cancelled again when it arrives as input.
+let suppressShortcutText = false;
 let advShortcutString = "";
 let inputPopupOpen = false;
 
@@ -191,6 +195,7 @@ function findKeyword(word) {
 }
 
 function shortcutKeyDown(e) {
+    suppressShortcutText = false;
     if (!hasMatchingModifier(e, shortcutModifier)) {
         return;
     }
@@ -201,15 +206,43 @@ function shortcutKeyDown(e) {
         if (digit) {
             advShortcutString += digit;
             // Eat keys if we acted upon them.
+            suppressShortcutText = true;
             e.stopPropagation();
             e.preventDefault();
         }
-    } else if (digit && shortcuts[digit] && !e.repeat) {
-        requestInsertTemplate(shortcuts[digit]);
+    } else if (digit && shortcuts[digit]) {
+        // Insert once, but also eat the auto-repeats of a held shortcut key,
+        // which would otherwise type their character (¡ for Option+1 on macOS).
+        if (!e.repeat) {
+            requestInsertTemplate(shortcuts[digit]);
+        }
         // Eat keys if we acted upon them.
+        suppressShortcutText = true;
         e.stopPropagation();
         e.preventDefault();
     }
+}
+
+// Cancel the character typed by a key that was used as a shortcut (see
+// suppressShortcutText). Only that single character is cancelled: the inserted
+// template arrives as input as well, often while the key is still held down.
+function suppressShortcutInput(e) {
+    if (!suppressShortcutText) {
+        return;
+    }
+    if (e.type == "keypress") {
+        if (!shortcutsHelper.getShortcutDigit(e)) {
+            return;
+        }
+    } else {
+        const isTyping = e.inputType == "insertText" || e.inputType == "insertCompositionText";
+        if (!isTyping || [...(e.data ?? "")].length != 1) {
+            return;
+        }
+        suppressShortcutText = false;
+    }
+    e.stopPropagation();
+    e.preventDefault();
 }
 
 async function shortcutKeyUp(e) {
@@ -245,6 +278,8 @@ async function setup() {
 
     window.addEventListener("keydown", shortcutKeyDown, true);
     window.addEventListener("keyup", shortcutKeyUp, true);
+    window.addEventListener("keypress", suppressShortcutInput, true);
+    window.addEventListener("beforeinput", suppressShortcutInput, true);
     window.addEventListener("keydown", keywordListener, false);
 
     new storage.StorageListener({
