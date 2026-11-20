@@ -11,9 +11,11 @@ const alternatives = {
 let keywords, keywordKey, keywordCaseInsensitive, shortcutTypeAdv, shortcutModifier, shortcuts;
 let advShortcutModifierIsDown = false;
 let shortcutsHelper;
-// Set when a key was used as a shortcut. On macOS, the character of an
-// Option+key combination (¡, “, …) still lands in the editor although its
-// keydown was cancelled, so it is cancelled again when it arrives as input.
+// Set when a key was used as a shortcut, cleared by the next keydown. On
+// macOS, the character of an Option+key combination (¡, “, …) still lands in
+// the editor although its keydown was cancelled, so it is cancelled again when
+// it arrives as input (see suppressShortcutInput). Other platforms do not
+// deliver such a character, there the flag usually has nothing to cancel.
 let suppressShortcutText = false;
 let advShortcutString = "";
 let inputPopupOpen = false;
@@ -224,8 +226,15 @@ function shortcutKeyDown(e) {
 }
 
 // Cancel the character typed by a key that was used as a shortcut (see
-// suppressShortcutText). Only that single character is cancelled: the inserted
-// template arrives as input as well, often while the key is still held down.
+// suppressShortcutText). It may arrive as a keypress of the digit key (not
+// counted, auto-repeats send more of them) and as a single-character text
+// input, of which only the first one is cancelled.
+//
+// The inserted template arrives as text input as well, often while the key is
+// still held down. It is one input event carrying the whole text, so it is
+// never mistaken for the stray character, unless the template is a single
+// character. That edge case is accepted: such a template is swallowed when
+// inserted by its shortcut.
 function suppressShortcutInput(e) {
     if (!suppressShortcutText) {
         return;
