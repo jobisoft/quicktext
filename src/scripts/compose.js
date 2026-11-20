@@ -10,6 +10,7 @@ const alternatives = {
 
 let keywords, keywordKey, keywordCaseInsensitive, shortcutTypeAdv, shortcutModifier, shortcuts;
 let advShortcutModifierIsDown = false;
+let shortcutsHelper;
 let advShortcutString = "";
 let inputPopupOpen = false;
 
@@ -128,10 +129,6 @@ function isMatchingModifier(e, modifier) {
     )
 }
 
-function isRealNumberKey(e) {
-    return e.key.length == 1 &&  /^[0-9]$/i.test(e.key);
-}
-
 function keywordListener(e) {
     if (e.code == keywordKey || alternatives[keywordKey]?.includes(e.code)) {
         let selection = window.getSelection();
@@ -198,16 +195,17 @@ function shortcutKeyDown(e) {
         return;
     }
 
+    const digit = shortcutsHelper.getShortcutDigit(e);
     if (shortcutTypeAdv) {
         advShortcutModifierIsDown = true;
-        if (isRealNumberKey(e)) {
-            advShortcutString += e.key;
+        if (digit) {
+            advShortcutString += digit;
             // Eat keys if we acted upon them.
             e.stopPropagation();
             e.preventDefault();
         }
-    } else if (isRealNumberKey(e) && shortcuts[e.key] && !e.repeat) {
-        requestInsertTemplate(shortcuts[e.key]);
+    } else if (digit && shortcuts[digit] && !e.repeat) {
+        requestInsertTemplate(shortcuts[digit]);
         // Eat keys if we acted upon them.
         e.stopPropagation();
         e.preventDefault();
@@ -226,6 +224,7 @@ async function shortcutKeyUp(e) {
 
 async function getLatestPrefs() {
     const storage = await import(browser.runtime.getURL("/modules/storage.mjs"));
+    shortcutsHelper = await import(browser.runtime.getURL("/modules/shortcuts.mjs"));
 
     keywordKey = await storage.getPref("keywordKey");
     keywordCaseInsensitive = await storage.getPref("keywordCaseInsensitive");
