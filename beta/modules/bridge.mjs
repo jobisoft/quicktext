@@ -111,6 +111,8 @@ const COMMANDS = {
           texts: (b.templates?.texts?.[gi] ?? []).map(t => ({
             name: t.name,
             contentType: t.type,
+            shortcut: t.shortcut ?? "",
+            keyword: t.keyword ?? "",
             bodyPreview: (t.text ?? "").slice(0, 400),
           })),
         })),
