@@ -4,6 +4,7 @@ import * as quicktext from "../modules/quicktext.mjs";
 import * as storage from "../modules/storage.mjs";
 import * as composeToolbar from "../modules/composeToolbar.mjs";
 import * as composeToast from "../modules/composeToast.mjs";
+import { formatShortcut } from "../modules/shortcuts.mjs";
 
 // Templates use getTemplatesMenuStructure() output (flat in single-storage,
 // nested with storage wrappers in multi-storage).
@@ -23,11 +24,10 @@ async function buildToolbarData() {
 // set, and multi-storage setups get one labelled section per storage.
 async function buildEditorToolbarModel() {
   const { templates, shortcutModifier, menuCollapse } = await buildToolbarData();
-  const modifier = messenger.i18n.getMessage(`quicktext.${shortcutModifier}Key.label`) || shortcutModifier;
 
   const toItem = t => ({
     label: t.title,
-    hint: t.shortcut ? `${modifier} + ${t.shortcut == 10 ? 0 : t.shortcut}` : "",
+    hint: t.shortcut ? formatShortcut(shortcutModifier, t.shortcut == 10 ? 0 : t.shortcut) : "",
     action: { command: "insertTemplate", storageUuid: t.storageUuid, group: t.groupIndex, text: t.textIndex },
   });
   const toEntry = node => {

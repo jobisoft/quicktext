@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Attachments"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Counter"
@@ -412,6 +418,9 @@
   },
   "quicktext.metaKey.label": {
     "message": "Meta"
+  },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
   },
   "quicktext.modifierSetting.label": {
     "message": "is the modifier I want to use for the keyboard shortcuts"
