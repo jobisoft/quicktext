@@ -13,7 +13,7 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import Squire from "/vendor/squire/squire.mjs";
 
 import { localizeDocument } from "/vendor/i18n.mjs";
-import { isShortcutAdvForced, isShortcutAdvActive } from "/modules/shortcuts.mjs";
+import { isMac, isShortcutAdvForced, isShortcutAdvActive, getModifierNameKey, formatShortcut } from "/modules/shortcuts.mjs";
 import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 import { showDialog, showAlert, showConfirm, showPrompt } from "./popover.js";
 import { openFlyoutMenu } from "./flyoutMenu.mjs";
@@ -1413,8 +1413,8 @@ function renderShortcutUI(shortcut) {
   document.getElementById("sel-shortcut").hidden = advMode;
   document.getElementById("text-shortcut-adv").hidden = !advMode;
 
-  const modKey = { alt: i18n("quicktext.altKey.label"), control: i18n("quicktext.controlKey.label"), meta: i18n("quicktext.metaKey.label") }[state.prefs.shortcutModifier] || "";
-  document.getElementById("label-modifier").textContent = `${modKey}+`;
+  document.getElementById("label-modifier").textContent =
+    state.prefs.shortcutModifier ? formatShortcut(state.prefs.shortcutModifier) : "";
 
   if (advMode) {
     document.getElementById("text-shortcut-adv").value = shortcut;
@@ -3155,6 +3155,13 @@ window.addEventListener("beforeunload", e => {
 
 async function init() {
   localizeDocument();
+  if (isMac()) {
+    // Show the full Mac key names (⌥ Option, ⌃ Control, ⌘ Command) for the
+    // modifiers. Everywhere else, macOS only shows the symbols.
+    for (const option of document.getElementById("sel-modifier").options) {
+      option.textContent = i18n(getModifierNameKey(option.value));
+    }
+  }
 
   await loadAll();
 
