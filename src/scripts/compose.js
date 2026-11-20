@@ -261,8 +261,12 @@ async function getLatestPrefs() {
 
     keywordKey = await storage.getPref("keywordKey");
     keywordCaseInsensitive = await storage.getPref("keywordCaseInsensitive");
-    shortcutTypeAdv = await storage.getPref("shortcutTypeAdv");
     shortcutModifier = await storage.getPref("shortcutModifier");
+    // Use the effective mode, advanced mode is not available for all modifiers.
+    shortcutTypeAdv = shortcutsHelper.isShortcutAdvActive(
+        await storage.getPref("shortcutTypeAdv"),
+        shortcutModifier
+    );
 
     let rv = await messenger.runtime.sendMessage({ command: "getKeywordsAndShortcuts" });
     keywords = rv.keywords;
