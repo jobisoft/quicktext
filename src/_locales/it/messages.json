@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Allegati"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Contatore"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "è il modificatore che voglio usare per le scorciatoie da tastiera"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Scorciatoia"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Questa scorciatoia funziona solo in modalità avanzata."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Questa combinazione di tasti è usata da Thunderbird stesso."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Usa la modalità avanzata per le scorciatoie"

@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Mellékletek"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Számláló"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "billentyű módosít a billentyűparancsot"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Gyorsbillentyű"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Ez a gyorsbillentyű csak speciális módban működik."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Ezt a billentyűkombinációt maga a Thunderbird használja."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Használja a speciális módot a gyorsbillentyűkhöz"

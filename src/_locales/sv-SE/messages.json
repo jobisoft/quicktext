@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Bifogade filer"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Räknare"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "är den tangent jag vill använda för kortkommandon"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Kortkommando"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Det här kortkommandot fungerar bara i avancerat läge."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Thunderbird använder själv den här tangentkombinationen."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Använd avancerat läge för kortkommandon"
