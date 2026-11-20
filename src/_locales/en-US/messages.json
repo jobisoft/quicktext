@@ -533,6 +533,12 @@
   "quicktext.shortcut.label": {
     "message": "Shortcut"
   },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "This shortcut only works in advanced mode."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Thunderbird uses this key combination itself."
+  },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Use advanced mode for shortcuts"
   },
