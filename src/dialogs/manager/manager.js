@@ -13,6 +13,7 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import Squire from "/vendor/squire/squire.mjs";
 
 import { localizeDocument } from "/vendor/i18n.mjs";
+import { isShortcutAdvForced, isShortcutAdvActive } from "/modules/shortcuts.mjs";
 import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 import { showDialog, showAlert, showConfirm, showPrompt } from "./popover.js";
 import { openFlyoutMenu } from "./flyoutMenu.mjs";
@@ -699,9 +700,7 @@ function renderGeneral() {
 }
 
 function updateShortcutAdvAvailability() {
-  const ua = navigator.userAgent.toLowerCase();
-  const forceOff = ua.includes("mac") ||
-    (ua.includes("win") && state.prefs.shortcutModifier === "alt");
+  const forceOff = isShortcutAdvForced(state.prefs.shortcutModifier);
   const chk = document.getElementById("chk-shortcut-adv");
   const isManaged = state.managedPrefs.has("shortcutTypeAdv");
   chk.disabled = isManaged || forceOff;
@@ -1324,7 +1323,7 @@ function commitTemplateEdits() {
   tmpl.type = document.getElementById("sel-type").value;
   tmpl.keyword = document.getElementById("text-keyword").value.replace(/\s/g, "");
   tmpl.subject = document.getElementById("text-subject").value;
-  const advMode = state.prefs.shortcutTypeAdv && !isShortcutAdvForced();
+  const advMode = isShortcutAdvActive(state.prefs.shortcutTypeAdv, state.prefs.shortcutModifier);
   tmpl.shortcut = advMode
     ? document.getElementById("text-shortcut-adv").value.replace(/\D/g, "")
     : document.getElementById("sel-shortcut").value;
@@ -1399,11 +1398,6 @@ function setTemplateFieldsEnabled(enabled) {
   }
 }
 
-function isShortcutAdvForced() {
-  const ua = navigator.userAgent.toLowerCase();
-  return ua.includes("mac") || (ua.includes("win") && state.prefs.shortcutModifier === "alt");
-}
-
 function refreshShortcutUI() {
   const uuid = state.selectedTemplateStorageUuid;
   const gi = state.selectedGroupIdx;
@@ -1415,7 +1409,7 @@ function refreshShortcutUI() {
 }
 
 function renderShortcutUI(shortcut) {
-  const advMode = state.prefs.shortcutTypeAdv && !isShortcutAdvForced();
+  const advMode = isShortcutAdvActive(state.prefs.shortcutTypeAdv, state.prefs.shortcutModifier);
   document.getElementById("sel-shortcut").hidden = advMode;
   document.getElementById("text-shortcut-adv").hidden = !advMode;
 
