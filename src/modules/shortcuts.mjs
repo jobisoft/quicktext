@@ -17,13 +17,20 @@ export function getShortcutDigit(e) {
 
 // Advanced mode eats every modifier+digit press. On macOS that only works with
 // Control: Option+digit types characters like [ ] { } | on many layouts, and
-// Thunderbird takes ⌘1 for Window > Mail. On Windows it does not work with Alt,
-// because releasing Alt activates the menu bar.
+// Thunderbird takes ⌘1 (see isShortcutKeyReserved). On Windows it does not
+// work with Alt, because releasing Alt activates the menu bar.
 export function isShortcutAdvForced(modifier) {
   if (isMac()) {
     return modifier !== "control";
   }
   return isWin() && modifier === "alt";
+}
+
+// Whether modifier+digit is taken by Thunderbird itself and never reaches the
+// editor: ⌘1 is Window > Mail in the compose window on macOS, and macOS hands
+// menu shortcuts to the menu before the page sees the key.
+export function isShortcutKeyReserved(modifier, digit) {
+  return isMac() && modifier === "meta" && digit === "1";
 }
 
 export function isShortcutAdvActive(shortcutTypeAdv, modifier) {
