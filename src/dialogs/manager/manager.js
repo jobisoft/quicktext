@@ -588,11 +588,13 @@ function markChanged(bundle) {
   if (bundle) bundle.dirty = true;
   state.changed = true;
   document.getElementById("btn-save").disabled = false;
+  document.getElementById("btn-close").textContent = i18n("quicktext.cancel.label");
 }
 
 function markSaved() {
   state.changed = false;
   document.getElementById("btn-save").disabled = true;
+  document.getElementById("btn-close").textContent = i18n("quicktext.close.label");
 }
 
 // ---------- Tab management ----------
