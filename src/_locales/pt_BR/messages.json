@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Anexos"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Contador"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "é o modificador que eu quero usar para os atalhos do teclado"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Atalho"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Este atalho só funciona no modo avançado."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "O próprio Thunderbird usa esta combinação de teclas."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Use o modo avançado para atalhos"

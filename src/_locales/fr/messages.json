@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Pièces jointes"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Compteur"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "est la touche que je veux utiliser pour les raccourcis clavier"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Raccourci"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Ce raccourci ne fonctionne qu’en mode avancé."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Thunderbird utilise lui-même cette combinaison de touches."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Utiliser le mode avancé pour les raccourcis clavier"

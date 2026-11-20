@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Přílohy"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Počítadlo"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "je modifikátor, který chci používat pro klávesové zkratky"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Zkratka"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Tato zkratka funguje pouze v pokročilém režimu."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Tuto kombinaci kláves používá sám Thunderbird."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Používat pokročilý režim zkratek"

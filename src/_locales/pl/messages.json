@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Załączniki"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Licznik"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "to modyfikator, którego chcę używać w skrótach klawiaturowych"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Skrót"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Ten skrót działa tylko w trybie zaawansowanym."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Tej kombinacji klawiszy używa sam Thunderbird."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Aby korzystać ze skrótów, wybierz tryb zaawansowany"

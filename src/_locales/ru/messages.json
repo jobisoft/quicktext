@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Вложения"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Счётчик"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "модификатор для сочетаний клавиш"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Сочетание"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Это сочетание работает только в расширенном режиме."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Это сочетание клавиш использует сам Thunderbird."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Использовать расширенный режим для ярлыков"

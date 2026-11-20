@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Adjuntos"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Counter"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "es el modificador que quiero usar para el acceso directo del teclado"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Acceso directo"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Este acceso directo solo funciona en el modo avanzado."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Thunderbird usa esta combinación de teclas para sí mismo."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Usar el modo avanzado para los accesos directos"

@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "Anhang"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Strg"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "Zähler"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "für Tastenkürzel verwenden"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "Tastenkürzel"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "Dieses Tastenkürzel funktioniert nur im erweiterten Modus."
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "Diese Tastenkombination verwendet Thunderbird selbst."
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "Erweiterten Modus für Tastaturkürzel verwenden"

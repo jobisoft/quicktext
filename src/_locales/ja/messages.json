@@ -206,6 +206,9 @@
   "quicktext.altKey.label": {
     "message": "Alt"
   },
+  "quicktext.altKeyMac.label": {
+    "message": "⌥ Option"
+  },
   "quicktext.attachments.label": {
     "message": "添付ファイル"
   },
@@ -223,6 +226,9 @@
   },
   "quicktext.controlKey.label": {
     "message": "Ctrl"
+  },
+  "quicktext.controlKeyMac.label": {
+    "message": "⌃ Control"
   },
   "quicktext.counter.label": {
     "message": "カウンター"
@@ -413,6 +419,9 @@
   "quicktext.metaKey.label": {
     "message": "Meta"
   },
+  "quicktext.metaKeyMac.label": {
+    "message": "⌘ Command"
+  },
   "quicktext.modifierSetting.label": {
     "message": "をキーボードショートカットの修飾キーとして使用する"
   },
@@ -523,6 +532,12 @@
   },
   "quicktext.shortcut.label": {
     "message": "ショートカット"
+  },
+  "quicktext.shortcutAdvancedOnly.label": {
+    "message": "このショートカットはアドバンスモードでのみ機能します。"
+  },
+  "quicktext.shortcutReserved.label": {
+    "message": "このキーの組み合わせは Thunderbird 自体が使用しています。"
   },
   "quicktext.shortcutTypeAdv.label": {
     "message": "アドバンスモードでショートカットを使用"
