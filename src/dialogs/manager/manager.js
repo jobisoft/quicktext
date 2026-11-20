@@ -13,7 +13,7 @@ import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 import Squire from "/vendor/squire/squire.mjs";
 
 import { localizeDocument } from "/vendor/i18n.mjs";
-import { isMac, isShortcutAdvForced, isShortcutAdvActive, getModifierNameKey, formatShortcut } from "/modules/shortcuts.mjs";
+import { isMac, isShortcutAdvForced, isShortcutAdvActive, isShortcutKeyReserved, getModifierNameKey, formatShortcut } from "/modules/shortcuts.mjs";
 import { getTagsMenuStructure, getDateTimeMenuTitle } from "/modules/menuStructure.mjs";
 import { showDialog, showAlert, showConfirm, showPrompt } from "./popover.js";
 import { openFlyoutMenu } from "./flyoutMenu.mjs";
@@ -1429,7 +1429,10 @@ function renderShortcutUI(shortcut) {
 
 function disableUsedShortcuts(currentShortcut) {
   const sel = document.getElementById("sel-shortcut");
-  for (const opt of sel.options) opt.disabled = false;
+  for (const opt of sel.options) {
+    // Keys Thunderbird takes for itself can never work as a shortcut.
+    opt.disabled = !!opt.value && isShortcutKeyReserved(state.prefs.shortcutModifier, opt.value);
+  }
   // Only consider shortcuts in the same storage as the current template;
   // shortcuts collide within a storage, not across the whole install.
   const bundle = findBundle(state.selectedTemplateStorageUuid);
