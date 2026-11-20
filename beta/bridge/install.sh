@@ -11,7 +11,11 @@ PY_SRC="$SCRIPT_DIR/quicktext_bridge_host.py"
 MANIFEST_SRC="$SCRIPT_DIR/quicktext_bridge_host.json"
 
 if [[ "$OSTYPE" == darwin* ]]; then
-  HOSTS_DIR="$HOME/Library/Application Support/Mozilla/NativeMessagingHosts"
+  # Thunderbird on macOS reads ~/Library/Mozilla/..., not Firefox's
+  # ~/Library/Application Support/Mozilla/... (earlier versions of this script
+  # used the Firefox location by mistake).
+  HOSTS_DIR="$HOME/Library/Mozilla/NativeMessagingHosts"
+  LEGACY_HOSTS_DIR="$HOME/Library/Application Support/Mozilla/NativeMessagingHosts"
 else
   HOSTS_DIR="$HOME/.mozilla/native-messaging-hosts"
 fi
@@ -30,6 +34,12 @@ echo "Installing the Quicktext bridge helper (beta/dev only):"
 echo "  helper   -> $PY_DEST"
 echo "  manifest -> $MANIFEST_DEST"
 echo
+
+# Remove a copy installed at the wrong (Firefox) location by older versions.
+if [[ -n "${LEGACY_HOSTS_DIR:-}" ]]; then
+  rm -f "$LEGACY_HOSTS_DIR/quicktext_bridge_host.json"
+  rm -rf "$LEGACY_HOSTS_DIR/quicktext_bridge_host_helper"
+fi
 
 mkdir -p "$INSTALL_DIR"
 cp "$PY_SRC" "$PY_DEST"
