@@ -893,7 +893,9 @@ async function _showImportEntryDialog({ title, okLabel, name = "", url = "https:
     onButton: async (buttonId, values, api) => {
       if (buttonId === "cancel") return true;
       api.setError("");
-      const url = values.url.trim();
+      // An http address is stored as https (except loopback), the way
+      // remoteFetch() requests it.
+      const url = utils.upgradeToHttps(values.url.trim());
       if (!url) {
         api.setError(i18n("quicktext.defaultImport.invalidUrl.label"));
         return false;
@@ -916,7 +918,7 @@ async function _showImportEntryDialog({ title, okLabel, name = "", url = "https:
         return false;
       }
       try {
-        const res = await fetch(url, { method: "HEAD", cache: "no-store" });
+        const res = await utils.remoteFetch(url, { method: "HEAD", cache: "no-store" });
         if (!res.ok) {
           api.setError(`Connect error: ${res.status} ${res.statusText}`);
           return false;
@@ -929,7 +931,7 @@ async function _showImportEntryDialog({ title, okLabel, name = "", url = "https:
     },
   });
   if (!result || result.button !== "ok") return null;
-  return { name: result.values.name.trim(), url: result.values.url.trim() };
+  return { name: result.values.name.trim(), url: utils.upgradeToHttps(result.values.url.trim()) };
 }
 
 // Select the import list row at `idx`.

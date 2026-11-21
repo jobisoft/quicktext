@@ -261,11 +261,44 @@ export async function getTextFileContent(file) {
     return content;
 }
 
+// Every request to a remote address goes through here. ATN policy: remote data
+// must travel encrypted, so a plain http URL is upgraded to https. Not upgraded
+// are loopback addresses, whose data never leaves the computer, and URLs with
+// an explicit port. Other URLs (https, invalid ones, other schemes) are passed
+// on unchanged.
+export function remoteFetch(url, init) {
+    return fetch(upgradeToHttps(url), init);
+}
+
+// The URL remoteFetch() requests. Also used where the user enters an address,
+// so the upgraded one is stored and shown.
+export function upgradeToHttps(url) {
+    let parsed;
+    try {
+        parsed = new URL(url);
+    } catch {
+        return url;
+    }
+    // An explicit port (other than 80) points to a special server, which
+    // does not necessarily speak https on that port: such a URL is left alone.
+    if (parsed.protocol !== "http:" || parsed.port !== "" || isLoopbackHost(parsed.hostname)) {
+        return url;
+    }
+    parsed.protocol = "https:";
+    return parsed.href;
+}
+
+function isLoopbackHost(hostname) {
+    return hostname === "localhost" ||
+        hostname === "[::1]" ||
+        /^127\.\d{1,3}\.\d{1,3}\.\d{1,3}$/.test(hostname);
+}
+
 export async function fetchFileAsFile(url, name) {
     // Bypass the HTTP cache: tag-driven URL reads should always
     // see the live resource, never a stale copy from a previous
     // template insert.
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await remoteFetch(url, { cache: "no-store" });
 
     if (!response.ok) {
         throw new Error(`Failed to fetch file: ${response.status} ${response.statusText}`);
@@ -280,7 +313,7 @@ export async function fetchFileAsFile(url, name) {
 
 export async function fetchFileAsText(url) {
     try {
-        const response = await fetch(url);
+        const response = await remoteFetch(url);
         if (response?.ok) {
             return await response.text();
         }
@@ -294,7 +327,7 @@ export async function fetchFileAsDataUrl(url) {
     // Bypass the HTTP cache: tag-driven URL reads should always
     // see the live resource, never a stale copy from a previous
     // template insert.
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await remoteFetch(url, { cache: "no-store" });
     if (!response.ok) {
         throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`);
     }

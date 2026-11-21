@@ -5,6 +5,7 @@
  */
 
 import * as quicktext from "./quicktext.mjs";
+import * as utils from "./utils.mjs";
 import * as vfs from "/vendor/vfs-client/vfs-client.mjs";
 
 // Human-readable name for the built-in OPFS storage, shown in the VFS file
@@ -583,7 +584,7 @@ export function installManagedImportSync() {
 export async function fetchImportOnce(entry) {
   const timestamp = Date.now();
   try {
-    const res = await fetch(entry.url, { cache: "no-store" });
+    const res = await utils.remoteFetch(entry.url, { cache: "no-store" });
     if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
     const text = await res.text();
     const parsed = await quicktext.parseConfigFileData(text);

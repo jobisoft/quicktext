@@ -587,7 +587,7 @@ export class QuicktextParser {
     }
 
     try {
-      const response = await fetch(url, init);
+      const response = await utils.remoteFetch(url, init);
       if (response.status == 200) return this.parse(await response.text());
       return debug ? `Quicktext onLoad error: ${response.status}` : "";
     } catch (e) {
