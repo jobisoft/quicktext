@@ -1,6 +1,6 @@
 {
   "name": "quicktext",
-  "version": "7.0.2",
+  "version": "7.0.3",
   "scripts": {
     "build": "node build.js",
     "version": "node build.js && git add src"
