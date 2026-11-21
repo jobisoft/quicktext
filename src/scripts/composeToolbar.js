@@ -43,15 +43,23 @@
     return b;
   }
 
-  function svg(markup) {
-    const t = document.createElement("template");
-    t.innerHTML = markup;
-    return t.content.firstElementChild;
+  // The down-arrow of an entry that opens a menu. Built with DOM calls, not
+  // parsed from markup.
+  function chevron() {
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    const icon = document.createElementNS(SVG_NS, "svg");
+    icon.setAttribute("viewBox", "0 0 16 16");
+    icon.setAttribute("aria-hidden", "true");
+    const path = document.createElementNS(SVG_NS, "path");
+    path.setAttribute("d", "M4 6l4 4 4-4");
+    path.setAttribute("fill", "none");
+    path.setAttribute("stroke", "currentColor");
+    path.setAttribute("stroke-width", "1.6");
+    path.setAttribute("stroke-linecap", "round");
+    path.setAttribute("stroke-linejoin", "round");
+    icon.append(path);
+    return icon;
   }
-
-  const ICONS = {
-    chevron: `<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
-  };
 
   function build() {
     // A draft saved while the toolbar was showing contains an empty host.
@@ -150,7 +158,7 @@
     if (entry.children) {
       entryButton.classList.add("has-menu");
       entryButton.setAttribute("aria-haspopup", "menu");
-      entryButton.append(svg(ICONS.chevron));
+      entryButton.append(chevron());
       menus.set(entryButton, entry.children);
     } else {
       if (entry.hint) entryButton.title = entry.hint;
